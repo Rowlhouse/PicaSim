@@ -1,0 +1,18 @@
+#!/usr/bin/env mkb
+# Builder mkb file for the dpiExt extension on android
+
+platform LINUX
+
+buildtype(SCONS, ARM)
+
+define S3E_ANDROID
+
+options
+{
+    dll
+    output-name="lib/android/libdpiExt.so"
+    output-name-debug="lib/android/libdpiExt_d.so"
+}
+define S3E_BUILD_EXT
+
+subproject dpiExt_build

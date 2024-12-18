@@ -1,0 +1,984 @@
+defines
+{
+  BT_NO_PROFILE
+  IW_HTTP_SSL
+  IW_GXFONT_TTF
+
+  #IW_USE_PROFILE
+}
+
+
+#!/usr/bin/env mkb
+files
+{
+  PicaSimNotes.txt
+  PicaSimAndroidManifest.xml
+["PicaSim"]
+  (source/PicaSim)
+  "*.h"
+  "*.cpp"
+["PicaSim/Strings"]
+  (source/PicaSim/Languages)
+#  "*.h"
+  "*.cpp"
+["PicaSim/Menus"]
+  (source/PicaSim/Menus)
+  "*.h"
+  "*.cpp"
+["Framework"]
+  (source/Framework)
+  "*.h"
+  "*.cpp"
+["Heightfield"]
+  (source/Heightfield)
+  "*.h"
+  "*.cpp"
+["Tinyxml"]
+  (source/tinyxml)
+  "*.h"
+  "*.cpp"
+["Challenges"]
+  (data/SystemSettings/Challenge)
+  "*.xml"
+
+["Aeroplane settings"]
+  (data/SystemSettings/Aeroplane)
+  "*.xml"
+  
+["Aeroplanes"]
+  (data/SystemData/Aeroplanes)
+  AcroBat/Aeroplane.xml
+  ArduCopter/Aeroplane.xml
+  ASW15/Aeroplane.xml
+  Banana/Aeroplane.xml
+  CanardGlider/Aeroplane.xml
+  Discus/Aeroplane.xml
+  ElectricGlider/Aeroplane.xml
+  ElectricKato/Aeroplane.xml
+  ElectricNeoslope/Aeroplane.xml
+  Extra3D/Aeroplane.xml
+  Extra3DLarge/Aeroplane.xml
+  F18Jet/Aeroplane.xml
+  GeeBee/Aeroplane.xml
+  Genie/Aeroplane.xml
+  HangGlider/Aeroplane.xml
+  Icarus/Aeroplane.xml
+  Jackdaw/Aeroplane.xml
+  Jart/Aeroplane.xml
+  Kato/Aeroplane.xml
+  LeFish/Aeroplane.xml
+  Magpie/Aeroplane.xml
+  MartinWing/Aeroplane.xml
+  MiniDLG/Aeroplane.xml
+  Minimoa/Aeroplane.xml
+  Neoslope/Aeroplane.xml
+  Notos/Aeroplane.xml
+  Phase6/Aeroplane.xml
+  RTEraserFive/Aeroplane.xml
+  RTEraserFiveVPP/Aeroplane.xml
+  Sherpa2/Aeroplane.xml
+  SopwithPup/Aeroplane.xml
+  Spirit26/Aeroplane.xml
+  Spitfire/Aeroplane.xml
+  SpitfirePSS/Aeroplane.xml
+  ThePlank/Aeroplane.xml
+  Tigger/Aeroplane.xml
+  Trainer/Aeroplane.xml
+  Trapeze/Aeroplane.xml
+  Twinjet/Aeroplane.xml
+  Wasp/Aeroplane.xml
+  Weasel/Aeroplane.xml
+  Yak54/Aeroplane.xml
+
+["Lighting"]
+  (data/SystemData/Skyboxes)
+  CloudyDaytime/Lighting.xml
+  CloudyEvening/Lighting.xml
+  Sunny/Lighting.xml
+
+["Panoramas"]
+  (data/SystemData/Panoramas)
+  Mountains/Lighting.xml
+  Mountains/Panorama.xml
+  
+["Aerofoils - Semi-Symmetric"]
+  (data/SystemData/Aerofoils)
+  "SemiSymmetric/*.xml"
+
+["Aerofoils - Symmetric"]
+  (data/SystemData/Aerofoils)
+  "Symmetric/*.xml"
+
+["Aerofoils - Reflex"]
+  (data/SystemData/Aerofoils)
+  "Reflex/*.xml"
+  
+["Menus"]
+  (data/iwui_style)
+  iwui_240_propertysets.itx
+  iwui_320_propertysets.itx
+  iwui_480_propertysets.itx
+  iwui_640_propertysets.itx
+  iwui_768_propertysets.itx
+  iwui_1536_propertysets.itx
+  iwui_2048_propertysets.itx
+}
+
+includepaths 
+{ 
+  source/tinyxml
+  source/Heightfield
+  source/Framework
+}
+
+subprojects
+{
+  iwgeom
+  iwgx
+  iwui
+  iw2d
+  iwhttp
+  derbh
+  s3eWindowsStoreBilling
+  source/bullet-2.81/Bullet
+  source/Gamepad/extensions/gamepad
+  source/dpi
+}
+
+assets
+{
+  (data)
+#  ANGLE-License.txt
+  trial-mode.xml
+  trial-mode-80.xml
+  trial-mode-wp80.xml
+
+  # These items are supplied, but can have UserData equivalents
+  SystemData/Menu/AgtMember.png
+  SystemData/Menu/Button.png
+  SystemData/Menu/Find.png
+  SystemData/Menu/GatePointer.png
+  SystemData/Menu/Help.png
+  SystemData/Menu/Joystick.png
+  SystemData/Menu/Leaderboards.png
+  SystemData/Menu/PlayerPause.png
+  SystemData/Menu/PlayerPlay.png
+  SystemData/Menu/PlayerRew.png
+  SystemData/Menu/Stop.png
+  SystemData/Menu/Button1.png
+  SystemData/Menu/Button2.png
+  SystemData/Menu/Button3.png
+  SystemData/Menu/Utilities.png
+  SystemData/Menu/Windsock.png
+
+  SystemData/Textures/Green.jpg
+  SystemData/Textures/TerrainTexture.jpg
+  SystemData/Textures/CloudTexture.jpg
+  SystemData/Textures/ShadowTexture.png
+  SystemData/Textures/Runway.png
+  SystemData/Textures/Smoke.png
+
+  SystemData/Skyboxes/CloudyDaytime/1/back1.jpg
+  SystemData/Skyboxes/CloudyDaytime/1/left1.jpg
+  SystemData/Skyboxes/CloudyDaytime/1/right1.jpg
+  SystemData/Skyboxes/CloudyDaytime/1/front1.jpg
+  SystemData/Skyboxes/CloudyDaytime/1/up1.jpg
+  SystemData/Skyboxes/CloudyDaytime/Lighting.xml
+  SystemSettings/Lighting/CloudyDaytime.xml
+  SystemSettings/Thumbnails/CloudyDaytime.jpg
+  
+  SystemData/Skyboxes/CloudyEvening/1/back1.jpg
+  SystemData/Skyboxes/CloudyEvening/1/left1.jpg
+  SystemData/Skyboxes/CloudyEvening/1/right1.jpg
+  SystemData/Skyboxes/CloudyEvening/1/front1.jpg
+  SystemData/Skyboxes/CloudyEvening/1/up1.jpg
+  SystemData/Skyboxes/CloudyEvening/Lighting.xml
+  SystemSettings/Lighting/CloudyEvening.xml
+  SystemSettings/Thumbnails/CloudyEvening.jpg
+
+  SystemSettings/Objects/None.xml
+  SystemSettings/Objects/Recreation_Ground.xml
+  SystemSettings/Objects/Flatland_Forest.xml
+  SystemSettings/Objects/Flatland_Control_Line.xml
+  
+  SystemData/Panoramas/Flatland/Lighting.xml
+  SystemData/Panoramas/Flatland/Panorama.xml
+  SystemData/Panoramas/Flatland/Flatland.raw
+  SystemData/Panoramas/Flatland/1/back1.jpg
+  SystemData/Panoramas/Flatland/1/left1.jpg
+  SystemData/Panoramas/Flatland/1/right1.jpg
+  SystemData/Panoramas/Flatland/1/front1.jpg
+  SystemData/Panoramas/Flatland/1/up1.jpg
+  SystemData/Panoramas/Flatland/1/down1.jpg
+  SystemData/Panoramas/Flatland/2/back1.jpg
+  SystemData/Panoramas/Flatland/2/back2.jpg
+  SystemData/Panoramas/Flatland/2/back3.jpg
+  SystemData/Panoramas/Flatland/2/back4.jpg
+  SystemData/Panoramas/Flatland/2/left1.jpg
+  SystemData/Panoramas/Flatland/2/left2.jpg
+  SystemData/Panoramas/Flatland/2/left3.jpg
+  SystemData/Panoramas/Flatland/2/left4.jpg
+  SystemData/Panoramas/Flatland/2/right1.jpg
+  SystemData/Panoramas/Flatland/2/right2.jpg
+  SystemData/Panoramas/Flatland/2/right3.jpg
+  SystemData/Panoramas/Flatland/2/right4.jpg
+  SystemData/Panoramas/Flatland/2/front1.jpg
+  SystemData/Panoramas/Flatland/2/front2.jpg
+  SystemData/Panoramas/Flatland/2/front3.jpg
+  SystemData/Panoramas/Flatland/2/front4.jpg
+  SystemData/Panoramas/Flatland/2/up1.jpg
+  SystemData/Panoramas/Flatland/2/down1.jpg
+  SystemData/Panoramas/Flatland/2/down2.jpg
+  SystemData/Panoramas/Flatland/2/down3.jpg
+  SystemData/Panoramas/Flatland/2/down4.jpg
+
+  SystemSettings\Objects/Recreation_Ground.xml
+  SystemData/Panoramas/RecreationGround/Lighting.xml
+  SystemData/Panoramas/RecreationGround/Panorama.xml
+  SystemData/Panoramas/RecreationGround/1/back1.jpg
+  SystemData/Panoramas/RecreationGround/1/left1.jpg
+  SystemData/Panoramas/RecreationGround/1/right1.jpg
+  SystemData/Panoramas/RecreationGround/1/front1.jpg
+  SystemData/Panoramas/RecreationGround/1/up1.jpg
+  SystemData/Panoramas/RecreationGround/1/down1.jpg
+  SystemData/Panoramas/RecreationGround/2/back1.jpg
+  SystemData/Panoramas/RecreationGround/2/back2.jpg
+  SystemData/Panoramas/RecreationGround/2/back3.jpg
+  SystemData/Panoramas/RecreationGround/2/back4.jpg
+  SystemData/Panoramas/RecreationGround/2/left1.jpg
+  SystemData/Panoramas/RecreationGround/2/left2.jpg
+  SystemData/Panoramas/RecreationGround/2/left3.jpg
+  SystemData/Panoramas/RecreationGround/2/left4.jpg
+  SystemData/Panoramas/RecreationGround/2/right1.jpg
+  SystemData/Panoramas/RecreationGround/2/right2.jpg
+  SystemData/Panoramas/RecreationGround/2/right3.jpg
+  SystemData/Panoramas/RecreationGround/2/right4.jpg
+  SystemData/Panoramas/RecreationGround/2/front1.jpg
+  SystemData/Panoramas/RecreationGround/2/front2.jpg
+  SystemData/Panoramas/RecreationGround/2/front3.jpg
+  SystemData/Panoramas/RecreationGround/2/front4.jpg
+  SystemData/Panoramas/RecreationGround/2/up1.jpg
+  SystemData/Panoramas/RecreationGround/2/down1.jpg
+  SystemData/Panoramas/RecreationGround/2/down2.jpg
+  SystemData/Panoramas/RecreationGround/2/down3.jpg
+  SystemData/Panoramas/RecreationGround/2/down4.jpg
+
+  SystemSettings/Environment/LitermonthalleNalbach.xml
+  SystemSettings/Objects/Litermonthalle.xml
+  SystemSettings/Objects/Litermonthalle_With_Objects.xml
+  SystemData/Panoramas/LitermonthalleNalbach/Lighting.xml
+  SystemData/Panoramas/LitermonthalleNalbach/Panorama.xml
+  SystemData/Panoramas/LitermonthalleNalbach/EULA.txt
+  SystemData/Panoramas/LitermonthalleNalbach/1/back1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/1/left1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/1/right1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/1/front1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/1/up1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/1/down1.jpg
+
+  SystemData/Panoramas/LitermonthalleNalbach/2/back1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/back2.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/back3.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/back4.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/left1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/left2.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/left3.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/left4.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/right1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/right2.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/right3.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/right4.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/front1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/front2.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/front3.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/front4.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/up1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/up2.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/up3.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/up4.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/down1.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/down2.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/down3.jpg
+  SystemData/Panoramas/LitermonthalleNalbach/2/down4.jpg
+
+
+  SystemData/FileTerrains/PicaSim/image.jpg
+
+  # Aerofoils
+  SystemData/Aerofoils/Reflex/HS130.xml
+
+  SystemData/Aerofoils/Symmetric/Flat.xml
+  SystemData/Aerofoils/Symmetric/NACA0006.xml
+  SystemData/Aerofoils/Symmetric/NACA0009.xml
+  SystemData/Aerofoils/Symmetric/NACA0015.xml
+  SystemData/Aerofoils/Symmetric/NACA0021.xml
+  SystemData/Aerofoils/Symmetric/NACA66-006.xml
+
+  SystemData/Aerofoils/SemiSymmetric/AG455CT.xml
+  SystemData/Aerofoils/SemiSymmetric/AG13.xml
+  SystemData/Aerofoils/SemiSymmetric/ClarkY.xml
+  SystemData/Aerofoils/SemiSymmetric/M6.xml
+  SystemData/Aerofoils/SemiSymmetric/MG06.xml
+  SystemData/Aerofoils/SemiSymmetric/RG14.xml
+  SystemData/Aerofoils/SemiSymmetric/RG15.xml
+  SystemData/Aerofoils/SemiSymmetric/SA7036.xml
+  SystemData/Aerofoils/SemiSymmetric/SB96V.xml
+  SystemData/Aerofoils/SemiSymmetric/SB96VS.xml
+  SystemData/Aerofoils/SemiSymmetric/TP73.xml
+  SystemData/Aerofoils/SemiSymmetric/WortmannFX61-163.xml
+
+  # Planes
+  SystemSettings/Aeroplane/ASW15.xml
+  SystemSettings/Aeroplane/AcroBat.xml
+  SystemSettings/Aeroplane/Banana.xml
+  SystemSettings/Aeroplane/CanardGlider.xml
+  SystemSettings/Aeroplane/Discus.xml
+  SystemSettings/Aeroplane/ElectricGlider.xml
+  SystemSettings/Aeroplane/ElectricKato.xml
+  SystemSettings/Aeroplane/ElectricNeoslope.xml
+  SystemSettings/Aeroplane/Extra3D.xml
+  SystemSettings/Aeroplane/Extra3DScaledUp.xml
+  SystemSettings/Aeroplane/ExtraControlLine.xml
+  SystemSettings/Aeroplane/F18Jet.xml
+  SystemSettings/Aeroplane/GeeBee.xml
+  SystemSettings/Aeroplane/Genie.xml
+  SystemSettings/Aeroplane/Icarus.xml
+  SystemSettings/Aeroplane/Jackdaw.xml
+  SystemSettings/Aeroplane/Jart.xml
+  SystemSettings/Aeroplane/Kato.xml
+  SystemSettings/Aeroplane/LeFish.xml
+  SystemSettings/Aeroplane/LeFishUltralight.xml
+  SystemSettings/Aeroplane/Magpie.xml
+  SystemSettings/Aeroplane/MaxBee.xml
+  SystemSettings/Aeroplane/MartinWing.xml
+  SystemSettings/Aeroplane/MiniDLG.xml
+  SystemSettings/Aeroplane/Minimoa.xml
+  SystemSettings/Aeroplane/MoyesHangGlider.xml
+  SystemSettings/Aeroplane/Neoslope.xml
+  SystemSettings/Aeroplane/Notos.xml
+  SystemSettings/Aeroplane/Peacemaker.xml
+  SystemSettings/Aeroplane/Phase6.xml
+  SystemSettings/Aeroplane/Quark.xml
+  SystemSettings/Aeroplane/Quartz.xml
+  SystemSettings/Aeroplane/RTEraserFive.xml
+  SystemSettings/Aeroplane/RTEraserFiveVPP.xml
+  SystemSettings/Aeroplane/Sherpa2.xml
+  SystemSettings/Aeroplane/SopwithPup.xml
+  SystemSettings/Aeroplane/Spirit26.xml
+  SystemSettings/Aeroplane/Spitfire.xml
+  SystemSettings/Aeroplane/SpitfirePSS.xml
+  SystemSettings/Aeroplane/ThePlank.xml
+  SystemSettings/Aeroplane/Tigger.xml
+  SystemSettings/Aeroplane/Trainer.xml
+  SystemSettings/Aeroplane/Trapeze.xml
+  SystemSettings/Aeroplane/Twinjet.xml
+  SystemSettings/Aeroplane/Wasp.xml
+  SystemSettings/Aeroplane/Weasel.xml
+  SystemSettings/Aeroplane/Yak54.xml
+
+  SystemSettings/Thumbnails/ASW15.jpg
+  SystemSettings/Thumbnails/AcroBat.jpg
+  SystemSettings/Thumbnails/Banana.jpg
+  SystemSettings/Thumbnails/CanardGlider.jpg
+  SystemSettings/Thumbnails/Choose.jpg
+  SystemSettings/Thumbnails/Discus.jpg
+  SystemSettings/Thumbnails/ElectricGlider.jpg
+  SystemSettings/Thumbnails/ElectricKato.jpg
+  SystemSettings/Thumbnails/Extra3D.jpg
+  SystemSettings/Thumbnails/Extra3DScaledUp.jpg
+  SystemSettings/Thumbnails/ExtraCL.jpg
+  SystemSettings/Thumbnails/F18Jet.jpg
+  SystemSettings/Thumbnails/GeeBee.jpg
+  SystemSettings/Thumbnails/Genie.jpg
+  SystemSettings/Thumbnails/HangGlider.jpg
+  SystemSettings/Thumbnails/Icarus.jpg
+  SystemSettings/Thumbnails/Jackdaw.jpg
+  SystemSettings/Thumbnails/Jart.jpg
+  SystemSettings/Thumbnails/Kato.jpg
+  SystemSettings/Thumbnails/LeFish.jpg
+  SystemSettings/Thumbnails/LeFishUltralight.jpg
+  SystemSettings/Thumbnails/Magpie.jpg
+  SystemSettings/Thumbnails/MartinWing.jpg
+  SystemSettings/Thumbnails/MaxBee.jpg
+  SystemSettings/Thumbnails/MiniDLG.jpg
+  SystemSettings/Thumbnails/Minimoa.jpg
+  SystemSettings/Thumbnails/Neoslope.jpg
+  SystemSettings/Thumbnails/Notos.jpg
+  SystemSettings/Thumbnails/Peacemaker.jpg
+  SystemSettings/Thumbnails/Phase6.jpg
+  SystemSettings/Thumbnails/Quark.jpg
+  SystemSettings/Thumbnails/Quartz.jpg
+  SystemSettings/Thumbnails/RTEraserFive.jpg
+  SystemSettings/Thumbnails/RTEraserFiveVPP.jpg
+  SystemSettings/Thumbnails/Sherpa2.jpg
+  SystemSettings/Thumbnails/SopwithPup.jpg
+  SystemSettings/Thumbnails/Spirit26.jpg
+  SystemSettings/Thumbnails/Spitfire.jpg
+  SystemSettings/Thumbnails/SpitfirePSS.jpg
+  SystemSettings/Thumbnails/ThePlank.jpg
+  SystemSettings/Thumbnails/Tigger.jpg
+  SystemSettings/Thumbnails/Trainer.jpg
+  SystemSettings/Thumbnails/Trapeze.jpg
+  SystemSettings/Thumbnails/Twinjet.jpg
+  SystemSettings/Thumbnails/Wasp.jpg
+  SystemSettings/Thumbnails/Weasel.jpg
+  SystemSettings/Thumbnails/Yak54.jpg
+
+  SystemData/Aeroplanes/Banana/Aeroplane.xml
+  SystemData/Aeroplanes/Banana/BananaYellow.ac
+
+  SystemData/Aeroplanes/Kato/Aeroplane.xml
+  SystemData/Aeroplanes/Kato/Kato-tribal.ac
+  SystemData/Aeroplanes/Kato/Kato-tribal-tex.png
+  SystemData/Aeroplanes/Kato/Kato-foil-root.xml
+  SystemData/Aeroplanes/Kato/Kato-foil-tip.xml
+
+  SystemData/Aeroplanes/Spirit26/Aeroplane.xml
+  SystemData/Aeroplanes/Spirit26/Aerofoil.xml
+  SystemData/Aeroplanes/Spirit26/Spirit.ac
+  SystemData/Aeroplanes/Spirit26/SpiritAlt.ac
+  SystemData/Aeroplanes/Spirit26/Spirit-Danny.png
+  SystemData/Aeroplanes/Spirit26/Spirit-Markus.png
+
+  SystemData/Aeroplanes/MartinWing/Aeroplane.xml
+  SystemData/Aeroplanes/MartinWing/Martin.ac
+  SystemData/Aeroplanes/MartinWing/Martin.png
+  SystemData/Aeroplanes/MartinWing/MartinAerofoil.xml
+
+  SystemData/Aeroplanes/F18Jet/Aeroplane.xml
+  SystemData/Aeroplanes/F18Jet/F18simple.ac
+
+  SystemData/Aeroplanes/Trainer/Aeroplane.xml
+  SystemData/Aeroplanes/Trainer/Trainer.ac
+  SystemData/Aeroplanes/Trainer/Trainer.png
+
+  SystemData/Aeroplanes/Jackdaw/Aeroplane.xml
+  SystemData/Aeroplanes/Jackdaw/Jackdaw.ac
+  SystemData/Aeroplanes/Jackdaw/Jackdaw.png
+
+  SystemData/Aeroplanes/Weasel/Aeroplane.xml
+  SystemData/Aeroplanes/Weasel/Weasel.ac
+  SystemData/Aeroplanes/Weasel/Weasel.png
+
+  SystemData/Aeroplanes/Sherpa2/Aeroplane.xml
+  SystemData/Aeroplanes/Sherpa2/Aerofoil.xml
+  SystemData/Aeroplanes/Sherpa2/Sherpa2.ac
+  SystemData/Aeroplanes/Sherpa2/Sherpa2.jpg
+
+  SystemData/Aeroplanes/RTEraserFive/Aeroplane.xml
+  SystemData/Aeroplanes/RTEraserFive/RTEraserFiveTextured.ac
+  SystemData/Aeroplanes/RTEraserFive/Texture.jpg
+  SystemData/Aeroplanes/RTEraserFive/Wing.xml
+
+  SystemData/Aeroplanes/RTEraserFiveVPP/Aeroplane.xml
+  SystemSettings/Controller/EraserVPP.xml
+
+  SystemData/Objects/LaunchMarker.3ds
+  SystemData/Objects/Tower.ac
+  SystemData/Objects/Eagle0.ac
+  SystemData/Objects/Eagle1.ac
+  SystemData/Objects/Eagle2.ac
+  SystemData/Objects/Eagle3.ac
+
+  SystemData/Audio/Beep22050Mono.raw
+  SystemData/Audio/Glider22050Stereo.raw
+  SystemData/Audio/GliderWhistle22050Stereo.raw
+  SystemData/Audio/WindLoop22050Stereo.raw
+  SystemData/Audio/Vario22050Mono.raw
+  SystemData/Audio/Motor22050Mono.raw
+  SystemData/Audio/NewMotor44100Mono.raw
+  SystemData/Audio/PetrolFlying44100Mono.raw
+
+  SystemSettings/Environment/MountainsDynamicSoaringPanoramic.xml
+  SystemSettings/Environment/SnowyHills3D.xml
+  SystemSettings/Environment/SnowyHillsPanoramic.xml
+  SystemSettings/Environment/MeadowPanoramic.xml
+  SystemSettings/Environment/MeadowSlopePanoramic.xml
+  SystemSettings/Environment/Hills.xml
+  SystemSettings/Environment/Cliff.xml
+  SystemSettings/Environment/MountainsPanoramic.xml
+  SystemSettings/Environment/FlatlandPanoramic.xml
+  SystemSettings/Environment/Flatland3D.xml
+  SystemSettings/Environment/RecreationGroundPanoramic.xml
+  SystemSettings/Environment/LowHills.xml
+  SystemSettings/Environment/GentleHills.xml
+  SystemSettings/Environment/MountainsDynamicSoaring3D.xml
+  SystemSettings/Environment/PicaSim.xml
+  SystemSettings/Environment/Island.xml
+
+  SystemSettings/Controller/Accelerometer.xml
+  SystemSettings/Controller/AccelerometerWithThrottle.xml
+  SystemSettings/Controller/AccelerometerWithFlaps.xml
+  SystemSettings/Controller/TwoSticksWithFlaps.xml
+  SystemSettings/Controller/TwoSticksWithFlapsThrottle.xml
+  SystemSettings/Controller/TwoSticksWithThrottle.xml
+  SystemSettings/Controller/TwoSticksWithThrottleRetracts.xml
+  SystemSettings/Controller/SingleStick.xml
+  SystemSettings/Controller/SingleStickDualRates.xml
+  SystemSettings/Controller/Extra3D.xml
+  SystemSettings/Controller/ControlLineWithFlaps.xml
+
+  SystemSettings/Options/HighQuality-SmallScreen.xml
+  SystemSettings/Options/HighQuality-LargeScreen.xml
+  SystemSettings/Options/StandardQuality-SmallScreen.xml
+  SystemSettings/Options/StandardQuality-LargeScreen.xml
+  SystemSettings/Options/LowQuality-SmallScreen.xml
+  SystemSettings/Options/LowQuality-LargeScreen.xml
+
+  SystemSettings/Scenario/1TrainerGlider.xml
+  SystemSettings/Scenario/2TrainerPowered.xml
+  SystemSettings/Scenario/3Choose.xml
+
+  SystemSettings/Thumbnails/Cliff.jpg
+  SystemSettings/Thumbnails/Flatland3D.jpg
+  SystemSettings/Thumbnails/FlatlandPanoramic.jpg
+  SystemSettings/Thumbnails/GentleHills.jpg
+  SystemSettings/Thumbnails/Hills.jpg
+  SystemSettings/Thumbnails/Island.jpg
+  SystemSettings/Thumbnails/LowHills.jpg
+  SystemSettings/Thumbnails/Litermontalle.jpg
+  SystemSettings/Thumbnails/MeadowPanoramic.jpg
+  SystemSettings/Thumbnails/MeadowSlopePanoramic.jpg
+  SystemSettings/Thumbnails/MountainsDynamicSoaring3D.jpg
+  SystemSettings/Thumbnails/MountainsDynamicSoaringPanoramic.jpg
+  SystemSettings/Thumbnails/MountainsPanoramic.jpg
+  SystemSettings/Thumbnails/PicaSim.jpg
+  SystemSettings/Thumbnails/RecreationGround.jpg
+  SystemSettings/Thumbnails/SnowyHills3D.jpg
+  SystemSettings/Thumbnails/SnowyHillsPanoramic.jpg
+
+  SystemSettings/Challenge/Duration-Meadow-Notos.xml
+  SystemSettings/Challenge/Duration-RecreationGround-Icarus.xml
+  SystemSettings/Challenge/Limbo-Cliff-Weasel.xml
+  SystemSettings/Challenge/Limbo-Flatland-Extra3D.xml
+  SystemSettings/Challenge/Race-AroundTheIsland-GeeBee.xml
+  SystemSettings/Challenge/Race-Cliff-Banana.xml
+  SystemSettings/Challenge/Race-Cliff-Tigger.xml
+  SystemSettings/Challenge/Race-Cliff.xml
+  SystemSettings/Challenge/Race-CrossCountry-Discus.xml
+  SystemSettings/Challenge/Race-CrossCountry-Genie.xml
+  SystemSettings/Challenge/Race-CrossCountryIsland-ASW15.xml
+  SystemSettings/Challenge/Race-Flatland-Extra3D.xml
+  SystemSettings/Challenge/Race-Flatland-Genie.xml
+  SystemSettings/Challenge/Race-Flatland-Wasp.xml
+  SystemSettings/Challenge/Race-Mountain-Banana.xml
+  SystemSettings/Challenge/Race-Mountain-ThePlank.xml
+  SystemSettings/Challenge/Race-SnowyHills-Spirit26.xml
+  SystemSettings/Hidden/Flatland3DForest.xml
+  SystemSettings/Hidden/Island.xml
+
+  SystemSettings/AIControllers/AllGliders.xml
+  SystemSettings/AIControllers/AllPoweredPlanes.xml
+  SystemSettings/AIControllers/DLGs.xml
+  SystemSettings/AIControllers/LargeGliders.xml
+  SystemSettings/AIControllers/MediumGliders.xml
+  SystemSettings/AIControllers/WeaselFest.xml
+  SystemSettings/AIControllers/Wings.xml
+
+  # Other stuff
+
+  Menus/StartBackground.jpg
+
+  (data-ram/data-gles1, data)
+  Menus/Menu_240.group.bin
+  Menus/Menu_320.group.bin
+  Menus/Menu_480.group.bin
+  Menus/Menu_640.group.bin
+  Menus/Menu_768.group.bin
+  Menus/Menu_1080.group.bin
+  Menus/Menu_1536.group.bin
+  Menus/Menu_2048.group.bin
+
+  Menus/Menu_Common.group.bin
+
+[FreeIOSAssets] # Free version on Android
+  <include "Default"> 
+
+#  "Default.png"
+#  "Default@2x.png"
+#  "Default@2x~ipad.png"
+#  "Default~ipad.png"
+#  "Default-568h@2x.png"
+
+[FreeAndroidAssets] # Free version on Android
+  <include "Default"> 
+
+  SystemData/Menu/Free.png
+
+# Sceneries
+
+  # Needed for DS 3D in the free Android version
+  SystemData/Panoramas/MountainsDynamicSoaring/Panorama.xml
+
+  SystemData/Panoramas/Mountains/heightmap.raw
+  SystemData/Panoramas/Mountains/Lighting.xml
+  SystemData/Panoramas/Mountains/Panorama.xml
+  SystemData/Panoramas/Mountains/1/back1.jpg
+  SystemData/Panoramas/Mountains/1/left1.jpg
+  SystemData/Panoramas/Mountains/1/right1.jpg
+  SystemData/Panoramas/Mountains/1/front1.jpg
+  SystemData/Panoramas/Mountains/1/up1.jpg
+  SystemData/Panoramas/Mountains/1/down1.jpg
+  SystemData/Panoramas/Mountains/2/back1.jpg
+  SystemData/Panoramas/Mountains/2/back2.jpg
+  SystemData/Panoramas/Mountains/2/back3.jpg
+  SystemData/Panoramas/Mountains/2/back4.jpg
+  SystemData/Panoramas/Mountains/2/left1.jpg
+  SystemData/Panoramas/Mountains/2/left2.jpg
+  SystemData/Panoramas/Mountains/2/left3.jpg
+  SystemData/Panoramas/Mountains/2/left4.jpg
+  SystemData/Panoramas/Mountains/2/right1.jpg
+  SystemData/Panoramas/Mountains/2/right2.jpg
+  SystemData/Panoramas/Mountains/2/right3.jpg
+  SystemData/Panoramas/Mountains/2/right4.jpg
+  SystemData/Panoramas/Mountains/2/front1.jpg
+  SystemData/Panoramas/Mountains/2/front2.jpg
+  SystemData/Panoramas/Mountains/2/front3.jpg
+  SystemData/Panoramas/Mountains/2/front4.jpg
+  SystemData/Panoramas/Mountains/2/up1.jpg
+  SystemData/Panoramas/Mountains/2/down1.jpg
+  SystemData/Panoramas/Mountains/2/down2.jpg
+  SystemData/Panoramas/Mountains/2/down3.jpg
+  SystemData/Panoramas/Mountains/2/down4.jpg
+
+
+
+# Planes
+  SystemData/Aeroplanes/CanardGlider/Aeroplane.xml
+  SystemData/Aeroplanes/CanardGlider/Canard.ac
+
+  SystemData/Aeroplanes/Phase6/Aeroplane.xml
+  SystemData/Aeroplanes/Phase6/Phase6.ac
+
+  SystemData/Aeroplanes/Discus/Aeroplane.xml
+  SystemData/Aeroplanes/Discus/Discus.ac
+
+  SystemData/Aeroplanes/Tigger/Aeroplane.xml
+  SystemData/Aeroplanes/Tigger/Tigger.ac
+
+  SystemData/Aeroplanes/HangGlider/Aeroplane.xml
+  SystemData/Aeroplanes/HangGlider/XSwss.3ds
+  SystemData/Aeroplanes/HangGlider/XS142phd.3ds
+  SystemData/Aeroplanes/HangGlider/hg-xs142p.3ds
+
+  SystemData/Aeroplanes/Neoslope/Aeroplane.xml
+  SystemData/Aeroplanes/Neoslope/Neoslope.ac
+
+  SystemData/Aeroplanes/Jart/Aeroplane.xml
+  SystemData/Aeroplanes/Jart/Jart.ac
+
+  SystemData/Aeroplanes/Twinjet/Aeroplane.xml
+  SystemData/Aeroplanes/Twinjet/Twinjet.ac
+  SystemData/Aeroplanes/Twinjet/Texture.png
+
+  SystemData/Aeroplanes/ElectricGlider/Aeroplane.xml
+
+  SystemData/Aeroplanes/Extra3D/Aeroplane.xml
+  SystemData/Aeroplanes/Extra3D/Extra3DTextured.ac
+  SystemData/Aeroplanes/Extra3D/Texture.png
+
+  SystemData/Aeroplanes/Extra3DLarge/Aeroplane.xml
+
+  SystemData/Aeroplanes/ExtraControlLine/Aeroplane.xml
+  SystemData/Aeroplanes/ExtraControlLine/Extra3D.ac
+
+  SystemData/Aeroplanes/MaxBee/Aeroplane.xml
+  SystemData/Aeroplanes/MaxBee/MaxBee.ac
+  SystemData/Aeroplanes/MaxBee/MaxBee.png
+
+  SystemData/Aeroplanes/LeFishUltralight/Aeroplane.xml
+  SystemData/Aeroplanes/LeFishUltralight/LeFishSwiss.ac
+  SystemSettings/Controller/LeFishMadStab.xml
+
+  SystemData/Aeroplanes/ElectricKato/Aeroplane.xml
+  SystemData/Aeroplanes/ElectricKato/Kato-tribal.ac
+  SystemData/Aeroplanes/ElectricKato/Kato-tribal-tex.png
+  SystemData/Aeroplanes/ElectricKato/Kato-foil-root.xml
+  SystemData/Aeroplanes/ElectricKato/Kato-foil-tip.xml
+
+  SystemData/Aeroplanes/Trapeze/Aeroplane.xml
+  SystemData/Aeroplanes/Trapeze/Trapeze.ac
+  SystemSettings/Controller/Trapeze.xml
+
+  SystemData/Aeroplanes/Genie/Aeroplane.xml
+  SystemData/Aeroplanes/Genie/Genie.ac
+  SystemData/Aeroplanes/Genie/Genie25.3ds
+
+[PaidAndroidAssets] # Paid versions
+  <include "FreeAndroidAssets"> 
+
+  SystemData/Menu/Thanks.png
+
+  SystemData/Skyboxes/Sunny/1/back1.jpg
+  SystemData/Skyboxes/Sunny/1/left1.jpg
+  SystemData/Skyboxes/Sunny/1/right1.jpg
+  SystemData/Skyboxes/Sunny/1/front1.jpg
+  SystemData/Skyboxes/Sunny/1/up1.jpg
+  SystemData/Skyboxes/Sunny/Lighting.xml
+  SystemSettings/Lighting/Sunny.xml
+  SystemSettings/Thumbnails/Sunny.jpg
+
+  SystemData/Panoramas/MountainsDynamicSoaring/Lighting.xml
+  SystemData/Panoramas/MountainsDynamicSoaring/1/back1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/1/left1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/1/right1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/1/front1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/1/up1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/1/down1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/back1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/back2.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/back3.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/back4.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/left1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/left2.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/left3.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/left4.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/right1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/right2.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/right3.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/right4.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/front1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/front2.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/front3.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/front4.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/up1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/down1.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/down2.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/down3.jpg
+  SystemData/Panoramas/MountainsDynamicSoaring/2/down4.jpg
+
+  SystemData/Panoramas/SnowyHills/Lighting.xml
+  SystemData/Panoramas/SnowyHills/Panorama.xml
+  SystemData/Panoramas/SnowyHills/Hills.raw
+  SystemData/Panoramas/SnowyHills/1/back1.jpg
+  SystemData/Panoramas/SnowyHills/1/left1.jpg
+  SystemData/Panoramas/SnowyHills/1/right1.jpg
+  SystemData/Panoramas/SnowyHills/1/front1.jpg
+  SystemData/Panoramas/SnowyHills/1/up1.jpg
+  SystemData/Panoramas/SnowyHills/1/down1.jpg
+  SystemData/Panoramas/SnowyHills/2/back1.jpg
+  SystemData/Panoramas/SnowyHills/2/back2.jpg
+  SystemData/Panoramas/SnowyHills/2/back3.jpg
+  SystemData/Panoramas/SnowyHills/2/back4.jpg
+  SystemData/Panoramas/SnowyHills/2/left1.jpg
+  SystemData/Panoramas/SnowyHills/2/left2.jpg
+  SystemData/Panoramas/SnowyHills/2/left3.jpg
+  SystemData/Panoramas/SnowyHills/2/left4.jpg
+  SystemData/Panoramas/SnowyHills/2/right1.jpg
+  SystemData/Panoramas/SnowyHills/2/right2.jpg
+  SystemData/Panoramas/SnowyHills/2/right3.jpg
+  SystemData/Panoramas/SnowyHills/2/right4.jpg
+  SystemData/Panoramas/SnowyHills/2/front1.jpg
+  SystemData/Panoramas/SnowyHills/2/front2.jpg
+  SystemData/Panoramas/SnowyHills/2/front3.jpg
+  SystemData/Panoramas/SnowyHills/2/front4.jpg
+  SystemData/Panoramas/SnowyHills/2/up1.jpg
+  SystemData/Panoramas/SnowyHills/2/down1.jpg
+  SystemData/Panoramas/SnowyHills/2/down2.jpg
+  SystemData/Panoramas/SnowyHills/2/down3.jpg
+  SystemData/Panoramas/SnowyHills/2/down4.jpg
+
+  SystemData/Panoramas/Meadow/Lighting.xml
+  SystemData/Panoramas/Meadow/Panorama.xml
+  SystemData/Panoramas/Meadow/Meadow.raw
+  SystemData/Panoramas/Meadow/1/back1.jpg
+  SystemData/Panoramas/Meadow/1/left1.jpg
+  SystemData/Panoramas/Meadow/1/right1.jpg
+  SystemData/Panoramas/Meadow/1/front1.jpg
+  SystemData/Panoramas/Meadow/1/up1.jpg
+  SystemData/Panoramas/Meadow/1/down1.jpg
+  SystemData/Panoramas/Meadow/2/back1.jpg
+  SystemData/Panoramas/Meadow/2/back2.jpg
+  SystemData/Panoramas/Meadow/2/back3.jpg
+  SystemData/Panoramas/Meadow/2/back4.jpg
+  SystemData/Panoramas/Meadow/2/left1.jpg
+  SystemData/Panoramas/Meadow/2/left2.jpg
+  SystemData/Panoramas/Meadow/2/left3.jpg
+  SystemData/Panoramas/Meadow/2/left4.jpg
+  SystemData/Panoramas/Meadow/2/right1.jpg
+  SystemData/Panoramas/Meadow/2/right2.jpg
+  SystemData/Panoramas/Meadow/2/right3.jpg
+  SystemData/Panoramas/Meadow/2/right4.jpg
+  SystemData/Panoramas/Meadow/2/front1.jpg
+  SystemData/Panoramas/Meadow/2/front2.jpg
+  SystemData/Panoramas/Meadow/2/front3.jpg
+  SystemData/Panoramas/Meadow/2/front4.jpg
+  SystemData/Panoramas/Meadow/2/up1.jpg
+  SystemData/Panoramas/Meadow/2/down1.jpg
+  SystemData/Panoramas/Meadow/2/down2.jpg
+  SystemData/Panoramas/Meadow/2/down3.jpg
+  SystemData/Panoramas/Meadow/2/down4.jpg
+
+  SystemData/Panoramas/MeadowSlope/Lighting.xml
+  SystemData/Panoramas/MeadowSlope/Panorama.xml
+  SystemData/Panoramas/MeadowSlope/1/back1.jpg
+  SystemData/Panoramas/MeadowSlope/1/left1.jpg
+  SystemData/Panoramas/MeadowSlope/1/right1.jpg
+  SystemData/Panoramas/MeadowSlope/1/front1.jpg
+  SystemData/Panoramas/MeadowSlope/1/up1.jpg
+  SystemData/Panoramas/MeadowSlope/1/down1.jpg
+  SystemData/Panoramas/MeadowSlope/2/back1.jpg
+  SystemData/Panoramas/MeadowSlope/2/back2.jpg
+  SystemData/Panoramas/MeadowSlope/2/back3.jpg
+  SystemData/Panoramas/MeadowSlope/2/back4.jpg
+  SystemData/Panoramas/MeadowSlope/2/left1.jpg
+  SystemData/Panoramas/MeadowSlope/2/left2.jpg
+  SystemData/Panoramas/MeadowSlope/2/left3.jpg
+  SystemData/Panoramas/MeadowSlope/2/left4.jpg
+  SystemData/Panoramas/MeadowSlope/2/right1.jpg
+  SystemData/Panoramas/MeadowSlope/2/right2.jpg
+  SystemData/Panoramas/MeadowSlope/2/right3.jpg
+  SystemData/Panoramas/MeadowSlope/2/right4.jpg
+  SystemData/Panoramas/MeadowSlope/2/front1.jpg
+  SystemData/Panoramas/MeadowSlope/2/front2.jpg
+  SystemData/Panoramas/MeadowSlope/2/front3.jpg
+  SystemData/Panoramas/MeadowSlope/2/front4.jpg
+  SystemData/Panoramas/MeadowSlope/2/up1.jpg
+  SystemData/Panoramas/MeadowSlope/2/down1.jpg
+  SystemData/Panoramas/MeadowSlope/2/down2.jpg
+  SystemData/Panoramas/MeadowSlope/2/down3.jpg
+  SystemData/Panoramas/MeadowSlope/2/down4.jpg
+
+  SystemData/FileTerrains/Island/image.jpg
+  SystemData/FileTerrains/Island/texture.jpg
+
+  SystemData/Aeroplanes/ElectricNeoslope/Aeroplane.xml
+
+  SystemData/Aeroplanes/ThePlank/Aeroplane.xml
+  SystemData/Aeroplanes/ThePlank/ThePlank.ac
+
+  SystemData/Aeroplanes/ASW15/Aeroplane.xml
+  SystemData/Aeroplanes/ASW15/ASW15.ac
+
+  SystemData/Aeroplanes/Icarus/Aeroplane.xml
+  SystemData/Aeroplanes/Icarus/DLG.ac
+  SystemData/Aeroplanes/Icarus/DLG.png
+
+  SystemData/Aeroplanes/Notos/Aeroplane.xml
+  SystemData/Aeroplanes/Notos/Notos.ac
+
+  SystemData/Aeroplanes/MiniDLG/Aeroplane.xml
+  SystemData/Aeroplanes/MiniDLG/MiniDLG.ac
+
+  SystemData/Aeroplanes/GeeBee/Aeroplane.xml
+  SystemData/Aeroplanes/GeeBee/GeeBee.ac
+  SystemData/Aeroplanes/GeeBee/GeeBee.png
+
+  SystemData/Aeroplanes/Spitfire/Aeroplane.xml
+  SystemData/Aeroplanes/Spitfire/Wing.xml
+  SystemData/Aeroplanes/Spitfire/Spitfire.ac
+  SystemData/Aeroplanes/Spitfire/Spitfire.jpg
+
+  SystemData/Aeroplanes/SpitfirePSS/Aeroplane.xml
+  SystemData/Aeroplanes/SpitfirePSS/Wing.xml
+  SystemData/Aeroplanes/SpitfirePSS/Spitfire.ac
+
+  SystemData/Aeroplanes/SopwithPup/Aeroplane.xml
+  SystemData/Aeroplanes/SopwithPup/Wing.xml
+  SystemData/Aeroplanes/SopwithPup/SopwithPup.ac
+  SystemData/Aeroplanes/SopwithPup/SopwithPup.jpg
+
+  SystemData/Aeroplanes/Yak54/Aeroplane.xml
+  SystemData/Aeroplanes/Yak54/Wing.xml
+  SystemData/Aeroplanes/Yak54/Yak54.ac
+  SystemData/Aeroplanes/Yak54/Yak.jpg
+
+  SystemData/Aeroplanes/Minimoa/Aeroplane.xml
+  SystemData/Aeroplanes/Minimoa/WingTip.xml
+  SystemData/Aeroplanes/Minimoa/WingMid.xml
+  SystemData/Aeroplanes/Minimoa/S3021.xml
+  SystemData/Aeroplanes/Minimoa/Minimoa.ac
+  SystemData/Aeroplanes/Minimoa/Minimoa.jpg
+
+  SystemData/Aeroplanes/AcroBat/Aeroplane.xml
+  SystemData/Aeroplanes/AcroBat/AcroBat.ac
+  SystemData/Aeroplanes/AcroBat/Flame.png
+
+  SystemData/Aeroplanes/Magpie/Aeroplane.xml
+  SystemData/Aeroplanes/Magpie/Magpie.ac
+
+  SystemData/Aeroplanes/Quark/Aeroplane.xml
+  SystemData/Aeroplanes/Quark/SB96V.xml
+  SystemData/Aeroplanes/Quark/SB96VS.xml
+  SystemData/Aeroplanes/Quark/Quark.ac
+  SystemSettings/Controller/Quark.xml
+
+  SystemData/Aeroplanes/Quartz/Aeroplane.xml
+  SystemData/Aeroplanes/Quartz/Quartz.ac
+  SystemData/Aeroplanes/Quartz/QuartzDanny.ac
+  SystemData/Aeroplanes/Quartz/Quartz.png
+  SystemData/Aeroplanes/Quartz/QuartzDanny.png
+  SystemSettings/Controller/Quartz.xml
+
+  SystemData/Aeroplanes/Peacemaker/Aeroplane.xml
+  SystemData/Aeroplanes/Peacemaker/Peacemaker.ac
+
+  SystemData/Aeroplanes/Wasp/Aeroplane.xml
+  SystemData/Aeroplanes/Wasp/Wasp.ac
+  SystemData/Aeroplanes/Wasp/Texture.png
+  SystemSettings/Controller/Wasp.xml
+
+  SystemData/Aeroplanes/LeFish/Aeroplane.xml
+  SystemData/Aeroplanes/LeFish/LeFish.ac
+  SystemSettings/Controller/TwoSticksFourAxisGlider.xml
+
+[PaidIOSAssets] # Paid versions
+  <include "PaidAndroidAssets"> 
+  <include "FreeIOSAssets"> 
+
+[FreeAndroidAssetsJoystick]
+  <include "FreeAndroidAssets"> 
+  SystemSettings/Joystick/Android-XBox360.xml
+  SystemSettings/Joystick/Android-GameCommander.xml
+
+
+[PaidAndroidAssetsJoystick]
+  <include "PaidAndroidAssets"> 
+  SystemSettings/Joystick/Android-XBox360.xml
+  SystemSettings/Joystick/Android-GameCommander.xml
+
+[AmazonAssets]
+  <include "PaidAndroidAssetsJoystick"> 
+  SystemData/Menu/Amazon.png
+
+[WindowsAssets] # Paid versions
+  <include "PaidAndroidAssets"> 
+  <include "FreeIOSAssets"> 
+  SystemSettings/Joystick/Win10-XBox360.xml
+  SystemSettings/Joystick/Windows-XBox360.xml
+  SystemSettings/Joystick/Windows-GameCommander.xml
+
+[DevTestAssets]
+  <include "WindowsAssets"> 
+
+  SystemSettings/Aeroplane/ArduCopter.xml
+  SystemSettings/Thumbnails/ArduCopter.jpg
+  SystemData/Aeroplanes/ArduCopter/Aeroplane.xml
+  SystemData/Aeroplanes/ArduCopter/ArduCopter.ac
+  SystemData/Aeroplanes/ArduCopter/Texture.png
+
+  SystemSettings/Environment/Flat.xml
+
+  SystemSettings/Environment/Roundway.xml
+  SystemData/FileTerrains/Roundway/terrain.raw
+}
+
+deployments
+{
+  android-custom-activity="source.android.gamepadActivity"
+}
+
+# These options seem to be safe on iOS, and they provide a big speedup (on Android too)
+options
+{
+#  arm-arch=armv6
+#  arm-fpu=vfp
+  arm-float-abi=softfp
+}
+
+#Hub deployment options, please do not add anything below this line
+subproject
+{
+    (.)
+    PicaSim_deployment
+}

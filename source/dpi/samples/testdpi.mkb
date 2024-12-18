@@ -1,0 +1,36 @@
+#!/usr/bin/env i3d_make_build.py
+
+option 
+{
+	strict
+	s3e-data-dir="./data" 
+}
+assets
+{
+	(./data)
+}
+
+files
+{
+	[Source]
+	(./src)
+	testdpi.cpp
+}
+
+deployments
+{
+}
+
+packages
+{
+}
+
+subprojects
+{
+	#simplemenu
+	iwgraphics
+	../dpi.mkf
+}
+deployments
+{
+}

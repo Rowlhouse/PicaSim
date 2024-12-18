@@ -1,0 +1,30 @@
+#!/usr/bin/env mkb
+# Builder mkb file for the gamepad extension on windows
+platform WIN32
+
+options
+{
+    dll
+    x86
+    output-name="lib/win32/gamepad.dll"
+    output-name-debug="lib/win32/gamepad_d.dll"
+}
+
+library
+{
+	kernel32.lib 
+	user32.lib 
+	gdi32.lib 
+	winspool.lib 
+	comdlg32.lib 
+	advapi32.lib 
+	shell32.lib 
+	ole32.lib 
+	oleaut32.lib 
+	uuid.lib
+	winmm.lib
+}
+
+define S3E_BUILD_EXT
+
+subproject gamepad_build

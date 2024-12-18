@@ -1,0 +1,25 @@
+
+<Aerofoil
+  name="NACA0021"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.01"
+  CDStalled="1.7"
+  CM0="0.0"
+  CMPerDeg="0"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"
+  
+  useData="0"
+  
+  CL0 = "0.0"
+  CLPerDeg = "0.1"
+  positiveAttachedAngle = "9"
+  positiveStallRange = "20"
+  negativeAttachedAngle = "-9"
+  negativeStallRange = "-20"
+  dragBucketFactor = "0.0"
+  dragBucketLowerAngle = "-5.0"
+  dragBucketUpperAngle = "5.0"
+/>

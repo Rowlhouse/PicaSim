@@ -1,0 +1,330 @@
+<!--
+Peacemaker - 4 channel powered plane
+-->
+<?xml version="1.0" ?>
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="0.93"
+    wingChord="0.1"
+    CMRollFromY="0.0"
+    friction="0.5"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing
+      name="FuselageVertical"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0006"
+      numSections="1"
+      mass="0.08"
+
+      positionX="-0.05"
+      positionY="0.0"
+      positionZ="-0.024"
+      roll="90"
+      extentsX="0.49"
+      extentsY="0.055"
+      extentsZ="0.01"
+      wingAspectRatio="0.5"
+      render="true"
+      collide="true"
+    />
+
+
+    <Wing 
+      name="Left"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0015"
+      numSections="3"
+      mass="0.1"
+
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationY="-0.0"
+      extentsX="0.18"
+      extentsY="0.464"
+      extentsZ="0.01"
+      wingAspectRatio="6.0"
+      groundEffect="1"
+      collide="true"
+
+      CLPerDegree="0.022"
+      CDPerDegree="0.015"
+      CMPerDegree="-0.013"
+      flapFraction="0.36"
+      degreesPerControl="20"
+      
+      controlPerChannel6="0.5"      
+    />
+
+    <Wing
+      name="Right"
+      copy="Left"
+      mirror="1"
+    />
+
+    <Wing
+      name="Tail"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0006"
+      numSections="2"
+      mass="0.04"
+
+      positionX="-0.34"
+      positionY="-0.16"
+      positionZ="0.04"
+      extentsX="0.07"
+      extentsY="0.32"
+      extentsZ="0.01"
+      rotationY="0.0"
+      wingAspectRatio="4.0"
+      groundEffect="1"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.03"
+      CMPerDegree="-0.01"
+      flapFraction="0.5"
+      degreesPerControl="10"
+      
+      washFromEngineName="Engine"
+      washFromEngineFraction="0.2"
+
+      washFromWingName1="Left"
+      washFromWingName2="Right"
+      washFromWingFraction1="0.3"
+      washFromWingFraction2="0.3"
+      
+      controlPerChannel1="1"
+      controlRate="20"
+      collide="true"
+    />
+
+    <Wing
+      name="Fin"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0006"
+      numSections="2"
+      mass="0.04"
+
+      positionX="-0.3"
+      positionY="0.0"
+      positionZ="0.04"
+      rotationX="90.0"
+      rotationY="0"
+      extentsX="0.2"
+      extentsY="0.08"
+      extentsZ="0.01"
+      wingAspectRatio="2.0"
+      collide="true"
+    />
+
+    <PropellerEngine
+      name="Engine"
+      positionX="0.21"
+      positionZ="0.002"
+      rotationZ="-5"
+      rotationY="0"
+      
+      numBlades = "2"
+      radius = "0.115"
+      pitch = "0.1016"
+      bladeChord = "0.015"
+      CL0 = "0.5"
+      CLPerDegree = "0.1"
+      CD0="0.1"
+      CDInducedMultiplier="2.0"
+      stallAngle="9"
+      inertia = "0.00002"
+      maxTorque = "0.3"
+      maxRPM = "16000.0"
+      minRPM = "000.0"
+      frictionTorque ="0.1"
+
+      controlExp="1.0"
+      controlRate="2"
+      controlPerChannel3="1"
+
+      audioFile="SystemData/Audio/Motor22050Mono.raw"
+      audioStereo="0"
+      audioSampleRate="22050"
+      audioRadius="0.2"
+      audioMinVolume="0"
+      audioMaxVolume="1"
+      audioMinFreqScale="0.2"
+      audioMaxFreqScale="2"
+
+      colourX="0.5"
+      colourY="0.5"
+      colourZ="0.5"
+      colourW="0.1"
+    />
+
+    <Fuselage
+      name="Fuselage"
+      mass="0.0"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.3"
+      extentsY="0.05"
+      extentsZ="0.05"
+      CDX="1"
+      CDY="1"
+      CDZ="1"
+      render="true"
+      collide="false"
+    />
+  </Aerodynamics>
+
+  <Wheels>
+    <Wheel
+      name="Wheel"
+      positionX="0.12"
+      positionY="0.0"
+      positionZ="-0.02"
+      directionX="0.0"
+      directionY="0.0"
+      directionZ="-1.0"
+      axleX="0.0"
+      axleY="1.0"
+      axleZ="0.0"
+      suspensionRestLength = "0.12"
+      wheelRadius = "0.002"
+      suspensionStiffness = "300.0"
+      suspensionDampingRatio = "0.1"
+      suspensionCompressionDampingRatio = "0.1"
+      rollInfluence = "1.0"
+      wheelFriction = "0.5"
+      maxSuspensionTravelCm = "4.0"
+      maxSuspensionForce = "100"
+      brake = "1"
+    />
+  </Wheels>
+  
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+
+    <Shape
+      type="box"
+      name="canopy"
+      mass="0.0"
+      positionX="0.01"
+      positionY="0.0"
+      positionZ="0.03"
+      rotationY="0"
+      extentsX="0.2"
+      extentsY="0.01"
+      extentsZ="0.035"
+      render="true"
+      collide="false"
+    />
+
+    <Shape
+      type="box"
+      name="Nose weight"
+      mass="0.2"
+      positionX="0.17"
+      positionY="-0.03"
+      positionZ="0.002"
+      extentsX="0.03"
+      extentsY="0.03"
+      extentsZ="0.03"
+      render="true"
+      collide="false"
+    />
+
+    <Shape
+      type="box"
+      name="Tip weight"
+      mass="0.021"
+      positionX="0.074"
+      positionY="-0.42"
+      positionZ="0.0"
+      extentsX="0.01"
+      extentsY="0.03"
+      extentsZ="0.03"
+      render="true"
+      collide="false"
+    />
+
+    <Shape
+      type="box"
+      name="Tether point"
+      mass="0.0"
+      positionX="0.05"
+      positionY="0.46"
+      positionZ="0.0"
+      extentsX="0.03"
+      extentsY="0.03"
+      extentsZ="0.03"
+      render="true"
+      collide="false"
+    />
+
+  </Geometry>
+
+  <CrashShapes>
+    <CrashShape
+      type="box"
+      name="Prop"
+      engineName="Engine"
+      crashPropSpeed="30"
+      positionX="0.22"
+      positionY="0"
+      positionZ="0.002"
+      rotationX="45"
+      extentsX="0.01"
+      extentsY="0.1"
+      extentsZ="0.1"
+      />
+  </CrashShapes>
+</Physics>
+
+<Graphics>
+  <Model 
+    name="Standard" 
+    model3DS="SystemData/Aeroplanes/Peacemaker/Peacemaker.ac" 
+    modelScale="1.0" 
+    cullBackFace="true" 
+    unsetColourR="255" unsetColourG="255" unsetColourB="0"
+    offsetX="0" offsetY="0.0" offsetZ="0.0"/>
+
+  <ControlSurface
+    name="Elevator"
+    source="Tail"
+    angleMultiplier="1"
+    hingePoint1X="-0.154"
+    hingePoint1Y="0.039"
+    hingePoint1Z="0.343"
+    hingePoint2X="0.154"
+    hingePoint2Y="0.039"
+    hingePoint2Z="0.343"
+  />
+</Graphics>
+
+<Audio>
+  <AirFlow
+    file="SystemData/Audio/Glider22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="15"
+    mFreqScalePerSpeed=".125"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".02"
+    mVolPow="2"
+    mMaxVolume=".1"
+  />
+</Audio>
+

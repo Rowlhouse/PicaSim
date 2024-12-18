@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<AIControllers
+ mEnableDebugDraw="0"
+ mIncludeInCameraViews="0"
+ mCreateMaxNumControllers="1"
+ mLaunchDirection="-0.95"
+ mRandomColourOffset="1"
+ mLaunchSeparationDistance="1.5"
+ numAIControllers="1"
+ file_0="SystemSettings/Aeroplane/weasel.xml"
+ includeInCameraViews_0="1"
+ enableDebugDraw_0="1"
+ colourShift_0="0"
+ />

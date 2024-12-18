@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<LightingSettings 
+ mThumbnail="SystemSettings/Thumbnails/CloudyDaytime.jpg"
+ mTitle="Cloudy daytime"
+ mInfo=""
+ mSunBearingOffset="90" 
+ mThermalActivity="0.7"
+ mGamma="1.0" 
+ mSkyboxName="SystemData/Skyboxes/CloudyDaytime" />

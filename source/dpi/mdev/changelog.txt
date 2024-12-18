@@ -1,0 +1,11 @@
+dpi (1.0.0-10)
+
+  * dpi
+
+ -- gamemaster <gamemaster@101gr.com>  Thu, 12 Jan 2012 22:38:13 +0000
+
+dpi (1.0.0-9)
+
+  * dpi
+
+ -- gamemaster <gamemaster@101gr.com>  Thu, 12 Jan 2012 22:38:04 +0000

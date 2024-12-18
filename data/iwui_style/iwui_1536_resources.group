@@ -1,0 +1,7 @@
+CIwResGroup
+{
+	name	iwui_resources
+
+	.\textures\iwui_textures.group
+	.\fonts\font_1536.group
+}

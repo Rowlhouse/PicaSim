@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<Panorama
+  heightmapFile="SystemData/Panoramas/SnowyHills/Hills.raw"
+  nx="513"
+  dx="5.0"
+  minZ="-65"
+  maxZ="200"
+  cameraPosX="1206.24"
+  cameraPosY="1115.18"
+  cameraPosZ="191.357"
+  windBearing="-104.674"
+  plainHeight="50"
+/>

@@ -1,0 +1,218 @@
+<!--
+The Plank - High performance flying wing
+-->
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="1.21"
+    wingChord="0.3"
+    CMRollFromY="0.0"
+    friction="0.5"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing 
+      name="Left1"
+      aerofoil="SystemData/Aerofoils/Reflex/HS130"
+      numSections="3"
+      mass="0.07"
+
+      positionX="-0.045"
+      positionY="0.0"
+      positionZ="0.03"
+      yaw="0"
+      extentsX="0.17"
+      extentsY="0.31"
+      extentsZ="0.01"
+      wingAspectRatio="7.0"
+      groundEffect="1"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.01"
+      CMPerDegree="-0.01"
+      flapFraction="0.25"
+      degreesPerControl="20"
+      
+      controlPerChannel0="1"
+      controlPerChannel1="0.2"
+      controlDifferentialPerChannel1="0.2"
+    />
+
+    <Wing
+      name="Left2"
+      aerofoil="SystemData/Aerofoils/Reflex/HS130"
+      numSections="3"
+      mass="0.05"
+
+      positionX="-0.035"
+      positionY="0.31"
+      positionZ="0.03"
+      yaw="0"
+      roll="1"
+      extentsX="0.15"
+      extentsY="0.3"
+      extentsZ="0.01"
+      wingAspectRatio="7.0"
+      groundEffect="1"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.01"
+      CMPerDegree="-0.01"
+      flapFraction="0.27"
+      degreesPerControl="20"
+      
+      controlPerChannel0="1"
+      controlPerChannel1="0.2"
+      controlDifferentialPerChannel1="0.2"
+    />
+
+    <Wing
+      name="Right1"
+      copy="Left1"
+      mirror="1"
+    />
+
+    <Wing
+      name="Right2"
+      copy="Left2"
+      mirror="1"
+    />
+
+    <Wing
+      name="Fin"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0006"
+      numSections="2"
+      mass="0.015"
+
+      positionX="-0.23"
+      positionY="0.0"
+      positionZ="0.01"
+      rotationX="90.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.11"
+      extentsY="0.15"
+      extentsZ="0.01"
+      
+      wingAspectRatio="2.0"
+    />
+
+    <Fuselage
+      name="Fuselage"
+      mass="0.0"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.02"
+      extentsX="0.35"
+      extentsY="0.04"
+      extentsZ="0.04"
+      CDX="0.5"
+      CDY="1"
+      CDZ="1"
+      render="true"
+    />
+  
+  </Aerodynamics>
+
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+    <Shape
+      type="box"
+      mass="0.03"
+      positionX="-0.03"
+      positionY="0.0"
+      positionZ="0.03"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.48"
+      extentsY="0.04"
+      extentsZ="0.04"
+      render="true"
+    />
+
+    <Shape
+      type="box"
+      mass="0.082"
+      positionX="0.185"
+      positionY="0.0"
+      positionZ="0.02"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.05"
+      extentsY="0.05"
+      extentsZ="0.05"
+      render="true"
+      collide="false"
+    />
+  </Geometry>
+  
+</Physics>
+
+<Graphics>
+  <Model name="Standard" model3DS="SystemData/Aeroplanes/ThePlank/ThePlank.ac" modelScale="0.91" cullBackFace="true"/>
+
+  <ControlSurface
+    name="AileronLeft"
+    source="Left2"
+    angleMultiplier="-1"
+    hingePoint1X="-0.017"
+    hingePoint1Y="0.0305"
+    hingePoint1Z="0.120"
+    hingePoint2X="-0.682"
+    hingePoint2Y="0.039"
+    hingePoint2Z="0.055"
+  />
+
+  <ControlSurface
+    name="AileronRight"
+    source="Right2"
+    angleMultiplier="1"
+    hingePoint1X="0.017"
+    hingePoint1Y="0.0305"
+    hingePoint1Z="0.120"
+    hingePoint2X="0.682"
+    hingePoint2Y="0.039"
+    hingePoint2Z="0.055"
+  />
+
+</Graphics>
+
+<Audio>
+  <AirFlow
+    file="SystemData/Audio/Glider22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="5"
+    mFreqScalePerSpeed=".125"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume=".3"
+  />
+
+  <AirFlow
+    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="15"
+    mFreqScalePerSpeed=".1"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume="1"
+  />
+</Audio>

@@ -1,0 +1,14 @@
+#!/usr/bin/env mkb
+# Builder mkb file for the java portion of the dpiExt extension on android
+platform JAVA
+
+files
+{
+    (source/android)
+    dpiExt.java
+}
+
+librarypath "$MARMALADE_ROOT/s3e/deploy/plugins/android/android.jar"
+librarypath "$MARMALADE_ROOT/s3e/loader/android/s3e_release.jar"
+
+option output-name=lib/android/dpiExt.jar

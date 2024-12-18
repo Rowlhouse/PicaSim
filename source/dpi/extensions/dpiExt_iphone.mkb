@@ -1,0 +1,14 @@
+#!/usr/bin/env mkb
+# Builder mkb file for the dpiExt extension on iphone
+
+platform IPHONE
+
+options
+{
+    lib
+    output-name="lib/iphone/libdpiExt.a"
+    output-name-debug="lib/iphone/libdpiExt_d.a"
+}
+define S3E_BUILD_EXT
+
+subproject dpiExt_build

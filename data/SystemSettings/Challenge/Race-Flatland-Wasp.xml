@@ -1,0 +1,72 @@
+
+<ChallengeSettings
+  mTitle="Race with the Wasp"
+  mInfo="Fly between the markers as quickly as possible - don't crash!"
+  mThumbnail="SystemSettings/Thumbnails/Wasp.jpg"
+  mChallengeMode="1"
+  mChallengeID="100"
+  mReferenceTime="80"
+  mPreparationTime="30"
+  mThermalDensityOverride="0"
+  mWindSpeedOverride="0.0"
+  mAllowAeroplaneSettings="0"
+  mAllowWindStrengthSetting="0"
+  mAllowEnvironmentSettings="0"
+  mAeroplaneSettingsFile="SystemSettings/Aeroplane/Wasp.xml"
+  mEnvironmentSettingsFile="SystemSettings/Hidden/Flatland3DForest.xml"
+  mLightingSettingsFile="SystemSettings/Lighting/CloudyDaytime.xml"
+  mDefaultToChaseView="1"
+  mThermalSeed="12347"
+/>
+
+<Gates>
+  <Gate
+    mID="0"
+    mType="1"
+    mDraw1="1"
+    mPos1X="-67"
+    mPos1Y="-221"
+    mPos1Z="112"
+    mRadius ="3.0"
+    mHeight ="3.0"
+  />
+  <Gate
+    mID="1"
+    mType="1"
+    mDraw1="1"
+    mPos1X="2"
+    mPos1Y="-259"
+    mPos1Z="0"
+    mRadius ="5.0"
+  />
+  <Gate
+    mID="2"
+    mType="1"
+    mDraw1="1"
+    mPos1X="-100"
+    mPos1Y="-282"
+    mPos1Z="0"
+    mRadius ="5.0"
+  />
+  <Gate
+    mID="3"
+    mType="1"
+    mDraw1="1"
+    mPos1X="-80"
+    mPos1Y="-190"
+    mPos1Z="0"
+    mRadius ="5.0"
+  />
+</Gates>
+
+<Checkpoints mCheckpointForTimer="0">
+  <Checkpoint gateID="0"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="3"/>
+  <Checkpoint gateID="0"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="3"/>
+  <Checkpoint gateID="0"/>
+</Checkpoints>

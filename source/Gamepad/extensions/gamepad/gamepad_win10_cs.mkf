@@ -1,0 +1,15 @@
+# Builder mkf file for the c# portion of the gamepad extension on win10
+
+options
+{
+    csproj=gamepadManaged
+}
+
+files
+{
+    (source/win10)
+    AssemblyInfo.cs
+    gamepad.cs
+    IgamepadNative.cs
+    IgamepadShim.cs 
+}

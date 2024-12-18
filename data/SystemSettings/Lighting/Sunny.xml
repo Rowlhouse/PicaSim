@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<LightingSettings 
+ mThumbnail="SystemSettings/Thumbnails/Sunny.jpg"
+ mTitle="A sunny day - barely any cloud"
+ mInfo=""
+ mSunBearingOffset="90" 
+ mThermalActivity="1.0"
+ mGamma="1.0" 
+ mSkyboxName="SystemData/Skyboxes/Sunny" />

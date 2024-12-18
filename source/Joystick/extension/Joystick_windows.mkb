@@ -1,0 +1,14 @@
+#!/usr/bin/env mkb
+# Builder mkb file for the Joystick extension on windows
+platform WIN32
+
+options
+{
+    dll
+    x86
+    output-name="lib/win32/Joystick.dll"
+    output-name-debug="lib/win32/Joystick_d.dll"
+}
+define S3E_BUILD_EXT
+
+subproject Joystick_build

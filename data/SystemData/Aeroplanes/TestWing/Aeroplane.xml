@@ -1,0 +1,60 @@
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="2.0"
+  launchSpeed="15.0"
+/>
+<Physics>
+  <Dynamics
+    friction="0.5"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing 
+      name="Wing"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.1f"
+
+      positionX="0.0f"
+      positionY="-0.5f"
+      positionZ="0.0f"
+      rotationX="0.0f"
+      rotationY="0.0f"
+      rotationZ="0.0f"
+      extentsX="0.2f"
+      extentsY="1.0f"
+      extentsZ="0.01f"
+      wingAspectRatio="5"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.04"
+      CMPerDegree="-0.013"
+      flapFraction="0.25"
+      degreesPerControl="50"
+      
+      trimControl="1"
+
+      controlPerChannel0="0"
+      controlPerChannel1="0"
+      controlPerChannel2="0"
+      controlPerChannel3="0"
+    />
+
+  </Aerodynamics>
+
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+  </Geometry>
+  
+  <Graphics
+    renderComponents="true"
+  />
+</Physics>

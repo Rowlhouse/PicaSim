@@ -1,0 +1,13 @@
+
+options
+{
+	lib
+	
+	optimise-speed
+}
+
+subproject Bullet
+
+files
+{
+}

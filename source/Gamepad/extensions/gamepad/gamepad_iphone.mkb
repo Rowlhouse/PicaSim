@@ -1,0 +1,13 @@
+#!/usr/bin/env mkb
+# Builder mkb file for the gamepad extension on iphone
+platform IPHONE
+
+options
+{
+    lib
+    output-name="lib/iphone/libgamepad.a"
+    output-name-debug="lib/iphone/libgamepad_d.a"
+}
+define S3E_BUILD_EXT
+
+subproject gamepad_build

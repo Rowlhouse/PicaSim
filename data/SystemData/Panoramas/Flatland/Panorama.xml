@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<Panorama
+  heightmapFile="SystemData/Panoramas/Flatland/Flatland.raw"
+  nx="513"
+  dx="5.0"
+  minZ="-8.38"
+  maxZ="609.42"
+  cameraPosX="1200"
+  cameraPosY="1040"
+  cameraPosZ="113.11"
+  windBearing="0"
+  plainHeight="-100"
+/>

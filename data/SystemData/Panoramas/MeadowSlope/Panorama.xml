@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<Panorama
+  heightmapFile="SystemData/Panoramas/Meadow/Meadow.raw"
+  nx="513"
+  dx="5.0"
+  minZ="0"
+  maxZ="100"
+  cameraPosX="1800.29"
+  cameraPosY="1809.05"
+  cameraPosZ="90.61"
+  windBearing="-170"
+  plainHeight="-100"
+/>

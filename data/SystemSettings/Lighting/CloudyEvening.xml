@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<LightingSettings
+ mThumbnail="SystemSettings/Thumbnails/CloudyEvening.jpg"
+ mTitle="Cloudy evening"
+ mInfo=""
+ mSunBearingOffset="90" 
+ mThermalActivity="0.1"
+ mGamma="1.0" 
+ mSkyboxName="SystemData/Skyboxes/CloudyEvening" />
