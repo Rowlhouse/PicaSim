@@ -1,5 +1,15 @@
 # PicaSim
 
+This contains the complete source, including dependencies, for PicaSim flight simulator: https://rowlhouse.co.uk/PicaSim/
+
+Note that in order to build it, you will need Marmalade SDK (and a functional licence), which you won't have!
+
+If you want/are able to port PicaSim to a different framework, then feel free to branch the project, but I suggest contacting me in case there are others wanting to do ths same.
+
+Danny Chapman - picasimulator@gmail.com
+
+# Licence
+
 PicaSim's licence only covers PicaSim source code and some of the data it uses.
 
 The third party packages and assets will have their own licences which need to be abided by.
