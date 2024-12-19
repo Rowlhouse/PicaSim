@@ -8,7 +8,7 @@ If you want/are able to port PicaSim to a different framework, then feel free to
 
 Danny Chapman - picasimulator@gmail.com
 
-# Licence
+# Notes on the licence 
 
 PicaSim's licence only covers PicaSim source code and some of the data it uses.
 
