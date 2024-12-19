@@ -1,6 +1,6 @@
 # PicaSim
 
-This contains the complete source, including dependencies, for PicaSim flight simulator: https://rowlhouse.co.uk/PicaSim/
+This contains the complete source, including dependencies, for PicaSim flight simulator: https://rowlhouse.co.uk/PicaSim/ It also contains a few tools and pieces of infrastructure needed to build and deploy to Windows, Android and iOS. Sorry these aren't organised more neatly!
 
 Note that in order to build it, you will need Marmalade SDK (and a functional licence), which you won't have!
 
