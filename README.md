@@ -6,6 +6,8 @@ Note that in order to build it, you will need Marmalade SDK (and a functional li
 
 If you want/are able to port PicaSim to a different framework, then feel free to branch the project, but I suggest contacting me in case there are others wanting to do ths same.
 
+I have tried to make sure that credit/licences etc are indicated correctly - please let me know of any errors so that I can correct them.
+
 Danny Chapman - picasimulator@gmail.com
 
 # Notes on the licence 
