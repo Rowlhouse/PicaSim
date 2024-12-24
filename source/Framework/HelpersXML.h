@@ -11,9 +11,9 @@ bool readFromXML(TiXmlElement* elem, const char* name, unsigned char& value, siz
 bool readFromXML(TiXmlElement* elem, const char* name, int& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, float& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, std::string& value, size_t* index = 0);
-bool readFromXML(TiXmlElement* elem, const char* name, Vector3& value, size_t* index = 0);
-bool readFromXML(TiXmlElement* elem, const char* name, Vector4& value, size_t* index = 0);
-bool readFromXML(TiXmlElement* elem, const char* name, Transform& value, size_t* index = 0);
+bool readFromXML(TiXmlElement* elem, const char* name, glm::vec3& value, size_t* index = 0);
+bool readFromXML(TiXmlElement* elem, const char* name, glm::vec4& value, size_t* index = 0);
+bool readFromXML(TiXmlElement* elem, const char* name, glm::mat4& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, float* value, size_t* index = 0); ///< Array of 3 floats
 
 bool         readBoolFromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
@@ -21,17 +21,17 @@ unsigned int readUnsignedIntFromXML(TiXmlElement* elem, const char* name, size_t
 int          readIntFromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
 float        readFloatFromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
 std::string  readStringFromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
-Vector3      readVector3FromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
-Vector4      readVector4FromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
-Transform    readTransformFromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
+glm::vec3      readVector3FromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
+glm::vec4      readVector4FromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
+glm::mat4    readTransformFromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
 Colour       readColourFromXML(TiXmlElement* elem, const char* name, size_t* index = 0);
 
 template<typename T> void writeToXML(const T& v, TiXmlElement* element, const char* name, size_t* index = 0);
 void writeStringToXML(const std::string& v, TiXmlElement* element, const char* name, size_t* index = 0);
 void writeFloatToXML(const float& v, TiXmlElement* element, const char* name, size_t* index = 0);
-void writeVector3ToXML(const Vector3& v, TiXmlElement* element, const char* name, size_t* index = 0);
-void writeVector4ToXML(const Vector4& v, TiXmlElement* element, const char* name, size_t* index = 0);
-void writeTransformToXML(const Transform& t, TiXmlElement* element, const char* name, size_t* index = 0);
+void writeVector3ToXML(const glm::vec3& v, TiXmlElement* element, const char* name, size_t* index = 0);
+void writeVector4ToXML(const glm::vec4& v, TiXmlElement* element, const char* name, size_t* index = 0);
+void writeTransformToXML(const glm::mat4& t, TiXmlElement* element, const char* name, size_t* index = 0);
 
 // These assume existence of element, and that the string name is the same as the variable
 #define WRITE_ATTRIBUTE(v) element->SetAttribute(#v, v)

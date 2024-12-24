@@ -6,9 +6,12 @@
 #include "Shaders.h"
 #include "Viewport.h"
 
-#include <s3e.h>
-#include <IwGx.h>
-#include <IwGxFont.h>
+//#include <s3e.h>
+//#include <IwGx.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+//#include <IwGxFont.h>
+#include <SDL2/SDL_ttf.h>
 
 //---------------------------------------------------------------------------------------------------------------------
 void ButtonOverlay::Init(
@@ -26,7 +29,7 @@ void ButtonOverlay::Init(
   mEnableText = enableText;
   mColour[0] = mColour[1] = mColour[2] = 255;
   mColour[3] = alpha;
-  mTextColour = Vector4(1,1,1,1);
+  mTextColour = glm::vec4(1,1,1,1);
   mFont = 0;
   mTextAnchorV = ANCHOR_V_BOT;
   RenderManager::GetInstance().RegisterRenderOverlayObject(this, 0);
@@ -89,21 +92,21 @@ bool ButtonOverlay::IsPressed(uint32_t pressMask) const
   if (!mEnabled)
     return false;
 
-  uint32 displayWidth = IwGxGetScreenWidth(); 
-  uint32 displayHeight = IwGxGetScreenHeight(); 
+  uint32_t displayWidth = IwGxGetScreenWidth(); 
+  uint32_t displayHeight = IwGxGetScreenHeight(); 
 
   float paddingX = mPaddingFraction * (mX1 - mX0);
   float paddingY = mPaddingFraction * (mY1 - mY0);
 
-  for (uint32 iTouch = 0 ; iTouch != S3E_POINTER_TOUCH_MAX ; ++iTouch)
+  for (uint32_t iTouch = 0 ; iTouch != S3E_POINTER_TOUCH_MAX ; ++iTouch)
   {
     if (
       ( (pressMask & PRESS_DOWN) && s3ePointerGetTouchState(iTouch) & S3E_POINTER_STATE_DOWN) ||
       ( (pressMask & PRESS_CLICKED) && s3ePointerGetTouchState(iTouch) & S3E_POINTER_STATE_PRESSED)
       )
     {
-      int32 touchX = s3ePointerGetTouchX(iTouch);
-      int32 touchY = s3ePointerGetTouchY(iTouch);
+      int32_t touchX = s3ePointerGetTouchX(iTouch);
+      int32_t touchY = s3ePointerGetTouchY(iTouch);
 
       float x = (float) touchX / displayWidth;
       float y = 1.0f - (float) touchY / displayHeight;
@@ -252,7 +255,7 @@ void ButtonOverlay::UpdateText(const char* txt)
 
 
 //---------------------------------------------------------------------------------------------------------------------
-void ButtonOverlay::SetTextColour(const Vector4& colour)
+void ButtonOverlay::SetTextColour(const glm::vec4& colour)
 {
   mTextColour = colour;
 }
@@ -274,7 +277,7 @@ void ButtonOverlay::GxRender(int renderLevel, DisplayConfig& displayConfig)
   colour.a = ClampToRange((int) (mTextColour.w * 255), 0, 255);
   IwGxFontSetCol(colour);
   IwGxLightingOn();
-  uint16 fontHeight = mFont->GetHeight();
+  uint16_t fontHeight = mFont->GetHeight();
 
   float X1 = displayConfig.mLeft + mX1 * displayConfig.mWidth;
   float Y1 = displayConfig.mBottom + mY1 * displayConfig.mHeight;

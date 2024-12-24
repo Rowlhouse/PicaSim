@@ -16,58 +16,58 @@ public:
   void Terminate();
 
   // 3D drawing
-  void DrawPoint(const Vector3& pos, float size, const Vector3& colour);
-  void DrawPoint(const Transform& tm, float size, const Vector3& colour);
-  void DrawLine(const Vector3& from, const Vector3& to, const Vector3& colour);
-  void DrawArrow(const Vector3& from, const Vector3& to, const Vector3& colour);
-  void DrawCircle(const Vector3& centre, const Vector3& axis, float radius, const Vector3& colour, int divisions = 12);
-  void DrawVector(const Vector3& from, const Vector3& delta, const Vector3& colour);
-  void DrawBox(const Transform& centreTM, const Vector3& extents);
+  void DrawPoint(const glm::vec3& pos, float size, const glm::vec3& colour);
+  void DrawPoint(const glm::mat4& tm, float size, const glm::vec3& colour);
+  void DrawLine(const glm::vec3& from, const glm::vec3& to, const glm::vec3& colour);
+  void DrawArrow(const glm::vec3& from, const glm::vec3& to, const glm::vec3& colour);
+  void DrawCircle(const glm::vec3& centre, const glm::vec3& axis, float radius, const glm::vec3& colour, int divisions = 12);
+  void DrawVector(const glm::vec3& from, const glm::vec3& delta, const glm::vec3& colour);
+  void DrawBox(const glm::mat4& centreTM, const glm::vec3& extents);
 
   // 2D drawing
-  void DrawLine2D(const Vector2& from, const Vector2& to, const Vector3& colour);
-  void DrawPoint2D(const Vector2& pos, float size, const Vector3& colour);
-  void DrawText2D(const std::string& text, const Vector2& pos, const Vector3& colour);
+  void DrawLine2D(const glm::vec2& from, const glm::vec2& to, const glm::vec3& colour);
+  void DrawPoint2D(const glm::vec2& pos, float size, const glm::vec3& colour);
+  void DrawText2D(const std::string& text, const glm::vec2& pos, const glm::vec3& colour);
 
   // Graphs
-  void SetGraphProperties(uint graphID, size_t numPts, float minVal, float maxVal, Vector3 colour);
+  void SetGraphProperties(uint graphID, size_t numPts, float minVal, float maxVal, glm::vec3 colour);
   void DisableGraph(uint graphID);
   void AddGraphPoint(uint graphID, float val);
 
 private:
   struct Point
   {
-    Point(const Vector3& pos, float size, const Vector3& colour) : mSize(size), mColour(colour) {mTM.SetIdentity(); mTM.SetTrans(pos);}
-    Point(const Transform& tm, float size, const Vector3& colour) : mTM(tm), mSize(size), mColour(colour) {}
-    Transform mTM;
-    Vector3 mColour;
+    Point(const glm::vec3& pos, float size, const glm::vec3& colour) : mSize(size), mColour(colour) {glm::mat4 mTM = glm::mat4(1.0f); mTM = glm::translate(mTM, pos); }
+    Point(const glm::mat4& tm, float size, const glm::vec3& colour) : mTM(tm), mSize(size), mColour(colour) {}
+    glm::mat4 mTM;
+    glm::vec3 mColour;
     float mSize;
   };
   typedef std::vector<Point> Points; 
 
   struct Line
   {
-    Line(const Vector3& start, const Vector3& end, const Vector3& colour) : mStart(start), mEnd(end), mColour(colour) {}
-    Vector3 mStart;
-    Vector3 mEnd;
-    Vector3 mColour;
+    Line(const glm::vec3& start, const glm::vec3& end, const glm::vec3& colour) : mStart(start), mEnd(end), mColour(colour) {}
+    glm::vec3 mStart;
+    glm::vec3 mEnd;
+    glm::vec3 mColour;
   };
   typedef std::vector<Line> Lines;
 
   struct LinePoint2D
   {
-    LinePoint2D(const Vector2& pos, const Vector3& colour) : mPos(pos), mColour(colour) {}
-    Vector2 mPos;
-    Vector3 mColour;
+    LinePoint2D(const glm::vec2& pos, const glm::vec3& colour) : mPos(pos), mColour(colour) {}
+    glm::vec2 mPos;
+    glm::vec3 mColour;
   };
   typedef std::vector<LinePoint2D> LinePoints2D;
 
   struct Text2D
   {
-    Text2D(const std::string& text, const Vector2& pos, const Vector3& colour) : mText(text), mPos(pos), mColour(colour) {}
+    Text2D(const std::string& text, const glm::vec2& pos, const glm::vec3& colour) : mText(text), mPos(pos), mColour(colour) {}
     std::string mText;
-    Vector2 mPos;
-    Vector3 mColour;
+    glm::vec2 mPos;
+    glm::vec3 mColour;
   };
   typedef std::vector<Text2D> Texts2D;
 
@@ -82,7 +82,7 @@ private:
     typedef std::vector<GraphPoint> GraphPoints;
     GraphPoints mGraphPoints;
     float mGraphMinVal, mGraphValRange;
-    Vector3 mColour;
+    glm::vec3 mColour;
   };
 
   void RenderUpdate(class Viewport* viewport, int renderLevel) OVERRIDE;

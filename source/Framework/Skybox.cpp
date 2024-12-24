@@ -203,7 +203,7 @@ void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
     glUniform1i(skyboxShader->u_texture, 0);
   }
 
-  Vector3 pos = viewport->GetCamera()->GetPosition();
+  glm::vec3 pos = viewport->GetCamera()->GetPosition();
   esTranslatef(pos.x, pos.y, pos.z);
 
   esRotatef(-mOffset, 0, 0, 1);

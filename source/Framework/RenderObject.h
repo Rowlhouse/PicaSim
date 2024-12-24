@@ -14,7 +14,7 @@ public:
 
   virtual void RenderUpdate(class Viewport* viewport, int renderLevel) = 0;
 
-  virtual const Transform& GetTM() const {return Transform::g_Identity;}
+  virtual const glm::mat4& GetTM() const {return glm::mat4(1.0f);}
 
   virtual float GetRenderBoundingRadius() const {return FLT_MAX;}
 

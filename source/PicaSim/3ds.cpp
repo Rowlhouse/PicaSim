@@ -124,7 +124,7 @@ bool CLoad3DS::Import3DS(ThreeDSModel *pModel, const char *strFileName)
   // Make sure we have a valid file pointer (we found the file)
   if(!m_FilePointer) 
   {
-    IwAssertMsg(ROWLHOUSE, false, ("Failed to open file"));
+    assert(false && "Failed to open file");
     TRACE_FILE_IF(1) TRACE("Unable to find the file: %s!", strFileName);
     return false;
   }
@@ -218,11 +218,11 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
       // we give a warning to that problem.
       
       num_to_read = m_CurrentChunk->length - m_CurrentChunk->bytesRead;
-      IwAssert(ROWLHOUSE, num_to_read <= BUF_SIZE);
+      assert(num_to_read <= BUF_SIZE);
       TRACE_FILE_IF(2) TRACE("Reading VERSION: %d bytes", num_to_read);
       // Read the file version and add the bytes read to our bytesRead variable
       num_read = fread(&buf_union, 1, num_to_read, m_FilePointer);
-      IwAssert(ROWLHOUSE, num_read == num_to_read);
+      assert(num_read == num_to_read);
 
 #if defined(__ppc__)
       LSWAP(buf_union.val_uint);
@@ -247,11 +247,11 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
       ReadChunk(m_TempChunk);
       
       num_to_read = m_TempChunk->length - m_TempChunk->bytesRead;
-      IwAssert(ROWLHOUSE, num_to_read <= BUF_SIZE);
+      assert(num_to_read <= BUF_SIZE);
       TRACE_FILE_IF(2) TRACE("Reading OBJECTINFO: %d bytes", num_to_read);
       // Get the version of the mesh
       num_read = fread(&buf_union, 1, num_to_read, m_FilePointer);
-      IwAssert(ROWLHOUSE, num_read == num_to_read);
+      assert(num_read == num_to_read);
 #if defined(__ppc__)
       LSWAP(buf_union.val_uint);
 #endif
@@ -312,7 +312,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
       // Read past this chunk and add the bytes read to the byte counter
       num_read = fread(&buffer[0], 1, m_CurrentChunk->length - m_CurrentChunk->bytesRead, m_FilePointer);
       m_CurrentChunk->bytesRead += num_read;
-      IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
+      assert(num_read <= BUF_SIZE);
       break;
       
     default: 
@@ -323,7 +323,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
       TRACE_FILE_IF(2) TRACE("ProcessNextChunk - Ignoring chunk ID %x", m_CurrentChunk->ID);
       num_read = fread(&buffer[0], 1, m_CurrentChunk->length - m_CurrentChunk->bytesRead, m_FilePointer);
       m_CurrentChunk->bytesRead += num_read;
-      IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
+      assert(num_read <= BUF_SIZE);
       break;
     }
     
@@ -410,7 +410,7 @@ void CLoad3DS::ProcessNextObjectChunk(ThreeDSModel *pModel, ThreeDSObject *pObje
       TRACE_FILE_IF(2) TRACE("Ignoring chunk ID %x", m_CurrentChunk->ID);
       num_read = fread(&buffer[0], 1, m_CurrentChunk->length - m_CurrentChunk->bytesRead, m_FilePointer);
       m_CurrentChunk->bytesRead += num_read;
-      IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
+      assert(num_read <= BUF_SIZE);
       break;
     }
     
@@ -455,7 +455,7 @@ void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousC
       
       // Here we read in the material name
       num_to_read = m_CurrentChunk->length - m_CurrentChunk->bytesRead;
-      IwAssert(ROWLHOUSE, num_to_read <= 255);
+      assert(num_to_read <= 255);
       m_CurrentChunk->bytesRead += fread(material->strName, 1, num_to_read, m_FilePointer);
       TRACE_FILE_IF(2) TRACE("Loading material %s", material->strName);
       break;
@@ -486,7 +486,7 @@ void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousC
       
       // Here we read in the material's file name
       num_to_read = m_CurrentChunk->length - m_CurrentChunk->bytesRead;
-      IwAssert(ROWLHOUSE, num_to_read <= 255);
+      assert(num_to_read <= 255);
       m_CurrentChunk->bytesRead += fread(material->strFile, 1, num_to_read, m_FilePointer);
       TRACE_FILE_IF(2) TRACE("Texture file name = %s", material->strFile);
       break;
@@ -495,7 +495,7 @@ void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousC
       // Read past the ignored or unknown chunks
       num_read = fread(&buffer[0], 1, m_CurrentChunk->length - m_CurrentChunk->bytesRead, m_FilePointer);
       m_CurrentChunk->bytesRead += num_read;
-      IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
+      assert(num_read <= BUF_SIZE);
       TRACE_FILE_IF(2) TRACE("ProcessNextMaterialChunk - Ignoring chunk ID %x", m_CurrentChunk->ID);
       break;
     }
@@ -560,7 +560,7 @@ int CLoad3DS::GetString(char *pBuffer)
     // Read in a character at a time until we hit NULL.
     fread(pBuffer + index, 1, 1, m_FilePointer);
   }
-  IwAssert(ROWLHOUSE, index <= 255);
+  assert(index <= 255);
   
   // Return the string length, which is how many bytes we read in
   // (including the NULL)
@@ -690,12 +690,12 @@ void CLoad3DS::ReadUVCoordinates(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 #endif
   
   // Allocate memory to hold the UV coordinates
-  pObject->pTexVerts = new Vector2 [pObject->numTexVertex];
+  pObject->pTexVerts = new glm::vec2 [pObject->numTexVertex];
   
   // Read in the texture coodinates (an array 2 float)
   unsigned int num_to_read;
   num_to_read = pPreviousChunk->length - pPreviousChunk->bytesRead;
-  IwAssert(ROWLHOUSE, num_to_read <= pObject->numTexVertex * sizeof(Vector2));
+  assert(num_to_read <= pObject->numTexVertex * sizeof(glm::vec2));
   pPreviousChunk->bytesRead += fread(pObject->pTexVerts, 1, num_to_read, m_FilePointer);
 #if defined(__ppc__)
   for(int i=0; i<pObject->numTexVertex; i++) {
@@ -726,13 +726,13 @@ void CLoad3DS::ReadVertices(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 #endif
   
   // Allocate the memory for the verts and initialize the structure
-  pObject->pVerts = new Vector3 [pObject->numOfVerts];
-  memset(pObject->pVerts, 0, sizeof(Vector3) * pObject->numOfVerts);
+  pObject->pVerts = new glm::vec3 [pObject->numOfVerts];
+  memset(pObject->pVerts, 0, sizeof(glm::vec3) * pObject->numOfVerts);
   
   // Read in the array of vertices (an array of 3 floats)
   unsigned int num_to_read;
   num_to_read = pPreviousChunk->length - pPreviousChunk->bytesRead;
-  IwAssert(ROWLHOUSE, num_to_read <= pObject->numOfVerts * sizeof(Vector3));
+  assert(num_to_read <= pObject->numOfVerts * sizeof(glm::vec3));
   pPreviousChunk->bytesRead += fread(pObject->pVerts, 1, num_to_read, m_FilePointer);
   
   // Now we should have all of the vertices read in.  Because 3D
@@ -842,7 +842,7 @@ void CLoad3DS::ReadObjectMaterial(ThreeDSModel *pModel, ThreeDSObject *pObject, 
   // this chunk from the total length.
   num_read = fread(&buffer[0], 1, pPreviousChunk->length - pPreviousChunk->bytesRead, m_FilePointer);
   pPreviousChunk->bytesRead += num_read;
-  IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
+  assert(num_read <= BUF_SIZE);
 }            
 
 // *Note* 
@@ -860,9 +860,9 @@ void CLoad3DS::ReadObjectMaterial(ThreeDSModel *pModel, ThreeDSObject *pObject, 
 #define Mag(Normal) (sqrt(Normal.x*Normal.x + Normal.y*Normal.y + Normal.z*Normal.z))
 
 // This calculates a vector between 2 points and returns the result
-Vector3 Vector(Vector3 vPoint1, Vector3 vPoint2)
+glm::vec3 Vector(glm::vec3 vPoint1, glm::vec3 vPoint2)
 {
-  Vector3 vVector;                  // The variable to hold the resultant vector
+  glm::vec3 vVector;                  // The variable to hold the resultant vector
   
   vVector.x = vPoint1.x - vPoint2.x;            // Subtract point1 and point2 x's
   vVector.y = vPoint1.y - vPoint2.y;            // Subtract point1 and point2 y's
@@ -872,9 +872,9 @@ Vector3 Vector(Vector3 vPoint1, Vector3 vPoint2)
 }
 
 // This adds 2 vectors together and returns the result
-Vector3 AddVector(Vector3 vVector1, Vector3 vVector2)
+glm::vec3 AddVector(glm::vec3 vVector1, glm::vec3 vVector2)
 {
-  Vector3 vResult;                // The variable to hold the resultant vector
+  glm::vec3 vResult;                // The variable to hold the resultant vector
   
   vResult.x = vVector2.x + vVector1.x;        // Add Vector1 and Vector2 x's
   vResult.y = vVector2.y + vVector1.y;        // Add Vector1 and Vector2 y's
@@ -884,9 +884,9 @@ Vector3 AddVector(Vector3 vVector1, Vector3 vVector2)
 }
 
 // This divides a vector by a single number (scalar) and returns the result
-Vector3 DivideVectorByScaler(Vector3 vVector1, float Scaler)
+glm::vec3 DivideVectorByScaler(glm::vec3 vVector1, float Scaler)
 {
-  Vector3 vResult;                 // The variable to hold the resultant vector
+  glm::vec3 vResult;                 // The variable to hold the resultant vector
   
   vResult.x = vVector1.x / Scaler;         // Divide Vector1's x value by the scaler
   vResult.y = vVector1.y / Scaler;         // Divide Vector1's y value by the scaler
@@ -896,9 +896,9 @@ Vector3 DivideVectorByScaler(Vector3 vVector1, float Scaler)
 }
 
 // This returns the cross product between 2 vectors
-Vector3 Cross(Vector3 vVector1, Vector3 vVector2)
+glm::vec3 Cross(glm::vec3 vVector1, glm::vec3 vVector2)
 {
-  Vector3 vCross;                       // The vector to hold the cross product
+  glm::vec3 vCross;                       // The vector to hold the cross product
   // Get the X value
   vCross.x = ((vVector1.y * vVector2.z) - (vVector1.z * vVector2.y));
   // Get the Y value
@@ -910,7 +910,7 @@ Vector3 Cross(Vector3 vVector1, Vector3 vVector2)
 }
 
 // This returns the normal of a vector
-Vector3 Normalize(Vector3 vNormal)
+glm::vec3 Normalize(glm::vec3 vNormal)
 {
   double Magnitude;                     // This holds the magitude            
   
@@ -932,7 +932,7 @@ Vector3 Normalize(Vector3 vNormal)
 void CLoad3DS::ComputeNormals(ThreeDSModel *pModel)
 {
   TRACE_FILE_IF(2) TRACE("pModel = %p", pModel);
-  Vector3 vVector1, vVector2, vNormal, vPoly[3];
+  glm::vec3 vVector1, vVector2, vNormal, vPoly[3];
   
   // If there are no objects, we can skip this part
   if(pModel->mMaterials.empty())
@@ -957,9 +957,9 @@ void CLoad3DS::ComputeNormals(ThreeDSModel *pModel)
     ThreeDSObject *pObject = pModel->mObjects[index];
     
     // Here we allocate all the memory we need to calculate the normals
-    Vector3 *pNormals        = new Vector3 [pObject->numOfFaces];
-    Vector3 *pTempNormals    = new Vector3 [pObject->numOfFaces];
-    pObject->pNormals        = new Vector3 [pObject->numOfVerts];
+    glm::vec3 *pNormals        = new glm::vec3 [pObject->numOfFaces];
+    glm::vec3 *pTempNormals    = new glm::vec3 [pObject->numOfFaces];
+    pObject->pNormals        = new glm::vec3 [pObject->numOfVerts];
     
     // Go though all of the faces of this object
     int i;
@@ -991,8 +991,8 @@ void CLoad3DS::ComputeNormals(ThreeDSModel *pModel)
     
     //////////////// Now Get The Vertex Normals /////////////////
     
-    Vector3 vSum(0.0, 0.0, 0.0);
-    Vector3 vZero = vSum;
+    glm::vec3 vSum(0.0, 0.0, 0.0);
+    glm::vec3 vZero = vSum;
     int shared=0;
     
     for (i = 0; i < pObject->numOfVerts; i++)    // Go through all of the vertices

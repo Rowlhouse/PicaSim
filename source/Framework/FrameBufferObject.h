@@ -1,7 +1,10 @@
 #ifndef FRAMEBUFFEROBJECT_H
 #define FRAMEBUFFEROBJECT_H
 
-#include "IwGL.h"
+//#include "IwGL.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
 
 // FrameBufferObject encapsulates an OpenGL ES framebuffer object
 class FrameBufferObject

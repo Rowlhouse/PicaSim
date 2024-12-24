@@ -63,7 +63,7 @@ void Aeroplane::Init(const AeroplaneSettings& as,
     doc = TiXmlDocument(mAeroplaneSettings.mName + "/Aeroplane.xml");
     ok = doc.LoadFile();
   }
-  IwAssert(ROWLHOUSE, ok);
+  assert(ok);
 
   // Work out the start transform based on the basic position plus an offset in the configuration file, relative to the wind
   TiXmlHandle handle = doc.FirstChild("Misc");

@@ -1,7 +1,10 @@
 #include "FrameBufferObject.h"
 #include "Graphics.h"
 
-#include <IwDebug.h>
+//#include <IwDebug.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include <GL/glew.h>
 
 //---------------------------------------------------------------------------------------------------------------------
 FrameBufferObject::FrameBufferObject(int width, int height, GLenum format, GLenum type)

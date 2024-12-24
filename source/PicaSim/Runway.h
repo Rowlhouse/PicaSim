@@ -3,8 +3,13 @@
 
 #include "Framework.h"
 
-#include <IwGeom.h> 
-#include <IwGx.h>
+//#include <IwGeom.h> 
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>  // Pour les vecteurs 3D
+#include <glm/mat4x4.hpp>  // Pour les matrices 4x4
+//#include <IwGx.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 
 #include <vector>
 

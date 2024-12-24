@@ -1,9 +1,12 @@
 #include "Viewport.h"
 #include "RenderManager.h"
 
-#include <IwGL.h>
-#include <IwGx.h>
-#include <Iw2D.h>
+//#include <IwGL.h>
+//#include <IwGx.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
+//#include <Iw2D.h>
 
 //----------------------------------------------------------------------------------------------------------------------
 Viewport::Viewport(float left, float bottom, float width, float height, Camera* camera)

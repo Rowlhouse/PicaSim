@@ -1,9 +1,10 @@
 #include "AudioManager.h"
 #include "Trace.h"
 
-#include <IwUtil.h>
-#include <s3eSound.h>
-#include <s3eAtomic.h>
+//#include <IwUtil.h>
+//#include <s3eSound.h>
+#include <SDL2/SDL_mixer.h>
+//#include <s3eAtomic.h>
 #include <unistd.h>
 #include <limits>
 
@@ -15,7 +16,7 @@ static float filterAmount = 0.7f;
 #define USE_FILTERx
 
 //---------------------------------------------------------------------------------------------------------------------
-S3E_INLINE int16 ClipToInt16(int32 sval)
+inline int16_t ClipToInt16(int32_t sval)
 {
   enum
   {
@@ -34,17 +35,17 @@ S3E_INLINE int16 ClipToInt16(int32 sval)
       if (sval < minval)
         sval = minval;
   }
-  return (int16)sval;
+  return (int16_t)sval;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 AudioManager::AudioCallbackMonoSource(void* sys, void* user)
+int32_t AudioManager::AudioCallbackMonoSource(void* sys, void* user)
 {
   s3eSoundGenAudioInfo* info = (s3eSoundGenAudioInfo*)sys;
   AudioManager::Channel* channel = (AudioManager::Channel*) user;
 
   info->m_EndSample = S3E_FALSE;
-  int16* target = (int16*)info->m_Target;
+  int16_t* target = (int16_t*)info->m_Target;
 
   int outputSampleSize = info->m_Stereo ? 2 : 1;
   int outputSamplesPlayed = 0;
@@ -98,8 +99,8 @@ int32 AudioManager::AudioCallbackMonoSource(void* sys, void* user)
     IwAssert(ROWLHOUSE, inputPlaybackPosNext >= 0 && inputPlaybackPosNext < channel->mSound->mSoundSamples);
 
     // copy 16bit sample directly from input buffer
-    int16 yInput  = channel->mSound->mSoundData[inputPlaybackPos];
-    int16 yInputNext  = channel->mSound->mSoundData[inputPlaybackPosNext];
+    int16_t yInput  = channel->mSound->mSoundData[inputPlaybackPos];
+    int16_t  yInputNext  = channel->mSound->mSoundData[inputPlaybackPosNext];
 
 #ifdef USE_FILTER
     float origYF = Interpolate(float(yInput), float(yInputNext), inputPlayBackPosFrac);
@@ -114,18 +115,18 @@ int32 AudioManager::AudioCallbackMonoSource(void* sys, void* user)
 
     if (info->m_Stereo)
     {
-      int32 yLeft = (int32) (yF * leftVol);
-      int32 yRight = (int32) (yF * rightVol);
-      int16 origYOutputLeft = info->m_Mix ? *target : 0;
-      int16 origYOutputRight =  info->m_Mix ? *(target+1) : 0;
+      int32_t yLeft = (int32_t) (yF * leftVol);
+      int32_t yRight = (int32_t) (yF * rightVol);
+      int16_t origYOutputLeft = info->m_Mix ? *target : 0;
+      int16_t origYOutputRight =  info->m_Mix ? *(target+1) : 0;
       *target++ = ClipToInt16(yLeft + origYOutputLeft);
       *target++ = ClipToInt16(yRight + origYOutputRight);
     }
     else
     {
       float vol = (leftVol + rightVol) * 0.5f;
-      int32 y = (int32) (yF * vol);
-      int16 origYOutput = info->m_Mix ? *target : 0;
+      int32_t y = (int32_t) (yF * vol);
+      int16_t origYOutput = info->m_Mix ? *target : 0;
       *target++ = ClipToInt16(origYOutput + y);
     }
 
@@ -142,7 +143,7 @@ int32 AudioManager::AudioCallbackMonoSource(void* sys, void* user)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
+int32_t AudioManager::AudioCallbackStereoSource(void* sys, void* user)
 {
   AudioManager::Channel* channel = (AudioManager::Channel*) user;
   if (!channel->mSound->mStereo)
@@ -151,7 +152,7 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
   s3eSoundGenAudioInfo* info = (s3eSoundGenAudioInfo*)sys;
 
   info->m_EndSample = S3E_FALSE;
-  int16* target = (int16*)info->m_Target;
+  int16_t* target = (int16_t*)info->m_Target;
 
   int outputSampleSize = info->m_Stereo ? 2 : 1;
   int outputSamplesPlayed = 0;
@@ -177,7 +178,7 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
   channel->mCurrentRightVolF = channel->mRightVolF;
 
   float numSoundSamplesF = float(channel->mSound->mSoundSamples);
-  IwAssert(ROWLHOUSE, channel->mPlaybackPosF >= 0.0f && channel->mPlaybackPosF == channel->mPlaybackPosF);
+  assert(channel->mPlaybackPosF >= 0.0f && channel->mPlaybackPosF == channel->mPlaybackPosF);
 
   // Loop through samples (mono) or sample-pairs (stereo) required.
   // If stereo, we copy the 16bit sample for each l/r channel and do per
@@ -208,15 +209,15 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
     int inputPlaybackPosLeftNext = (inputPlaybackPosLeft + 2 ) % channel->mSound->mSoundSamples;
     int inputPlaybackPosRightNext = (inputPlaybackPosRight + 2) % channel->mSound->mSoundSamples;
 
-    IwAssert(ROWLHOUSE, inputPlaybackPosLeft >= 0 && inputPlaybackPosLeft < channel->mSound->mSoundSamples);
-    IwAssert(ROWLHOUSE, inputPlaybackPosRight >= 0 && inputPlaybackPosRight < channel->mSound->mSoundSamples);
+    assert(inputPlaybackPosLeft >= 0 && inputPlaybackPosLeft < channel->mSound->mSoundSamples);
+    assert(inputPlaybackPosRight >= 0 && inputPlaybackPosRight < channel->mSound->mSoundSamples);
 
     // copy left (and right) 16bit sample directly from input buffer
-    int16 yInputLeft  = channel->mSound->mSoundData[inputPlaybackPosLeft];
-    int16 yInputRight = channel->mSound->mSoundData[inputPlaybackPosRight];
+    int16_t yInputLeft  = channel->mSound->mSoundData[inputPlaybackPosLeft];
+    int16_t yInputRight = channel->mSound->mSoundData[inputPlaybackPosRight];
 
-    int16 yInputLeftNext  = channel->mSound->mSoundData[inputPlaybackPosLeftNext];
-    int16 yInputRightNext = channel->mSound->mSoundData[inputPlaybackPosRightNext];
+    int16_t yInputLeftNext  = channel->mSound->mSoundData[inputPlaybackPosLeftNext];
+    int16_t yInputRightNext = channel->mSound->mSoundData[inputPlaybackPosRightNext];
 
 #ifdef USE_FILTER
     float origYLeftF = Interpolate(float(yInputLeft), float(yInputLeftNext), inputPlayBackPosFrac);
@@ -235,28 +236,28 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
 
     if (info->m_Stereo)
     {
-      int32 yLeft = (int32) (yLeftF * leftVol);
-      int32 yRight = (int32) (yRightF * rightVol);
-      int16 origYOutputLeft = info->m_Mix ? *target : 0;
-      int16 origYOutputRight =  info->m_Mix ? *(target+1) : 0;
+      int32_t yLeft = (int32_t) (yLeftF * leftVol);
+      int32_t yRight = (int32_t) (yRightF * rightVol);
+      int16_t origYOutputLeft = info->m_Mix ? *target : 0;
+      int16_t origYOutputRight =  info->m_Mix ? *(target+1) : 0;
       *target++ = ClipToInt16(yLeft + origYOutputLeft);
       *target++ = ClipToInt16(yRight + origYOutputRight);
     }
     else
     {
       float vol = (leftVol + rightVol) * 0.5f;
-      int32 y = (int32) ((yLeftF + yRightF) * vol);
-      int16 origYOutput = info->m_Mix ? *target : 0;
+      int32_t y = (int32_t) ((yLeftF + yRightF) * vol);
+      int16_t origYOutput = info->m_Mix ? *target : 0;
       *target++ = ClipToInt16(origYOutput + y);
     }
 
     ++outputSamplesPlayed;
   }
 
-  IwAssert(ROWLHOUSE, channel->mPlaybackPosF == channel->mPlaybackPosF);
+  assert(channel->mPlaybackPosF == channel->mPlaybackPosF);
   if (channel->mSound->mLoop && channel->mPlaybackPosF >= numSoundSamplesF)
     channel->mPlaybackPosF -= numSoundSamplesF;
-  IwAssert(ROWLHOUSE, channel->mPlaybackPosF == channel->mPlaybackPosF);
+  assert(channel->mPlaybackPosF == channel->mPlaybackPosF);
 
   //static int count = 0;
   //TRACE_FILE_IF(1) TRACE("%d Played %d stereo source samples on sound channel %p mix = %d stereo = %d buffer = %p, pos = %f deltaPlaybackPos = %f", 
@@ -270,7 +271,7 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
 void AudioManager::Init()
 {
   TRACE_FILE_IF(1) TRACE("AudioManager::Init()");
-  IwAssert(ROWLHOUSE, mInstance == 0);
+  assert(mInstance == 0);
   mInstance = new AudioManager;
 }
 
@@ -278,7 +279,7 @@ void AudioManager::Init()
 void AudioManager::Terminate()
 {
   TRACE_FILE_IF(1) TRACE("AudioManager::Terminate()");
-  IwAssert(ROWLHOUSE, mInstance);
+  assert(mInstance);
   delete mInstance;
   mInstance = 0;
 }
@@ -293,7 +294,7 @@ AudioManager::AudioManager()
     gPlaybackFrequency = playbackFrequency;
 
   mTM.SetIdentity();
-  mVelocity = Vector3(0,0,0);
+  mVelocity = glm::vec3(0,0,0);
 
   mNumAvailableChannels = s3eSoundGetInt(S3E_SOUND_NUM_CHANNELS);
   if (mNumAvailableChannels <= 0)
@@ -346,7 +347,7 @@ void AudioManager::Update(float deltaTime)
 void AudioManager::UpdateChannel(SoundChannel soundChannel, float deltaTime)
 {
   Channel& channel = mChannels[soundChannel];
-  IwAssert(ROWLHOUSE, channel.mInUse);
+  assert(channel.mInUse);
 
   bool setVolumeToZero = false;
   if (s3eSoundGetInt(S3E_SOUND_AVAILABLE) == 0)
@@ -361,13 +362,13 @@ void AudioManager::UpdateChannel(SoundChannel soundChannel, float deltaTime)
   }
   else if (channel.mUse3D)
   {
-    Vector3 deltaToSource = channel.mSourcePosition - mTM.GetTrans();
-    float distToSource = deltaToSource.GetLength();
-    Vector3 dirToSource;
+    glm::vec3 deltaToSource = channel.mSourcePosition - glm::vec3(mTM[3]);
+    float distToSource = glm::length(deltaToSource);
+    glm::vec3 dirToSource;
     if (distToSource > 0.0000001f)
       dirToSource = deltaToSource / distToSource;
     else
-      dirToSource = mTM.RowX();
+      dirToSource = mTM[0];
 
     // Fade in/out
     float deltaVol = (channel.mTargetVolumeScaleF * mVolScale) - channel.mVolumeScale;
@@ -387,7 +388,7 @@ void AudioManager::UpdateChannel(SoundChannel soundChannel, float deltaTime)
     float rightVol = channel.mVolumeScale * amplitudeScale;
 
     // Left/right amplitude
-    float sourceOnLeft = dirToSource.Dot(mTM.RowY());
+    float sourceOnLeft = glm::dot(dirToSource, glm::vec3(mTM[1]));
     leftVol *= sqrtf(1.0f + sourceOnLeft);
     rightVol *= sqrtf(1.0f - sourceOnLeft);
 
@@ -396,8 +397,8 @@ void AudioManager::UpdateChannel(SoundChannel soundChannel, float deltaTime)
     channel.mRightVolF = Minimum(rightVol, 1.0f);
 
     // Doppler. Listener looks along X
-    float sourceSpeed = channel.mSourceVelocity.Dot(mTM.RowX());
-    float listenerSpeed = mVelocity.Dot(mTM.RowX());
+    float sourceSpeed = glm::dot(channel.mSourceVelocity,glm::vec3(mTM[0]));
+    float listenerSpeed = glm::dot(mVelocity,glm::vec3(mTM[0]));
     const float c = 330.0f;
     const float maxSourceSpeed = c * 0.9f;
     if (fabsf(sourceSpeed) > maxSourceSpeed)
@@ -405,7 +406,7 @@ void AudioManager::UpdateChannel(SoundChannel soundChannel, float deltaTime)
 
     // Needs atomic
     float freqScale = channel.mFrequencyScale * (c + listenerSpeed) / (c + sourceSpeed);
-    IwAssert(ROWLHOUSE, freqScale > 0.0f);
+    assert(freqScale > 0.0f);
     freqScale = Maximum(freqScale, 0.1f);
     channel.mPlaybackFrequencyMultiplierF = freqScale;
 
@@ -473,16 +474,16 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
   mNormaliseOnLoad = normaliseOnLoad;
 
   s3eFile *fileHandle = s3eFileOpen(soundFile, "rb");
-  IwAssert(ROWLHOUSE, fileHandle);
+  assert(fileHandle);
   if (fileHandle)
   {
-    int32 fileNumBytes = s3eFileGetSize(fileHandle);
+    int32_t fileNumBytes = s3eFileGetSize(fileHandle);
     TRACE_FILE_IF(1) TRACE("Reading sound file - %d bytes", fileNumBytes);
     mSoundSamples = fileNumBytes/2; // reading 16 bit values
-    mSoundData = new int16[mSoundSamples];
+    mSoundData = new int16_t[mSoundSamples];
     memset(mSoundData, 0, fileNumBytes);
     unsigned char* buffer = (unsigned char*) mSoundData;
-    int32 result = s3eFileRead(buffer, fileNumBytes, 1, fileHandle);
+    int32_t result = s3eFileRead(buffer, fileNumBytes, 1, fileHandle);
     if (result != 1)
     {
       s3eFileError error = s3eFileGetError();
@@ -491,23 +492,23 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     s3eFileClose(fileHandle);
 
     // Now apply a low pass filter to remove frequencies above half the Nyquist frequency
-    int16 nSamples = (int16) (0.5f + mSampleFrequency / gPlaybackFrequency);
+    int16_t nSamples = (int16_t) (0.5f + mSampleFrequency / gPlaybackFrequency);
     if (nSamples > 0)
     {
-      int16 *filteredSoundData = new int16[mSoundSamples];
-      for (int32 i = 0 ; i != mSoundSamples ; ++i)
+      int16_t *filteredSoundData = new int16_t[mSoundSamples];
+      for (int32_t i = 0 ; i != mSoundSamples ; ++i)
       {
         int total = mSoundData[i];
         if (stereo)
         {
-          for (int32 j = 1 ; j != nSamples ; ++j)
+          for (int32_t j = 1 ; j != nSamples ; ++j)
           {
             total += mSoundData[(mSoundSamples + (i - j)*2) % mSoundSamples];
           }
         }
         else
         {
-          for (int32 j = 1 ; j != nSamples ; ++j)
+          for (int32_t j = 1 ; j != nSamples ; ++j)
           {
             total += mSoundData[(mSoundSamples + i - j) % mSoundSamples];
           }
@@ -522,8 +523,8 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     // Normalise
     if (normaliseOnLoad)
     {
-      int16 maxLevel = 0;
-      for (int32 i = 0 ; i != mSoundSamples ; ++i)
+      int16_t maxLevel = 0;
+      for (int32_t i = 0 ; i != mSoundSamples ; ++i)
       {
         if (mSoundData[i] > maxLevel)
           maxLevel = mSoundData[i];
@@ -532,8 +533,8 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
       }
       if (maxLevel > 0)
       {
-        float scale = std::numeric_limits<int16>::max() / (float) maxLevel;
-        for (int32 i = 0 ; i != mSoundSamples ; ++i)
+        float scale = std::numeric_limits<int16_t>::max() / (float) maxLevel;
+        for (int32_t i = 0 ; i != mSoundSamples ; ++i)
         {
           mSoundData[i] = ClipToInt16((int) (mSoundData[i] * scale));
         }
@@ -543,13 +544,13 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     static bool output = false;
     if (output)
     {
-      int32 maxSamples = 2048;
-      for (int32 i = 0 ; i != std::min(mSoundSamples, maxSamples) ; ++i)
+      int32_t maxSamples = 2048;
+      for (int32_t i = 0 ; i != std::min(mSoundSamples, maxSamples) ; ++i)
       {
-        int16 left = mSoundData[i];
+        int16_t left = mSoundData[i];
         if (stereo)
         {
-          int16 right = mSoundData[++i];
+          int16_t right = mSoundData[++i];
           TRACE_FILE_IF(1) TRACE("%d %d", left, right);
         }
         else
@@ -628,7 +629,7 @@ AudioManager::Sound* AudioManager::LoadSound(const char* soundFile, int sampleFr
 //---------------------------------------------------------------------------------------------------------------------
 void AudioManager::UnloadSound(Sound* sound)
 {
-  IwAssert(ROWLHOUSE, sound);
+  assert(sound);
   if (!sound)
     return;
 
@@ -667,11 +668,11 @@ AudioManager::SoundChannel AudioManager::AllocateSoundChannel(float soundSourceR
     TRACE_FILE_IF(1) TRACE("Failed to get a sound channel");
     return -1;
   }
-  IwAssert(ROWLHOUSE, soundChannel < mNumAvailableChannels);
+  assert(soundChannel < mNumAvailableChannels);
 
   // Prepare our data
   Channel& channel = mChannels[soundChannel];
-  IwAssert(ROWLHOUSE, channel.mInUse == false);
+  assert(channel.mInUse == false);
   channel.mInUse = true;
   channel.mUse3D = use3D;
   channel.mPlaybackPosF = 0.0f;
@@ -682,10 +683,10 @@ AudioManager::SoundChannel AudioManager::AllocateSoundChannel(float soundSourceR
   channel.mVolumeScale = 0.0f;
   channel.mLeftVolF = 0.0f;
   channel.mRightVolF = 0.0f;
-  channel.mSourcePosition = Vector3(0,0,0);
+  channel.mSourcePosition = glm::vec3(0,0,0);
   channel.mPlaybackFrequencyMultiplierF = 1.0f;
   SetChannelTargetVolumeScale(soundChannel, 1.0f);
-  SetChannelPositionAndVelocity(soundChannel, Vector3(0,0,0), Vector3(0,0,0));
+  SetChannelPositionAndVelocity(soundChannel, glm::vec3(0,0,0), glm::vec3(0,0,0));
   UpdateChannel(soundChannel, 0.0f);
 
   // Set the volume to 0 so that no click is audible after unregistering the callbacks later
@@ -703,7 +704,7 @@ AudioManager::SoundChannel AudioManager::AllocateSoundChannel(float soundSourceR
 void AudioManager::ReleaseSoundChannel(AudioManager::SoundChannel soundChannel)
 {
   TRACE_FILE_IF(1) TRACE("AudioManager::ReleaseSoundChannel(%d)", soundChannel);
-  IwAssert(ROWLHOUSE, soundChannel >= 0 && soundChannel < mNumAvailableChannels);
+  assert(soundChannel >= 0 && soundChannel < mNumAvailableChannels);
 
   if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     return;
@@ -730,10 +731,10 @@ void AudioManager::StartSoundOnChannel(SoundChannel soundChannel, Sound* sound, 
 {
   TRACE_FILE_IF(1) TRACE("AudioManager::StartSoundOnChannel(%d, %s, %p) sound = %p", 
     soundChannel, sound->mName, &mChannels[soundChannel], sound);
-  IwAssert(ROWLHOUSE, soundChannel >= 0);
+  assert(soundChannel >= 0);
 
   Channel& channel = mChannels[soundChannel];
-  IwAssert(ROWLHOUSE, channel.mInUse);
+  assert(channel.mInUse);
   channel.mSound = sound;
   channel.mPlaybackPosF = 0.0f;
   channel.mVolumeScale = 0.0f;
@@ -751,7 +752,7 @@ void AudioManager::StartSoundOnChannel(SoundChannel soundChannel, Sound* sound, 
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void AudioManager::SetChannelPositionAndVelocity(SoundChannel soundChannel, const Vector3& pos, const Vector3& velocity)
+void AudioManager::SetChannelPositionAndVelocity(SoundChannel soundChannel, const glm::vec3& pos, const glm::vec3& velocity)
 {
   Channel& channel = mChannels[soundChannel];
   channel.mSourcePosition = pos;

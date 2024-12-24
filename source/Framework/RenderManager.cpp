@@ -7,8 +7,10 @@
 #include "LoadingScreenHelper.h"
 #include "Viewport.h"
 
-#include <IwGL.h>
-#include <IwGx.h>
+//#include <IwGL.h>
+//#include <IwGx.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 
 RenderManager* RenderManager::mInstance = 0;
 
@@ -16,17 +18,17 @@ RenderManager* RenderManager::mInstance = 0;
 //---------------------------------------------------------------------------------------------------------------------
 RenderManager& RenderManager::GetInstance()
 {
-  IwAssert(ROWLHOUSE, mInstance != 0);
+  assert(mInstance != 0);
   return *mInstance;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void RenderManager::SetLightingDirection(float bearing, float elevation)
 {
-  mLightingDirection = Vector3(-1.0f, 0.0f, 0.0f);
-  Quat q(Vector3(0,1,0), DegreesToRadians(elevation));
+  mLightingDirection = glm::vec3(-1.0f, 0.0f, 0.0f);
+  glm::quat q(glm::vec3(0,1,0), DegreesToRadians(elevation));
   mLightingDirection = q.RotateVector(mLightingDirection);
-  q = Quat(Vector3(0,0,1), DegreesToRadians(bearing));
+  q = glm::quat(glm::vec3(0,0,1), DegreesToRadians(bearing));
   mLightingDirection = q.RotateVector(mLightingDirection);
 }
 
@@ -36,8 +38,8 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
   : mFrameworkSettings(frameworkSettings)
 {
   mDebugRenderer = new DebugRenderer;
-  mLightingAmbientColour = Vector3(0.3f, 0.3f, 0.3f);
-  mLightingDiffuseColour = Vector3(1.0f, 1.0f, 1.0f);
+  mLightingAmbientColour = glm::vec3(0.3f, 0.3f, 0.3f);
+  mLightingDiffuseColour = glm::vec3(1.0f, 1.0f, 1.0f);
   mShadowStrength = 0.2f;
   mShadowDecayHeight = 40.0f;
   mShadowSizeScale = 1.3f;
@@ -59,7 +61,7 @@ RenderManager::~RenderManager()
 void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelper* loadingScreen)
 {
   TRACE_FUNCTION_ONLY(1);
-  IwAssert(ROWLHOUSE, !mInstance);
+  assert(!mInstance);
   mInstance = new RenderManager(frameworkSettings);
 
   // Get dimensions from IwGL
@@ -86,7 +88,7 @@ void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelp
 void RenderManager::Terminate()
 {
   TRACE_FUNCTION_ONLY(1);
-  IwAssert(ROWLHOUSE, mInstance);
+  assert(mInstance);
 
   for (Viewports::iterator it = mInstance->mViewports.begin(); it != mInstance->mViewports.end() ; ++it)
     delete *it;
@@ -238,11 +240,11 @@ DisplayConfig GetDisplayConfig(int screenWidth, int screenHeight, int viewpointI
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-Vector3 CalculateCameraOffset(const Camera& camera, const DisplayConfig& displayConfig, int numViewpoints, float stereoSeparation)
+glm::vec3 CalculateCameraOffset(const Camera& camera, const DisplayConfig& displayConfig, int numViewpoints, float stereoSeparation)
 {
   if (numViewpoints == 1)
-    return Vector3(0,0,0);
-  Vector3 leftDir = camera.GetTransform().RowY();
+    return glm::vec3(0,0,0);
+  glm::vec3 leftDir = camera.GetTransform().RowY();
   return displayConfig.mViewpointIndex ? leftDir * (-0.5f * stereoSeparation) : leftDir * (0.5f * stereoSeparation);
 }
 
@@ -308,7 +310,7 @@ void RenderManager::RenderUpdate()
       camera.SetupCameraProjection(aspectRatio);
 
       // Changes to GL_MODELVIEW, calls lookat
-      Vector3 cameraOffset = CalculateCameraOffset(camera, displayConfig, numViewpoints, mStereoSeparation);
+      glm::vec3 cameraOffset = CalculateCameraOffset(camera, displayConfig, numViewpoints, mStereoSeparation);
       camera.SetupCameraView(cameraOffset);
 
       // Changes to GL_MODELVIEW, sets lighting position etc
@@ -320,7 +322,7 @@ void RenderManager::RenderUpdate()
         if (!viewport->GetShouldRenderObject(renderObject))
           continue;
 
-        const Transform& tm = renderObject->GetTM();
+        const glm::mat4& tm = renderObject->GetTM();
         float radius = renderObject->GetRenderBoundingRadius();
         if (!camera.isSpherePartlyInFrustum(tm.GetTrans(), radius))
           continue;
@@ -334,20 +336,21 @@ void RenderManager::RenderUpdate()
       DisableFog disableFog;
 
       // Now the overlay - over the whole screen.
-      if (IsMarmaladeVersionLessThan(6,2,0) && mFrameworkSettings.mOS == S3E_OS_ID_IPHONE)
+      /*if (IsMarmaladeVersionLessThan(6,2,0) && mFrameworkSettings.mOS == S3E_OS_ID_IPHONE)
         glViewport( displayConfig.mBottom, displayConfig.mLeft, displayConfig.mHeight, displayConfig.mWidth );
       else
-        glViewport( displayConfig.mLeft, displayConfig.mBottom, displayConfig.mWidth, displayConfig.mHeight );
+        glViewport( displayConfig.mLeft, displayConfig.mBottom, displayConfig.mWidth, displayConfig.mHeight );*/
+      glViewport( displayConfig.mLeft, displayConfig.mBottom, displayConfig.mWidth, displayConfig.mHeight );
 
       esMatrixMode(GL_PROJECTION);
       esLoadIdentity();
-      if (IsMarmaladeVersionLessThan(6,2,0) && mFrameworkSettings.mOS == S3E_OS_ID_IPHONE)
+      /*if (IsMarmaladeVersionLessThan(6,2,0) && mFrameworkSettings.mOS == S3E_OS_ID_IPHONE)
       {
         if (s3eSurfaceGetInt(S3E_SURFACE_DEVICE_BLIT_DIRECTION) == S3E_SURFACE_BLIT_DIR_ROT90)
           ROTATE_270_Z;
         else
           ROTATE_90_Z;
-      }
+      }*/
       esOrthof(
         float(displayConfig.mLeft), 
         float(displayConfig.mWidth + displayConfig.mLeft), 
@@ -417,7 +420,7 @@ void RenderManager::RegisterRenderObject(RenderObject* renderObject, int renderL
 //----------------------------------------------------------------------------------------------------------------------
 void RenderManager::UnregisterRenderObject(RenderObject* renderObject, int renderLevel)
 {
-  IwAssert(ROWLHOUSE, renderLevel != RENDER_LEVEL_ANY);
+  assert(renderLevel != RENDER_LEVEL_ANY);
   // TODO make this more efficient
   for (RenderObjects::iterator it = mRenderObjects.begin() ; it != mRenderObjects.end() ; ++it)
   {
@@ -451,7 +454,7 @@ void RenderManager::RegisterRenderGxObject(RenderGxObject* renderGxObject, int r
 //----------------------------------------------------------------------------------------------------------------------
 void RenderManager::UnregisterRenderGxObject(RenderGxObject* renderGxObject, int renderLevel)
 {
-  IwAssert(ROWLHOUSE, renderLevel != RENDER_LEVEL_ANY);
+  assert(renderLevel != RENDER_LEVEL_ANY);
   // TODO make this more efficient
   for (RenderGxObjects::iterator it = mRenderGxObjects.begin() ; it != mRenderGxObjects.end() ; ++it)
   {

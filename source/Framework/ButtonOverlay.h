@@ -55,7 +55,7 @@ public:
   // Sets the text, with anchors and position offsets. Offsets are in terms of the size. Anchor relates to the position on the text
   void SetText(const char* txt, class CIwGxFont* font, AnchorH textAnchorH, AnchorV textAnchorV, float offsetX, float offsetY);
   void UpdateText(const char* txt);
-  void SetTextColour(const Vector4& colour);
+  void SetTextColour(const glm::vec4& colour);
 
 private:
   void Init(float size, float paddingFraction, AnchorH anchorH, AnchorV anchorV, 
@@ -74,7 +74,7 @@ private:
   AnchorV mTextAnchorV;
   float mTextOffsetX, mTextOffsetY;
 
-  Vector4 mTextColour;
+  glm::vec4 mTextColour;
   AnchorH mAnchorH;
   AnchorV mAnchorV;
   float mPaddingFraction;

@@ -14,10 +14,10 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 Particle::Particle(
-  const Vector3& initialPos, 
-  const Vector3& initialVel,
-  const Vector3& targetVel,
-  const Vector3& colour,
+  const glm::vec3& initialPos, 
+  const glm::vec3& initialVel,
+  const glm::vec3& targetVel,
+  const glm::vec3& colour,
   float initialSize,
   float finalSize,
   float initialAlpha,
@@ -90,10 +90,10 @@ void Particle::Draw(const float* rotationMatrix)
 //---------------------------------------------------------------------------------------------------------------------
 ParticleEmitter::ParticleEmitter(
   int            maxNumParticles,
-  const Vector3& emitterPos,
-  const Vector3& particleVel,
-  const Vector3& targetVel,
-  const Vector3& colour,
+  const glm::vec3& emitterPos,
+  const glm::vec3& particleVel,
+  const glm::vec3& targetVel,
+  const glm::vec3& colour,
   const Texture* texture,
   float          initialAlpha,
   float          initialSize,
@@ -132,9 +132,9 @@ ParticleEmitter::~ParticleEmitter()
 
 //---------------------------------------------------------------------------------------------------------------------
 void ParticleEmitter::Update(float          dt,
-                             const Vector3& emitterPos,
-                             const Vector3& particleVel,
-                             const Vector3& targetVel,
+                             const glm::vec3& emitterPos,
+                             const glm::vec3& particleVel,
+                             const glm::vec3& targetVel,
                              float          jitterVelMagnitude)
 {
   if (mDead || mSuicidal)
@@ -146,21 +146,21 @@ void ParticleEmitter::Update(float          dt,
   if (numberToAddNow > 0)
   {
     mNumberToAdd -= numberToAddNow;
-    Vector3 posDiff = emitterPos - mEmitterPos;
-    Vector3 velDiff = particleVel - mParticleVel;
-    Vector3 targetDiff = targetVel - mTargetVel;
+    glm::vec3 posDiff = emitterPos - mEmitterPos;
+    glm::vec3 velDiff = particleVel - mParticleVel;
+    glm::vec3 targetDiff = targetVel - mTargetVel;
     for (int i = 0 ; i < numberToAddNow ; ++i)
     {
       // add in a gradual sense... i.e. spread the particles out
       float frac = float(i) / numberToAddNow;
-      Vector3 pos = mEmitterPos + frac * posDiff;
-      Vector3 target = mTargetVel + frac * targetDiff;
-      Vector3 jitterVel(
+      glm::vec3 pos = mEmitterPos + frac * posDiff;
+      glm::vec3 target = mTargetVel + frac * targetDiff;
+      glm::vec3 jitterVel(
         RangedRandom(-jitterVelMagnitude, jitterVelMagnitude), 
         RangedRandom(-jitterVelMagnitude, jitterVelMagnitude), 
         RangedRandom(-jitterVelMagnitude, jitterVelMagnitude)
         );
-      Vector3 vel = mParticleVel + frac * velDiff + jitterVel;
+      glm::vec3 vel = mParticleVel + frac * velDiff + jitterVel;
       mParticles.push_back(
         Particle(pos,
                  vel,
@@ -240,11 +240,11 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
     glVertexAttribPointer(smokeShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
   }
 
-  const Transform cameraTM = viewport->GetCamera()->GetTransform();
-  const Vector3 lookDir = cameraTM.RowX();
-  const Vector3 cameraPos = cameraTM.GetTrans();
-  Transform cameraRot(cameraTM);
-  cameraRot.SetTrans(Vector3(0,0,0));
+  const glm::mat4 cameraTM = viewport->GetCamera()->GetTransform();
+  const glm::vec3 lookDir = glm::vec3(cameraTM[0]);
+  const glm::vec3 cameraPos = glm::vec3(cameraTM[3]);
+  glm::mat4 cameraRot(cameraTM);
+  cameraRot= glm::translate(cameraRot, glm::vec3(0,0,0));
 
   GLMat44 cameraRotGL;
   ConvertTransformToGLMat44(cameraRot, cameraRotGL);
@@ -253,9 +253,9 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
   {
     const Particle& particle = *it;
 
-    const Vector3 pos = particle.mPos;
+    const glm::vec3 pos = particle.mPos;
     // Never render anything behind the camera
-    if ((pos - cameraPos).Dot(lookDir) < 0.0f)
+    if (glm::dot((pos - cameraPos),lookDir) < 0.0f)
       continue;
 
     float frac = 1.0f - particle.mTimeLeft / particle.mLifetime;
@@ -290,7 +290,7 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
     const Particle& p = *it;
     float frac = 1.0f - p.mTimeLeft / p.mLifetime;
     float size = p.mInitialSize + (p.mFinalSize - p.mInitialSize) * frac;
-    RenderManager::GetInstance().GetDebugRenderer().DrawPoint(p.mPos, size, Vector3(p.mColour.x, p.mColour.y, p.mColour.z));
+    RenderManager::GetInstance().GetDebugRenderer().DrawPoint(p.mPos, size, glm::vec3(p.mColour.x, p.mColour.y, p.mColour.z));
   }
 
 #endif

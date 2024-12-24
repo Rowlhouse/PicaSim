@@ -159,7 +159,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, std::string& value, size_
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-bool readFromXML(TiXmlElement* elem, const char* name, Vector3& value, size_t* index)
+bool readFromXML(TiXmlElement* elem, const char* name, glm::vec3& value, size_t* index)
 {
   if (!elem)
     return false;
@@ -181,15 +181,15 @@ bool readFromXML(TiXmlElement* elem, const char* name, Vector3& value, size_t* i
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-bool readFromXML(TiXmlElement* elem, const char* name, Transform& value, size_t* index)
+bool readFromXML(TiXmlElement* elem, const char* name, glm::mat4& value, size_t* index)
 {
   if (!elem)
     return false;
 
-  Vector3 rx;
-  Vector3 ry;
-  Vector3 rz;
-  Vector3 t;
+  glm::vec3 rx;
+  glm::vec3 ry;
+  glm::vec3 rz;
+  glm::vec3 t;
   bool result = true;
 
   char txt[256];
@@ -209,14 +209,14 @@ bool readFromXML(TiXmlElement* elem, const char* name, Transform& value, size_t*
   SetRowX(value, rx);
   SetRowY(value, ry);
   SetRowZ(value, rz);
-  value.SetTrans(t);
+  value = glm::translate(value, t);
 
   return result;
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-bool readFromXML(TiXmlElement* elem, const char* name, Vector4& value, size_t* index)
+bool readFromXML(TiXmlElement* elem, const char* name, glm::vec4& value, size_t* index)
 {
   if (!elem)
     return false;
@@ -323,26 +323,26 @@ std::string readStringFromXML(TiXmlElement* elem, const char* name, size_t* inde
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-Vector3 readVector3FromXML(TiXmlElement* elem, const char* name, size_t* index)
+glm::vec3 readVector3FromXML(TiXmlElement* elem, const char* name, size_t* index)
 {
-  Vector3 result(0,0,0);
+  glm::vec3 result(0,0,0);
   readFromXML(elem, name, &result.x, index);
   return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-Vector4 readVector4FromXML(TiXmlElement* elem, const char* name, size_t* index)
+glm::vec4 readVector4FromXML(TiXmlElement* elem, const char* name, size_t* index)
 {
-  Vector4 result(0,0,0,0);
+  glm::vec4 result(0,0,0,0);
   readFromXML(elem, name, result, index);
   return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-Transform readTransformFromXML(TiXmlElement* elem, const char* name, size_t* index)
+glm::mat4 readTransformFromXML(TiXmlElement* elem, const char* name, size_t* index)
 {
-  Transform result;
-  result.SetIdentity();    
+  glm::mat4 result;
+  result = glm::mat4(1.0f);    
   readFromXML(elem, name, result, index);
   return result;
 }
@@ -357,10 +357,10 @@ Colour readColourFromXML(TiXmlElement* elem, const char* name, size_t* index)
   std::string textB(name); textB += "B";
   std::string textA(name); textA += "A";
 
-  readFromXML(elem, textR.c_str(), result.r);
-  readFromXML(elem, textG.c_str(), result.g);
-  readFromXML(elem, textB.c_str(), result.b);
-  readFromXML(elem, textB.c_str(), result.a);
+  readFromXML(elem, textR.c_str(), result.col.r);
+  readFromXML(elem, textG.c_str(), result.col.g);
+  readFromXML(elem, textB.c_str(), result.col.b);
+  readFromXML(elem, textA.c_str(), result.col.a);
   return result;
 }
 
@@ -392,7 +392,7 @@ void writeFloatToXML(const float& v, TiXmlElement* element, const char* name, si
   }
 }
 
-void writeVector3ToXML(const Vector3& v, TiXmlElement* element, const char* name, size_t* index)
+void writeVector3ToXML(const glm::vec3& v, TiXmlElement* element, const char* name, size_t* index)
 {
   char txt[256];
   if (index)
@@ -414,7 +414,7 @@ void writeVector3ToXML(const Vector3& v, TiXmlElement* element, const char* name
   element->SetDoubleAttribute(txt, v.z);
 }
 
-void writeVector4ToXML(const Vector4& v, TiXmlElement* element, const char* name, size_t* index)
+void writeVector4ToXML(const glm::vec4& v, TiXmlElement* element, const char* name, size_t* index)
 {
   char txt[256];
   if (index)
@@ -442,17 +442,17 @@ void writeVector4ToXML(const Vector4& v, TiXmlElement* element, const char* name
   element->SetDoubleAttribute(txt, v.w);
 }
 
-void writeTransformToXML(const Transform& t, TiXmlElement* element, const char* name, size_t* index)
+void writeTransformToXML(const glm::mat4& t, TiXmlElement* element, const char* name, size_t* index)
 {
   char txt[256];
   sprintf(txt, "%s_rowx", name);
-  writeVector3ToXML(t.RowX(), element, txt, index);
+  writeVector3ToXML(glm::vec3(t[0]), element, txt, index);
   sprintf(txt, "%s_rowy", name);
-  writeVector3ToXML(t.RowY(), element, txt, index);
+  writeVector3ToXML(glm::vec3(t[1]), element, txt, index);
   sprintf(txt, "%s_rowz", name);
-  writeVector3ToXML(t.RowZ(), element, txt, index);
+  writeVector3ToXML(glm::vec3(t[2]), element, txt, index);
   sprintf(txt, "%s_trans", name);
-  writeVector3ToXML(t.GetTrans(), element, txt, index);
+  writeVector3ToXML(glm::vec3(t[3]), element, txt, index);
 }
 
 

@@ -68,10 +68,10 @@ void ParticleEngine::Terminate()
 //---------------------------------------------------------------------------------------------------------------------
 int ParticleEngine::RegisterEmitter(
   ParticleType   type,
-  const Vector3& emitterPos,
-  const Vector3& particleVel,
-  const Vector3& targetVel,
-  const Vector3& colour,
+  const glm::vec3& emitterPos,
+  const glm::vec3& particleVel,
+  const glm::vec3& targetVel,
+  const glm::vec3& colour,
   int            maxNumParticles,
   float          initialAlpha,
   float          initialSize,
@@ -97,7 +97,7 @@ int ParticleEngine::RegisterEmitter(
     }
   }
 
-  IwAssert(ROWLHOUSE, !mFreeIDs.empty());
+  assert(!mFreeIDs.empty());
 
   int id = mFreeIDs.back();
   mFreeIDs.pop_back();
@@ -129,7 +129,7 @@ ParticleEmitter* ParticleEngine::GetEmitter(int id)
   if (id == -1)
     return 0;
   ParticleEmitterMap::iterator it = mParticleEmitters.find(id);
-  IwAssert(ROWLHOUSE, it != mParticleEmitters.end());
+  assert(it != mParticleEmitters.end());
   return it->second;
 }
 
@@ -141,7 +141,7 @@ const ParticleEmitter* ParticleEngine::GetEmitter(int id) const
   if (id == -1)
     return 0;
   ParticleEmitterMap::const_iterator it = mParticleEmitters.find(id);
-  IwAssert(ROWLHOUSE, it != mParticleEmitters.end());
+  assert(it != mParticleEmitters.end());
   return it->second;
 }
 
@@ -153,7 +153,7 @@ void ParticleEngine::DeregisterEmitter(int id)
   if (id == -1)
     return;
   ParticleEmitterMap::iterator it = mParticleEmitters.find(id);
-  IwAssert(ROWLHOUSE, it != mParticleEmitters.end());
+  assert(it != mParticleEmitters.end());
 
   // just disable it - when all the particles have expired it will 
   // get cleaned up.
@@ -164,9 +164,9 @@ void ParticleEngine::DeregisterEmitter(int id)
 void ParticleEngine::UpdateEmitter(
   int id,
   float dt,
-  const Vector3& emitterPos,
-  const Vector3& particleVel,
-  const Vector3& targetVel,
+  const glm::vec3& emitterPos,
+  const glm::vec3& particleVel,
+  const glm::vec3& targetVel,
   float velocityJitterMagnitude)
 {
   if (id == -1)
@@ -174,7 +174,7 @@ void ParticleEngine::UpdateEmitter(
 
   // make sure it exists
   ParticleEmitterMap::iterator it = mParticleEmitters.find(id);
-  IwAssert(ROWLHOUSE, it != mParticleEmitters.end());
+  assert(it != mParticleEmitters.end());
 
   it->second->Update(dt, emitterPos, particleVel, targetVel, velocityJitterMagnitude);
 }

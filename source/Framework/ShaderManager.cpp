@@ -9,7 +9,7 @@ ShaderManager* ShaderManager::mInstance = 0;
 //---------------------------------------------------------------------------------------------------------------------
 ShaderManager& ShaderManager::GetInstance()
 {
-  IwAssert(ROWLHOUSE, mInstance != 0);
+  assert(mInstance != 0);
   return *mInstance;
 }
 //---------------------------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ ShaderManager::ShaderManager(LoadingScreenHelper* loadingScreen)
     for (int i = 0 ; i != NUM_SHADERS ; ++i)
     {
       mShaders[i]->Init();
-      IwAssert(ROWLHOUSE, mShaders[i]->mShaderProgram > 0);
+      assert(mShaders[i]->mShaderProgram > 0);
     }
   }
 }
@@ -49,7 +49,7 @@ ShaderManager::ShaderManager(LoadingScreenHelper* loadingScreen)
 void ShaderManager::Init(LoadingScreenHelper* loadingScreen)
 {
   TRACE_FUNCTION_ONLY(1);
-  IwAssert(ROWLHOUSE, !mInstance);
+  assert(!mInstance);
   mInstance = new ShaderManager(loadingScreen);
 }
 
@@ -57,7 +57,7 @@ void ShaderManager::Init(LoadingScreenHelper* loadingScreen)
 void ShaderManager::Terminate()
 {
   TRACE_FUNCTION_ONLY(1);
-  IwAssert(ROWLHOUSE, mInstance);
+  assert(mInstance);
 
   for (int i = 0 ; i != NUM_SHADERS ; ++i)
   {

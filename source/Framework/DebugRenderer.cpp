@@ -6,8 +6,11 @@
 #include "Shaders.h"
 #include "Viewport.h"
 
-#include <IwGx.h>
-#include <IwGxFont.h>
+//#include <IwGx.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+//#include <IwGxFont.h>
+#include <SDL2/SDL_ttf.h>
 
 //---------------------------------------------------------------------------------------------------------------------
 void DebugRenderer::Init()
@@ -43,9 +46,9 @@ static GLfloat linePts[] = {
 };
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::SetGraphProperties(uint graphID, size_t numPts, float minVal, float maxVal, Vector3 colour)
+void DebugRenderer::SetGraphProperties(uint graphID, size_t numPts, float minVal, float maxVal, glm::vec3 colour)
 {
-  IwAssert(ROWLHOUSE, graphID < MAX_NUM_GRAPHS);
+  assert(graphID < MAX_NUM_GRAPHS);
   Graph& graph = mGraphs[graphID];
   graph.mGraphMinVal = minVal;
   graph.mGraphValRange = maxVal - minVal;
@@ -60,7 +63,7 @@ void DebugRenderer::SetGraphProperties(uint graphID, size_t numPts, float minVal
 //---------------------------------------------------------------------------------------------------------------------
 void DebugRenderer::DisableGraph(uint graphID)
 {
-  IwAssert(ROWLHOUSE, graphID < MAX_NUM_GRAPHS);
+  assert(graphID < MAX_NUM_GRAPHS);
   Graph& graph = mGraphs[graphID];
   graph.mGraphPoints.resize(0, GraphPoint(0,0));
 }
@@ -68,7 +71,7 @@ void DebugRenderer::DisableGraph(uint graphID)
 //---------------------------------------------------------------------------------------------------------------------
 void DebugRenderer::AddGraphPoint(uint graphID, float val)
 {
-  IwAssert(ROWLHOUSE, graphID < MAX_NUM_GRAPHS);
+  assert(graphID < MAX_NUM_GRAPHS);
   Graph& graph = mGraphs[graphID];
   if (graph.mGraphPoints.empty())
     return;
@@ -253,15 +256,15 @@ void DebugRenderer::GxRender(int renderLevel, DisplayConfig& displayConfig)
   {
     const Text2D& text2D = *it;
     IwGxFontSetRect(CIwRect(
-      (int16) (displayConfig.mLeft + text2D.mPos.x * displayConfig.mWidth),
-      (int16) (displayConfig.mBottom + text2D.mPos.y * displayConfig.mHeight), 
-      (int16) displayConfig.mWidth, fontHeight));
+      (int16_t) (displayConfig.mLeft + text2D.mPos.x * displayConfig.mWidth),
+      (int16_t) (displayConfig.mBottom + text2D.mPos.y * displayConfig.mHeight), 
+      (int16_t) displayConfig.mWidth, fontHeight));
     IwGxFontSetAlignmentHor(IW_GX_FONT_ALIGN_LEFT);
     int r = ClampToRange((int) (text2D.mColour.x * 255), 0, 255);
     int g = ClampToRange((int) (text2D.mColour.y * 255), 0, 255);
     int b = ClampToRange((int) (text2D.mColour.z * 255), 0, 255);
     int a = 255;
-    uint32 col = (r << 0) + (g << 8) + (b << 16) + (a << 24);
+    uint32_t col = (r << 0) + (g << 8) + (b << 16) + (a << 24);
     IwGxFontSetCol(col);
     IwGxFontDrawText(text2D.mText.c_str());
   }
@@ -273,40 +276,40 @@ void DebugRenderer::GxRender(int renderLevel, DisplayConfig& displayConfig)
 
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawPoint(const Vector3& pos, float size, const Vector3& colour)
+void DebugRenderer::DrawPoint(const glm::vec3& pos, float size, const glm::vec3& colour)
 {
   mPoints.push_back(Point(pos, size, colour));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawPoint(const Transform& tm, float size, const Vector3& colour)
+void DebugRenderer::DrawPoint(const glm::mat4& tm, float size, const glm::vec3& colour)
 {
   mPoints.push_back(Point(tm, size, colour));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawLine(const Vector3& from, const Vector3& to, const Vector3& colour)
+void DebugRenderer::DrawLine(const glm::vec3& from, const glm::vec3& to, const glm::vec3& colour)
 {
   mLines.push_back(Line(from, to, colour));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawArrow(const Vector3& from, const Vector3& to, const Vector3& colour)
+void DebugRenderer::DrawArrow(const glm::vec3& from, const glm::vec3& to, const glm::vec3& colour)
 {
   mLines.push_back(Line(from, to, colour));
-  Vector3 dir = to - from;
-  float length = dir.GetLength();
+  glm::vec3 dir = to - from;
+  float length = glm::length(dir);
   dir *= (1.0f/length);
 
   float headLength = length * 0.2f;
   float headWidth = length * 0.1f;
 
-  Vector3 sideDir;
-  if (fabsf(dir.Dot(Vector3(0, 0, 1))) < 0.5f)
-    sideDir = dir.Cross(Vector3(0,0,1)).GetNormalised();
+  glm::vec3 sideDir;
+  if (fabsf(glm::dot(dir, glm::vec3(0, 0, 1))) < 0.5f)
+    sideDir = glm::normalize(glm::cross(dir, glm::vec3(0,0,1)));
   else
-    sideDir = dir.Cross(Vector3(0,1,0)).GetNormalised();
-  Vector3 upDir = sideDir.Cross(dir);
+    sideDir = glm::normalize(glm::cross(dir, glm::vec3(0,1,0)));
+  glm::vec3 upDir = glm::cross(sideDir, dir);
 
   mLines.push_back(Line(to, to - dir * headLength + sideDir * headWidth, colour));
   mLines.push_back(Line(to, to - dir * headLength - sideDir * headWidth, colour));
@@ -315,63 +318,63 @@ void DebugRenderer::DrawArrow(const Vector3& from, const Vector3& to, const Vect
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawCircle(const Vector3& centre, const Vector3& axis, float radius, const Vector3& colour, int divisions)
+void DebugRenderer::DrawCircle(const glm::vec3& centre, const glm::vec3& axis, float radius, const glm::vec3& colour, int divisions)
 {
-  Vector3 radial1;
-  if (fabsf(axis.Dot(Vector3(0,0,1))) < 0.5f)
-    radial1 = axis.Cross(Vector3(0,0,1));
+  glm::vec3 radial1;
+  if (fabsf(glm::dot(axis,glm::vec3(0,0,1))) < 0.5f)
+    radial1 = glm::cross(axis,glm::vec3(0,0,1));
   else
-    radial1 = axis.Cross(Vector3(0,1,0));
-  radial1.Normalise();
+    radial1 = glm::cross(axis,glm::vec3(0,1,0));
+  radial1 = glm::normalize(radial1);
   radial1 *= radius;
-  Vector3 radial2 = radial1.Cross(axis);
+  glm::vec3 radial2 = glm::cross(radial1, axis);
 
-  Vector3 prevP = centre + radial2;
+  glm::vec3 prevP = centre + radial2;
   for (int i = 0 ; i != divisions ; ++i)
   {
     float a = (2.0f * PI * (i+1)) / divisions;
     float s = FastSin(a);
     float c = FastCos(a);
 
-    Vector3 p = centre + radial1 * s + radial2 * c;
+    glm::vec3 p = centre + radial1 * s + radial2 * c;
     DrawLine(prevP, p, colour);
     prevP = p;
   }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawVector(const Vector3& from, const Vector3& delta, const Vector3& colour)
+void DebugRenderer::DrawVector(const glm::vec3& from, const glm::vec3& delta, const glm::vec3& colour)
 {
   mLines.push_back(Line(from, from+delta, colour));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawBox(const Transform& centreTM, const Vector3& extents)
+void DebugRenderer::DrawBox(const glm::mat4& centreTM, const glm::vec3& extents)
 {
-  Vector3 he = extents * 0.5f;
-  Vector3 X = centreTM.RowX() * extents.x;
-  Vector3 Y = centreTM.RowY() * extents.y;
-  Vector3 Z = centreTM.RowZ() * extents.z;
-  Vector3 corner = centreTM.GetTrans() - centreTM.RotateVec(he);
-  DrawVector(corner, X, Vector3(1, 0, 0));
-  DrawVector(corner, Y, Vector3(0, 1, 0));
-  DrawVector(corner, Z, Vector3(0, 0, 1));
+  glm::vec3 he = extents * 0.5f;
+  glm::vec3 X = glm::vec3(centreTM[0]) * extents.x;
+  glm::vec3 Y = glm::vec3(centreTM[1]) * extents.y;
+  glm::vec3 Z = glm::vec3(centreTM[2]) * extents.z;
+  glm::vec3 corner = glm::vec3(centreTM[3]) - glm::vec3(centreTM * glm::vec4(he, 1.0f)); ///////////////////////////////////////////////////////////// A vérifier
+  DrawVector(corner, X, glm::vec3(1, 0, 0));
+  DrawVector(corner, Y, glm::vec3(0, 1, 0));
+  DrawVector(corner, Z, glm::vec3(0, 0, 1));
 
-  DrawVector(corner+Z, X, Vector3(1, 1, 1));
-  DrawVector(corner+Z, Y, Vector3(1, 1, 1));
-  DrawVector(corner+Z+Y, X, Vector3(1, 1, 1));
-  DrawVector(corner+Y, X, Vector3(1, 1, 1));
-  DrawVector(corner+Y, Z, Vector3(1, 1, 1));
+  DrawVector(corner+Z, X, glm::vec3(1, 1, 1));
+  DrawVector(corner+Z, Y, glm::vec3(1, 1, 1));
+  DrawVector(corner+Z+Y, X, glm::vec3(1, 1, 1));
+  DrawVector(corner+Y, X, glm::vec3(1, 1, 1));
+  DrawVector(corner+Y, Z, glm::vec3(1, 1, 1));
 
-  DrawVector(corner+X, Y, Vector3(1, 1, 1));
-  DrawVector(corner+X, Z, Vector3(1, 1, 1));
-  DrawVector(corner+X+Z, Y, Vector3(1, 1, 1));
-  DrawVector(corner+X+Y, Z, Vector3(1, 1, 1));
+  DrawVector(corner+X, Y, glm::vec3(1, 1, 1));
+  DrawVector(corner+X, Z, glm::vec3(1, 1, 1));
+  DrawVector(corner+X+Z, Y, glm::vec3(1, 1, 1));
+  DrawVector(corner+X+Y, Z, glm::vec3(1, 1, 1));
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawLine2D(const Vector2& from, const Vector2& to, const Vector3& colour)
+void DebugRenderer::DrawLine2D(const glm::vec2& from, const glm::vec2& to, const glm::vec3& colour)
 {
   LinePoint2D a(from, colour);
   LinePoint2D b(to, colour);
@@ -380,14 +383,14 @@ void DebugRenderer::DrawLine2D(const Vector2& from, const Vector2& to, const Vec
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawPoint2D(const Vector2& pos, float size, const Vector3& colour)
+void DebugRenderer::DrawPoint2D(const glm::vec2& pos, float size, const glm::vec3& colour)
 {
-  DrawLine2D(pos - Vector2(size, 0.0f), pos + Vector2(size, 0.0f), colour);
-  DrawLine2D(pos - Vector2(0.0f, size), pos + Vector2(0.0f, size), colour);
+  DrawLine2D(pos - glm::vec2(size, 0.0f), pos + glm::vec2(size, 0.0f), colour);
+  DrawLine2D(pos - glm::vec2(0.0f, size), pos + glm::vec2(0.0f, size), colour);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void DebugRenderer::DrawText2D(const std::string& text, const Vector2& pos, const Vector3& colour)
+void DebugRenderer::DrawText2D(const std::string& text, const glm::vec2& pos, const glm::vec3& colour)
 {
   mTexts2D.push_back(Text2D(text, pos, colour));
 }

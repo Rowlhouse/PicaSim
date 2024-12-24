@@ -13,19 +13,19 @@ struct ACSurface
 {
   std::vector<int> vertref;
   std::vector<ACUV> uvs;
-  std::vector<Vector3> vertexNormals;
-  Vector3 normal;
+  std::vector<glm::vec3> vertexNormals;
+  glm::vec3 normal;
   int flags;
   int mat;
 };
 
 struct ACObject
 {
-  Vector3 loc;
+  glm::vec3 loc;
   std::string name;
   std::string data;
   std::string url;
-  std::vector<Vector3> vertices;
+  std::vector<glm::vec3> vertices;
 
   std::vector<ACSurface> surfaces;
   float texture_repeat_x, texture_repeat_y;

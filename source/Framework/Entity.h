@@ -1,7 +1,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <s3eTypes.h>
+//#include <s3eTypes.h>
+#include <SDL2/SDL.h>
 
 class Entity
 {

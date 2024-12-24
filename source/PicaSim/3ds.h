@@ -50,9 +50,9 @@ struct ThreeDSObject
   int  materialID;      // The texture ID to use, which is the index into our texture array
   bool bHasTexture;      // This is TRUE if there is a texture map for this object
   char strName[255];      // The name of the object
-  Vector3  *pVerts;      // The object's vertices
-  Vector3  *pNormals;    // The object's normals
-  Vector2  *pTexVerts;    // The texture's UV coordinates
+  glm::vec3  *pVerts;      // The object's vertices
+  glm::vec3  *pNormals;    // The object's normals
+  glm::vec2  *pTexVerts;    // The texture's UV coordinates
   ThreeDSFace *pFaces;        // The faces information of the object
 };
 

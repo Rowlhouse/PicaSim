@@ -3,7 +3,10 @@
 #include "Profile.h"
 #include "Trace.h"
 
-#include <IwGeom.h> 
+//#include <IwGeom.h> 
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>  // Pour les vecteurs 3D
+#include <glm/mat4x4.hpp>  // Pour les matrices 4x4
 
 #include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
 
@@ -14,7 +17,7 @@ EntityManager* EntityManager::mInstance = 0;
 //---------------------------------------------------------------------------------------------------------------------
 EntityManager& EntityManager::GetInstance()
 {
-  IwAssert(ROWLHOUSE, mInstance != 0);
+  assert(mInstance != 0);
   return *mInstance;
 }
 
@@ -45,7 +48,7 @@ bool ContactAdded(
 void EntityManager::Init(const FrameworkSettings& frameworkSettings)
 {
   TRACE_FUNCTION_ONLY(1);
-  IwAssert(ROWLHOUSE, !mInstance);
+  assert(!mInstance);
   mInstance = new EntityManager(frameworkSettings);
 
   // Initialise physics SDK
@@ -91,11 +94,11 @@ void EntityManager::Init(const FrameworkSettings& frameworkSettings)
 void EntityManager::Terminate()
 {
   TRACE_FUNCTION_ONLY(1);
-  IwAssert(ROWLHOUSE, mInstance);
+  assert(mInstance);
 
   mInstance->UnregisterEntity(mInstance, ENTITY_LEVEL_LOOP_PHYSICS);
 
-  IwAssert(ROWLHOUSE, mInstance->mEntities.empty());
+  assert(mInstance->mEntities.empty());
 
   // terminate physics
   delete mInstance->mDynamicsWorld;
@@ -199,7 +202,7 @@ void EntityManager::UpdateEntities(float deltaTime)
 void EntityManager::EntityUpdate(float deltaTime, int entityLevel)
 {
   IW_PROFILE("Step physics");
-  IwAssert(ROWLHOUSE, entityLevel == ENTITY_LEVEL_LOOP_PHYSICS);
+  assert(entityLevel == ENTITY_LEVEL_LOOP_PHYSICS);
   s3eDeviceYield(0);
   TRACE_FILE_IF(2) TRACE("Physics Step start");
   mDynamicsWorld->stepSimulation(deltaTime, 0);
@@ -217,7 +220,7 @@ void EntityManager::RegisterEntity(Entity* entity, int entityLevel)
 //----------------------------------------------------------------------------------------------------------------------
 void EntityManager::UnregisterEntity(Entity* entity, int entityLevel)
 {
-  IwAssert(ROWLHOUSE, entityLevel != ENTITY_LEVEL_ANY);
+  assert(entityLevel != ENTITY_LEVEL_ANY);
   // TODO make this more efficient
   for (Entities::iterator it = mEntities.begin() ; it != mEntities.end() ; ++it)
   {

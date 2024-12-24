@@ -1,19 +1,19 @@
 #include "Helpers.h"
 #include "Trace.h"
 
-#include <IwUtil.h>
+//#include <IwUtil.h>
 
 //---------------------------------------------------------------------------------------------------------------------
-void ApplyRollPitchYawToRotationDegrees(float roll, float pitch, float yaw, Vector3& rotation)
+void ApplyRollPitchYawToRotationDegrees(float roll, float pitch, float yaw, glm::vec3& rotation)
 {
   if (roll == 0.0f && pitch == 0.0f && yaw == 0.0f)
     return;
 
-  float angle = DegreesToRadians(rotation.GetLength());
+  float angle = DegreesToRadians(glm::length(rotation));
   if (angle > 0.0f)
-    rotation.Normalise();
+    glm::normalize(rotation);
   else
-    rotation = Vector3(1,0,0);
+    rotation = glm::vec3(1,0,0);
 
   btQuaternion quat1(Vector3ToBulletVector3(rotation), angle);
   btMatrix3x3 m1(quat1);

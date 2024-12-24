@@ -2,7 +2,9 @@
 #define PICA_DIALOG_H
 
 #include "Menu.h"
-#include "IwUI.h"
+//#include "IwUI.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 
 //---------------------------------------------------------------------------------------------------------------------

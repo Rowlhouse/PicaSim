@@ -108,12 +108,12 @@ public:
 
   Camera* GetCamera(size_t index) {return mCameras[index];}
 
-  const Vector3& GetLightingAmbientColour() const {return mLightingAmbientColour;}
-  const Vector3& GetLightingDiffuseColour() const {return mLightingDiffuseColour;}
-  const Vector3& GetLightingDirection() const {return mLightingDirection;}
+  const glm::vec3& GetLightingAmbientColour() const {return mLightingAmbientColour;}
+  const glm::vec3& GetLightingDiffuseColour() const {return mLightingDiffuseColour;}
+  const glm::vec3& GetLightingDirection() const {return mLightingDirection;}
 
-  void SetLightingAmbientColour(const Vector3& colour) {mLightingAmbientColour = colour;}
-  void SetLightingDiffuseColour(const Vector3& colour) {mLightingDiffuseColour = colour;}
+  void SetLightingAmbientColour(const glm::vec3& colour) {mLightingAmbientColour = colour;}
+  void SetLightingDiffuseColour(const glm::vec3& colour) {mLightingDiffuseColour = colour;}
 
   void SetShadowStrength(float shadowStrength) {mShadowStrength = shadowStrength;}
   void SetShadowDecayHeight(float shadowDecayHeight) {mShadowDecayHeight = shadowDecayHeight;}
@@ -122,7 +122,7 @@ public:
   float GetShadowDecayHeight() const {return mShadowDecayHeight;}
   float GetShadowSizeScale() const {return mShadowSizeScale;}
 
-  void SetLightingDirection(const Vector3& direction) {mLightingDirection = direction;}
+  void SetLightingDirection(const glm::vec3& direction) {mLightingDirection = direction;}
   void SetLightingDirection(float bearing, float elevation);
 
   void EnableStereoscopy(bool enable) {mEnableStereoscopy = enable;}
@@ -155,9 +155,9 @@ private:
 
   DebugRenderer* mDebugRenderer;
 
-  Vector3 mLightingDiffuseColour;
-  Vector3 mLightingAmbientColour;
-  Vector3 mLightingDirection;
+  glm::vec3 mLightingDiffuseColour;
+  glm::vec3 mLightingAmbientColour;
+  glm::vec3 mLightingDirection;
   float   mShadowStrength;
   float   mShadowDecayHeight;
   float   mShadowSizeScale;

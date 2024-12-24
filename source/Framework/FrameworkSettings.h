@@ -1,9 +1,41 @@
 #ifndef FRAMEWORKSETTINGS_H
 #define FRAMEWORKSETTINGS_H
 
-#include <s3eDevice.h>
+//#include <s3eDevice.h>
+#include <SDL2/SDL.h>
+#include <string>
 
 struct FrameworkSettings
+{
+    FrameworkSettings();
+
+    void UpdateScreenDimensions() const;
+
+    void UpdateOS();
+
+    bool isWin10() const { return mOS == "Windows"; }
+    bool isWindowsDesktop() const { return mOS == "Windows"; }
+    bool isWindows() const { return mOS == "Windows"; }
+    bool isAndroid() const { return mOS == "Android"; }
+    bool isIOS() const { return mOS == "iOS"; }
+
+    int mPhysicsSubsteps;
+    float mNearClipPlaneDistance;
+    float mFarClipPlaneDistance;
+    bool  mUseMultiLights;
+
+    // Remplacer s3eDeviceOSID par un type std::string pour l'OS
+    std::string mOS;
+
+    mutable int mScreenWidth, mScreenHeight;
+
+    // Pour stocker les informations sur l'affichage via SDL
+    mutable SDL_DisplayMode mDisplayMode;
+};
+
+
+
+/* struct FrameworkSettings
 {
   FrameworkSettings();
 
@@ -23,6 +55,6 @@ struct FrameworkSettings
 
   s3eDeviceOSID mOS;
   mutable int mScreenWidth, mScreenHeight;
-};
+}; */
 
 #endif

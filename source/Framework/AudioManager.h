@@ -3,7 +3,7 @@
 
 #include <Helpers.h>
 
-#include <s3eTypes.h>
+//#include <s3eTypes.h>
 
 #include <vector>
 
@@ -17,7 +17,7 @@ public:
     ~Sound();
     char mName[256];      // Name (for debugging)
     int     mRefCount;
-    int16*  mSoundData;        // Buffer that holds the sound data
+    int16_t*  mSoundData;        // Buffer that holds the sound data
     int     mSoundSamples;     // Length of sound data in 16-bit samples
     int     mSampleFrequency;
     bool    mStereo;
@@ -31,12 +31,12 @@ public:
   static void Init();
   static void Terminate();
 
-  static AudioManager& GetInstance() {IwAssert(ROWLHOUSE, mInstance); return *mInstance;}
+  static AudioManager& GetInstance() {assert(mInstance); return *mInstance;}
 
   void Update(float dt);
 
   /// Sets the position of the listener
-  void SetTransformAndVelocity(const Transform& tm, const Vector3& vel) {mTM = tm; mVelocity = vel;}
+  void SetTransformAndVelocity(const glm::mat4& tm, const glm::vec3& vel) {mTM = tm; mVelocity = vel;}
 
   /// This stops playing all sounds and marks them all as not in use.
   void StopAllChannels();
@@ -61,7 +61,7 @@ public:
 
   bool IsSoundPlayingOnChannel(SoundChannel soundChannel);
 
-  void SetChannelPositionAndVelocity(SoundChannel soundChannel, const Vector3& pos, const Vector3& velocity);
+  void SetChannelPositionAndVelocity(SoundChannel soundChannel, const glm::vec3& pos, const glm::vec3& velocity);
   void SetChannelFrequencyScale(SoundChannel soundChannel, float freqScale);
 
   void SetChannelTargetVolumeScale(SoundChannel soundChannel, float targetVolScale, float volScaleRate = 2.0f);
@@ -93,8 +93,8 @@ private:
 
     /// These are set by the game
     float         mSoundSourceRadius;
-    Vector3       mSourcePosition;
-    Vector3       mSourceVelocity;
+    glm::vec3       mSourcePosition;
+    glm::vec3       mSourceVelocity;
     float         mFrequencyScale;
     float         mTargetVolumeScaleF; // The target overall volume - there's a fade into/out of this
     float         mTargetVolumeScaleFRate; // The rate of change of the overall volume
@@ -116,8 +116,8 @@ private:
   Sounds::iterator FindLoadedSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop);
 
   /// Callback for playing the audio when the source is stereo
-  static int32 AudioCallbackStereoSource(void* sys, void* user);
-  static int32 AudioCallbackMonoSource(void* sys, void* user);
+  static int32_t AudioCallbackStereoSource(void* sys, void* user);
+  static int32_t AudioCallbackMonoSource(void* sys, void* user);
 
   static AudioManager* mInstance;
 
@@ -132,8 +132,8 @@ private:
   /// references to already loaded sounds.
   Sounds mSounds;
 
-  Transform mTM;
-  Vector3 mVelocity;
+  glm::mat4 mTM;
+  glm::vec3 mVelocity;
 
   float mVolScale;
 };

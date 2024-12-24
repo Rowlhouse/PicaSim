@@ -17,10 +17,10 @@ class Particle
 {
 public:
   Particle(
-    const Vector3& initialPos, 
-    const Vector3& initialVel,
-    const Vector3& targetVel,
-    const Vector3& colour,
+    const glm::vec3& initialPos, 
+    const glm::vec3& initialVel,
+    const glm::vec3& targetVel,
+    const glm::vec3& colour,
     float initialSize,
     float finalSize,
     float initialAlpha,
@@ -34,10 +34,10 @@ public:
 
   float GetTimeLeft() const {return mTimeLeft;}
 //private:
-  Vector3       mPos;
-  Vector3       mVel;
-  Vector3       mTargetVel;
-  Vector3       mColour;
+  glm::vec3       mPos;
+  glm::vec3       mVel;
+  glm::vec3       mTargetVel;
+  glm::vec3       mColour;
   const float   mInitialSize;
   const float   mFinalSize;
   const float   mInitialAlpha;
@@ -53,10 +53,10 @@ class ParticleEmitter : public RenderObject
 public:
   ParticleEmitter(
     int            maxNumParticles,
-    const Vector3& emitterPos,
-    const Vector3& particleVel,
-    const Vector3& targetVel,
-    const Vector3& colour,
+    const glm::vec3& emitterPos,
+    const glm::vec3& particleVel,
+    const glm::vec3& targetVel,
+    const glm::vec3& colour,
     const Texture* texture,
     float          initialAlpha,
     float          initialSize,
@@ -72,13 +72,13 @@ public:
   void SetInitialAlpha(float initialAlpha) {mInitialAlpha = initialAlpha;}
   void SetLifeTime(float lifeTime) {mLifetime = lifeTime;}
   void SetFinalSize(float finalSize) {mFinalSize = finalSize;}
-  void SetColour(const Vector3& colour) {mColour = colour;}
+  void SetColour(const glm::vec3& colour) {mColour = colour;}
 
   void Update(
     float          dt,
-    const Vector3& emitterPos,
-    const Vector3& particleVel,
-    const Vector3& targetVel,
+    const glm::vec3& emitterPos,
+    const glm::vec3& particleVel,
+    const glm::vec3& targetVel,
     float          jitterVelMagnitude);
 
   void MoveParticles(float dt);
@@ -91,10 +91,10 @@ public:
 
 private:
 
-  Vector3 mEmitterPos;
-  Vector3 mParticleVel;
-  Vector3 mTargetVel;
-  Vector3 mColour;
+  glm::vec3 mEmitterPos;
+  glm::vec3 mParticleVel;
+  glm::vec3 mTargetVel;
+  glm::vec3 mColour;
   const Texture* mTexture;
 
   const int   mMaxNum; // max num particles

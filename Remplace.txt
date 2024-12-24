@@ -1,0 +1,332 @@
+Attention : Mettre Absolument SDL_GL_SwapWindow(g_Window) à la fin de la boucle
+Pour les textures : Utilisation :
+Pour appeler cette fonction (LoadTextureFromFile), vous devez simplement définir un GLuint pour stocker l'identifiant de la texture OpenGL :
+GLuint textureID;
+LoadTextureFromFile(textureID, "path/to/your/image.png", 0.1f); // Exemple avec un décalage de couleur
+
+IwAssertMsg(ROWLHOUSE, false, ("Failed to open file"));
+par
+assert(file && "Failed to open file");
+
+
+
+
+#include <IwGeom.h>
+
+IwVector3 position(1.0f, 2.0f, 3.0f);
+position += IwVector3(0.0f, 1.0f, 0.0f);
+
+par
+
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>  // Pour les vecteurs 3D
+#include <glm/mat4x4.hpp>  // Pour les matrices 4x4
+
+glm::vec3 position(1.0f, 2.0f, 3.0f);
+position += glm::vec3(0.0f, 1.0f, 0.0f);
+
+
+
+
+
+#include <IwGxFont.h>
+
+par
+
+#include <SDL2/SDL_ttf.h>
+
+
+
+
+
+#include <Iw2D.h>
+
+par
+
+#include <SDL2/SDL.h>
+
+
+
+
+
+
+#include <s3e.h>
+
+par
+
+#include <SDL2/SDL.h>
+
+
+
+
+#include <IwProfileMenu.h>
+
+par
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
+
+
+
+
+#include <IwUI.h>
+
+par
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
+
+
+
+
+
+
+#include <IwGeomFQuat.h>
+
+IwFQuat rotation = IwFQuat::Identity;
+rotation.Rotate(IwVector3(1.0f, 0.0f, 0.0f), 90.0f);
+
+par 
+
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
+glm::quat rotation = glm::identity<glm::quat>();
+rotation = glm::rotate(rotation, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+
+
+
+
+#include <IwColour.h>
+
+IwColourRGBA color(255, 0, 0, 255);  // Rouge opaque
+
+par
+
+#include <SDL2/SDL.h>
+
+SDL_Color color = {255, 0, 0, 255};  // Rouge opaque
+
+
+
+
+
+
+
+#include <IwDebug.h>
+
+par 
+
+#include <SDL2/SDL.h>
+
+
+
+
+
+
+#include <IwGL.h>
+#include <IwGx.h>
+
+par
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include <iostream>
+//Initialisation Nécessaire pour SDL2 pour utiliser OpenGL
+int main(int argc, char* argv[]) {
+    // Initialisation de SDL2
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cerr << "SDL2 could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+        return -1;
+    }
+
+    // Créer une fenêtre avec un contexte OpenGL
+    SDL_Window* window = SDL_CreateWindow("SDL2 OpenGL Example",
+                                          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                          800, 600, SDL_WINDOW_OPENGL);
+    if (!window) {
+        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        return -1;
+    }
+
+    // Créer un contexte OpenGL
+    SDL_GLContext glContext = SDL_GL_CreateContext(window);
+    if (!glContext) {
+        std::cerr << "OpenGL context could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        return -1;
+    }
+
+    // Initialisation d'OpenGL (par exemple, définir la version OpenGL)
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE) != 0) {
+        std::cerr << "OpenGL profile could not be set!" << std::endl;
+        return -1;
+    }
+
+    // Boucle principale
+    bool quit = false;
+    SDL_Event e;
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
+        // Code OpenGL ici, par exemple, pour effacer l'écran avec une couleur
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // Noir
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Affichage de la fenêtre
+        SDL_GL_SwapWindow(window);
+    }
+
+    // Libération des ressources
+    SDL_GL_DeleteContext(glContext);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}
+
+//Créer une fenêtre SDL2 avec OpenGL :
+SDL_Window* window = SDL_CreateWindow("SDL2 OpenGL Example",
+                                      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                      800, 600, SDL_WINDOW_OPENGL);
+if (!window) {
+    std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+    return -1;
+}
+
+SDL_GLContext glContext = SDL_GL_CreateContext(window);
+if (!glContext) {
+    std::cerr << "OpenGL context could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+    return -1;
+}
+
+//Rendu OpenGL dans SDL2 : Remplacez les fonctions spécifiques à Marmalade pour le rendu par des appels OpenGL.
+// Exemple simple pour effacer l'écran
+glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // Noir
+glClear(GL_COLOR_BUFFER_BIT);
+// Affichage de la fenêtre avec SDL
+SDL_GL_SwapWindow(window);
+
+
+
+
+#include <s3eSound.h>
+
+par 
+
+#include <SDL2/SDL_mixer.h>
+
+
+
+
+#include <s3eSocket.h>
+
+par
+
+
+
+
+
+
+#include <s3eAtomic.h>
+
+par 
+
+les fonctionnalités directement intégré à C++11 et supérieures
+exemple : 
+std::atomic<int> counter(0);
+counter.fetch_add(1, std::memory_order_relaxed);  // Opération atomique sur counter
+
+
+
+
+
+
+#include <s3eTypes.h>
+
+s3eDeviceOSID mOS;
+s3eBool mUseMultiLights;
+
+par
+
+#include <SDL2/SDL.h>
+
+int mOS;  // Remplace s3eDeviceOSID par int
+bool mUseMultiLights;
+
+
+
+
+
+//Utilisation pour la boucle principale de SDL2 (Par ChatGPT):
+void MainLoop()
+{
+    bool quit = false;
+    SDL_Event e;
+
+    while (!quit) {
+        // Gérer les événements SDL
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
+        // Effacer l'écran
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Dessiner avec OpenGL ici...
+
+        // Échanger les buffers pour afficher le dessin
+        SDL_GL_SwapWindow(g_Window);
+    }
+}
+
+int main()
+{
+    if (sdlInit(true) != 0) {
+        return -1;  // Échec de l'initialisation
+    }
+
+    MainLoop();
+
+    sdlTerm(true);  // Libération des ressources avant de quitter
+    return 0;
+}
+
+
+
+
+
+
+
+
+Vecteur :
+Vector3 to glm::vec3
+v.getLength() par glm::length(v)
+v.Normalise() par glm::normalise(v)
+
+Matrice 4*4 :
+Transform to glm::mat4
+mTM.GetTrans() par glm::vec3(mTM[3])
+mTM.RowX() par glm::vec3(mTM[0])
+mTM.RowY() par glm::vec3(mTM[1])
+mTM.RowZ() par glm::vec3(mTM[2])
+mTM.t par glm::vec3(mTM[3][0], mTM[3][1], mTM[3][2])
+mTM.Transpose() par glm::transpose(mTM)
+mTM.SetIdentity() par glm::mat4 mTM = glm::mat4(1.0f)
+mTM.SetTrans(pos) par mTM = glm::translate(mTM, pos)
+mTM.RotateVec(he) par glm::vec3(mTM * glm::vec4(he, 1.0f));
+
+
+Autre :
+Vector2 to glm::vec2
+Quat to glm::quat

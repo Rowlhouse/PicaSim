@@ -3,7 +3,9 @@
 
 #include "Graphics.h"
 
-#include <IwUI.h>
+//#include <IwUI.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <string>
 
 void MenuInit(const struct GameSettings& gameSettings);

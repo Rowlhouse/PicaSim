@@ -4,7 +4,8 @@
 
 #include "Trace.h"
 
-#include <IwDebug.h>
+//#include <IwDebug.h>
+#include <SDL2/SDL.h>
 #include <stdio.h>
 
 /// Overall trace enabled

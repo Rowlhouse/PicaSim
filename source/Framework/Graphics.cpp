@@ -19,14 +19,15 @@ static GLVec4 gLightAmbientColour[MAX_NUM_LIGHTS] = {0,0,0,0};
 static GLVec4 gLightSpecularColour[MAX_NUM_LIGHTS] = {0,0,0,0};
 
 
-static EGLSurface g_EGLSurface = NULL;
+/* static EGLSurface g_EGLSurface = NULL;
 static EGLDisplay g_EGLDisplay = NULL;
 static EGLContext g_EGLContext = NULL;
+ */
 
 #define MAX_CONFIG 128
 
 //---------------------------------------------------------------------------------------------------------------------
-int eglInit(bool createSurface)
+/*int eglInit(bool createSurface)
 {
   EGLint major;
   EGLint minor;
@@ -154,10 +155,10 @@ GotConfig:
     g_EGLSurface = eglCreateWindowSurface(g_EGLDisplay, configList[config], nativeWindow, NULL);
   eglMakeCurrent(g_EGLDisplay, g_EGLSurface, g_EGLSurface, g_EGLContext);
   return 0;
-}
+}*/
 
 //---------------------------------------------------------------------------------------------------------------------
-void eglTerm(bool destroySurface)
+/*void eglTerm(bool destroySurface)
 {
   if (g_EGLDisplay)
   {
@@ -171,8 +172,67 @@ void eglTerm(bool destroySurface)
     eglTerminate(g_EGLDisplay);
     g_EGLDisplay = 0;
   }
+}*/
+
+
+SDL_Window* g_Window = nullptr;    // Fenêtre SDL
+SDL_GLContext g_GLContext = nullptr; // Contexte OpenGL SDL
+
+// Fonction d'initialisation
+int sdlInit(bool createSurface)
+{
+  // Initialiser SDL
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    return 1;
+  }
+
+  // Créer une fenêtre SDL avec support OpenGL
+  g_Window = SDL_CreateWindow("OpenGL with SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
+  if (g_Window == nullptr) {
+    printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+    return 1;
+  }
+
+  // Créer un contexte OpenGL
+  g_GLContext = SDL_GL_CreateContext(g_Window);
+  if (g_GLContext == nullptr) {
+    printf("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
+    return 1;
+  }
+
+  // Initialisation d'OpenGL (par exemple, choisir la version OpenGL)
+  if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) != 0 || SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) != 0) {
+    printf("SDL_GL_SetAttribute failed: %s\n", SDL_GetError());
+    return 1;
+  }
+
+  // Initialisation de GLEW
+  glewExperimental = GL_TRUE;  // Permet l'accès à toutes les extensions
+  if (glewInit() != GLEW_OK) {
+    std::cerr << "GLEW Init failed!" << std::endl;
+    return -1;
+  }
+
+
+  return 0;
 }
 
+void sdlTerm(bool destroySurface)
+{
+    // Libérer les ressources OpenGL et SDL
+    if (g_GLContext) {
+        SDL_GL_DeleteContext(g_GLContext);
+        g_GLContext = nullptr;
+    }
+
+    if (g_Window) {
+        SDL_DestroyWindow(g_Window);
+        g_Window = nullptr;
+    }
+
+    SDL_Quit();  // Quitter SDL
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 static GLfloat UITextureMatrix[16] = {
@@ -186,40 +246,46 @@ void RecoverFromIwGx(bool clear)
 {
   if (gGLVersion == 1)
   {
-    // Marmalade clobbers some of these
+    // Active texture unit 1 and reset its texture matrix
     glActiveTexture(GL_TEXTURE1);
     glDisable(GL_TEXTURE_2D);
-    glMatrixMode( GL_TEXTURE );
+    glMatrixMode(GL_TEXTURE);
     glLoadIdentity();
 
+    // Active texture unit 0 and reset its texture matrix
     glActiveTexture(GL_TEXTURE0);
     glDisable(GL_TEXTURE_2D);
-    glMatrixMode( GL_TEXTURE );
+    glMatrixMode(GL_TEXTURE);
     glGetFloatv(GL_TEXTURE_MATRIX, UITextureMatrix);
     glLoadIdentity();
 
+    // Disable blending and alpha testing
     glDisable(GL_BLEND);
     glDisable(GL_ALPHA_TEST);
 
+    // Reset modelview matrix and set shading model
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
     glShadeModel(GL_SMOOTH);
 
+    // Disable client states for vertex, texture coords, and color arrays
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 
-    GLfloat mat[] = {0,0,0,0};
+    // Set material emission to black
+    GLfloat mat[] = {0, 0, 0, 0};
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat);
 
+    // Set clear color (black)
     float col = 0.0f;
     glClearColor(col, col, col, 1.0);
+
+    // If clear flag is true, clear the color and depth buffers
     if (clear)
     {
-      IwGxClear(IW_GX_COLOUR_BUFFER_F | IW_GX_DEPTH_BUFFER_F);
-      IwGxFlush();
-      IwGxSwapBuffers();
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Equivalent to IwGxClear
+      //Swap and Flush ?
     }
   }
 }
@@ -229,32 +295,46 @@ void PrepareForIwGx(bool clear)
 {
   if (gGLVersion == 1)
   {
+    // Désactivez l'éclairage
     glDisable(GL_LIGHTING);
+    
+    // Activez le mélange (blending) et le test alpha
     glEnable(GL_BLEND);
     glEnable(GL_ALPHA_TEST);
+    
+    // Mode de rendu plat pour les surfaces sans ombrage lisse
     glShadeModel(GL_FLAT);
 
+    // Activez l'unité de texture 0 et la texture 2D
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
+    
+    // Définir l'environnement de texture pour utiliser la modélisation
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glMatrixMode( GL_TEXTURE );
+    
+    // Réinitialiser la matrice de texture
+    glMatrixMode(GL_TEXTURE);
     glLoadIdentity();
     glMultMatrixf(UITextureMatrix);
 
+    // Réinitialiser la matrice modèle-vue
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    // Désactiver les états des tableaux de sommets et de textures
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 
+    // Définir la couleur de fond (en blanc dans ce cas)
     float col = 1.0f;
     glClearColor(col, col, col, 1.0f);
+
+    // Si l'option clear est activée, effacer le tampon de couleur et de profondeur
     if (clear)
     {
-      IwGxClear(IW_GX_COLOUR_BUFFER_F | IW_GX_DEPTH_BUFFER_F);
-      IwGxFlush();
-      IwGxSwapBuffers();
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Equivalent de IwGxClear
+      //Swap ??
     }
   }
 }
@@ -349,7 +429,7 @@ void LookAt(
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void LoadTextureFromFile(Texture& texture, const char* filename, float colourOffset)
+/*void LoadTextureFromFile(Texture& texture, const char* filename, float colourOffset)
 {
   CIwImage image;
   image.LoadFromFile(filename);
@@ -374,9 +454,9 @@ void LoadTextureFromFile(Texture& texture, const char* filename, float colourOff
         col[2] = image.GetTexels()[(jj*origWidth + ii)*3 + 0] / 255.0f; 
         col[3] = 1.0f;
         OffsetColour(col, colourOffset);
-        image.GetTexels()[(jj*origWidth + ii)*3 + 2] = (uint8) (col[0] * 255.0f);
-        image.GetTexels()[(jj*origWidth + ii)*3 + 1] = (uint8) (col[1] * 255.0f);
-        image.GetTexels()[(jj*origWidth + ii)*3 + 0] = (uint8) (col[2] * 255.0f);
+        image.GetTexels()[(jj*origWidth + ii)*3 + 2] = (uint8_t) (col[0] * 255.0f);
+        image.GetTexels()[(jj*origWidth + ii)*3 + 1] = (uint8_t) (col[1] * 255.0f);
+        image.GetTexels()[(jj*origWidth + ii)*3 + 0] = (uint8_t) (col[2] * 255.0f);
       }
     }
   }
@@ -408,10 +488,106 @@ void LoadTextureFromFile(Texture& texture, const char* filename, float colourOff
   image.ConvertToImage(&newImage);
 
   texture.CopyFromImage(&newImage);
+}*/
+
+void LoadTextureFromFile(GLuint& texture, const char* filename, float colourOffset)
+{
+    // Charger l'image avec SDL_image
+    SDL_Surface* surface = IMG_Load(filename);
+    if (!surface) {
+        std::cerr << "Unable to load image " << filename << ": " << IMG_GetError() << std::endl;
+        return;
+    }
+
+    GLint origWidth = surface->w;
+    GLint origHeight = surface->h;
+    GLint maxTextureSize;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+
+    std::cout << "Image " << filename << " size " << origWidth << "x" << origHeight << std::endl;
+
+    // Si un offset de couleur est spécifié, appliquer à chaque pixel
+    if (colourOffset)
+    {
+        Uint32* pixels = (Uint32*)surface->pixels;
+        for (int i = 0; i < origWidth * origHeight; ++i)
+        {
+            Uint8 r, g, b, a;
+            SDL_GetRGBA(pixels[i], surface->format, &r, &g, &b, &a);
+
+            float col[4] = {r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f};
+            OffsetColour(col, colourOffset);
+
+            // Remettre les valeurs modifiées dans les pixels
+            pixels[i] = SDL_MapRGBA(surface->format, (Uint8)(col[0] * 255), (Uint8)(col[1] * 255), (Uint8)(col[2] * 255), (Uint8)(col[3] * 255));
+        }
+    }
+
+    // Si l'image est plus grande que la taille maximale de texture, redimensionner
+    if (origWidth <= maxTextureSize && origHeight <= maxTextureSize)
+    {
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, origWidth, origHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        SDL_FreeSurface(surface);
+        return;
+    }
+
+    GLint newWidth = origWidth;
+    GLint newHeight = origHeight;
+
+    if (origWidth >= origHeight)
+    {
+        newWidth = maxTextureSize;
+        newHeight = (origHeight * maxTextureSize) / origWidth;
+    }
+    else
+    {
+        newHeight = maxTextureSize;
+        newWidth = (origWidth * maxTextureSize) / origHeight;
+    }
+
+    std::cout << "Resizing texture " << filename << " to " << newWidth << "x" << newHeight << std::endl;
+
+    // Créer une nouvelle surface pour l'image redimensionnée
+    SDL_Surface* resizedSurface = SDL_CreateRGBSurface(0, newWidth, newHeight, 32, 
+                                                         surface->format->Rmask, surface->format->Gmask,
+                                                         surface->format->Bmask, surface->format->Amask);
+    if (!resizedSurface) {
+        std::cerr << "Unable to create resized surface: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(surface);
+        return;
+    }
+
+    SDL_BlitScaled(surface, NULL, resizedSurface, NULL);
+
+    // Charger la texture redimensionnée dans OpenGL
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, resizedSurface->w, resizedSurface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, resizedSurface->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    SDL_FreeSurface(surface);
+    SDL_FreeSurface(resizedSurface);
 }
 
+// Fonction de décalage de couleur (à définir selon les besoins)
+void OffsetColour(float* colour, float offset)
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        colour[i] += offset;
+        if (colour[i] > 1.0f) colour[i] = 1.0f;
+        if (colour[i] < 0.0f) colour[i] = 0.0f;
+    }
+}
+
+
 //---------------------------------------------------------------------------------------------------------------------
-static void flipVertical(unsigned char *data, int w, int h)
+/*static void flipVertical(unsigned char *data, int w, int h)
 {
   int x, y, i1, i2;
   for (x=0;x<w;x++){
@@ -428,10 +604,10 @@ static void flipVertical(unsigned char *data, int w, int h)
       data[i1] = data[i2] = 255;
     }
   }
-}
+}*/
 
 //---------------------------------------------------------------------------------------------------------------------
-void SaveScreenshot()
+/*void SaveScreenshot()
 {
   static int count = 0;
   static char file[] = "PicaSim-00000.png";
@@ -456,10 +632,55 @@ void SaveScreenshot()
   image.SavePng(file);
 
   free(framebuffer);
+}*/
+
+void SaveScreenshot()
+{
+  static int count = 0;
+  char file[32];
+  sprintf(file, "PicaSim-%05d.png", count++);
+
+  int w, h;
+  SDL_GetRendererOutputSize(SDL_GetRenderer(SDL_GetWindowFromID(1)), &w, &h);
+
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+  std::vector<unsigned char> framebuffer(w * h * 4);
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, framebuffer.data());
+
+  // Flip vertically
+  for (int y = 0; y < h / 2; ++y)
+  {
+      for (int x = 0; x < w * 4; ++x)
+      {
+          std::swap(framebuffer[y * w * 4 + x], framebuffer[(h - y - 1) * w * 4 + x]);
+      }
+  }
+
+  // Save the screenshot using SDL2
+  SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(
+      framebuffer.data(), w, h, 32, w * 4, SDL_PIXELFORMAT_ABGR8888);
+  if (!surface)
+  {
+      std::cerr << "Failed to create SDL_Surface: " << SDL_GetError() << std::endl;
+      return;
+  }
+
+  if (IMG_SavePNG(surface, file) != 0)
+  {
+      std::cerr << "Failed to save screenshot: " << SDL_GetError() << std::endl;
+  }
+  else
+  {
+      std::cout << "Screenshot saved to " << file << std::endl;
+  }
+
+  SDL_FreeSurface(surface);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void SaveScreenshotAsTexture(CIwTexture* texture)
+/*void SaveScreenshotAsTexture(CIwTexture* texture)
 {
   int w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
   int h = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
@@ -479,6 +700,60 @@ void SaveScreenshotAsTexture(CIwTexture* texture)
   image.SetBuffers(framebuffer, dataSize);
 
   texture->SetImage(&image);
+}*/
+
+void SaveScreenshotAsTexture(SDL_Texture*& texture, SDL_Renderer* renderer)
+{
+  // Obtenir la taille de la fenêtre
+  int w, h;
+  SDL_GetRendererOutputSize(renderer, &w, &h);
+
+  // Configurer les alignements
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+  // Lire les pixels de la fenêtre
+  std::vector<unsigned char> framebuffer(w * h * 4); // RGBA (4 canaux)
+  glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, framebuffer.data());
+
+  // Inverser les pixels verticalement
+  for (int row = 0; row < h / 2; ++row)
+  {
+    for (int col = 0; col < w * 4; ++col)
+    {
+      std::swap(framebuffer[row * w * 4 + col], framebuffer[(h - 1 - row) * w * 4 + col]);
+    }
+  }
+
+  // Créer une texture SDL à partir des données lues
+  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(
+      framebuffer.data(), w, h, 32, w * 4, SDL_PIXELFORMAT_ABGR8888);
+
+  if (!surface)
+  {
+    std::cerr << "Failed to create SDL_Surface: " << SDL_GetError() << std::endl;
+    return;
+  }
+
+  // Créer une texture SDL
+  SDL_Texture* newTexture = SDL_CreateTextureFromSurface(renderer, surface);
+  if (!newTexture)
+  {
+    std::cerr << "Failed to create SDL_Texture: " << SDL_GetError() << std::endl;
+    SDL_FreeSurface(surface);
+    return;
+  }
+
+  // Nettoyer l'ancienne texture si nécessaire
+  if (texture)
+  {
+      SDL_DestroyTexture(texture);
+  }
+  texture = newTexture;
+
+  SDL_FreeSurface(surface);
+
+  std::cout << "Screenshot saved as a texture!" << std::endl;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -1250,27 +1525,25 @@ void OffsetColour(float col[4], float offset)
   col[2] = rgb.b;
 }
 
-Vector3 RGB2HSV(const Vector3& rgb)
+glm::vec3 RGB2HSV(const glm::vec3& rgb)
 {
   RGB in(rgb.x, rgb.y, rgb.z);
   HSV out = RGB2HSV(in);
-  return Vector3(out.h/360.0f, out.s, out.v);
+  return glm::vec3(out.h/360.0f, out.s, out.v);
 }
 
-Vector3 HSV2RGB(const Vector3& hsv)
+glm::vec3 HSV2RGB(const glm::vec3& hsv)
 {
   HSV in(hsv.x * 360.0f, hsv.y, hsv.z);
   RGB out = HSV2RGB(in);
-  return Vector3(out.r, out.g, out.b);
+  return glm::vec3(out.r, out.g, out.b);
 }
 
-CIwColour ConvertToColour(const Vector3& colour)
-{
-  CIwColour col;
-  col.Set(
-    ClampToRange((int) (colour.x * 256), 0, 255),
-    ClampToRange((int) (colour.y * 256), 0, 255),
-    ClampToRange((int) (colour.z * 256), 0, 255)
-    );
-  return col;
+SDL_Color ConvertToColour(const glm::vec3& colour) {
+    SDL_Color col;
+    col.r = ClampToRange(static_cast<int>(colour.x * 256), 0, 255);
+    col.g = ClampToRange(static_cast<int>(colour.y * 256), 0, 255);
+    col.b = ClampToRange(static_cast<int>(colour.z * 256), 0, 255);
+    col.a = 255; // Par défaut, alpha est à 255 (opaque)
+    return col;
 }

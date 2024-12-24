@@ -1,8 +1,11 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
-#include <IwProfileMenu.h>
-#include <IwGx.h>
+//#include <IwProfileMenu.h>
+//#include <IwGx.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_ttf.h>
 
 #ifdef IW_USE_PROFILE
 
@@ -40,7 +43,6 @@ inline void destroyDebugMenu()
 {
    delete &CIwProfileMenu::Get();
    delete &CIwProfileManager::Get();
-
    delete IwGetMenuManager();
 }
 

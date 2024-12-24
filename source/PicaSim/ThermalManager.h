@@ -8,7 +8,7 @@
 
 // Change this to a std::vector like array type. However CIwArray has got a fast 
 // resize_quick(0) that doesn't call destructors
-#include <IwUtil.h>
+//#include <IwUtil.h>
 #define ARRAY_TYPE CIwArray
 
 class ThermalManager : public RenderObject

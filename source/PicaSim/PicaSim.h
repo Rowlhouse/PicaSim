@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-#include <s3eTypes.h>
+//#include <s3eTypes.h>
 
 enum GraphIDs
 {

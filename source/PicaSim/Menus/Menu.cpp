@@ -6,8 +6,12 @@
 #include "../PicaJoystick.h"
 #include "../WindowsBilling.h"
 
-#include <IwUI.h>
-#include <IwGL.h>
+//#include <IwUI.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+//#include <IwGL.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 #include <s3eOSExec.h>
 
 typedef std::map<std::string, Texture*> TextureMap;

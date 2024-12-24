@@ -11,7 +11,7 @@
 
 // Change this to a std::vector like array type. However CIwArray has got a fast 
 // resize_quick(0) that doesn't call destructors
-#include <IwUtil.h>
+//#include <IwUtil.h>
 #define ARRAY_TYPE CIwArray
 
 namespace Heightfield
@@ -37,7 +37,7 @@ public:
 
   void ReservePoints(size_t num);
   
-  Vector3 getPos(int i, int j) const; // i and j are "x" and "y"
+  glm::vec3 getPos(int i, int j) const; // i and j are "x" and "y"
   
   float getHeight(int i, int j) const; // i and j are "x" and "y"
   
@@ -49,11 +49,11 @@ public:
   
   // mesh refinement fns
   //! Top-level refinement function - generates the array of saved points that can be rendered as a triangle strip
-  void meshRefine(const Vector3& eye_pos, float lod);
+  void meshRefine(const glm::vec3& eye_pos, float lod);
   
   //! Sets clipping parameters (and enables)
   void setClipping(
-    const Transform& cameraTM, 
+    const glm::mat4& cameraTM, 
     float verticalFOV,
     float aspect,
     float Near, 
@@ -127,10 +127,10 @@ private:
 
 //------------- Inline functions ------------------
 
-inline Vector3 HeightfieldRuntime::getPos(int i, int j) const
+inline glm::vec3 HeightfieldRuntime::getPos(int i, int j) const
 {
   int index = mVertices[Heightfield::calcIndex(i, j, mSize)].index;  
-  return Vector3(mVertices[index].x, mVertices[index].y, mVertices[index].z);
+  return glm::vec3(mVertices[index].x, mVertices[index].y, mVertices[index].z);
 }
 
 inline float HeightfieldRuntime::getHeight(int i, int j) const

@@ -5,7 +5,9 @@
 #include "LoadingScreenHelper.h"
 #include "Helpers.h"
 
-#include <IwUI.h>
+//#include <IwUI.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 class LoadingScreen : public LoadingScreenHelper
 {
@@ -21,15 +23,15 @@ public:
 
 private:
   GameSettings& mGameSettings;
-  int64 mLastTimeMs;
+  int64_t mLastTimeMs;
   float mFraction;
   bool mClearOnExit;
 
   CIwUILabel* mLabel;
   CIwUILabel* mTipLabel;
   CIwUIImage* mProgressImage;
-  int32 mProgressImageWidth; // in pixels of the displayed image
-  int32 mProgressImageHeight; // in pixels of the displayed image
+  int32_t mProgressImageWidth; // in pixels of the displayed image
+  int32_t mProgressImageHeight; // in pixels of the displayed image
   Texture* mTexture;
 };
 

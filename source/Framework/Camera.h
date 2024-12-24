@@ -10,8 +10,8 @@ class CameraTarget
 {
 public:
   virtual ~CameraTarget() {}
-  virtual Vector3 GetCameraTargetPosition(
-    const Vector3& cameraPosition, 
+  virtual glm::vec3 GetCameraTargetPosition(
+    const glm::vec3& cameraPosition, 
     const void*    cameraUserData, 
     float&         targetRadius,
     float&         closestDistanceToCamera) const = 0;
@@ -23,7 +23,7 @@ class CameraTransform
 {
 public:
   virtual ~CameraTransform() {}
-  virtual Transform GetCameraTransform(void* cameraUserData) const = 0;
+  virtual glm::mat4 GetCameraTransform(void* cameraUserData) const = 0;
 };
 
 class Camera
@@ -36,7 +36,7 @@ public:
 
   // Set up the perspective transform and the modelview matrix for the camera. aspectRatio is width/height
   void SetupCameraProjection(float aspectRatio);
-  void SetupCameraView(const Vector3& positionOffset = Vector3(0,0,0));
+  void SetupCameraView(const glm::vec3& positionOffset = glm::vec3(0,0,0));
 
   void SetCameraTarget(CameraTarget* cameraTarget) {mCameraTarget = cameraTarget;}
   const CameraTarget* GetCameraTarget() const {return mCameraTarget;}
@@ -45,17 +45,17 @@ public:
   const CameraTransform* GetCameraTransform() const {return mCameraTransform;}
 
   /// Returns the camera transform. Note that this is only updated during the SetupCamera call.
-  const Transform& GetTransform() const {return mTM;}
+  const glm::mat4& GetTransform() const {return mTM;}
 
-  void SetPosition(const Vector3& pos) {mPosition = pos;}
-  const Vector3& GetPosition() const {return mPosition;}
+  void SetPosition(const glm::vec3& pos) {mPosition = pos;}
+  const glm::vec3& GetPosition() const {return mPosition;}
 
-  void SetUpDirection(const Vector3& upDir) {mUpDirection = upDir;}
-  const Vector3& GetUpdirection() const {return mUpDirection;}
+  void SetUpDirection(const glm::vec3& upDir) {mUpDirection = upDir;}
+  const glm::vec3& GetUpdirection() const {return mUpDirection;}
 
-  void SetTargetPosition(const Vector3& targetPosition) {mTargetPosition = targetPosition;}
-  const Vector3& GetTargetPosition() const {return mTargetPosition;}
-  Vector3 GetLookDir() const {return (mTargetPosition - mPosition).GetNormalised();}
+  void SetTargetPosition(const glm::vec3& targetPosition) {mTargetPosition = targetPosition;}
+  const glm::vec3& GetTargetPosition() const {return mTargetPosition;}
+  glm::vec3 GetLookDir() const {return glm::normalize(mTargetPosition - mPosition);}
 
   /// Returns the width of the near mClipToPlanes mClipPlanes
   float GetNearClipPlaneWidth() const {return mNearWidth;}
@@ -79,9 +79,9 @@ public:
 
   const FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
 
-  bool isPointInFrustum(const Vector3& pt) const;
-  bool isSphereFullyInFrustum(const Vector3& pt, float radius) const;
-  bool isSpherePartlyInFrustum(const Vector3& pt, float radius) const;
+  bool isPointInFrustum(const glm::vec3& pt) const;
+  bool isSphereFullyInFrustum(const glm::vec3& pt, float radius) const;
+  bool isSpherePartlyInFrustum(const glm::vec3& pt, float radius) const;
 
 private:
   void UpdateFrustumPlanes();
@@ -91,13 +91,13 @@ private:
   CameraTarget* mCameraTarget;
   CameraTransform* mCameraTransform;
 
-  Vector3 mPosition;
-  Vector3 mTargetPosition;
-  Vector3 mUpDirection;
+  glm::vec3 mPosition;
+  glm::vec3 mTargetPosition;
+  glm::vec3 mUpDirection;
 
   Plane mFrustumPlanes[6];
 
-  Transform mTM;
+  glm::mat4 mTM;
 
   float mNearClip;
   float mFarClip;

@@ -1,14 +1,15 @@
 #ifndef SCORELOOPMENU_H
 #define SCORELOOPMENU_H
 
-#include <s3eTypes.h>
+//#include <s3eTypes.h>
+#include <cstdint>
 
 struct Score
 {
-  Score(double result, double minorResult, uint32 mode) : mResult(result), mMinorResult(minorResult), mMode(mode) {}
+  Score(double result, double minorResult, uint32_t mode) : mResult(result), mMinorResult(minorResult), mMode(mode) {}
   double mResult;
   double mMinorResult;
-  uint32 mMode;
+  uint32_t mMode;
 };
 
 /// Displays the Scoreloop system, initially in the profile tab

@@ -131,7 +131,7 @@ void init_surface(ACSurface *s)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void tri_calc_normal(Vector3 *v1, Vector3 *v2, Vector3 *v3, Vector3 *n)
+void tri_calc_normal(glm::vec3 *v1, glm::vec3 *v2, glm::vec3 *v3, glm::vec3 *n)
 {
   double len;
 
@@ -203,9 +203,9 @@ ACSurface *read_surface(FILE *f, ACSurface *s, ACObject *ob, bool compressed)
 
       /** calc surface normal **/
       if (s->vertref.size() >= 3)
-        tri_calc_normal((Vector3 *)&ob->vertices[s->vertref[0]], 
-        (Vector3 *)&ob->vertices[s->vertref[1]], 
-        (Vector3 *)&ob->vertices[s->vertref[2]], (Vector3 *)&s->normal);
+        tri_calc_normal((glm::vec3 *)&ob->vertices[s->vertref[0]], 
+        (glm::vec3 *)&ob->vertices[s->vertref[1]], 
+        (glm::vec3 *)&ob->vertices[s->vertref[2]], (glm::vec3 *)&s->normal);
 
       return(s);
     }
@@ -224,12 +224,12 @@ void ac_object_calc_vertex_normals(ACObject *ob)
   for (size_t s = 0 ; s != ob->surfaces.size() ; ++s)
   {
     ACSurface& surface = ob->surfaces[s];
-    const Vector3& n = surface.normal;
+    const glm::vec3& n = surface.normal;
     surface.vertexNormals.resize(surface.vertref.size());
     for (size_t v = 0 ; v != surface.vertref.size() ; ++v)
     {
       size_t vertexIndex = surface.vertref[v];
-      Vector3 accumulatedNormal = n;
+      glm::vec3 accumulatedNormal = n;
       int found = 1;
       // Find all the other adjacent surfaces that have a normal within the crease angle
       for (size_t s1 = 0 ; s1 != ob->surfaces.size() ; ++s1)
@@ -237,7 +237,7 @@ void ac_object_calc_vertex_normals(ACObject *ob)
         if (s1 == s)
           continue;
         ACSurface& surface1 = ob->surfaces[s1];
-        Vector3 n1 = surface1.normal;
+        glm::vec3 n1 = surface1.normal;
         float dot = n.x * n1.x + n.y * n1.y + n.z * n1.z;
         if (dot < cosCreaseAngle)
           continue;
@@ -439,7 +439,7 @@ bool ac_load_object(ACObject& ob, FILE *f, ACObject *parent, Materials& material
 
         for (n = 0; n < num; n++)
         {
-          Vector3 p;
+          glm::vec3 p;
           read_line(f, compressed);
           sscanf(buff, "%f %f %f", &p.x, &p.y, &p.z);
           ob.vertices[n] = p;
@@ -517,13 +517,13 @@ bool ACLoadModel(ACModel& model, const char *fname)
   FILE *f = fopen(fname, "rb");
   if (f == NULL)
   {
-    IwAssertMsg(ROWLHOUSE, false, ("Failed to open file"));
+    assert(false && "Failed to open file");
     char cf[512];
     sprintf(cf, "%s.p", fname);
     f = fopen(cf, "rb");
     if (f == NULL)
     {
-      IwAssertMsg(ROWLHOUSE, false, ("Failed to open file"));
+      assert(false && "Failed to open file");
       printf("can't open %s or %s\n", fname, cf);
       return false;
     }

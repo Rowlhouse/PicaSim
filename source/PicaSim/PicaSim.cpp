@@ -20,8 +20,9 @@
 
 #include "Menus/PicaDialog.h"
 
-#include <s3e.h>
-#include <Iw2D.h>
+#include <SDL2/SDL.h>
+//#include <s3e.h>
+//#include <Iw2D.h>
 
 float numButtonSlots = 8.0f;
 

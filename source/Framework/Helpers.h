@@ -3,10 +3,21 @@
 
 #include "btBulletDynamicsCommon.h"
 
-#include <IwGeom.h>
-#include <IwGeomFQuat.h>
-#include <IwColour.h>
-#include <MarmaladeVersion.h>
+//#include <IwGeom.h>
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>  // Pour les vecteurs 3D
+#include <glm/mat4x4.hpp>  // Pour les matrices 4x4
+
+//#include <IwGeomFQuat.h>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
+//#include <IwColour.h>
+#include <SDL2/SDL.h>
+
+//#include <MarmaladeVersion.h>
+
+#include <cassert> // Pour l'assertion
 
 #ifdef _MSC_VER
 #define OVERRIDE override
@@ -14,7 +25,7 @@
 #define OVERRIDE 
 #endif
 
-inline bool IsMarmaladeVersionGreaterEqualsThan(int major, int minor, int revision)
+/* inline bool IsMarmaladeVersionGreaterEqualsThan(int major, int minor, int revision)
 {
   int r = MARMALADE_VERSION_FROM_MAJOR_MINOR_REVISION(major, minor, revision);
   int m = MARMALADE_VERSION;
@@ -26,55 +37,62 @@ inline bool IsMarmaladeVersionLessThan(int major, int minor, int revision)
   int r = MARMALADE_VERSION_FROM_MAJOR_MINOR_REVISION(major, minor, revision);
   int m = MARMALADE_VERSION;
   return m < r;
-}
+} */
 
-typedef CIwFVec2  Vector2;
-typedef CIwFVec3  Vector3;
-typedef CIwFVec4  Vector4;
-typedef CIwFMat   Transform;
-typedef CIwFQuat  Quat;
-class Plane : public CIwFPlane
+class Plane
 {
 public:
-  Plane(const Vector3& v, float k) : CIwFPlane(v, k) {}
-  Plane() {}
+  glm::vec3 v; // Le vecteur normal
+  float k;   // Le décalage
 
-  void Normalise() {float invM = 1.0f / v.GetLength(); v *= invM; k *= invM;}
-  float GetDistanceToPoint(const Vector3& pt) const { return v * pt + k;}
+  // Constructeurs
+  Plane(const glm::vec3& v, float k) : v(v), k(k) {}
+  Plane() : v(0.0f, 0.0f, 1.0f), k(0.0f) {} // Valeur par défaut
+
+
+  void Normalise() {float invM = 1.0f / glm::length(v); v *= invM; k *= invM;}
+  float GetDistanceToPoint(const glm::vec3& pt) const { return glm::dot(v, pt) + k;}
 };
 
-class Colour : public CIwColour
+class Colour //: public CIwColour
 {
 public:
-  Colour(uint8 r = 255, uint8 g = 255, uint8 b = 255, uint8 a = 255)
+  SDL_Color col;
+  
+  Colour(uint8_t r = 255, uint8_t g = 255, uint8_t b = 255, uint8_t a = 255)
   {
-    Set(r, g, b, a);
+    col.r = r;
+    col.g = g;
+    col.b = b;
+    col.a = a;
   }
-  Colour(const CIwColour& col) : CIwColour(col) {}
+  Colour(const SDL_Color& col) : col(col) {}
 };
 
-inline void SetRowX(Transform& tm, const Vector3& v) {
-  tm.m[0][0] = v.x; tm.m[0][1] = v.y; tm.m[0][2] = v.z;
-}
-inline void SetRowY(Transform& tm, const Vector3& v) {
-  tm.m[1][0] = v.x; tm.m[1][1] = v.y; tm.m[1][2] = v.z;
-}
-inline void SetRowZ(Transform& tm, const Vector3& v) {
-  tm.m[2][0] = v.x; tm.m[2][1] = v.y; tm.m[2][2] = v.z;
+inline void SetRowX(glm::mat4& tm, const glm::vec3& v) {
+    tm[0][0] = v.x; tm[0][1] = v.y; tm[0][2] = v.z; 
 }
 
-inline void SafeNormalise(Vector3& v, const Vector3& fallback = Vector3(1,0,0))
+inline void SetRowY(glm::mat4& tm, const glm::vec3& v) {
+    tm[1][0] = v.x; tm[1][1] = v.y; tm[1][2] = v.z;
+}
+
+inline void SetRowZ(glm::mat4& tm, const glm::vec3& v) {
+    tm[2][0] = v.x; tm[2][1] = v.y; tm[2][2] = v.z;
+}
+
+inline void SafeNormalise(glm::vec3& v, const glm::vec3& fallback = glm::vec3(1,0,0))
 {
-  if (v.GetLengthSquared() > 0.0f)
-    v.Normalise();
+  if (glm::length(v) > 0.0f)
+    v = glm::normalize(v);
   else
     v = fallback;
 }
 
-inline Vector3 GetSafeNormalised(const Vector3& v, const Vector3& fallback = Vector3(1,0,0))
+inline glm::vec3 GetSafeNormalised(const glm::vec3& v, const glm::vec3& fallback = glm::vec3(1,0,0))
 {
-  if (v.GetLengthSquared() > 0.0f)
-    return v.GetNormalised();
+  if (glm::length(v) > 0.0f)
+    return glm::normalize(v);
   else 
     return fallback;
 }
@@ -84,19 +102,19 @@ inline T DegreesToRadians(T deg) {return deg * PI / 180.0f;}
 template<typename T>
 inline T RadiansToDegrees(T radians) {return radians * 180.0f / PI;}
 
-inline Vector3 ComponentMultiply(const Vector3&a, const Vector3&b)
+inline glm::vec3 ComponentMultiply(const glm::vec3& a, const glm::vec3& b)
 {
-  return Vector3(a.x*b.x, a.y*b.y, a.z*b.z);
+  return glm::vec3(a.x*b.x, a.y*b.y, a.z*b.z);
 }
 
-inline Vector3 Abs(const Vector3&a)
+inline glm::vec3 Abs(const glm::vec3&a)
 {
-  return Vector3(fabsf(a.x), fabsf(a.y), fabsf(a.z));
+  return glm::vec3(fabsf(a.x), fabsf(a.y), fabsf(a.z));
 }
 
-inline Vector3 ComponentSquareSigned(const Vector3&a)
+inline glm::vec3 ComponentSquareSigned(const glm::vec3& a)
 {
-  return Vector3(a.x*fabsf(a.x), a.y*fabsf(a.y), a.z*fabsf(a.z));
+  return glm::vec3(a.x*fabsf(a.x), a.y*fabsf(a.y), a.z*fabsf(a.z));
 }
 
 inline float Hypot(float a, float b) {return sqrtf(a*a + b*b);}
@@ -118,25 +136,27 @@ inline T Maximum(T a, T b) {return a > b ? a : b;}
 template<typename T>
 inline T Minimum(T a, T b) {return a < b ? a : b;}
 
-inline Vector3 Maximum(const Vector3& a, const Vector3& b) 
+inline glm::vec3 Maximum(const glm::vec3& a, const glm::vec3& b) 
 {
-  Vector3 result(Maximum(a.x, b.x), Maximum(a.y, b.y), Maximum(a.z, b.z));
+  glm::vec3 result(Maximum(a.x, b.x), Maximum(a.y, b.y), Maximum(a.z, b.z));
   return result;
 }
 
-inline void CheckSanity(const Vector3& v)
+inline void CheckSanity(const glm::vec3& v)
 {
-  IwAssert(ROWLHOUSE, v.x == v.x);
-  IwAssert(ROWLHOUSE, v.y == v.y);
-  IwAssert(ROWLHOUSE, v.z == v.z);
+   // Vérifie que les coordonnées du vecteur ne sont pas NaN (Not a Number)
+    assert(v.x == v.x); // Vérifie que x n'est pas NaN
+    assert(v.y == v.y); // Vérifie que y n'est pas NaN
+    assert(v.z == v.z); // Vérifie que z n'est pas NaN
 }
 
-inline void CheckSanity(const Transform& tm)
+inline void CheckSanity(const glm::mat4& tm)
 {
-  CheckSanity(tm.RowX());
-  CheckSanity(tm.RowY());
-  CheckSanity(tm.RowZ());
-  CheckSanity(tm.GetTrans());
+    // Vérifie chaque ligne de la matrice de transformation
+    CheckSanity(tm[0]); // Ligne X
+    CheckSanity(tm[1]); // Ligne Y
+    CheckSanity(tm[2]); // Ligne Z
+    CheckSanity(tm[3]); // Translation (ligne T)
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -158,7 +178,7 @@ inline T ClampToRange(T val, T minVal, T maxVal)
     return val;
 }
 
-inline Vector3 ClampToRange(Vector3 val, float minVal, float maxVal) 
+inline glm::vec3 ClampToRange(glm::vec3 val, float minVal, float maxVal) 
 {
   val.x = ClampToRange(val.x, minVal, maxVal);
   val.y = ClampToRange(val.y, minVal, maxVal);
@@ -181,7 +201,7 @@ inline T WrapToRange(T val, T minVal, T maxVal)
 template <>
 inline float WrapToRange<float>(float val, float minVal, float maxVal)
 {
-  IwAssert(ROWLHOUSE, minVal < maxVal);
+  assert(minVal < maxVal);
   const float delta = maxVal - minVal;  
   float u = (val - minVal) / delta;
   u -= floorf(u);
@@ -235,6 +255,10 @@ inline float SmoothStep(float t)
   return 3.0f * Square(t) - 2.0f * Cube(t);
 }
 
+constexpr float PI = 3.14159265358979323846f;
+//constexpr float HALF_PI = 0.5f * PI;
+//constexpr float TWO_PI = 2.0f * PI;
+//constexpr float TWO_PI_INV = 1.0f / TWO_PI;
 #define HALF_PI    (0.5f * PI)
 #define TWO_PI     (2.0f * PI)
 #define TWO_PI_INV (1.0f / TWO_PI)
@@ -355,26 +379,39 @@ private:
   const float AM;
 };
 
-inline btVector3 Vector3ToBulletVector3(const Vector3& v) {return btVector3(v.x, v.y, v.z);}
-inline Vector3   BulletVector3ToVector3(const btVector3& v) {return Vector3(v.x(), v.y(), v.z());}
+inline btVector3 Vector3ToBulletVector3(const glm::vec3& v) {return btVector3(v.x, v.y, v.z);}
+inline glm::vec3   BulletVector3ToVector3(const btVector3& v) {return glm::vec3(v.x(), v.y(), v.z());}
 
-inline btQuaternion QuatToBulletQuaternion(const Quat& q) {return btQuaternion(q.x, q.y, q.z, q.s);}
-inline Quat BulletQuaternionToQuat(const btQuaternion& q) {return Quat(q.w(), q.x(), q.y(), q.z());}
+inline btQuaternion QuatToBulletQuaternion(const glm::quat& q) {return btQuaternion(q.x, q.y, q.z, q.w);}
+inline glm::quat BulletQuaternionToQuat(const btQuaternion& q) {return glm::quat(q.w(), q.x(), q.y(), q.z());}
 
-inline btTransform TransformToBulletTransform(const Transform& tm) 
+inline btTransform TransformToBulletTransform(const glm::mat4& tm) 
 {
-  return btTransform(QuatToBulletQuaternion(Quat(tm)), Vector3ToBulletVector3(tm.t));
+  // Extraire la rotation (matrice 3x3) et la translation (vecteur 3D) de la matrice 4x4
+  glm::mat3 rotation = glm::mat3(tm);  // Partie rotation (les 3 premières colonnes)
+  glm::vec3 translation = glm::vec3(tm[3][0], tm[3][1], tm[3][2]);  // Dernière colonne pour la translation
+  
+  return btTransform(QuatToBulletQuaternion(glm::quat(tm)), Vector3ToBulletVector3(translation));
 }
 
-inline Transform BulletTransformToTransform(const btTransform& tm) 
+inline glm::mat4 BulletTransformToTransform(const btTransform& tm) 
 {
-  Quat q = BulletQuaternionToQuat(tm.getRotation());
-  Transform r = q;
-  r.t = BulletVector3ToVector3(tm.getOrigin());
+  // Convertir le quaternion Bullet en quaternion GLM
+  glm::quat q = BulletQuaternionToQuat(tm.getRotation());
+
+  // Créer une matrice 4x4 à partir du quaternion pour la rotation
+  glm::mat4 r = glm::mat4_cast(q);
+
+  // Extraire la translation Bullet et la convertir en glm::vec3
+  glm::vec3 t = BulletVector3ToVector3(tm.getOrigin());
+
+  // Mettre à jour la dernière colonne de la matrice 4x4 pour la translation
+  r[3] = glm::vec4(t, 1.0f);
+
   return r;
 }
 
-void ApplyRollPitchYawToRotationDegrees(float roll, float pitch, float yaw, Vector3& rotation);
+void ApplyRollPitchYawToRotationDegrees(float roll, float pitch, float yaw, glm::vec3& rotation);
 
 //----------------------------------------------------------------------------------------------------------------------
 /// Critically damped method of making a variable smoothly approach a value. Requires

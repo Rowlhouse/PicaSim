@@ -6,13 +6,13 @@
 struct AerofoilConfiguration
 {
   /// Offset of the aerofoil from the aeroplane's TM
-  Transform mOffset;
+  glm::mat4 mOffset;
 
   /// Extents in local space
-  Vector3 mExtents;
+  glm::vec3 mExtents;
 
   /// Direction and magnitude of the shadowing. This points in the direction of the shadow - i.e. up for a conventional fin being shadowed by the tail.
-  Vector3 mShadow;
+  glm::vec3 mShadow;
 
   /// mExtents.x * mExtents.y
   float mArea;
@@ -41,8 +41,8 @@ struct AerofoilConfiguration
 /// These parameters will be updated each tick and are specific to that aerofoil
 struct AerofoilParameters
 {
-  Transform mTM;
-  Vector3 mVel;
+  glm::mat4 mTM;
+  glm::vec3 mVel;
 };
 
 /// Modifications to the aerofoil properties due to control

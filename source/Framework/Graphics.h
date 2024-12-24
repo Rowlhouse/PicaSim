@@ -3,8 +3,18 @@
 
 #include "Helpers.h"
 
-#include <IwGL.h>
-#include <IwGx.h>
+//#include <IwGL.h>
+//#include <IwGx.h>
+#include <GL/glew.h>
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_image.h>
+
+//#include <glad/glad.h>
+//#include <GL/gl.h> 
+#include <iostream>
+
 
 extern int gGLVersion;
 
@@ -13,7 +23,9 @@ typedef GLfloat GLMat33[3][3];
 typedef GLfloat GLVec4[4];
 typedef GLfloat GLVec3[3];
 
-typedef CIwTexture Texture;
+//typedef CIwTexture Texture;
+typedef SDL_Texture* Texture;
+
 
 // Use this to restore OpenGL etc to a sensible state after the menu
 void RecoverFromIwGx(bool clear);
@@ -23,52 +35,70 @@ void PrepareForIwGx(bool clear);
 
 void SaveScreenshot();
 
-void SaveScreenshotAsTexture(CIwTexture* texture);
+void SaveScreenshotAsTexture(SDL_Texture* texture);
 
 /// Initialises the OpenGL context and gets the best RGB/depth buffer combination possible. 
 /// Returns 0 if successful.
 int eglInit(bool createSurface);
 void eglTerm(bool destroySurface);
 
-inline void ConvertTransformToGLMat44(const Transform& tm, GLMat44& mat44)
+inline void ConvertTransformToGLMat44(const glm::mat4& tm, GLMat44& mat44)
 {
-  mat44[0][0] = tm.RowX().x;
-  mat44[0][1] = tm.RowX().y;
-  mat44[0][2] = tm.RowX().z;
-  mat44[0][3] = 0.0;
-  mat44[1][0] = tm.RowY().x;
-  mat44[1][1] = tm.RowY().y;
-  mat44[1][2] = tm.RowY().z;
-  mat44[1][3] = 0.0;
-  mat44[2][0] = tm.RowZ().x;
-  mat44[2][1] = tm.RowZ().y;
-  mat44[2][2] = tm.RowZ().z;
-  mat44[2][3] = 0.0;
-  mat44[3][0] = tm.GetTrans().x;
-  mat44[3][1] = tm.GetTrans().y;
-  mat44[3][2] = tm.GetTrans().z;
-  mat44[3][3] = 1.0;
+  // Copie de la ligne 0 de tm (colonne 0, 1, 2)
+  mat44[0][0] = tm[0][0];  // X
+  mat44[0][1] = tm[0][1];  // Y
+  mat44[0][2] = tm[0][2];  // Z
+  mat44[0][3] = 0.0f;      // Pas de translation ici
+
+  // Copie de la ligne 1 de tm (colonne 0, 1, 2)
+  mat44[1][0] = tm[1][0];  // X
+  mat44[1][1] = tm[1][1];  // Y
+  mat44[1][2] = tm[1][2];  // Z
+  mat44[1][3] = 0.0f;      // Pas de translation ici
+
+  // Copie de la ligne 2 de tm (colonne 0, 1, 2)
+  mat44[2][0] = tm[2][0];  // X
+  mat44[2][1] = tm[2][1];  // Y
+  mat44[2][2] = tm[2][2];  // Z
+  mat44[2][3] = 0.0f;      // Pas de translation ici
+
+  // Copie de la ligne 3 de tm (colonne 0, 1, 2)
+  mat44[3][0] = tm[3][0];  // Translation X
+  mat44[3][1] = tm[3][1];  // Translation Y
+  mat44[3][2] = tm[3][2];  // Translation Z
+  mat44[3][3] = 1.0f;      // Composant homogène
 }
 
-inline void ConvertGLMat44ToTransform(const GLMat44& mat44, Transform& tm)
+inline void ConvertGLMat44ToTransform(const GLMat44& mat44, glm::mat4& tm)
 {
-  tm.m[0][0] =     mat44[0][0];
-  tm.m[0][1] =     mat44[0][1];
-  tm.m[0][2] =     mat44[0][2];
-  tm.m[1][0] =     mat44[1][0];
-  tm.m[1][1] =     mat44[1][1];
-  tm.m[1][2] =     mat44[1][2];
-  tm.m[2][0] =     mat44[2][0];
-  tm.m[2][1] =     mat44[2][1];
-  tm.m[2][2] =     mat44[2][2];
-  tm.t.x = mat44[3][0];
-  tm.t.y = mat44[3][1];
-  tm.t.z = mat44[3][2];
+  tm[0][0] = mat44[0][0];  // Ligne 0, Colonne 0
+  tm[0][1] = mat44[0][1];  // Ligne 0, Colonne 1
+  tm[0][2] = mat44[0][2];  // Ligne 0, Colonne 2
+  tm[0][3] = 0.0f;         // Pas de translation ici
+
+  tm[1][0] = mat44[1][0];  // Ligne 1, Colonne 0
+  tm[1][1] = mat44[1][1];  // Ligne 1, Colonne 1
+  tm[1][2] = mat44[1][2];  // Ligne 1, Colonne 2
+  tm[1][3] = 0.0f;         // Pas de translation ici
+
+  tm[2][0] = mat44[2][0];  // Ligne 2, Colonne 0
+  tm[2][1] = mat44[2][1];  // Ligne 2, Colonne 1
+  tm[2][2] = mat44[2][2];  // Ligne 2, Colonne 2
+  tm[2][3] = 0.0f;         // Pas de translation ici
+
+  tm[3][0] = mat44[3][0];  // Translation X
+  tm[3][1] = mat44[3][1];  // Translation Y
+  tm[3][2] = mat44[3][2];  // Translation Z
+  tm[3][3] = 1.0f;         // Composant homogène
 }
 
 /// Loads an image into the texture, making sure that if it's too big then it gets scaled down safely.
 /// colourOffset adjusts the HSV result - modifying H.
 void LoadTextureFromFile(Texture& texture, const char* filename, float colourOffset = 0.0f);
+
+
+void OffsetColour(float* colour, float offset);
+
 
 /// \brief Load a shader, check for compile errors, print error messages to output log
 /// \param type Type of shader (GL_VERTEX_SHADER or GL_FRAGMENT_SHADER)
@@ -283,12 +313,12 @@ struct HSV
 HSV RGB2HSV(RGB in);
 RGB HSV2RGB(HSV in);
 
-Vector3 RGB2HSV(const Vector3& rgb);
-Vector3 HSV2RGB(const Vector3& rgb);
+glm::vec3 RGB2HSV(const glm::vec3& rgb);
+glm::vec3 HSV2RGB(const glm::vec3& rgb);
 
 // Offsets the HSV version of col, with offset = 0-1
 void OffsetColour(float col[4], float offset);
 
-CIwColour ConvertToColour(const Vector3& colour);
+SDL_Color ConvertToColour(const glm::vec3& colour);
 
 #endif

@@ -29,10 +29,10 @@ public:
   /// @param particle_size: Size of the billboard used for this particle
   int RegisterEmitter(
     ParticleType   type,
-    const Vector3& emitterPos,
-    const Vector3& particleVel,
-    const Vector3& targetVel,
-    const Vector3& colour,
+    const glm::vec3& emitterPos,
+    const glm::vec3& particleVel,
+    const glm::vec3& targetVel,
+    const glm::vec3& colour,
     int            maxNumParticles,
     float          initialAlpha,
     float          initialSize,
@@ -59,9 +59,9 @@ public:
   void UpdateEmitter(
     int            id,
     float          dt,
-    const Vector3& emitterPos,
-    const Vector3& particleVel,
-    const Vector3& targetVel,
+    const glm::vec3& emitterPos,
+    const glm::vec3& particleVel,
+    const glm::vec3& targetVel,
     float velocityJitterMagnitude);
 
   /// Does 2 things:

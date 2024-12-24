@@ -420,7 +420,7 @@ void Shader::Terminate()
 //---------------------------------------------------------------------------------------------------------------------
 void Shader::Use() const
 {
-  IwAssert(ROWLHOUSE, mShaderProgram);
+  assert(mShaderProgram);
   glUseProgram(mShaderProgram);
 }
 
@@ -428,7 +428,7 @@ void Shader::Use() const
 static int getUniformLocation(int shaderProgram, const char* str)
 {
   int loc = glGetUniformLocation(shaderProgram, str);
-  IwAssert(ROWLHOUSE, loc >= 0);
+  assert(loc >= 0);
   return loc;
 }
 
@@ -436,7 +436,7 @@ static int getUniformLocation(int shaderProgram, const char* str)
 static int getAttribLocation(int shaderProgram, const char* str)
 {
   int loc = glGetAttribLocation(shaderProgram, str);
-  IwAssert(ROWLHOUSE, loc >= 0);
+  assert(loc >= 0);
   return loc;
 }
 

@@ -33,8 +33,8 @@ public:
     const struct AerofoilControl&       control,
     const class Environment&            environment, 
     const struct TurbulenceData&        turbulenceData,
-    Vector3&                            wash,
-    Vector3&                            force,
+    glm::vec3&                            wash,
+    glm::vec3&                            force,
     float                               deltaTime,                
     float&                              lastAoA) const;
 
