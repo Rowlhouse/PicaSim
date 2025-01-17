@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<AIControllers
+ mEnableDebugDraw="0"
+ mIncludeInCameraViews="0"
+ mCreateMaxNumControllers="1"
+ mLaunchDirection="-1"
+ mRandomColourOffset="1"
+ mLaunchSeparationDistance="3.0"
+ numAIControllers="2"
+ file_0="SystemSettings/Aeroplane/icarus.xml"
+ includeInCameraViews_0="1"
+ enableDebugDraw_0="1"
+ colourShift_0="0"
+ file_1="SystemSettings/Aeroplane/notos.xml"
+ includeInCameraViews_1="1"
+ enableDebugDraw_1="1"
+ colourShift_1="0"
+ />

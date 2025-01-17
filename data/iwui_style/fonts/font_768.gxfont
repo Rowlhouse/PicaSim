@@ -1,0 +1,7 @@
+CIwGxFont
+{
+    name "normal"
+    ttf "FontRegular.ttf"
+    ttfPointSize 13
+}
+

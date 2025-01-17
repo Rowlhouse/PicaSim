@@ -1,0 +1,17 @@
+#!/usr/bin/env mkb
+# Builder mkb file for the gamepad extension on win10
+platform WIN10LOADER
+
+options
+{
+    buildenv=vc14
+    buildenv-toolset=win10
+    dll
+    #arm
+    output-name="lib/win10/$(PlatformTarget)/$(Configuration)/gamepadExtension.dll"
+}
+
+subproject gamepad_win10_cs
+define S3E_BUILD_EXT
+
+subproject gamepad_build

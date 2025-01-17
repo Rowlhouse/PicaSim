@@ -1,0 +1,3 @@
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/build/CMakeFiles/PicaSim.dir
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/build/CMakeFiles/edit_cache.dir
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,184 @@
+# mkf file for building extension gamepad.
+# NOTE: This file was originally written by the extension builder, but will not
+# be overwritten (unless --force is specified) and is intended to be modified.
+display_name "Extensions/gamepad"
+
+includepath source/h
+includepath h
+
+defines
+{
+    #Define the verbose channel to be off by default (but controllable by icf)
+    IW_TRACE_CHANNEL_GAMEPAD_VERBOSE=2
+
+    #This macro indicates that this extension is being built
+    S3E_EXT_GAMEPAD
+}
+
+#This command re-generates the relevant source files from the s4e when
+#the mkb is run
+extension
+{
+    ("$MARMALADE_ROOT/s3e/edk/builder")
+    "edk_build gamepad.s4e"
+}
+
+#include the extension builder subproject
+subproject "$MARMALADE_ROOT/s3e/edk"
+
+if {{defined I3D_OS_IPHONE}}
+{
+    files
+    {
+        
+        ["source"]
+        (use_first_found, source/iphone, source/generic)
+        gamepad_platform.mm
+        #Add any iphone-specific files here
+    }
+}
+
+if {{defined I3D_OS_WINDOWS}}
+{
+    files
+    {
+        
+        ["source"]
+        (use_first_found, source/windows, source/generic)
+        gamepad_platform.cpp
+        #Add any windows-specific files here
+    }
+}
+
+if {{defined S3E_ANDROID}}
+{
+    files
+    {
+        
+        ["source"]
+        (use_first_found, source/android, source/generic)
+        gamepad_platform.cpp
+        #Add any android-specific files here
+    }
+}
+
+if {{defined I3D_OS_OSX}}
+{
+    files
+    {
+        
+        ["source"]
+        (use_first_found, source/osx, source/generic)
+        gamepad_platform.mm
+        #Add any osx-specific files here
+    }
+}
+
+if {{defined I3D_OS_LINUX and not defined S3E_ANDROID}}
+{
+    files
+    {
+        ["source"]
+        (use_first_found, source/linux, source/generic)
+        gamepad_platform.cpp
+        #Add any linux-specific files here
+    }
+}
+
+if {{defined I3D_OS_WP8}}
+{
+    files
+    {
+        ["h"]
+        (source/wp8)
+        gamepad_shim.h
+        ["source"]
+        (use_first_found, source/wp8, source/generic)
+        gamepad_platform.cpp
+        gamepad_shim.cpp
+        #Add any wp8-specific files here
+    }
+}
+
+if {{defined I3D_OS_WS8}}
+{
+    files
+    {
+        ["h"]
+        (source/ws8)
+        gamepad_shim.h
+        ["source"]
+        (use_first_found, source/ws8, source/generic)
+        gamepad_platform.cpp
+        gamepad_shim.cpp
+        #Add any ws8-specific files here
+    }
+}
+
+if {{defined I3D_OS_WS81}}
+{
+    files
+    {
+        ["h"]
+        (source/ws81)
+        gamepad_shim.h
+        ["source"]
+        (use_first_found, source/ws81, source/generic)
+        gamepad_platform.cpp
+        gamepad_shim.cpp
+        #Add any ws81-specific files here
+    }
+}
+
+if {{defined I3D_OS_WP81}}
+{
+    files
+    {
+        ["h"]
+        (source/wp81)
+        gamepad_shim.h
+        ["source"]
+        (use_first_found, source/wp81, source/generic)
+        gamepad_platform.cpp
+        gamepad_shim.cpp
+        #Add any wp81-specific files here
+    }
+}
+
+if {{defined I3D_OS_WIN10}}
+{
+    files
+    {
+        ["h"]
+        (source/win10)
+        gamepad_shim.h
+        ["source"]
+        (use_first_found, source/win10, source/generic)
+        gamepad_platform.cpp
+        gamepad_shim.cpp
+        #Add any win10-specific files here
+    }
+}
+
+files
+{
+
+    # Add any platform-independent files here
+    # Note that if the file exists in the platform-specific directory
+    # it will be taken from there instead of 'generic'
+    gamepad_register.cpp
+    gamepad.cpp
+
+    ["h"]
+    (source/h)
+    gamepad_internal.h
+    gamepad_autodefs.h
+
+    ["docs"]
+    (interface)
+    gamepad.defines.txt
+
+    []
+    (.)
+    gamepad.s4e
+}

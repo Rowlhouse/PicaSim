@@ -1,0 +1,96 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -Wall -g -DBT_NO_PROFILE -DIW_HTTP_SSL -DIW_GXFONT_TTF
+
+# Include paths
+INCLUDES =	-IApplication/Challenge \
+			-IApplication/Menus \
+			-IApplication/Files \
+			-IApplication/General \
+			-IApplication/Graphics \
+			-IApplication/Plane \
+			-IApplication/Internet \
+			-IApplication/Physics \
+			-IApplication/Terrain \
+			-IApplication/Heightfield \
+			-IApplication/Languages \
+			-IApplication/Controller \
+			-IApplication/AIController \
+			-IApplication/UI \
+		    -IApplication/Bullet \
+            -IApplication/tinyxml \
+			-IApplication/MapTrace \
+			-IApplication/ProcessUI \
+			-IApplication/Other \
+
+
+# Source files and object files
+SRC_DIRS = Application Application/Files Application/Graphics Application/General Application/Other Application/Heightfield Application/Bullet Application/tinyxml
+SRCS = $(wildcard $(addsuffix /*.cpp, $(SRC_DIRS)))
+OBJS = $(SRCS:.cpp=.o)
+
+# Library paths and libraries
+LDFLAGS = -lGL -lSDL2 -lEGL -lGLESv2 -lGLEW -LApplication/Bullet -lBulletDynamics -lBulletCollision -lLinearMath
+
+# Target executable
+TARGET = PicaSim
+
+# Rules 
+all: clean $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+
+print:
+	@echo "Sources: $(SRCS)"
+	@echo "Objects: $(OBJS)"
+	@echo "Includes: $(INCLUDES)"
+	@echo "Libraries: $(LDFLAGS)"
+
+depend: 
+	makedepend *.cpp
+
+
+
+.PHONY: all clean print
+
+
+#Explication des sections du Makefile :
+
+#     Variables de compilation :
+#         CXX : Le compilateur à utiliser (g++ pour les fichiers C++).
+#         CXXFLAGS : Les flags du compilateur, incluant les options de préprocesseur définies dans votre script mkb.
+
+#     Chemins d'inclusion :
+#         INCLUDES : Les chemins vers les répertoires contenant les fichiers .h.
+
+#     Fichiers sources et objets :
+#         SRC_DIRS : Les répertoires contenant les fichiers sources.
+#         SRCS : Tous les fichiers .cpp dans les répertoires spécifiés.
+#         OBJS : Les fichiers objets correspondants.
+
+#     Cible d'exécutable :
+#         TARGET : Le nom de l'exécutable final.
+
+#     Règles de compilation :
+#         all : Règle pour construire l'exécutable final.
+#         $(TARGET) : Lie tous les fichiers objets pour créer l'exécutable.
+#         %.o : Règle pour compiler chaque fichier source en fichier objet.
+#         clean : Règle pour nettoyer les fichiers objets et l'exécutable.
+
+# Utilisation :
+
+# Pour compiler le projet, naviguez dans le répertoire contenant votre Makefile et exécutez :
+
+# make
+
+# Pour nettoyer les fichiers objets et l'exécutable, utilisez :
+
+# make clean
+# DO NOT DELETE

@@ -1,0 +1,26 @@
+
+<Aerofoil
+  name="Martin"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.015"
+  CDStalled="1.7"
+  CDInducedMultiplier="1.0"
+  CM0="0.004"
+  CMPerDeg="-0.001"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"
+  
+  useData="0"
+  
+  CL0 = "0.3"
+  CLPerDeg = "0.1"
+  positiveAttachedAngle = "12"
+  positiveStallRange = "14"
+  negativeAttachedAngle = "-6.0"
+  negativeStallRange = "-8"
+  dragBucketFactor = "0.0"
+  dragBucketLowerAngle = "-5.0"
+  dragBucketUpperAngle = "5.0"
+/>

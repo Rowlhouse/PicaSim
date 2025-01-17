@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<Lighting
+  lightBearing="70.0"
+  lightElevation="35.0"
+  ambientLightR="0.4"
+  ambientLightG="0.4"
+  ambientLightB="0.4"
+  diffuseLightR="1"
+  diffuseLightG="1"
+  diffuseLightB="1"
+/>

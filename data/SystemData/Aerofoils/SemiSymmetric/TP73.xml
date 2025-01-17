@@ -1,0 +1,23 @@
+
+<Aerofoil
+  name="TP73"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.009"
+  CDStalled="1.7"
+  CM0="-0.05"
+  CMPerDeg="0.005"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"  
+  useData="0"  
+  CL0 = "0.2"
+  CLPerDeg = "0.1"
+  positiveAttachedAngle = "9"
+  positiveStallRange = "12"
+  negativeAttachedAngle = "-5.5"
+  negativeStallRange = "-7"
+  dragBucketFactor = "0.1"
+  dragBucketLowerAngle = "-2.0"
+  dragBucketUpperAngle = "6.0"
+/>

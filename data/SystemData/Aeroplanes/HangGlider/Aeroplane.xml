@@ -1,0 +1,338 @@
+<!--
+Full size hang glider
+-->
+
+<Misc
+  launchOffsetX="5.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="2.0"
+  launchSpeed="15.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="7.0"
+    wingChord="1.5"
+    CMRollFromY="0.2"
+    friction="0.5"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing
+      name="Mid"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/ClarkY"
+      numSections="1"
+      mass="5"
+
+      positionX="0.15"
+      positionY="-0.5"
+      positionZ="0.15"
+      pitch="-5"
+      extentsX="2.0"
+      extentsY="1.0"
+      extentsZ="0.05"      
+      wingAspectRatio="9"
+      groundEffect="1"
+    />
+
+    <Wing
+      name="Left1"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/ClarkY"
+      numSections="1"
+      mass="5"
+
+      positionX="-0.1"
+      positionY="0.5"
+      positionZ="0.15"
+      pitch="-7"
+      yaw="0"
+      roll="3"
+      extentsX="1.8"
+      extentsY="1.0"
+      extentsZ="0.05"
+      wingAspectRatio="9"
+      groundEffect="1"
+    />
+
+    <Wing
+      name="Left2"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/ClarkY"
+      numSections="1"
+      mass="4"
+
+      positionX="-0.5"
+      positionY="1.5"
+      positionZ="0.1"
+      pitch="-6"
+      yaw="0"
+      roll="3"
+      extentsX="1.4"
+      extentsY="1.0"
+      extentsZ="0.05"
+
+      CLPerDegree="0.0"
+      CDPerDegree="0.0"
+      CMPerDegree="-0.007"
+      flapFraction="1.0"
+      degreesPerControl="7.0"
+      
+      controlPerChannel0="0.7"
+      controlPerChannel1="0.8"
+      controlDifferentialPerChannel0="0"
+      
+      wingAspectRatio="9"
+      groundEffect="1"
+    />
+
+    <Wing
+      name="Left3"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/ClarkY"
+      numSections="1"
+      mass="3"
+
+      positionX="-1.0"
+      positionY="2.5"
+      positionZ="0.05"
+      pitch="-1"
+      yaw="0"
+      roll="3"
+      extentsX="1.0"
+      extentsY="1.0"
+      extentsZ="0.05"
+
+      CLPerDegree="0.0"
+      CDPerDegree="0.0"
+      CMPerDegree="-0.007"
+      flapFraction="1.0"
+      degreesPerControl="8.0"
+
+      controlPerChannel0="0.9"
+      controlPerChannel1="0.8"
+      controlDifferentialPerChannel0="0"
+      
+      wingAspectRatio="9"
+      groundEffect="1"
+    />
+
+    <Wing
+      name="Left4"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/ClarkY"
+      numSections="1"
+      mass="2"
+
+      positionX="-1.5"
+      positionY="3.5"
+      positionZ="-0.05"
+      pitch="0.5"
+      yaw="0"
+      roll="3"
+      extentsX="0.7"
+      extentsY="1.5"
+      extentsZ="0.05"
+
+      CLPerDegree="0.0"
+      CDPerDegree="0.0"
+      CMPerDegree="-0.007"
+      flapFraction="1.0"
+      degreesPerControl="9.0"
+      
+      controlPerChannel0="1.0"
+      controlPerChannel1="0.8"
+      controlDifferentialPerChannel0="0"
+      
+      wingAspectRatio="9"
+      groundEffect="1"
+    />
+
+    <Wing
+      name="Right1"
+      copy="Left1"
+      mirror="1"
+    />
+
+    <Wing
+      name="Right2"
+      copy="Left2"
+      mirror="1"
+    />
+
+    <Wing
+      name="Right3"
+      copy="Left3"
+      mirror="1"
+    />
+
+    <Wing
+      name="Right4"
+      copy="Left4"
+      mirror="1"
+    />
+
+    <Wing
+      name="Fin"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="2"
+      mass="0.01"
+
+      positionX="-1.6"
+      positionY="0"
+      positionZ="-0.7"
+      roll="90"
+      extentsX="1.0"
+      extentsY="1.3"
+      extentsZ="0.05"
+      
+      wingAspectRatio="1"
+	  collide="false"
+    />
+
+    <Wing
+      name="FinLeft"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.01"
+
+      positionX="-1.4"
+      positionY="3.5"
+      positionZ="-0.2"
+      roll="90"
+      extentsX="0.8"
+      extentsY="0.4"
+      extentsZ="0.05"
+      
+      wingAspectRatio="1"
+    />
+
+    <Wing
+      name="FinRight"
+      copy="FinLeft"
+      mirror="1"
+    />
+
+    <Fuselage
+      name="Body"
+      mass="40"
+      positionX="-0.3"
+      positionY="0.0"
+      positionZ="-1.0"
+      extentsX="1.6"
+      extentsY="0.4"
+      extentsZ="0.4"
+      colourTopX="1"
+      colourTopY="1"
+      colourTopZ="1"
+      colourSidesX="0.5"
+      colourSidesY="0.5"
+      colourSidesZ="0.5"
+      colourBottomX="1.0"
+      colourBottomY="1.0"
+      colourBottomZ="1.0"
+
+      CDX="0.6"
+      CDY="0.6"
+      CDZ="0.6"
+      render="true"
+    />
+
+  </Aerodynamics>
+
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+
+    <Shape
+      type="box"
+      name="NoseWeight"
+      mass="17"
+      positionX="1.2"
+      positionY="0.0"
+      positionZ="-1.0"
+      extentsX="0.1"
+      extentsY="0.1"
+      extentsZ="0.1"
+      render="true"
+      collide="false"
+    />
+
+    <Shape
+      type="box"
+      name="Frame"
+      mass="1"
+      positionX="0.5"
+      positionY="0.0"
+      positionZ="-1.3"
+      extentsX="0.1"
+      extentsY="1.3"
+      extentsZ="0.1"
+      render="true"
+      collide="true"
+    />
+
+    <Shape
+    type="box"
+    name="BackStrut"
+    mass="1"
+    positionX="-1.6"
+    positionY="0.0"
+    positionZ="0"
+    rotationY="-7"
+    extentsX="1.5"
+    extentsY="0.1"
+    extentsZ="0.1"
+    render="true"
+    collide="true"
+    />
+
+    <Shape
+      type="box"
+      name="TopStrut"
+      mass="1"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.7"
+      extentsX="0.1"
+      extentsY="0.1"
+      extentsZ="1.0"
+      render="true"
+      collide="true"
+    />
+  </Geometry>  
+</Physics>
+
+<Graphics>
+  <Model name="Standard" model3DS="SystemData/Aeroplanes/HangGlider/XSwss.3ds" modelScale="1.0" cullBackFace="false"/>
+  <Model name="Pink" model3DS="SystemData/Aeroplanes/HangGlider/XS142phd.3ds" modelScale="1.0" cullBackFace="false"/>
+  <Model name="Pink simple" model3DS="SystemData/Aeroplanes/HangGlider/hg-xs142p.3ds" modelScale="1.0" cullBackFace="false"/>
+</Graphics>
+
+<Audio>
+  <AirFlow
+    file="SystemData/Audio/Glider22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="15"
+    mFreqScalePerSpeed=".125"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume=".3"
+  />
+
+  <AirFlow
+    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="25"
+    mFreqScalePerSpeed=".1"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume="1"
+  />
+</Audio>
+
+

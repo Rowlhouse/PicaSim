@@ -1,0 +1,7 @@
+CIwResGroup
+{
+	name	iwui_style
+	
+	.\iwui_2048_resources.group  { inline true }
+	.\iwui_2048_stylesheet.itx
+}

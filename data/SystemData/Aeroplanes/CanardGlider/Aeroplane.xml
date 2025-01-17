@@ -1,0 +1,273 @@
+<!--
+Simple canard glider
+-->
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="2.0"
+    wingChord="0.2"
+    CMRollFromY="0.0"
+    friction="0.5"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing 
+      name="Left"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/RG15"
+      numSections="3"
+      mass="0.3f"
+
+      positionX="-0.7f"
+      positionY="0.0f"
+      positionZ="0.0f"
+      rotationX="0.0f"
+      rotationY="0.0f"
+      rotationZ="0.0f"
+      roll="8"
+      extentsX="0.2f"
+      extentsY="1.0f"
+      extentsZ="0.01f"
+      wingAspectRatio="8.0"
+      groundEffect="1"
+
+      washFromWingName1="FrontTail"
+      washFromWingFraction1="0.1"
+     
+      
+      CLPerControl="0.25"
+      CDPerControl="0.05"
+      CMPerControl="0.0"
+      anglePerControl="4.0"
+
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="0.25"
+      degreesPerControl="25"
+      
+      controlPerChannel0="1"
+    />
+
+    <Wing
+      name="Right"
+      copy="Left"
+      mirror="1"
+    />
+
+    <Wing
+      name="FrontTail"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/RG15"
+      numSections="2"
+      mass="0.03f"
+
+      positionX="0.2f"
+      positionY="-0.4f"
+      positionZ="0.0f"
+      rotationY="-1.0f"
+      extentsX="0.15f"
+      extentsY="0.8f"
+      extentsZ="0.01f"
+      wingAspectRatio="5.0"
+      groundEffect="1"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="0.25"
+      degreesPerControl="20"
+      
+      controlPerChannel1="-1"
+      controlPerAbsChannel2="0.1"
+      />
+
+    <Wing
+      name="Fin"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="2"
+      mass="0.03f"
+
+      positionX="-0.75f"
+      positionY="0.0f"
+      positionZ="0.0f"
+      rotationX="90.0f"
+      rotationY="0.0f"
+      rotationZ="0.0f"
+      extentsX="0.2f"
+      extentsY="0.25f"
+      extentsZ="0.01f"
+      wingAspectRatio="2.0"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="0.25"
+      degreesPerControl="25"
+      
+      controlPerChannel2="-1"
+    />
+
+    <Wing
+      name="FinLeft"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="2"
+      mass="0.03f"
+
+      positionX="-0.7f"
+      positionY="1.0f"
+      positionZ="0.1f"
+      rotationX="90.0f"
+      rotationY="0.0f"
+      rotationZ="0.0f"
+      extentsX="0.2f"
+      extentsY="0.1f"
+      extentsZ="0.01f"
+      wingAspectRatio="1.0"
+    />
+
+    <Wing
+      name="FinRight"
+      copy="FinLeft"
+      mirror="1"
+    />
+  </Aerodynamics>
+
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+    <Shape
+      type="box"
+      mass="0.05f"
+      positionX="-0.2f"
+      positionY="0.0f"
+      positionZ="0.0f"
+      rotationX="0.0f"
+      rotationY="0.0f"
+      rotationZ="0.0f"
+      extentsX="1.2f"
+      extentsY="0.05f"
+      extentsZ="0.05f"
+      render="true"
+    />
+
+    <Shape
+      type="box"
+      mass="0.2f"
+      positionX="0.4f"
+      positionY="0.0f"
+      positionZ="0.0f"
+      rotationX="0.0f"
+      rotationY="0.0f"
+      rotationZ="0.0f"
+      extentsX="0.05f"
+      extentsY="0.05f"
+      extentsZ="0.05f"
+      render="false"
+    />
+  </Geometry>
+  
+</Physics>
+
+<Graphics>
+  <Model name="Standard" model3DS="SystemData/Aeroplanes/CanardGlider/Canard.ac" modelScale="0.0254" cullBackFace="true" unsetColourR="100" unsetColourG="100" unsetColourB="204"/>
+
+  <ControlSurface
+    name="AileronLeft"
+    source="Left"
+    angleMultiplier="-1"
+    hingePoint1X="-8.712"
+    hingePoint1Y="1.302"
+    hingePoint1Z="28.145"
+    hingePoint2X="-37.127"
+    hingePoint2Y="4.996"
+    hingePoint2Z="28.145"
+  />
+
+  <ControlSurface
+    name="AileronRight"
+    source="Right"
+    angleMultiplier="1"
+    hingePoint1X="8.712"
+    hingePoint1Y="1.302"
+    hingePoint1Z="28.145"
+    hingePoint2X="37.127"
+    hingePoint2Y="4.996"
+    hingePoint2Z="28.145"
+  />
+
+  <ControlSurface
+    name="Rudder"
+    source="Fin"
+    angleMultiplier="-1"
+    hingePoint1X="0"
+    hingePoint1Y="1.497"
+    hingePoint1Z="27.918"
+    hingePoint2X="0"
+    hingePoint2Y="10.102"
+    hingePoint2Z="29.300"
+  />
+
+  <ControlSurface
+    name="FlapLeft"
+    source="Left1"
+    angleMultiplier="-1"
+    hingePoint1X="-0.230"
+    hingePoint1Y="0.0165"
+    hingePoint1Z="0.116"
+    hingePoint2X="-1.469"
+    hingePoint2Y="0.0525"
+    hingePoint2Z="0.079"
+  />
+
+  <ControlSurface
+    name="Tail"
+    source="FrontTail"
+    angleMultiplier="1"
+    hingePoint1X="-1"
+    hingePoint1Y="0.184793"
+    hingePoint1Z="-9.53095"
+    hingePoint2X="1"
+    hingePoint2Y="0.184793"
+    hingePoint2Z="-9.53095"
+  />
+
+
+</Graphics>
+
+<Audio>
+  <AirFlow
+    file="SystemData/Audio/Glider22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="5"
+    mFreqScalePerSpeed=".125"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume=".3"
+  />
+
+  <AirFlow
+    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="15"
+    mFreqScalePerSpeed=".1"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume="1"
+  />
+</Audio>
+
+

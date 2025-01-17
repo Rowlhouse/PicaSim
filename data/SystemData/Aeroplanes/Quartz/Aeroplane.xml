@@ -1,0 +1,392 @@
+<!--
+Based on Francois Cahour's Quartz
+-->
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="2.5"
+    wingChord="0.25"
+    CMRollFromY="0.0"
+    flutterDragScale="0.0002"
+    flutterDragSpeed="100"
+    friction="0.4"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing
+      name="FuselageFrontVertical"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.4"
+
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="-0.06"
+      roll="90"
+      extentsX="0.4"
+      extentsY="0.14"
+      extentsZ="0.01"
+      wingAspectRatio="0.4"
+    />
+
+    <Wing
+      name="FuselageBackVer"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0006"
+      numSections="1"
+      mass="0.0"
+
+      positionX="-0.5"
+      positionY="-0.0"
+      positionZ="0.0"
+      roll="90.0"
+      extentsX="0.2"
+      extentsY="0.03"
+      extentsZ="0.01"
+      wingAspectRatio="0.1"
+    />
+
+    <Wing
+      name="MidLeft"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/SB96V"
+      numSections="1"
+      mass="0.05"
+
+      positionX="-0.02"
+      positionY="0.03"
+      positionZ="0.01"
+      extentsX="0.28"
+      extentsY="0.12"
+      extentsZ="0.01"
+      
+      wingAspectRatio="15"
+      groundEffect="1"
+    />
+
+    <Wing 
+      name="Left1"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/SB96V"
+      numSections="2"
+      mass="0.3"
+
+      positionX="-0.02"
+      positionY="0.15"
+      positionZ="0.01"
+      extentsX="0.25"
+      extentsY="0.522"
+      extentsZ="0.01"
+      rotationX="2"
+      wingAspectRatio="15"
+      groundEffect="1"
+      
+      CLPerDegree="0.02"
+      CDPerDegree="0.00"
+      CMPerDegree="-0.02"
+      flapFraction="0.25"
+      degreesPerControl="25"
+      
+      controlPerChannel0="0.4"
+      controlPerChannel3="-1.0"
+      controlPerChannel6="0.2"
+    />
+
+    <Wing
+      name="Left2"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/SB96VS"
+      numSections="2"
+      mass="0.2"
+
+      positionX="-0.01"
+      positionY="0.67"
+      positionZ="0.03"
+      extentsX="0.18"
+      extentsY="0.58"
+      extentsZ="0.01"
+      rotationX="2"
+      wingAspectRatio="15"
+      groundEffect="1"
+      
+      CLPerDegree="0.02"
+      CDPerDegree="0.00"
+      CMPerDegree="-0.02"
+      flapFraction="0.4"
+      degreesPerControl="25"
+      
+      controlPerChannel0="1"
+      controlPerChannel3="-1.0"
+      controlPerChannel6="0.2"
+    />
+
+    <Wing
+      name="MidRight"
+      copy="MidLeft"
+      mirror="1"
+    />
+
+    <Wing
+      name="Right1"
+      copy="Left1"
+      mirror="1"
+    />
+
+    <Wing
+      name="Right2"
+      copy="Left2"
+      mirror="1"
+    />
+
+    <Wing
+      name="Tail"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="2"
+      mass="0.2"
+
+      positionX="-0.9"
+      positionY="-0.34"
+      positionZ="0.05"
+      pitch="0.2"
+      extentsX="0.14"
+      extentsY="0.68"
+      extentsZ="0.01"
+      wingAspectRatio="5.0"
+      groundEffect="1"
+
+      washFromWingName1="Left1"
+      washFromWingName2="Right1"
+      washFromWingFraction1="0.5"
+      washFromWingFraction2="0.5"
+      
+      CLPerDegree="0.0"
+      CDPerDegree="0.0"
+      CMPerDegree="0"
+      flapFraction="1"
+      degreesPerControl="87"
+      controlRate="5.0"
+      
+      controlPerChannel1="1.0"
+      controlPerChannel6="0.0"
+    />
+
+    <Wing
+      name="FinLow"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0015"
+      numSections="1"
+      mass="0.1"
+
+      positionX="-0.98"
+      positionY="0.0"
+      positionZ="-0.01"
+      rotationX="90.0"
+      extentsX="0.22"
+      extentsY="0.16"
+      extentsZ="0.01"
+      wingAspectRatio="3.0"
+      shadowX="0.0"
+      shadowY="0.0"
+      shadowZ="0.0"
+      
+      CLPerDegree="0.01"
+      CDPerDegree="0.0"
+      CMPerDegree="0.0"
+      flapFraction="0.5"
+      degreesPerControl="40"
+      
+      controlPerChannel2="-1"
+    />
+
+    <Wing
+      name="FinHigh"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0015"
+      numSections="1"
+      mass="0.05"
+
+      positionX="-0.98"
+      positionY="0.0"
+      positionZ="0.15"
+      rotationX="90.0"
+      extentsX="0.16"
+      extentsY="0.16"
+      extentsZ="0.01"
+      wingAspectRatio="3.0"
+      shadowX="0.0"
+      shadowY="0.0"
+      shadowZ="0.0"
+      
+      CLPerDegree="0.01"
+      CDPerDegree="0.0"
+      CMPerDegree="0.0"
+      flapFraction="0.6"
+      degreesPerControl="40"
+      
+      controlPerChannel2="-1"
+    />
+
+
+  <Fuselage
+      name="Fuselage"
+      mass="0.0"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.01"
+      extentsX="0.2"
+      extentsY="0.1"
+      extentsZ="0.08"
+      CDX="0.0"
+      CDY="0.0"
+      CDZ="0.0"
+      render="true"
+    />
+    
+    <Fuselage
+      name="FuselageBack"
+      mass="0.0"
+      positionX="-0.7"
+      positionY="0.0"
+      positionZ="0.01"
+      extentsX="0.5"
+      extentsY="0.04"
+      extentsZ="0.04"
+      CDX="0.0"
+      CDY="0.5"
+      CDZ="0.5"
+      render="true"
+    />
+    
+  </Aerodynamics>
+
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+
+    <Shape
+      type="box"
+      name="NoseWeight"
+      mass="0.65"
+      positionX="0.38"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.05"
+      extentsY="0.05"
+      extentsZ="0.05"
+      render="true"
+      collide="true"
+    />
+  </Geometry>  
+</Physics>
+
+<Graphics>
+  <Model name="Standard" model3DS="SystemData/Aeroplanes/Quartz/Quartz.ac" modelScale="1.0" cullBackFace="true"/>
+  <Model name="Alternative" model3DS="SystemData/Aeroplanes/Quartz/QuartzDanny.ac" modelScale="1.0" cullBackFace="true"/>
+
+  <ControlSurface
+    name="Tail"
+    source="Tail"
+    angleMultiplier="1"
+    hingePoint1X="-1"
+    hingePoint1Y="0.0559265"
+    hingePoint1Z="0.8927"
+    hingePoint2X="1"
+    hingePoint2Y="0.0559265"
+    hingePoint2Z="0.8927"
+  />
+
+  <ControlSurface
+    name="Rudder"
+    source="FinLow"
+    angleMultiplier="-1"
+    hingePoint1X="0.00"
+    hingePoint1Y="-0.0080086"
+    hingePoint1Z="0.957731"
+    hingePoint2X="0.0"
+    hingePoint2Y="0.302344"
+    hingePoint2Z="0.95773"
+  />
+
+  <ControlSurface
+    name="AileronLeft"
+    source="Left2"
+    angleMultiplier="-1"
+    hingePoint1X="-0.658533"
+    hingePoint1Y="0.0315464"
+    hingePoint1Z="0.068228"
+    hingePoint2X="-1.14978"
+    hingePoint2Y="0.0500342"
+    hingePoint2Z="0.0414545"
+  />
+
+  <ControlSurface
+    name="FlapLeft"
+    source="Left1"
+    angleMultiplier="-1"
+    hingePoint1X="-0.658533"
+    hingePoint1Y="0.0315464"
+    hingePoint1Z="0.068228"
+    hingePoint2X="-1.14978"
+    hingePoint2Y="0.0500342"
+    hingePoint2Z="0.0414545"
+  />
+
+  <ControlSurface
+    name="AileronRight"
+    source="Right2"
+    angleMultiplier="1"
+    hingePoint1X="0.658533"
+    hingePoint1Y="0.0315464"
+    hingePoint1Z="0.068228"
+    hingePoint2X="1.14978"
+    hingePoint2Y="0.0500342"
+    hingePoint2Z="0.0414545"
+  />
+
+  <ControlSurface
+    name="FlapRight"
+    source="Right1"
+    angleMultiplier="1"
+    hingePoint1X="0.658533"
+    hingePoint1Y="0.0315464"
+    hingePoint1Z="0.068228"
+    hingePoint2X="1.14978"
+    hingePoint2Y="0.0500342"
+    hingePoint2Z="0.0414545"
+  />
+</Graphics>
+
+<Audio>
+  <AirFlow
+    file="SystemData/Audio/Glider22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="5"
+    mFreqScalePerSpeed=".125"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume=".3"
+  />
+
+  <AirFlow
+    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="15"
+    mFreqScalePerSpeed=".1"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume="1"
+  />
+</Audio>
+

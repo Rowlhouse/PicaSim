@@ -1,0 +1,10 @@
+CIwResGroup
+{
+	name	"Menu320"
+
+	useTemplate	"image"	"iwui"
+	useTemplate	"mtl"	"iwui"
+
+	iwui_style/iwui_320_style.group { inline true }
+}
+

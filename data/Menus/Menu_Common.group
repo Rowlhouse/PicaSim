@@ -1,0 +1,24 @@
+include Menus/resource_templates.itx
+
+CIwResGroup
+{
+	name	"Common"
+
+	useTemplate	"image"	"default"
+	useTemplate	"mtl"	"default"
+
+	shared 1
+
+	Menus/RateMe.png
+	Menus/NewVersion.png
+	Menus/Facebook.png
+	Menus/Googleplus.png
+	Menus/Leaderboards.png
+	Menus/Progress.png
+	Menus/MenuBackground.png
+	Menus/DialogBackground.png
+	Menus/Help.png
+	Menus/Stop.png
+	Menus/Utilities.png
+
+}
