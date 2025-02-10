@@ -1,6 +1,7 @@
 #ifndef SETTINGS_WIDGETS_H
 #define SETTINGS_WIDGETS_H
 
+#include "ClassesUIMarmelade.h"
 #include "GameSettings.h"
 
 // #include <IwUI.h>

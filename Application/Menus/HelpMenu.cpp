@@ -1,11 +1,14 @@
 ﻿#include "HelpMenu.h"
-// #include "Menu.h"
-// #include "Helpers.h"
-// #include "../GameSettings.h"
-// #include "../PicaStrings.h"
+#include "FonctionsMarmelade.h"
+#include "GameSettings.h"
+#include "Menu.h"
+#include "ClassesUIMarmelade.h"
+#include "Helpers.h"
+#include "PicaStrings.h"
+#include "FonctionsPointerKeyboardMarmelade.h"
 
 // #include <s3eOSExec.h>
-// #include "dpiInfo.h"
+//#include "dpiInfo.h"
   
 //---------------------------------------------------------------------------------------------------------------------
 class HelpMenu : public Menu
@@ -30,7 +33,7 @@ public:
   HelpMenu(const GameSettings& gameSettings, TabPanelEnum initialTab);
   ~HelpMenu();
 
-  int32 Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings) OVERRIDE;
+  int32_t Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings) OVERRIDE;
 
   bool GetFinished() const {return mFinished;}
 
@@ -44,7 +47,7 @@ private:
   CIwUILayoutGrid* mGridLayout;
   CIwUIImage* mGridArea;
 
-  uint16   mSelectedTab;
+  uint16_t   mSelectedTab;
   CIwUIScrollableView* mScrollAreas[TAB_NUM_TABS];
 
   CIwUIButton* mBackButton;
@@ -55,7 +58,7 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 HelpMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
+int32_t HelpMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
 {
   mScrollArea = mScrollAreas[mSelectedTab];
   if (mUpdateCounter > 0)
@@ -97,7 +100,7 @@ CIwUIScrollableView* HelpMenu::CreateText(const char* text, bool centre, int spa
 //---------------------------------------------------------------------------------------------------------------------
 static float GetSurfaceDiagonalInches()
 {
-  int32 dpi = DPI::dpiGetScreenDPI();
+  int32_t dpi = DPI::dpiGetScreenDPI();
   if (dpi > 0)
   {
     int w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
@@ -260,10 +263,10 @@ HelpMenu::HelpMenu(const GameSettings& gameSettings, TabPanelEnum initialTab)
   mScrollAreas[TAB_VERSIONS]->AddChild(versionLabel);
   mScrollAreas[TAB_VERSIONS]->GetLayout()->AddElement(versionLabel);
 
-  int32 dpi = DPI::dpiGetScreenDPI();
+  int32_t dpi = DPI::dpiGetScreenDPI();
   float diagonal = GetSurfaceDiagonalInches();
   const char* deviceName = s3eDeviceGetString(S3E_DEVICE_ID);
-  int32 numCores = s3eDeviceGetInt(S3E_DEVICE_NUM_CPU_CORES);
+  int32_t numCores = s3eDeviceGetInt(S3E_DEVICE_NUM_CPU_CORES);
 
   sprintf(labelTxt, "Device info:\nName: %s\nCores: %d\nSurface: %d dpi %5.2f\"", 
     deviceName, numCores, dpi, diagonal);
@@ -298,7 +301,7 @@ HelpMenu::HelpMenu(const GameSettings& gameSettings, TabPanelEnum initialTab)
 //---------------------------------------------------------------------------------------------------------------------
 HelpMenu::~HelpMenu()
 {
-  for (uint16 i = 0 ; i != TAB_NUM_TABS ; ++i)
+  for (uint16_t i = 0 ; i != TAB_NUM_TABS ; ++i)
   {
     if (i != mSelectedTab)
     {

@@ -1,13 +1,15 @@
 ﻿#include "SettingsMenu.h"
-// #include "SettingsWidgets.h"
+#include "ClassesUIMarmelade.h"
+#include "FileMenu.h"
+#include "Helpers.h"
 // #include "SelectMenu.h"
-// #include "FileMenu.h"
-// #include "Menu.h"
+#include "Menu.h"
 // #include "../GameSettings.h"
 // #include "../PicaSim.h"
-// #include "../Aeroplane.h"
+#include "Aeroplane.h"
+#include "SettingsWidgets.h"
 // #include "../AeroplanePhysics.h"
-// #include "../PicaJoystick.h"
+#include "PicaJoystick.h"
 // #include "../Scoreloop.h"
 // #include "PicaDialog.h"
 
@@ -109,7 +111,7 @@ public:
   SettingsMenu(GameSettings& gameSettings);
   ~SettingsMenu();
 
-  int32 Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings) OVERRIDE;
+  int32_t Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings) OVERRIDE;
 
   SettingsStatus mStatus;
 
@@ -172,7 +174,7 @@ private:
     TAB_JOYSTICK,
     TAB_NUM_TABS
   };
-  static uint16   mSelectedTab;
+  static uint16_t   mSelectedTab;
   static TabPanel mTabPanels[TAB_NUM_TABS];
 
   GameSettings& mGameSettings;
@@ -234,7 +236,7 @@ private:
   Vector3 mSmokeHSVs[AeroplaneSettings::MAX_NUM_SMOKES_PER_PLANE];
 };
 
-uint16 SettingsMenu::mSelectedTab = 0;
+uint16_t SettingsMenu::mSelectedTab = 0;
 SettingsMenu::TabPanel SettingsMenu::mTabPanels[SettingsMenu::TAB_NUM_TABS];
 
 SettingsMenu::TabPanel::TabPanel() 
@@ -294,7 +296,7 @@ void SettingsMenu::GetImageButtonInfo(int& x, int& y, int& w, int& h)
 
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 SettingsMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
+int32_t SettingsMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
 {
   mScrollArea = mTabPanels[mSelectedTab].mScrollArea;
   Language language = mGameSettings.mOptions.mLanguage;

@@ -5,13 +5,166 @@
 #include "ClassesMarmelade.h"
 #include "Entete.h"
 //#include "PicaDialog.h"
+//#include "PicaDialog.h"
 #include "Vecteurs.h"
+#include <cstdint>
 #include <string>
 #include <iostream>
 #include <algorithm> 
+#include <unordered_map>
 
 
 class CIwUILayout;
+class CIwUIPropertySet;
+
+
+
+class CIwUIStyle {
+public:
+    CIwUIStyle() {
+        // Initialisation des propriétés par défaut, si nécessaire
+    }
+
+    // Méthode pour définir des propriétés en ligne
+    void InlinePropertySet() {
+        // Cela pourrait initialiser des valeurs par défaut pour ce style
+        // mais dans ce cas, nous faisons une simple initialisation vide
+    }
+
+    // Retourne un objet de type CIwUIPropertySet pour manipuler les propriétés spécifiques
+    CIwUIPropertySet* GetInlinePropertySet() {
+        return properties;
+    }
+
+private:
+    CIwUIPropertySet* properties;  // Ensemble de propriétés liées au style
+};
+
+class CIwUIPropertySet {
+public:
+    CIwUIPropertySet() : mVisible(true)  {}
+
+    // Méthode pour définir une propriété donnée par un nom et une valeur
+    void SetProperty(const std::string& key, const IwHashString value) {
+        if (key == "drawableType") {
+            drawableType = value;
+        }
+        else {
+            std::cout << "La fonction SetProperty de CIwUIPropertySet ne connait pas la property demande" << key << std::endl;
+        }
+    }
+
+    void SetProperty(const std::string& key, Texture* value) {
+        if (key == "texture") {
+            texture = value;
+        }
+        else {
+            std::cout << "La fonction SetProperty de CIwUIPropertySet ne connait pas la property demande" << key << std::endl;
+        }
+    }
+
+    void SetProperty(const std::string& key, Vector2 value) {
+        if (key == "aspectRatio") {
+            aspectRatio = value;
+        }
+        else {
+            std::cout << "La fonction SetProperty de CIwUIPropertySet ne connait pas la property demande" << key << std::endl;
+        }
+    }
+
+    void SetProperty(const std::string& key, CIwUIStyle value) {
+        if (key == "buttonUp") {
+            buttonUp = value;
+        }
+        else if (key == "buttonDown") {
+            buttonDown = value;
+        }
+        else {
+            std::cout << "La fonction SetProperty de CIwUIPropertySet ne connait pas la property demande" << key << std::endl;
+        }
+    }
+
+    void SetProperty(const std::string& key, CIwPropertyValue value) {
+        if (key == "alignH") {
+            alignH = value;
+        }
+        else if (key == "alignV") {
+            alignV = value;
+        }
+        else {
+            std::cout << "La fonction SetProperty de CIwUIPropertySet ne connait pas la property demande" << key << std::endl;
+        }
+    }
+
+    // Affiche toutes les propriétés pour le débogage
+    /*void PrintProperties() const {
+        for (const auto& pair : properties) {
+            std::cout << pair.first << ": " << pair.second << std::endl;
+        }
+    }*/
+
+    void SetVisible(bool visible) { mVisible = visible; }
+    bool IsVisible() const { return mVisible; }
+
+    void SetPosition(Vector2 vec){ pos = vec; }
+    Vector2 GetPosition() const { return pos; }
+
+    void SetSize(const Vector2& Size) { size = Size; }
+    Vector2 GetSize() { return size; }
+
+    void SetSizeMax(Vector2 Size){ SetSize(Size); }
+    void SetSizeMin(Vector2 Size){ SetSize(Size); }
+
+    void SetSizeToContent (bool val) {SizeToContent = val;}
+
+    void SetLayout(CIwUILayout* Layout) { layout = Layout; }
+    CIwUILayout* GetLayout () { return layout; }
+
+    void SetColour (Colour Color) { color = Color; }
+
+    void SetFont (CIwGxFont* value) { font = value; }
+    CIwGxFont* GetPropertyFont () { return font; }
+
+    void SetTextColour (Colour value) { textColour = value; }
+
+    void SetCaption(std::string Caption) { caption = std::string( Caption); }
+    std::string GetCaption() { return caption; }
+
+    void SetStyle (std::string Style) { style = Style; }
+    std::string GetStyle () { return style; }
+
+    void SetSizeHint (Vector2 SizeHint) { sizeHint = SizeHint; }
+    Vector2 GetSizeHint () { return sizeHint; }
+
+    void SetTexture (Texture * value) { texture = value; }
+    Texture* GetTexture () { return texture; }
+
+    void SetEnabled (bool value) { enabled = value; }
+
+    Vector2 GetSizeMin () { return sizeMin; }
+
+private:
+    IwHashString drawableType;
+    Texture* texture;
+    Vector2 aspectRatio;
+    CIwUIStyle buttonUp;
+    CIwUIStyle buttonDown;
+    Vector2 pos=  Vector2(0,0);
+    Vector2 size = Vector2(1,1);
+    Vector2 sizeMin = Vector2 (1,1);
+    Vector2 sizeHint;
+    CIwUILayout* layout;
+    bool SizeToContent = true;
+    bool mVisible;
+    bool enabled = true;
+    Colour color;
+    CIwGxFont* font;
+    Colour textColour;
+    CIwPropertyValue alignH = IW_UI_ALIGN_CENTRE;
+    CIwPropertyValue alignV = IW_UI_ALIGN_CENTRE;
+    std::string caption;
+    std::string style;
+};
 
 class CIwUIStylesheet {
 public:
@@ -22,6 +175,15 @@ private:
     std::string styleSheetName;
 };
 
+class CIwUIStyleManager {
+public:
+    void SetStylesheet(CIwUIStylesheet** stylesheet) {
+        styleSheet = stylesheet;
+        //std::cout << "Setting stylesheet: " << stylesheet->GetName() << std::endl;
+    }
+private :
+    CIwUIStylesheet** styleSheet;
+};
 
 class CIwEvent{
 public:
@@ -45,11 +207,38 @@ private:
     */
 };
 
-class CIwUIElementEventHandler {
+
+class CIwUIElementEventHandler{
 };
 
-//using Type = std::variant<CIwGxFont*, CIwUIStylesheet*, Texture*, std::nullptr_t>;
-template <typename T>
+class CIwUIElement : public CIwUIPropertySet {
+public:
+    CIwUIElement() {}
+    virtual ~CIwUIElement() = default;
+
+    void AddChild(CIwUIElement* child) { mChildren.push_back(child); }
+    virtual bool HandleEvent(CIwEvent* pEvent) { return false; }
+
+    virtual void Render() {
+        std::cout << "Rendering a generic UI element\n";
+        if (!IsVisible()) return;
+        for (auto& child : mChildren) {
+            child->Render();
+        }
+    }
+
+    void AddEventHandler (CIwUIElementEventHandler* value) {
+        eventHandler = value;
+    }
+
+    
+
+private:
+    std::vector<CIwUIElement*> mChildren;
+    CIwUIElementEventHandler* eventHandler = nullptr;
+    
+};
+
 class CIwResource {
 public:
     CIwResource(const std::string& name, resourceType ResType) : mName(name), resType(ResType) { CreateRessource(); }
@@ -76,12 +265,12 @@ public:
         //return ressource;
     }
 
-    T* GetRessource () { return ressource; }
+    void* GetRessource () { return ressource; }
 
 private:
     std::string mName;
     resourceType resType;
-    T* ressource;
+    void* ressource;
     
 };
 
@@ -102,7 +291,7 @@ private:
     std::string groupName;
 };
 
-template <typename T>
+
 class CIwResManager {
 public:
     CIwResManager() {}
@@ -126,7 +315,7 @@ public:
     }
 
     // Détruit un groupe de ressources
-    void DestroyGroup(CIwResource<T>* group) {
+    void DestroyGroup(CIwResource* group) {
         if (group) {
             std::cout << "Destroyed resource group: " << group->GetName() << std::endl;
             delete group;
@@ -134,14 +323,14 @@ public:
     }
 
     // Récupère une ressource nommée
-    T* GetResNamed(const std::string& resourceName, resourceType resType) {
-        CIwResource<T>* res = new CIwResource<T>(resourceName, resType);
+    void* GetResNamed(const std::string& resourceName, resourceType resType) {
+        CIwResource* res = new CIwResource(resourceName, resType);
         resourceList.push_back(res);
         return res->GetRessource();
     }
 
-    T* GetResNamed(const std::string& resourceName, std::string resType) {
-        CIwResource<T>* res = new CIwResource<T>(resourceName, resType);
+    void* GetResNamed(const std::string& resourceName, std::string resType) {
+        CIwResource* res = new CIwResource(resourceName, resType);
         resourceList.push_back(res);
         return res->GetRessource();
     }
@@ -154,8 +343,13 @@ public:
 private:
     std::unordered_map<std::string, CIwResGroup*> mResourceGroups;
     CIwResGroup* mCurrentGroup = nullptr;
-    std::vector<CIwResource<T>*> resourceList;
+    std::vector<void*> resourceList;
 };
+
+inline CIwResManager* IwGetResManager() {
+    static CIwResManager manager;
+    return &manager;
+}
 
 class CIwMaterial {
 public:
@@ -231,52 +425,159 @@ inline bool IwGxSetMaterial(CIwMaterial* material) {
     return true;
 }
 
-template <typename T>
-inline CIwResManager<T> IwGetResManager() {
-    static CIwResManager<T> manager;
-    return &manager;
-}
-
-class CIwUIElement {
+class CIwUILayout {
 public:
-    CIwUIElement() : mVisible(true) {}
-    virtual ~CIwUIElement() = default;
+    int rows = 1, cols = 1;
 
-    void AddChild(CIwUIElement* child) { mChildren.push_back(child); }
-    virtual bool HandleEvent(CIwEvent* pEvent) { return false; }
+    void AddElement(CIwUIElement* element, int i = 0 , CIwPropertyValue alignH = IW_UI_ALIGN_CENTRE, CIwPropertyValue alignV = IW_UI_ALIGN_CENTRE, Vector2 size = Vector2(1,1)) {
+        element->SetProperty("alignH",alignH);
+        element->SetProperty("alignV",alignV);
+        element->SetSize(size);
+        mElements[i].push_back(element); 
+    }
+
+    void AddElement(CIwUIElement* element, int x , int y) { mElements[x][y] = element; }
+    
+    void AddElement(CIwUIElement* element, std::string style, int i = 0) {
+        element->SetStyle(style);
+        GetElements()[i].push_back(element);
+    }
+
+    //void RemoveElement(CIwUIElement* element) { mElements.erase(std::remove(mElements.begin(), mElements.end(), element), mElements.end()); }
 
     virtual void Render() {
-        std::cout << "Rendering a generic UI element\n";
-        if (!mVisible) return;
-        for (auto& child : mChildren) {
-            child->Render();
+        std::cout << "Rendering layout\n";
+        for (auto& vectorElements : mElements) {
+            for (auto& element : vectorElements) {
+                element->Render();
+            }
         }
     }
 
-    void SetVisible(bool visible) { mVisible = visible; }
-    bool IsVisible() const { return mVisible; }
-
-    void SetPosition(Vector2 vec){ pos = vec; }
-    Vector2 GetPosition() const { return pos; }
-
-    void SetSize(const Vector2& Size) { size = Size; }
-    Vector2 GetSize() { return size; }
-
-    void SetSizeMax(Vector2 Size){ SetSize(Size); }
-    void SetSizeMin(Vector2 Size){ SetSize(Size); }
-
-    void SetSizeToContent (bool val) {SizeToContent = val;}
-
-    void SetLayout(CIwUILayout* Layout) { layout = Layout; }
-    CIwUILayout* GetLayout () { return layout; }
+    std::vector<std::vector<CIwUIElement*>> GetElements () { return mElements; }
+    void SetSizeToSpace (bool val) {SizeToSpace = val;}
 
 private:
-    bool mVisible;
-    std::vector<CIwUIElement*> mChildren;
-    Vector2 pos=  Vector2(0,0);
-    Vector2 size = Vector2(1,1);
-    CIwUILayout* layout;
-    bool SizeToContent = true;
+    bool SizeToSpace = false;
+    //std::vector<CIwUIElement*> mElements;
+    std::vector<std::vector<CIwUIElement*>> mElements = std::vector<std::vector<CIwUIElement*>> (rows, std::vector<CIwUIElement*>(cols, 0));
+
+};
+
+// Classe CIwUILayout pour gérer la disposition des éléments
+class CIwUILayoutGrid : public CIwUILayout {
+public :
+    void AddColumn (int row = 0, float espacement = 0){
+        mSpacingColumn = espacement;
+        cols+=1;
+        for (unsigned int i; i<GetElements ().size(); i++) {
+            GetElements ()[i].push_back(0);
+        }
+    }
+
+    void AddRow (int column = 0, float espacement = 0){
+        mSpacingRow = espacement;
+        rows+=1;
+        GetElements ().push_back(std::vector<CIwUIElement*>(cols,0));
+    }
+
+private : 
+    float mSpacingColumn = 0;
+    float mSpacingRow = 0;
+};
+
+class CIwUILayoutVertical : public CIwUILayout {
+public:
+    CIwUILayoutVertical() : mSpacing(5) {}
+
+    void SetSpacing(int spacing) { mSpacing = spacing; }
+
+    void Render() override {
+        int currentY = 0;
+        for (auto& vectorElements : GetElements()) {
+            for (auto& element : vectorElements) {
+                element->SetPosition(Vector2(0, currentY));
+                element->Render();
+                currentY += element->GetSize().y + mSpacing;
+            }
+        }
+    }
+
+private:
+    int mSpacing;
+};
+
+class CIwUILayoutHorizontal : public CIwUILayout {
+public:
+    CIwUILayoutHorizontal() : mSpacing(5) {}
+
+    void SetSpacing(float spacing) { mSpacing = spacing; }
+
+    void Render() override {
+        int currentY = 0;
+        for (auto& vectorElements : GetElements()) {
+            for (auto& element : vectorElements) {
+                element->SetPosition(Vector2(0, currentY));
+                element->Render();
+                currentY += element->GetSize().y + mSpacing;
+            }
+        }
+    }
+
+    void AddColumn(int i, float spacing) {
+
+        mSpacing = spacing;
+    }
+
+private:
+    float mSpacing;
+};
+
+class CIwUIImage : public CIwUIElement {
+public:
+    CIwUIImage(){}
+    CIwUIImage(const std::string& filename, bool use16Bit) : mFilePath(filename), mUse16Bit(use16Bit)/*, mTexture(nullptr)*/ {
+        LoadImage();
+    }
+
+    ~CIwUIImage() {
+        /*if (texture) {
+            delete texture;
+        }*/
+    }
+
+    void LoadImage() {
+        std::cout << "Loading image: " << mFilePath << " with 16-bit: " << mUse16Bit << std::endl;
+        SetTexture( new Texture(mFilePath, mUse16Bit ));
+    }
+
+    void Render() override {
+        if (IsVisible() && GetTexture()) {
+            std::cout << "Rendering image from: " << mFilePath << std::endl;
+        }
+    }
+
+    /*void SetPos(Vector2 Pos) { pos = Pos; }
+    Vector2 GetPos() const { return pos; }
+
+    void SetSizeToContent(bool val) {    ////////////////////////////////////////////////////////// If true the the whole screen is vertically centred. False places it at the top
+        sizeToContent = val;
+    }*/
+
+    //void SetColour (Colour col) { colour = col;}
+    void SetModulatesColour (bool val) { modulateColor = val;}
+
+    void SetLayout (CIwUILayout* val) { layout = val; }
+
+private:
+    std::string mFilePath;
+    bool mUse16Bit;
+    //Texture* mTexture; 
+    //Vector2 pos;
+    //bool sizeToContent = true;
+    //Colour colour = Colour (255,255,255,255);
+    bool modulateColor = false;
+    CIwUILayout* layout = nullptr;
 };
 
 class CIwUILabel : public CIwUIElement {
@@ -294,22 +595,8 @@ public:
         }
     }
 
-    void SetCaption(const char* caption) {mText = std::string( caption);}
-    void SetStyle (std::string Style) {style = Style;}
-
-    void SetProperty (std::string Property, CIwPropertyValue value) {
-        if (Property == "alignV") {
-            property.alignementVertical = value;
-        }
-    }
-
 private:
-    std::string style;
     std::string mText;
-    struct properties {
-        CIwPropertyValue alignementVertical = IW_UI_ALIGN_CENTER;
-    };
-    properties property;
 };
 
 // Classe CIwUIButton pour un bouton
@@ -340,7 +627,31 @@ public:
 
     void Render() override {
         if (IsVisible()) {
-            std::cout << "Rendering button: " << mCaption << std::endl;
+            GenerateRect();
+            // Définir la couleur en fonction du focus
+            if (mFocused)
+            {
+                SDL_SetRenderDrawColor(GeneralRenderManager.getRenderer(), 255, 255, 0, 255); // Jaune si focus
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(GeneralRenderManager.getRenderer(), 128, 128, 128, 255); // Gris sinon
+            }
+
+            // Dessiner le bouton
+            SDL_RenderFillRect(GeneralRenderManager.getRenderer(), &mRect);
+
+            // Dessiner le texte (simplifié)
+            SDL_Color textColor = {255, 255, 255, 255}; // Blanc
+            SDL_Surface *textSurface = TTF_RenderText_Solid(GetPropertyFont()->GetTTF_Font(), mCaption.c_str(), textColor);
+            SDL_Texture *textTexture = SDL_CreateTextureFromSurface(GeneralRenderManager.getRenderer(), textSurface);
+            SDL_Rect textRect = {mRect.x + 10, mRect.y + 10, textSurface->w, textSurface->h};
+
+            SDL_RenderCopy(GeneralRenderManager.getRenderer(), textTexture, nullptr, &textRect);
+
+            // Nettoyer la mémoire
+            SDL_FreeSurface(textSurface);
+            SDL_DestroyTexture(textTexture);
         }
     }
 
@@ -350,82 +661,34 @@ public:
         mHandlers.erase(it, mHandlers.end());
     }
 
+    void RequestFocus() {
+        mFocused = true;
+    }
+
+    bool IsMouseOver(int mouseX, int mouseY) {
+        return (mouseX >= mRect.x && mouseX <= (mRect.x + mRect.w) &&
+                mouseY >= mRect.y && mouseY <= (mRect.y + mRect.h));
+    }
+
+    void GenerateRect () {
+        mRect = CIwRect (GetPosition(), GetSize());
+    }
 
 
 private:
     std::string mStyle;
     std::string mCaption;
     std::vector<CIwUIElement*> mHandlers;
+    bool mFocused = false;
+    CIwRect mRect;
 };
 
-// Classe CIwUILayout pour gérer la disposition des éléments
-class CIwUILayout {
-public:
-    void AddElement(CIwUIElement* element) { mElements.push_back(element); }
+class CIwUISlider : public CIwUIElement {
 
-    //void RemoveElement(CIwUIElement* element) { mElements.erase(std::remove(mElements.begin(), mElements.end(), element), mElements.end()); }
-
-    virtual void Render() {
-        std::cout << "Rendering layout\n";
-        for (auto& element : mElements) {
-            element->Render();
-        }
-    }
-
-    void SetSizeToSpace (bool val) {SizeToSpace = val;}
-
-    std::vector<CIwUIElement*> GetElements () { return mElements; }
-
-private:
-    std::vector<CIwUIElement*> mElements;
-    bool SizeToSpace = false;
 };
 
-class CIwUIImage : public CIwUIElement {
-public:
-    CIwUIImage(){}
-    CIwUIImage(const std::string& filename, bool use16Bit) : mFilePath(filename), mUse16Bit(use16Bit), mTexture(nullptr) {
-        LoadImage();
-    }
+class CIwUICheckbox : public CIwUIElement {
 
-    ~CIwUIImage() {
-        if (mTexture) {
-            delete mTexture;
-        }
-    }
-
-    void LoadImage() {
-        std::cout << "Loading image: " << mFilePath << " with 16-bit: " << mUse16Bit << std::endl;
-        mTexture = new Texture(mFilePath, mUse16Bit );
-    }
-
-    void SetTexture(Texture* texture) {mTexture = texture;}
-    Texture* GetTexture() { return mTexture; }
-
-    void Render() override {
-        if (IsVisible() && mTexture) {
-            std::cout << "Rendering image from: " << mFilePath << std::endl;
-        }
-    }
-
-    void SetPos(Vector2 Pos) { pos = Pos; }
-    Vector2 GetPos() const { return pos; }
-
-    void SetSizeToContent(bool val) {    ////////////////////////////////////////////////////////// If true the the whole screen is vertically centred. False places it at the top
-        sizeToContent = val;
-    }
-
-    void SetColour (Colour col) { colour = col;}
-    void SetModulatesColour (bool val) { modulateColor = val;}
-
-private:
-    std::string mFilePath;
-    bool mUse16Bit;
-    Texture* mTexture; 
-    Vector2 pos;
-    bool sizeToContent = true;
-    Colour colour = Colour (255,255,255,255);
-    bool modulateColor = false;
 };
 
 class CIwUIScrollableView : public CIwUIElement {
@@ -472,16 +735,6 @@ private:
     std::vector<CIwUIElement*> mChildren;
 };
 
-class CIwUIStyleManager {
-public:
-    void SetStylesheet(CIwUIStylesheet** stylesheet) {
-        styleSheet = stylesheet;
-        //std::cout << "Setting stylesheet: " << stylesheet->GetName() << std::endl;
-    }
-private :
-    CIwUIStylesheet** styleSheet;
-};
-
 class CIwUIView {
 public:
     CIwUIView() { std::cout << "CIwUIView created." << std::endl; }
@@ -506,8 +759,21 @@ public:
         mElements.erase(it, mElements.end());
     }
 
+    int GetNumElements () {
+        return mElements.size();
+    }
+
     bool Update(int i) {
         return true;
+    }
+
+    void DestroyElements() {
+        for (CIwUIElement* element : mElements) {
+            if (element) {
+                delete element;
+            }
+        }
+        mElements.clear();
     }
 private: 
     std::vector<CIwUIElement*> mElements;
@@ -547,47 +813,57 @@ private:
     EditorMode mEditorMode;
 };
 
-class CIwUILayoutVertical : public CIwUILayout {
-public:
-    CIwUILayoutVertical() : mSpacing(5) {}
+class CIwUITextField : public CIwUIElement {
 
-    void SetSpacing(int spacing) { mSpacing = spacing; }
-
-    void Render() override {
-        int currentY = 0;
-        for (auto& element : GetElements()) {
-            element->SetPosition(Vector2(0, currentY));
-            element->Render();
-            currentY += element->GetSize().y + mSpacing;
-        }
-    }
-
-    void SetSizeToSpace(bool val){
-        sizeToSpace = val;
-    }
-
-private:
-    int mSpacing;
-    bool sizeToSpace = false;
 };
 
-class CIwUILayoutHorizontal : public CIwUILayout {
+class CIwUITabBar : public CIwUIElement {
+private:
+    struct Tab {
+        std::string label;
+        CIwUIElement* content;
+    };
+
+    std::vector<Tab> tabs;
+    int16_t selectedTab;
+
 public:
-    CIwUILayoutHorizontal() : mSpacing(5) {}
+    CIwUITabBar() : selectedTab(0) {}
 
-    void SetSpacing(int spacing) { mSpacing = spacing; }
+    void AddTab(const std::string& title, CIwUIElement* content) {
+        tabs.push_back({title, content});
+    }
 
-    void Render() override {
-        int currentX = 0;
-        for (auto& element : GetElements()) {
-            element->SetPosition(Vector2(currentX, 0));
-            element->Render();
-            currentX += element->GetSize().x + mSpacing;
+    void SetRadioButtonStyle(int16_t tabIndex, const std::string& style) {
+        if (tabIndex >= 0 && tabIndex < tabs.size()) {
+            std::cout << "Style for tab " << tabIndex << " set to: " << style << std::endl;
         }
     }
 
-private:
-    int mSpacing;
+    void SetRadioButtonCaption(int16_t tabIndex, const std::string& caption) {
+        if (tabIndex >= 0 && tabIndex < tabs.size()) {
+            tabs[tabIndex].label = caption;
+        }
+    }
+
+    void SetSelected(int16_t tabIndex) {
+        if (tabIndex >= 0 && tabIndex < tabs.size()) {
+            selectedTab = tabIndex;
+        }
+    }
+
+    void Render() override {
+        for (size_t i = 0; i < tabs.size(); ++i) {
+            std::cout << "Rendering tab: " << tabs[i].label << std::endl;
+            if (i == selectedTab) {
+                std::cout << "Tab " << i << " is selected!" << std::endl;
+            }
+        }
+    }
+
+    int16_t GetSelected() {
+        return selectedTab;
+    }
 };
 
 
@@ -650,6 +926,27 @@ inline void Iw2DFillPolygon(const Vector2* verts, int NUM_VERTS) {
 
     // Terminer le dessin du polygone
     glEnd();
+}
+
+struct Element {
+    int x, y, width, height; // Dimensions de l'éléments
+};
+// Recréation de la fonction IwUIDebugRender
+inline void IwUIDebugRender(SDL_Renderer* renderer, int flags) {
+    // Exemple de hiérarchie d'éléments
+    Element element = {50, 50, 200, 150};
+
+    // Si le drapeau IW_UI_DEBUG_LAYOUT_OUTLINE_F est activé
+    if (flags & 0x01) { // Supposons que IW_UI_DEBUG_LAYOUT_OUTLINE_F == 0x01
+        // Couleur pour le contour (rouge pour l'exemple)
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+        // Dessiner le contour de l'élément
+        SDL_Rect rect = {element.x, element.y, element.width, element.height};
+        SDL_RenderDrawRect(renderer, &rect);
+    }
+
+    // D'autres flags peuvent être gérés ici
 }
 
 using CIwUIColour = CIwColour;

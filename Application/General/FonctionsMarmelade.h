@@ -22,6 +22,9 @@
 #include "gamepad_interface.h"
 
 
+
+
+
 #ifdef _WIN32
 #include <windows.h>
 #include <iostream>
@@ -365,21 +368,20 @@ inline bool IwGxDrawRectScreenSpace(Vector2* pos, Vector2* wh) {
 }
 
 // Fonction IwSafeCast générique
-template <typename T>
-T* IwSafeCast(CIwResource<T> resource) {
+/*void* IwSafeCast(CIwResource* resource) {
     // Vérifier si le pointeur est nul
     if (!resource) {
         return nullptr;
     }
 
     // Utiliser dynamic_cast pour tenter de convertir le pointeur en un type dérivé
-    T* castedResource = dynamic_cast<T*>(resource);
+    void* castedResource = dynamic_cast<>(resource);
     if (!castedResource) {
         std::cerr << "Erreur : Le cast de type a échoué." << std::endl;
     }
 
     return castedResource;
-}
+}*/
 
 // Définir les drapeaux comme des constantes bitmasks
 constexpr unsigned int IW_GX_COLOUR_BUFFER_F = 0x01;  // Bit 0
@@ -812,7 +814,7 @@ SDL_SysWMinfo wmInfo;
 }
 
 
-inline void s3eDeviceYield(int milliseconds) {
+inline void s3eDeviceYield(int milliseconds = 50) {
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 }
 
@@ -828,8 +830,13 @@ inline bool s3eDeviceCheckQuitRequest() {
     }
 }
 
-inline bool IwGxPrintSetColour(SDL_Renderer* renderer, int r, int g, int b) {
-    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+inline bool IwGxPrintSetColour(int r, int g, int b) {
+    SDL_SetRenderDrawColor(GeneralRenderManager.getRenderer(), r, g, b, 255);
+    return true;
+}
+
+inline bool IwGxSetColClear(int r, int g, int b, int a) {
+    SDL_SetRenderDrawColor(GeneralRenderManager.getRenderer(), r, g, b, a);
     return true;
 }
 

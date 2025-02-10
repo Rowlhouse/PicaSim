@@ -62,5 +62,7 @@ s3eResult s3eFileListNext(s3eFileList* fileList, char* filename, int filenameLen
 // Fonction s3eFileListClose
 void s3eFileListClose(s3eFileList* fileList);
 
+void s3eFileDelete (const char* chaine);
+
 
 #endif

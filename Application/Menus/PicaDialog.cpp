@@ -1,4 +1,5 @@
 #include "PicaDialog.h"
+#include "FonctionsMarmelade.h"
 #include "Trace.h"
 #include "Menu.h"
 
@@ -29,7 +30,8 @@ int ShowDialog(const char* title, const char* text, const char* button0, const c
   dialogArea->SetSizeToContent(false); // If true the the whole screen is vertically centred. False places it at the top
   dialogArea->SetSizeMax(CIwVec2(width,height));
   dialogArea->SetLayout(dialogLayout);
-  CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("DialogBackground", "CIwTexture");
+  //CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("DialogBackground", "CIwTexture");
+  CIwTexture* texture = IwGetResManager<CIwTexture>().GetResNamed("DialogBackground", "CIwTexture");
   dialogArea->SetTexture(texture);
 
   IwGetUIView()->AddElement(dialogArea);
@@ -80,7 +82,7 @@ int ShowDialog(const char* title, const char* text, const char* button0, const c
 
   // Update loop
 
-  uint64 lastTime = s3eTimerGetMs();
+  uint64_t lastTime = s3eTimerGetMs();
 
   // Zooming params
   static float smoothTime = 0.12f;
@@ -141,7 +143,7 @@ int ShowDialog(const char* title, const char* text, const char* button0, const c
     SmoothSpringDamper(offsetX, offsetXRate, dt, 0.0f, smoothTime, dampingRatio);
     SmoothSpringDamper(offsetY, offsetYRate, dt, 0.0f, smoothTime, dampingRatio);
 
-    CIwVec2 offset((int32) offsetX, (int32) offsetY);
+    CIwVec2 offset((int32_t) offsetX, (int32_t) offsetY);
     CIwVec2 position = finalPosition + offset;
     dialogArea->SetPos(position);
 

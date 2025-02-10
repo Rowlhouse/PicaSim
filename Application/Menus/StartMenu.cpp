@@ -6,7 +6,7 @@
 // #include "ScoreloopMenu.h"
 // #include "../Scoreloop.h"
 // #include "../VersionChecker.h"
-// #include "../PicaJoystick.h"
+#include "PicaJoystick.h"
 // #include "../WindowsBilling.h"
 // #include "Menu.h"
 
@@ -46,7 +46,7 @@ public:
 
   bool HandleEvent(CIwEvent* pEvent) OVERRIDE;
 
-  int32 Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings) OVERRIDE;
+  int32_t Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings) OVERRIDE;
 
 private:
   CIwUIElement* mRow0Area;
@@ -146,7 +146,7 @@ bool StartMenu::HandleEvent(CIwEvent* pEvent)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 StartMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
+int32_t StartMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
 {
   int width =  gameSettings.mOptions.mFrameworkSettings.mScreenWidth;
   int height =  gameSettings.mOptions.mFrameworkSettings.mScreenHeight;
@@ -191,7 +191,7 @@ int32 StartMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChange
 
   mRow1Area->SetSizeMin(CIwVec2(-1, height/3));
 
-  int32 time = Menu::Update(keepAwake, throttle, resourcesHaveChanged, gameSettings);
+  int32_t time = Menu::Update(keepAwake, throttle, resourcesHaveChanged, gameSettings);
   return time;
 }
 

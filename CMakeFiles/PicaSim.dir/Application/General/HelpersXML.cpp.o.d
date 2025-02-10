@@ -474,21 +474,16 @@ CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o: \
  /usr/include/SDL2/SDL_system.h /usr/include/SDL2/SDL_timer.h \
  /usr/include/SDL2/SDL_version.h /usr/include/SDL2/SDL_locale.h \
  /usr/include/SDL2/SDL_misc.h /usr/include/SDL2/SDL_pixels.h \
- /usr/include/SDL2/SDL_render.h /usr/include/c++/14/unordered_map \
- /usr/include/c++/14/bits/unordered_map.h \
- /usr/include/c++/14/bits/hashtable.h \
- /usr/include/c++/14/bits/hashtable_policy.h \
- /usr/include/c++/14/ext/aligned_buffer.h \
- /usr/include/c++/14/bits/enable_special_members.h \
- /usr/include/c++/14/bits/node_handle.h \
- /usr/include/c++/14/bits/erase_if.h /usr/include/c++/14/variant \
- /usr/include/c++/14/bits/parse_numbers.h \
+ /usr/include/SDL2/SDL_render.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entete.h \
  /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_log.h \
  /usr/include/SDL2/SDL_video.h /usr/include/c++/14/cstdarg \
  /usr/include/c++/14/map /usr/include/c++/14/bits/stl_tree.h \
+ /usr/include/c++/14/ext/aligned_buffer.h \
+ /usr/include/c++/14/bits/node_handle.h \
  /usr/include/c++/14/bits/stl_map.h \
- /usr/include/c++/14/bits/stl_multimap.h /usr/include/GL/glew.h \
+ /usr/include/c++/14/bits/stl_multimap.h \
+ /usr/include/c++/14/bits/erase_if.h /usr/include/GL/glew.h \
  /usr/include/GL/glu.h /usr/include/GL/gl.h /usr/include/EGL/egl.h \
  /usr/include/EGL/eglplatform.h /usr/include/KHR/khrplatform.h \
  /usr/include/SDL2/SDL_stdinc.h /usr/include/c++/14/vector \

@@ -21,7 +21,8 @@ enum alignmentVer {
     
 };
 
-class CIwGxFont {
+
+class CIwGxFont  {
 public:
     // Constructeur
     CIwGxFont(const std::string& fontName = "", int fontSize = 12) : fontName(fontName), fontSize(fontSize), font(nullptr), colour({255, 255, 255, 255}), AlignmentHor(IW_GX_FONT_ALIGN_LEFT), AlignmentVer(IW_GX_FONT_ALIGN_MIDDLE) {
@@ -126,6 +127,10 @@ public:
         return renderRect;
     }
 
+    TTF_Font* GetTTF_Font () const {
+        return font;
+    }
+
 private:
     std::string fontName;    // Nom du fichier de la police
     int fontSize;            // Taille de la police
@@ -137,7 +142,7 @@ private:
 };
 
 
-CIwGxFont* GeneralFont = nullptr;
+CIwGxFont* GeneralFont;
 
 
 inline bool IwGxFontSetFont(CIwGxFont* font) {

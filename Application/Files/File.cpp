@@ -95,3 +95,8 @@ void s3eFileListClose(s3eFileList* fileList)
         delete fileList;  // Libérer la mémoire allouée pour l'objet fileList
     }
 }
+
+
+void s3eFileDelete (const char* chaine){
+    ////////////////////////////////////////////////////////////////////////////////////////////Compléter
+}

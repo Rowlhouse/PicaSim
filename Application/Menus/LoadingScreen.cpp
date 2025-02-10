@@ -1,7 +1,9 @@
 #include "LoadingScreen.h"
-// #include "../PicaStrings.h"
-
-// #include "../GameSettings.h"
+#include "FonctionsMarmelade.h"
+#include "Graphics.h"
+#include "Trace.h"
+#include "PicaStrings.h"
+#include "GameSettings.h"
 
 //---------------------------------------------------------------------------------------------------------------------
 static const char* GetTip(const struct GameSettings& gameSettings, const char** tips, size_t numTips)
@@ -32,7 +34,7 @@ static const char* GetTip(const struct GameSettings& gameSettings, const char** 
   if (gameSettings.mStatistics.mLoadCounter < 5)
     return 0;
 
-  const uint32 cycle = 4;
+  const uint32_t cycle = 4;
   if (gameSettings.mStatistics.mLoadCounter % cycle)
     return 0;
 
@@ -132,8 +134,8 @@ LoadingScreen::LoadingScreen(const char* initialText, struct GameSettings& gameS
     float desiredWidth = width/10.0f;
     float desiredHeight = desiredWidth / ar;
 
-    mProgressImageWidth = (int32) desiredWidth;
-    mProgressImageHeight = (int32) desiredHeight;
+    mProgressImageWidth = (int32_t) desiredWidth;
+    mProgressImageHeight = (int32_t) desiredHeight;
 
     // Add the image
     mProgressImage = new CIwUIImage;
@@ -190,7 +192,7 @@ void LoadingScreen::Update(const char* moduleName)
     TRACE_FILE_IF(1) TRACE("LoadingScreen::Update()");
 
   int64_t currentTimeMs = s3eTimerGetMs();
-  int32_t deltaTimeMs = (int32) (currentTimeMs - mLastTimeMs);
+  int32_t deltaTimeMs = (int32_t) (currentTimeMs - mLastTimeMs);
 
   if (!moduleName && deltaTimeMs < 33)
     return;

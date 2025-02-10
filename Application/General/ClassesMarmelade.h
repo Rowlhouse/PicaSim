@@ -11,16 +11,14 @@
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <iostream>
-#include <unordered_map>
-#include <variant>
+//#include <unordered_map>
+//#include <variant>
 #include "Entete.h"
 
 
 class RendererManager {
-private:
-    static SDL_Renderer* renderer;
-
 public:
+    RendererManager () { renderer = nullptr; }
     static void setRenderer(SDL_Renderer* r) {
         renderer = r;
     }
@@ -31,10 +29,10 @@ public:
         }
         return renderer;
     }
+private:
+    static SDL_Renderer* renderer;
 };
 
-// Initialisation du pointeur statique
-SDL_Renderer* RendererManager::renderer = nullptr;
 
 class Image {
 public : 
@@ -462,16 +460,6 @@ public:
     }
 };
 
-/*class Colour : public CIwColour
-{
-public:
-  Colour(uint8_t r = 255, uint8_t g = 255, uint8_t b = 255, uint8_t a = 255)
-  {
-    Set(r, g, b, a);
-  }
-  Colour(const CIwColour& col) : CIwColour(col) {}
-};*/
-
 class Colour {
 public :
   uint8_t r;
@@ -498,16 +486,6 @@ public :
     return SDL_Colour ({r,g,b,a});
   }
 };
-
-/*class Plane : public CIwFPlane
-{
-public:
-  Plane(const Vector3& v, float k) : CIwFPlane(v, k) {}
-  Plane() {}
-
-  void Normalise() {float invM = 1.0f / v.GetLength(); v *= invM; k *= invM;}
-  float GetDistanceToPoint(const Vector3& pt) const { return v * pt + k;}
-};*/
 
 class Plane {
 public :
@@ -545,6 +523,13 @@ public:
         this->y = y;
         this->w = w;
         this->h = h;
+    }
+
+    CIwRect(Vector2 pos, Vector2 size) {
+        this->x = pos.x;
+        this->y = pos.y;
+        this->w = size.x;
+        this->h = size.y;
     }
 
     // Méthode pour définir les valeurs du rectangle
@@ -635,5 +620,29 @@ public:
         return w * h;
     }
 };
+
+class IwHashString {
+public:
+    IwHashString() : str() {}
+    IwHashString(const std::string& str) : str(str) {}
+
+    const std::string& GetString() const { return str; }
+
+private:
+    std::string str;
+};
+
+
+
+
+
+
+
+
+
+
+
+RendererManager GeneralRenderManager;
+
 
 #endif

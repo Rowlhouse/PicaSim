@@ -1,13 +1,16 @@
 #include "FileMenu.h"
+#include "File.h"
+#include "FonctionsPointerKeyboardMarmelade.h"
 #include "GameSettings.h"
 #include "Menu.h"
 #include <cstring>
 #include "Entete.h"
 #include "ClassesUIMarmelade.h"
-// #include "SettingsWidgets.h"
-// #include "Helpers.h"
-// #include "PicaDialog.h"
-// #include "../GameSettings.h"
+#include "SettingsWidgets.h"
+#include "Helpers.h"
+#include "PicaDialog.h"
+#include "GameSettings.h"
+#include "Trace.h"
 
 // #include <IwUI.h>
 // #include <IwUITextField.h>
@@ -433,12 +436,12 @@ void FileMenu::CreateContentAndButtonsAreaAndLayout(
     for (size_t i = 0 ; i != numTabs ; ++i)
     {
       if (i == 0)
-        mTabBar->SetRadioButtonStyle((int16) i, "<radio_left>");
+        mTabBar->SetRadioButtonStyle((int16_t) i, "<radio_left>");
       else if (i == numTabs - 1)
-        mTabBar->SetRadioButtonStyle((int16) i, "<radio_right>");
+        mTabBar->SetRadioButtonStyle((int16_t) i, "<radio_right>");
       else
-        mTabBar->SetRadioButtonStyle((int16) i, "<radio_centre>");
-      mTabBar->SetRadioButtonCaption((int16) i, tabTitles[i]);
+        mTabBar->SetRadioButtonStyle((int16_t) i, "<radio_centre>");
+      mTabBar->SetRadioButtonCaption((int16_t) i, tabTitles[i]);
     }
     mTabBar->SetSelected(mSelectedTab);
     navigationArea->AddChild(mTabBar);
@@ -531,7 +534,7 @@ void FileMenu::CreateContentAndButtonsAreaAndLayout(
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 FileMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
+int32_t FileMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
 {
   mScrollArea = mFilenameArea;
 
@@ -548,7 +551,7 @@ int32 FileMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged
 bool FileMenu::HandleEvent(CIwEvent* pEvent) 
 {
   CIwManaged* sender = pEvent->GetSender();
-  const uint32 eventID = pEvent->GetID();
+  const uint32_t eventID = pEvent->GetID();
   const Language language = mGameSettings.mOptions.mLanguage;
 
   if (eventID == IWUI_EVENT_BUTTON)

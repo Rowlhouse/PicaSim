@@ -1,8 +1,8 @@
 #include "WhatsNewMenu.h"
-// #include "Menu.h"
-// #include "Helpers.h"
+#include "Menu.h"
+#include "Helpers.h"
 // #include "SettingsWidgets.h"
-// #include "../GameSettings.h"
+#include "GameSettings.h"
 // #include "../PicaStrings.h"
 
 // #include <s3eOSExec.h>
