@@ -1,5 +1,5 @@
-#ifndef AEROFOIL_PARAMETERS_H
-#define AEROFOIL_PARAMETERS_H
+#ifndef AEROFOILPARAMETERS_H
+#define AEROFOILPARAMETERS_H
 
 /// This is the constant configuration of an aerofoil - secific to that aerofoil
 #include "Vecteurs.h"

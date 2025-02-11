@@ -1,12 +1,13 @@
 #include "SelectMenu.h"
 
+#include "FonctionsMarmelade.h"
 #include "FonctionsPointerKeyboardMarmelade.h"
-#include "GameSettings.h"
+// #include "GameSettings.h"
 #include "Menu.h"
-#include "Helpers.h"
-#include "PicaStrings.h"
+// #include "Helpers.h"
+// #include "PicaStrings.h"
 #include "SettingsWidgets.h"
-#include <vector>
+// #include <vector>
 // #include "../GameSettings.h"
 
 //---------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
-#ifndef CONFIGURATIONANDSETTINGS_H
-#define CONFIGURATIONANDSETTINGS_H
+#ifndef GAMESETTINGS_H
+#define GAMESETTINGS_H
 
 
 // #include "PicaStrings.h"

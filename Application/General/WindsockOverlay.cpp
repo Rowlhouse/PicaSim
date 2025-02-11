@@ -1,11 +1,11 @@
 #include "WindsockOverlay.h"
-#include "Entete.h"
+// #include "Entete.h"
 #include "Graphics.h"
 #include "Shaders.h"
 #include "Trace.h"
 #include "Viewport.h"
-#include "WindsockOverlay.h"
-#include "RenderManager.h"
+///#include "WindsockOverlay.h"
+// #include "RenderManager.h"
 #include "ShaderManager.h"
 
 // #include <s3e.h>

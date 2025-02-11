@@ -4,7 +4,7 @@
 //#include <s3eDevice.h>
 
 #include "Entete.h"
-#include <SDL2/SDL_video.h>
+// #include <SDL2/SDL_video.h>
 
 struct FrameworkSettings
 {

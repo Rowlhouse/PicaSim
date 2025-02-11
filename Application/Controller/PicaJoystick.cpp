@@ -1,11 +1,11 @@
 #include "PicaJoystick.h"
-#include <cstring>
-#include "File.h"
+// #include <cstring>
+// #include "File.h"
 #include "FonctionsMarmelade.h"
 #include "Trace.h"
-#include <cstdint>
+// #include <cstdint>
 #include "GameSettings.h"
-#include "Entete.h"
+// #include "Entete.h"
 #include "gamepad.h"
 
 

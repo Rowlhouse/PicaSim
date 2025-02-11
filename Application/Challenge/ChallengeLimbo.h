@@ -6,8 +6,6 @@
 #include "RenderManager.h"
 #include "Scoreloop.h"
 #include "AudioManager.h"
-// #include "Gate.h"
-// #include "Scoreloop.h"
 // #include "Menus/ScoreloopMenu.h"
 // #include "GameSettings.h"
 

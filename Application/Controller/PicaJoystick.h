@@ -1,7 +1,10 @@
+#ifndef PICAJOYSTICK_H
+#define PICAJOYSTICK_H
+
 //#include "gamepad.h"
 
 #include "Entete.h"
-#include "File.h"
+// #include "File.h"
 struct JoystickData 
 {
   JoystickData();
@@ -23,3 +26,5 @@ void UpdateJoystick(int id);
 void ResetJoystick();
 
 bool ShowJoystickInGame(const struct GameSettings& gameSettings);
+
+#endif

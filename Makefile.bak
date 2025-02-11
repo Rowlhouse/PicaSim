@@ -30,7 +30,7 @@ SRCS = $(wildcard $(addsuffix /*.cpp, $(SRC_DIRS)))
 OBJS = $(SRCS:.cpp=.o)
 
 # Library paths and libraries
-LDFLAGS = -lGL -lSDL2 -lEGL -lGLESv2 -lGLEW -LApplication/Bullet -lBulletDynamics -lBulletCollision -lLinearMath
+LDFLAGS = -lGL -lSDL2 -lEGL -lGLESv2 -lGLEW -LApplication/Bullet
 
 # Target executable
 TARGET = PicaSim

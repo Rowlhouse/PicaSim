@@ -12,8 +12,8 @@
   Copyright (C) 2002 Danny Chapman - flight@rowlhouse.freeserve.co.uk
  */
 
-#ifndef LOD_H
-#define LOD_H
+#ifndef HEIGHTFIELDBUILDER_H
+#define HEIGHTFIELDBUILDER_H
 
 #include "LoadingScreenHelper.h"
 

@@ -1,6 +1,8 @@
 ﻿#include "SettingsMenu.h"
 #include "ClassesUIMarmelade.h"
+#include "File.h"
 #include "FileMenu.h"
+#include "FonctionsMarmelade.h"
 #include "Helpers.h"
 #include "HelpersXML.h"
 #include "SelectMenu.h"

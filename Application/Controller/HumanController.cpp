@@ -1,4 +1,5 @@
 #include "HumanController.h"
+#include "FonctionsMarmelade.h"
 #include "Graphics.h"
 #include "PicaSim.h"
 #include "EntityManager.h"

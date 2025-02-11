@@ -1,13 +1,14 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "ClassesMarmelade.h"
+#include "FrameworkSettings.h"
+#include "Vecteurs.h"
 //#include "Helpers.h"
 //#include "Graphics.h"
 
 /// This is used to make the camera look at an object. The position and up direction should be set manually on the camera.
-#include "ClassesMarmelade.h"
-#include "FrameworkSettings.h"
-#include "Vecteurs.h"
+
 class CameraTarget
 {
 public:

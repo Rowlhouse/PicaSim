@@ -1,4 +1,5 @@
 #include "PicaSim.h"
+#include "FonctionsMarmelade.h"
 #include "FonctionsPointerKeyboardMarmelade.h"
 #include "Trace.h"
 #include "EntityManager.h"

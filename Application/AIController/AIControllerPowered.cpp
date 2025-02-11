@@ -10,7 +10,7 @@
 #include "Environment.h"
 #include "EntityManager.h"
 #include "Trace.h"
-#include "Viewport.h"
+//#include "Viewport.h"
 
 //---------------------------------------------------------------------------------------------------------------------
 Vector3 AIControllerPowered::GetLaunchPos() const

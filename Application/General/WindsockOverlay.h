@@ -2,7 +2,7 @@
 #define WINDSOCKOVERLAY_H
 
 #include "ClassesMarmelade.h"
-#include "Entete.h"
+// #include "Entete.h"
 #include "RenderOverlayObject.h"
 #include "Helpers.h"
 

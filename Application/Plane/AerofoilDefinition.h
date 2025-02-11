@@ -1,5 +1,5 @@
-#ifndef AEROFOIL_DEFINITION_H
-#define AEROFOIL_DEFINITION_H
+#ifndef AEROFOILDEFINITION_H
+#define AEROFOILDEFINITION_H
 
 // #include "Helpers.h"
 

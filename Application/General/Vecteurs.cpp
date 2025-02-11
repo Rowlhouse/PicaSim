@@ -11,7 +11,7 @@ void Transform::PostRotate(const Quat& Q) {
 }
 
 
-inline float ClipPlane::distanceToPoint(const Vector3& pos) const
+float ClipPlane::distanceToPoint(const Vector3& pos) const
 {
   Vector3 normal(data[0], data[1], data[2]);
   // normal is already normalised.. I hope...!
@@ -19,19 +19,19 @@ inline float ClipPlane::distanceToPoint(const Vector3& pos) const
   return dist + data[3];
 }
 
-inline float ClipPlane::distanceToPoint(float x, float y, float z) const
+float ClipPlane::distanceToPoint(float x, float y, float z) const
 {
   return data[0]*x + data[1]*y + data[2]*z + data[3];
 }
 
-inline void ClipPlane::show() const
+void ClipPlane::show() const
 {
   printf("ClipPlane %p: %6.2f %6.2f %6.2f %6.2f\n",
          this,
          data[0], data[1], data[2], data[3]);
 }
 
-inline ClipPlane operator*(const Matrix44 & lhs, const ClipPlane & rhs)
+ClipPlane operator*(const Matrix44 & lhs, const ClipPlane & rhs)
 {
   ClipPlane result;
   
@@ -45,3 +45,8 @@ inline ClipPlane operator*(const Matrix44 & lhs, const ClipPlane & rhs)
   }
   return result;
 }
+
+
+Vector3 Vector3::g_Zero = Vector3();
+// Définition de l'instance statique g_Identity
+Transform Transform::g_Identity = Transform();

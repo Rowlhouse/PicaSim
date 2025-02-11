@@ -59,7 +59,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   Application/Controller/Controller.h \
   Application/Controller/Gyro.h \
   Application/Controller/HumanController.h \
-  Application/Controller/gamepad_interface.h \
   Application/Files/3ds.h \
   Application/Files/ac3d.h \
   Application/General/ClassesFontMarmelade.h \
@@ -67,7 +66,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/Entity.h \
-  Application/General/FonctionsMarmelade.h \
   Application/General/FrameworkSettings.h \
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
@@ -153,7 +151,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/SDL2/SDL_stdinc.h \
   /usr/include/SDL2/SDL_surface.h \
   /usr/include/SDL2/SDL_system.h \
-  /usr/include/SDL2/SDL_syswm.h \
   /usr/include/SDL2/SDL_thread.h \
   /usr/include/SDL2/SDL_timer.h \
   /usr/include/SDL2/SDL_touch.h \
@@ -162,11 +159,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/begin_code.h \
   /usr/include/SDL2/close_code.h \
-  /usr/include/X11/X.h \
-  /usr/include/X11/Xatom.h \
-  /usr/include/X11/Xfuncproto.h \
-  /usr/include/X11/Xlib.h \
-  /usr/include/X11/Xosdefs.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
@@ -183,8 +175,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
-  /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
@@ -194,7 +184,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
   /usr/include/c++/14/bits/exception_ptr.h \
-  /usr/include/c++/14/bits/fstream.tcc \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
@@ -216,7 +205,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -226,7 +214,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -249,9 +236,7 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -262,17 +247,14 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -284,7 +266,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
-  /usr/include/c++/14/fstream \
   /usr/include/c++/14/initializer_list \
   /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
@@ -298,7 +279,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -307,7 +287,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -508,7 +487,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/glm/vector_relational.hpp \
   /usr/include/inttypes.h \
   /usr/include/limits.h \
-  /usr/include/linux/close_range.h \
   /usr/include/linux/errno.h \
   /usr/include/linux/limits.h \
   /usr/include/locale.h \
@@ -523,26 +501,21 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/string.h \
   /usr/include/strings.h \
   /usr/include/time.h \
-  /usr/include/unistd.h \
   /usr/include/wchar.h \
   /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/confname.h \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
-  /usr/include/x86_64-linux-gnu/bits/environments.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
   /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
   /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
   /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -555,7 +528,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
   /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
   /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -602,8 +574,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/x86_64-linux-gnu/bits/typesizes.h \
   /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
   /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
-  /usr/include/x86_64-linux-gnu/bits/utsname.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
@@ -611,10 +581,8 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
@@ -629,7 +597,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerGlider.cpp.o: Applic
   /usr/include/x86_64-linux-gnu/sys/select.h \
   /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/sys/utsname.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxcomplexintrin.h \
@@ -794,7 +761,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   Application/Controller/Controller.h \
   Application/Controller/Gyro.h \
   Application/Controller/HumanController.h \
-  Application/Controller/gamepad_interface.h \
   Application/Files/3ds.h \
   Application/Files/ac3d.h \
   Application/General/ClassesFontMarmelade.h \
@@ -802,7 +768,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/Entity.h \
-  Application/General/FonctionsMarmelade.h \
   Application/General/FrameworkSettings.h \
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
@@ -888,7 +853,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/SDL2/SDL_stdinc.h \
   /usr/include/SDL2/SDL_surface.h \
   /usr/include/SDL2/SDL_system.h \
-  /usr/include/SDL2/SDL_syswm.h \
   /usr/include/SDL2/SDL_thread.h \
   /usr/include/SDL2/SDL_timer.h \
   /usr/include/SDL2/SDL_touch.h \
@@ -897,11 +861,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/begin_code.h \
   /usr/include/SDL2/close_code.h \
-  /usr/include/X11/X.h \
-  /usr/include/X11/Xatom.h \
-  /usr/include/X11/Xfuncproto.h \
-  /usr/include/X11/Xlib.h \
-  /usr/include/X11/Xosdefs.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
@@ -918,8 +877,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
-  /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
@@ -929,7 +886,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
   /usr/include/c++/14/bits/exception_ptr.h \
-  /usr/include/c++/14/bits/fstream.tcc \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
@@ -951,7 +907,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -961,7 +916,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -984,9 +938,7 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -997,17 +949,14 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -1019,7 +968,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
-  /usr/include/c++/14/fstream \
   /usr/include/c++/14/initializer_list \
   /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
@@ -1033,7 +981,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -1042,7 +989,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -1243,7 +1189,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/glm/vector_relational.hpp \
   /usr/include/inttypes.h \
   /usr/include/limits.h \
-  /usr/include/linux/close_range.h \
   /usr/include/linux/errno.h \
   /usr/include/linux/limits.h \
   /usr/include/locale.h \
@@ -1258,26 +1203,21 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/string.h \
   /usr/include/strings.h \
   /usr/include/time.h \
-  /usr/include/unistd.h \
   /usr/include/wchar.h \
   /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/confname.h \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
-  /usr/include/x86_64-linux-gnu/bits/environments.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
   /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
   /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
   /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -1290,7 +1230,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
   /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
   /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -1337,8 +1276,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/x86_64-linux-gnu/bits/typesizes.h \
   /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
   /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
-  /usr/include/x86_64-linux-gnu/bits/utsname.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
@@ -1346,10 +1283,8 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
@@ -1364,7 +1299,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerPowered.cpp.o: Appli
   /usr/include/x86_64-linux-gnu/sys/select.h \
   /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/sys/utsname.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxcomplexintrin.h \
@@ -1529,7 +1463,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   Application/Controller/Controller.h \
   Application/Controller/Gyro.h \
   Application/Controller/HumanController.h \
-  Application/Controller/gamepad_interface.h \
   Application/Files/3ds.h \
   Application/Files/ac3d.h \
   Application/General/ClassesFontMarmelade.h \
@@ -1537,7 +1470,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/Entity.h \
-  Application/General/FonctionsMarmelade.h \
   Application/General/FrameworkSettings.h \
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
@@ -1623,7 +1555,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/SDL2/SDL_stdinc.h \
   /usr/include/SDL2/SDL_surface.h \
   /usr/include/SDL2/SDL_system.h \
-  /usr/include/SDL2/SDL_syswm.h \
   /usr/include/SDL2/SDL_thread.h \
   /usr/include/SDL2/SDL_timer.h \
   /usr/include/SDL2/SDL_touch.h \
@@ -1632,11 +1563,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/begin_code.h \
   /usr/include/SDL2/close_code.h \
-  /usr/include/X11/X.h \
-  /usr/include/X11/Xatom.h \
-  /usr/include/X11/Xfuncproto.h \
-  /usr/include/X11/Xlib.h \
-  /usr/include/X11/Xosdefs.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
@@ -1653,8 +1579,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
-  /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
@@ -1664,7 +1588,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
   /usr/include/c++/14/bits/exception_ptr.h \
-  /usr/include/c++/14/bits/fstream.tcc \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
@@ -1686,7 +1609,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -1696,7 +1618,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -1719,9 +1640,7 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -1732,17 +1651,14 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -1754,7 +1670,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
-  /usr/include/c++/14/fstream \
   /usr/include/c++/14/initializer_list \
   /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
@@ -1768,7 +1683,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -1777,7 +1691,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -1978,7 +1891,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/glm/vector_relational.hpp \
   /usr/include/inttypes.h \
   /usr/include/limits.h \
-  /usr/include/linux/close_range.h \
   /usr/include/linux/errno.h \
   /usr/include/linux/limits.h \
   /usr/include/locale.h \
@@ -1993,26 +1905,21 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/string.h \
   /usr/include/strings.h \
   /usr/include/time.h \
-  /usr/include/unistd.h \
   /usr/include/wchar.h \
   /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/confname.h \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
-  /usr/include/x86_64-linux-gnu/bits/environments.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
   /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
   /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
   /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -2025,7 +1932,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
   /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
   /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -2072,8 +1978,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/x86_64-linux-gnu/bits/typesizes.h \
   /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
   /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
-  /usr/include/x86_64-linux-gnu/bits/utsname.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
@@ -2081,10 +1985,8 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
@@ -2099,7 +2001,6 @@ CMakeFiles/PicaSim.dir/Application/AIController/AIControllerTug.cpp.o: Applicati
   /usr/include/x86_64-linux-gnu/sys/select.h \
   /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/sys/utsname.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxcomplexintrin.h \
@@ -23809,7 +23710,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/Challenge.cpp.o: Application/Challe
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -24513,7 +24413,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeDuration.cpp.o: Applicatio
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -25149,7 +25048,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: Application
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -25182,7 +25080,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: Application
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -25192,7 +25089,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: Application
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -25215,9 +25111,7 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: Application
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -25228,17 +25122,14 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: Application
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -25264,7 +25155,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: Application
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -25273,7 +25163,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: Application
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -25889,7 +25778,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeLimbo.cpp.o: Application/C
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -25922,7 +25810,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeLimbo.cpp.o: Application/C
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -25932,7 +25819,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeLimbo.cpp.o: Application/C
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -25955,9 +25841,7 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeLimbo.cpp.o: Application/C
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -25968,17 +25852,14 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeLimbo.cpp.o: Application/C
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -26004,7 +25885,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeLimbo.cpp.o: Application/C
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -26013,7 +25893,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeLimbo.cpp.o: Application/C
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -26617,7 +26496,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeRace.cpp.o: Application/Ch
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -26650,7 +26528,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeRace.cpp.o: Application/Ch
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -26660,7 +26537,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeRace.cpp.o: Application/Ch
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -26683,9 +26559,7 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeRace.cpp.o: Application/Ch
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -26696,17 +26570,14 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeRace.cpp.o: Application/Ch
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -26732,7 +26603,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeRace.cpp.o: Application/Ch
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -26741,7 +26611,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeRace.cpp.o: Application/Ch
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -27348,7 +27217,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/TrialOverlay.cpp.o: Application/Cha
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -28019,7 +27887,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/Accelerometer.cpp.o: Application/C
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -28644,7 +28511,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/Gyro.cpp.o: Application/Controller
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -29123,7 +28989,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   Application/Controller/PicaJoystick.h \
   Application/Controller/gamepad_interface.h \
   Application/Files/3ds.h \
-  Application/Files/File.h \
   Application/Files/ac3d.h \
   Application/General/ClassesFontMarmelade.h \
   Application/General/ClassesMarmelade.h \
@@ -29238,7 +29103,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -29271,7 +29135,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -29281,7 +29144,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -29304,9 +29166,7 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -29317,18 +29177,14 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -29354,7 +29210,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -29363,7 +29218,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o: Application
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -29957,7 +29811,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/NetworkController.cpp.o: Applicati
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -30419,7 +30272,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   Application/Controller/PicaJoystick.h \
   Application/Controller/gamepad.h \
   Application/Controller/gamepad_interface.h \
-  Application/Files/File.h \
   Application/General/ClassesFontMarmelade.h \
   Application/General/ClassesMarmelade.h \
   Application/General/ClassesUIMarmelade.h \
@@ -30430,9 +30282,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   Application/General/Helpers.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   Application/Languages/PicaStrings.h \
   Application/tinyxml/tinyxml.h \
   /usr/include/EGL/egl.h \
@@ -30515,7 +30364,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -30548,7 +30396,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -30558,7 +30405,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -30579,9 +30425,7 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -30592,18 +30436,14 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -30629,7 +30469,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -30637,7 +30476,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o: Application/Co
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -31074,11 +30912,7 @@ CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Applicati
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/FonctionsMarmelade.h \
-  Application/General/FrameworkSettings.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   /usr/include/EGL/egl.h \
   /usr/include/EGL/eglplatform.h \
   /usr/include/GL/gl.h \
@@ -31159,7 +30993,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Applicati
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -31192,7 +31025,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Applicati
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -31201,7 +31033,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Applicati
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -31222,9 +31053,7 @@ CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Applicati
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -31235,17 +31064,14 @@ CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Applicati
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -31271,14 +31097,12 @@ CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Applicati
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
   /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -31777,8 +31601,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/c++/14/bit \
   /usr/include/c++/14/bits/alloc_traits.h \
   /usr/include/c++/14/bits/allocator.h \
-  /usr/include/c++/14/bits/basic_ios.h \
-  /usr/include/c++/14/bits/basic_ios.tcc \
   /usr/include/c++/14/bits/basic_string.h \
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
@@ -31786,29 +31608,19 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
-  /usr/include/c++/14/bits/cxxabi_init_exception.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
-  /usr/include/c++/14/bits/exception_ptr.h \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
   /usr/include/c++/14/bits/invoke.h \
-  /usr/include/c++/14/bits/ios_base.h \
-  /usr/include/c++/14/bits/istream.tcc \
-  /usr/include/c++/14/bits/locale_classes.h \
-  /usr/include/c++/14/bits/locale_classes.tcc \
-  /usr/include/c++/14/bits/locale_facets.h \
-  /usr/include/c++/14/bits/locale_facets.tcc \
   /usr/include/c++/14/bits/localefwd.h \
   /usr/include/c++/14/bits/memory_resource.h \
   /usr/include/c++/14/bits/memoryfwd.h \
   /usr/include/c++/14/bits/move.h \
-  /usr/include/c++/14/bits/nested_exception.h \
   /usr/include/c++/14/bits/new_allocator.h \
   /usr/include/c++/14/bits/node_handle.h \
-  /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
@@ -31831,8 +31643,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/c++/14/bits/stl_tree.h \
   /usr/include/c++/14/bits/stl_uninitialized.h \
   /usr/include/c++/14/bits/stl_vector.h \
-  /usr/include/c++/14/bits/streambuf.tcc \
-  /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
   /usr/include/c++/14/bits/uses_allocator.h \
@@ -31846,40 +31656,28 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
   /usr/include/c++/14/cwchar \
-  /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
   /usr/include/c++/14/debug/debug.h \
-  /usr/include/c++/14/exception \
   /usr/include/c++/14/ext/aligned_buffer.h \
   /usr/include/c++/14/ext/alloc_traits.h \
-  /usr/include/c++/14/ext/atomicity.h \
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
   /usr/include/c++/14/initializer_list \
-  /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
-  /usr/include/c++/14/iostream \
-  /usr/include/c++/14/istream \
   /usr/include/c++/14/limits \
   /usr/include/c++/14/map \
   /usr/include/c++/14/math.h \
   /usr/include/c++/14/new \
-  /usr/include/c++/14/ostream \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
-  /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
-  /usr/include/c++/14/system_error \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -31894,7 +31692,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/c++/14/tr1/special_function_util.h \
   /usr/include/c++/14/tuple \
   /usr/include/c++/14/type_traits \
-  /usr/include/c++/14/typeinfo \
   /usr/include/c++/14/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
@@ -31905,22 +31702,17 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/linux/errno.h \
   /usr/include/locale.h \
   /usr/include/math.h \
-  /usr/include/pthread.h \
-  /usr/include/sched.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
   /usr/include/string.h \
   /usr/include/strings.h \
-  /usr/include/time.h \
   /usr/include/wchar.h \
-  /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -31938,12 +31730,9 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
-  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
-  /usr/include/x86_64-linux-gnu/bits/sched.h \
   /usr/include/x86_64-linux-gnu/bits/select.h \
-  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
@@ -31952,10 +31741,8 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
-  /usr/include/x86_64-linux-gnu/bits/time.h \
   /usr/include/x86_64-linux-gnu/bits/time64.h \
   /usr/include/x86_64-linux-gnu/bits/timesize.h \
-  /usr/include/x86_64-linux-gnu/bits/timex.h \
   /usr/include/x86_64-linux-gnu/bits/types.h \
   /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
@@ -31972,12 +31759,8 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
   /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -31986,24 +31769,16 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
-  /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h \
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_inline.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/error_constants.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr-default.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/sys/cdefs.h \
   /usr/include/x86_64-linux-gnu/sys/select.h \
-  /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
@@ -32118,11 +31893,7 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Ap
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/FonctionsMarmelade.h \
-  Application/General/FrameworkSettings.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   /usr/include/EGL/egl.h \
   /usr/include/EGL/eglplatform.h \
   /usr/include/GL/gl.h \
@@ -32203,7 +31974,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Ap
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -32236,7 +32006,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Ap
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -32245,7 +32014,6 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Ap
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -32266,9 +32034,7 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Ap
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -32279,17 +32045,14 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Ap
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -32315,14 +32078,12 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Ap
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
   /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -32897,7 +32658,6 @@ CMakeFiles/PicaSim.dir/Application/Files/3ds.cpp.o: Application/Files/3ds.cpp \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -33485,12 +33245,10 @@ CMakeFiles/PicaSim.dir/Application/Files/File.cpp.o: Application/Files/File.cpp 
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -33506,7 +33264,6 @@ CMakeFiles/PicaSim.dir/Application/Files/File.cpp.o: Application/Files/File.cpp 
   /usr/include/c++/14/initializer_list \
   /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
-  /usr/include/c++/14/iostream \
   /usr/include/c++/14/istream \
   /usr/include/c++/14/limits \
   /usr/include/c++/14/map \
@@ -33900,7 +33657,6 @@ CMakeFiles/PicaSim.dir/Application/Files/ac3d.cpp.o: Application/Files/ac3d.cpp 
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -34832,8 +34588,6 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/c++/14/bit \
   /usr/include/c++/14/bits/alloc_traits.h \
   /usr/include/c++/14/bits/allocator.h \
-  /usr/include/c++/14/bits/basic_ios.h \
-  /usr/include/c++/14/bits/basic_ios.tcc \
   /usr/include/c++/14/bits/basic_string.h \
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
@@ -34841,29 +34595,19 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
-  /usr/include/c++/14/bits/cxxabi_init_exception.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
-  /usr/include/c++/14/bits/exception_ptr.h \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
   /usr/include/c++/14/bits/invoke.h \
-  /usr/include/c++/14/bits/ios_base.h \
-  /usr/include/c++/14/bits/istream.tcc \
-  /usr/include/c++/14/bits/locale_classes.h \
-  /usr/include/c++/14/bits/locale_classes.tcc \
-  /usr/include/c++/14/bits/locale_facets.h \
-  /usr/include/c++/14/bits/locale_facets.tcc \
   /usr/include/c++/14/bits/localefwd.h \
   /usr/include/c++/14/bits/memory_resource.h \
   /usr/include/c++/14/bits/memoryfwd.h \
   /usr/include/c++/14/bits/move.h \
-  /usr/include/c++/14/bits/nested_exception.h \
   /usr/include/c++/14/bits/new_allocator.h \
   /usr/include/c++/14/bits/node_handle.h \
-  /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
@@ -34886,8 +34630,6 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/c++/14/bits/stl_tree.h \
   /usr/include/c++/14/bits/stl_uninitialized.h \
   /usr/include/c++/14/bits/stl_vector.h \
-  /usr/include/c++/14/bits/streambuf.tcc \
-  /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
   /usr/include/c++/14/bits/uses_allocator.h \
@@ -34901,39 +34643,28 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cwchar \
-  /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
   /usr/include/c++/14/debug/debug.h \
-  /usr/include/c++/14/exception \
   /usr/include/c++/14/ext/aligned_buffer.h \
   /usr/include/c++/14/ext/alloc_traits.h \
-  /usr/include/c++/14/ext/atomicity.h \
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
   /usr/include/c++/14/initializer_list \
-  /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
-  /usr/include/c++/14/iostream \
-  /usr/include/c++/14/istream \
   /usr/include/c++/14/limits \
   /usr/include/c++/14/map \
   /usr/include/c++/14/math.h \
   /usr/include/c++/14/new \
-  /usr/include/c++/14/ostream \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
-  /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
-  /usr/include/c++/14/system_error \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -34948,7 +34679,6 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/c++/14/tr1/special_function_util.h \
   /usr/include/c++/14/tuple \
   /usr/include/c++/14/type_traits \
-  /usr/include/c++/14/typeinfo \
   /usr/include/c++/14/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
@@ -34959,22 +34689,17 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/linux/errno.h \
   /usr/include/locale.h \
   /usr/include/math.h \
-  /usr/include/pthread.h \
-  /usr/include/sched.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
   /usr/include/string.h \
   /usr/include/strings.h \
-  /usr/include/time.h \
   /usr/include/wchar.h \
-  /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -34992,12 +34717,9 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
-  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
-  /usr/include/x86_64-linux-gnu/bits/sched.h \
   /usr/include/x86_64-linux-gnu/bits/select.h \
-  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
@@ -35006,10 +34728,8 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
-  /usr/include/x86_64-linux-gnu/bits/time.h \
   /usr/include/x86_64-linux-gnu/bits/time64.h \
   /usr/include/x86_64-linux-gnu/bits/timesize.h \
-  /usr/include/x86_64-linux-gnu/bits/timex.h \
   /usr/include/x86_64-linux-gnu/bits/types.h \
   /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
@@ -35026,12 +34746,8 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
   /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -35040,24 +34756,16 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
-  /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h \
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_inline.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/error_constants.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr-default.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/sys/cdefs.h \
   /usr/include/x86_64-linux-gnu/sys/select.h \
-  /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
@@ -35202,9 +34910,6 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   Application/General/RenderObject.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   Application/Languages/PicaStrings.h \
   Application/Physics/SimpleObject.h \
   Application/tinyxml/tinyxml.h \
@@ -35288,7 +34993,6 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -35321,7 +35025,6 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -35331,7 +35034,6 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -35352,9 +35054,7 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -35365,18 +35065,14 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -35402,7 +35098,6 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -35410,7 +35105,6 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/Gener
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -35986,7 +35680,6 @@ CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o: Application/General/He
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -36593,7 +36286,6 @@ CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o: Application/General
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -37281,7 +36973,6 @@ CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o: Applicati
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -37804,8 +37495,6 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/c++/14/bits/algorithmfwd.h \
   /usr/include/c++/14/bits/alloc_traits.h \
   /usr/include/c++/14/bits/allocator.h \
-  /usr/include/c++/14/bits/basic_ios.h \
-  /usr/include/c++/14/bits/basic_ios.tcc \
   /usr/include/c++/14/bits/basic_string.h \
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
@@ -37813,29 +37502,19 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
-  /usr/include/c++/14/bits/cxxabi_init_exception.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
-  /usr/include/c++/14/bits/exception_ptr.h \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
   /usr/include/c++/14/bits/invoke.h \
-  /usr/include/c++/14/bits/ios_base.h \
-  /usr/include/c++/14/bits/istream.tcc \
-  /usr/include/c++/14/bits/locale_classes.h \
-  /usr/include/c++/14/bits/locale_classes.tcc \
-  /usr/include/c++/14/bits/locale_facets.h \
-  /usr/include/c++/14/bits/locale_facets.tcc \
   /usr/include/c++/14/bits/localefwd.h \
   /usr/include/c++/14/bits/memory_resource.h \
   /usr/include/c++/14/bits/memoryfwd.h \
   /usr/include/c++/14/bits/move.h \
-  /usr/include/c++/14/bits/nested_exception.h \
   /usr/include/c++/14/bits/new_allocator.h \
   /usr/include/c++/14/bits/node_handle.h \
-  /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
@@ -37861,8 +37540,6 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/c++/14/bits/stl_tree.h \
   /usr/include/c++/14/bits/stl_uninitialized.h \
   /usr/include/c++/14/bits/stl_vector.h \
-  /usr/include/c++/14/bits/streambuf.tcc \
-  /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
@@ -37877,41 +37554,30 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cwchar \
-  /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
   /usr/include/c++/14/debug/debug.h \
-  /usr/include/c++/14/exception \
   /usr/include/c++/14/ext/aligned_buffer.h \
   /usr/include/c++/14/ext/alloc_traits.h \
-  /usr/include/c++/14/ext/atomicity.h \
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
   /usr/include/c++/14/initializer_list \
-  /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
-  /usr/include/c++/14/iostream \
-  /usr/include/c++/14/istream \
   /usr/include/c++/14/limits \
   /usr/include/c++/14/map \
   /usr/include/c++/14/math.h \
   /usr/include/c++/14/new \
-  /usr/include/c++/14/ostream \
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
-  /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
-  /usr/include/c++/14/system_error \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -37926,7 +37592,6 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/c++/14/tr1/special_function_util.h \
   /usr/include/c++/14/tuple \
   /usr/include/c++/14/type_traits \
-  /usr/include/c++/14/typeinfo \
   /usr/include/c++/14/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
@@ -37937,22 +37602,17 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/linux/errno.h \
   /usr/include/locale.h \
   /usr/include/math.h \
-  /usr/include/pthread.h \
-  /usr/include/sched.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
   /usr/include/string.h \
   /usr/include/strings.h \
-  /usr/include/time.h \
   /usr/include/wchar.h \
-  /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -37970,12 +37630,9 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
-  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
-  /usr/include/x86_64-linux-gnu/bits/sched.h \
   /usr/include/x86_64-linux-gnu/bits/select.h \
-  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
@@ -37984,10 +37641,8 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
-  /usr/include/x86_64-linux-gnu/bits/time.h \
   /usr/include/x86_64-linux-gnu/bits/time64.h \
   /usr/include/x86_64-linux-gnu/bits/timesize.h \
-  /usr/include/x86_64-linux-gnu/bits/timex.h \
   /usr/include/x86_64-linux-gnu/bits/types.h \
   /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
@@ -38004,12 +37659,8 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
   /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -38018,24 +37669,16 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trac
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
-  /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h \
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_inline.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/error_constants.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr-default.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/sys/cdefs.h \
   /usr/include/x86_64-linux-gnu/sys/select.h \
-  /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
@@ -38720,7 +38363,6 @@ CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o: Application/Ge
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -39323,7 +38965,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o: Application/Graphics/C
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -39913,7 +39554,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o: Application
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -40376,14 +40016,10 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/FonctionsMarmelade.h \
-  Application/General/FrameworkSettings.h \
   Application/General/Helpers.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Graphics/Shaders.h \
   /usr/include/EGL/egl.h \
   /usr/include/EGL/eglplatform.h \
@@ -40465,7 +40101,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -40498,7 +40133,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -40507,7 +40141,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -40528,9 +40161,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -40541,17 +40172,14 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -40577,14 +40205,12 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
   /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -41184,7 +40810,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o: Application/G
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -41815,7 +41440,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o: Application/Gr
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -42374,7 +41998,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Gra
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -42407,7 +42030,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Gra
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -42416,7 +42038,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Gra
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -42439,9 +42060,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Gra
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -42452,17 +42071,14 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Gra
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -42488,7 +42104,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Gra
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -42496,7 +42111,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Gra
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -43087,7 +42701,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o: Application/Graph
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -43697,7 +43310,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o: Application/Gra
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -44298,7 +43910,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o: Application/Graphics/
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -44915,7 +44526,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o: Application/Graphics
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -46037,14 +45647,10 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Applicat
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/FonctionsMarmelade.h \
-  Application/General/FrameworkSettings.h \
   Application/General/Helpers.h \
   Application/General/SocketMarmelade.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   Application/Internet/AuthorisationChecker.h \
   Application/Internet/VersionChecker.h \
   Application/Menus/PicaDialog.h \
@@ -46133,7 +45739,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Applicat
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -46166,7 +45771,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Applicat
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -46175,7 +45779,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Applicat
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -46196,9 +45799,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Applicat
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -46209,18 +45810,15 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Applicat
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -46246,14 +45844,12 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Applicat
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
   /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -46888,7 +46484,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o: Applicatio
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -47544,7 +47139,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Applicatio
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -47577,7 +47171,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Applicatio
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -47587,7 +47180,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Applicatio
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -47610,9 +47202,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Applicatio
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -47623,18 +47213,15 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Applicatio
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -47660,7 +47247,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Applicatio
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -47669,7 +47255,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Applicatio
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -48133,13 +47718,9 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/In
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/FonctionsMarmelade.h \
-  Application/General/FrameworkSettings.h \
   Application/General/SocketMarmelade.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   Application/Internet/VersionChecker.h \
   /usr/include/EGL/egl.h \
   /usr/include/EGL/eglplatform.h \
@@ -48226,7 +47807,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/In
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -48259,7 +47839,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/In
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -48268,7 +47847,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/In
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -48289,9 +47867,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/In
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -48302,18 +47878,15 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/In
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -48339,14 +47912,12 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/In
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
   /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -48956,7 +48527,6 @@ CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o: Application/In
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -49484,8 +49054,6 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/c++/14/bit \
   /usr/include/c++/14/bits/alloc_traits.h \
   /usr/include/c++/14/bits/allocator.h \
-  /usr/include/c++/14/bits/basic_ios.h \
-  /usr/include/c++/14/bits/basic_ios.tcc \
   /usr/include/c++/14/bits/basic_string.h \
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
@@ -49493,29 +49061,19 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
-  /usr/include/c++/14/bits/cxxabi_init_exception.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
-  /usr/include/c++/14/bits/exception_ptr.h \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
   /usr/include/c++/14/bits/invoke.h \
-  /usr/include/c++/14/bits/ios_base.h \
-  /usr/include/c++/14/bits/istream.tcc \
-  /usr/include/c++/14/bits/locale_classes.h \
-  /usr/include/c++/14/bits/locale_classes.tcc \
-  /usr/include/c++/14/bits/locale_facets.h \
-  /usr/include/c++/14/bits/locale_facets.tcc \
   /usr/include/c++/14/bits/localefwd.h \
   /usr/include/c++/14/bits/memory_resource.h \
   /usr/include/c++/14/bits/memoryfwd.h \
   /usr/include/c++/14/bits/move.h \
-  /usr/include/c++/14/bits/nested_exception.h \
   /usr/include/c++/14/bits/new_allocator.h \
   /usr/include/c++/14/bits/node_handle.h \
-  /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
@@ -49538,8 +49096,6 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/c++/14/bits/stl_tree.h \
   /usr/include/c++/14/bits/stl_uninitialized.h \
   /usr/include/c++/14/bits/stl_vector.h \
-  /usr/include/c++/14/bits/streambuf.tcc \
-  /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
   /usr/include/c++/14/bits/uses_allocator.h \
@@ -49553,39 +49109,28 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cwchar \
-  /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
   /usr/include/c++/14/debug/debug.h \
-  /usr/include/c++/14/exception \
   /usr/include/c++/14/ext/aligned_buffer.h \
   /usr/include/c++/14/ext/alloc_traits.h \
-  /usr/include/c++/14/ext/atomicity.h \
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
   /usr/include/c++/14/initializer_list \
-  /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
-  /usr/include/c++/14/iostream \
-  /usr/include/c++/14/istream \
   /usr/include/c++/14/limits \
   /usr/include/c++/14/map \
   /usr/include/c++/14/math.h \
   /usr/include/c++/14/new \
-  /usr/include/c++/14/ostream \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
-  /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
-  /usr/include/c++/14/system_error \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -49600,7 +49145,6 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/c++/14/tr1/special_function_util.h \
   /usr/include/c++/14/tuple \
   /usr/include/c++/14/type_traits \
-  /usr/include/c++/14/typeinfo \
   /usr/include/c++/14/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
@@ -49611,22 +49155,17 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/linux/errno.h \
   /usr/include/locale.h \
   /usr/include/math.h \
-  /usr/include/pthread.h \
-  /usr/include/sched.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
   /usr/include/string.h \
   /usr/include/strings.h \
-  /usr/include/time.h \
   /usr/include/wchar.h \
-  /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -49644,12 +49183,9 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
-  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
-  /usr/include/x86_64-linux-gnu/bits/sched.h \
   /usr/include/x86_64-linux-gnu/bits/select.h \
-  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
@@ -49658,10 +49194,8 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
-  /usr/include/x86_64-linux-gnu/bits/time.h \
   /usr/include/x86_64-linux-gnu/bits/time64.h \
   /usr/include/x86_64-linux-gnu/bits/timesize.h \
-  /usr/include/x86_64-linux-gnu/bits/timex.h \
   /usr/include/x86_64-linux-gnu/bits/types.h \
   /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
@@ -49678,12 +49212,8 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
   /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -49692,24 +49222,16 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Lang
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
-  /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h \
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_inline.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/error_constants.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr-default.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/sys/cdefs.h \
   /usr/include/x86_64-linux-gnu/sys/select.h \
-  /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
@@ -51447,10 +50969,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   Application/General/Helpers.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Languages/PicaStrings.h \
   Application/Menus/FileMenu.h \
   Application/Menus/Menu.h \
@@ -51537,7 +51056,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -51570,7 +51088,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -51580,7 +51097,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -51601,9 +51117,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -51614,18 +51128,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -51651,7 +51161,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -51659,7 +51168,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileM
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -52109,10 +51617,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Languages/PicaStrings.h \
   Application/Menus/HelpMenu.h \
   Application/Menus/Menu.h \
@@ -52198,7 +51703,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -52231,7 +51735,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -52241,7 +51744,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -52262,9 +51764,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -52275,17 +51775,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -52311,7 +51808,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -52319,7 +51815,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpM
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -52770,10 +52265,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   Application/General/LoadingScreenHelper.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Languages/PicaStrings.h \
   Application/Menus/LoadingScreen.h \
   Application/Menus/Menu.h \
@@ -52858,7 +52350,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -52891,7 +52382,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -52901,7 +52391,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -52922,9 +52411,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -52935,17 +52422,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -52971,7 +52455,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -52979,7 +52462,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -53433,10 +52915,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   Application/General/LoadingScreenHelper.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Internet/WindowsBilling.h \
   Application/Languages/PicaStrings.h \
   Application/Menus/LoadingScreen.h \
@@ -53522,7 +53001,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -53555,7 +53033,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -53565,7 +53042,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -53586,9 +53062,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -53599,18 +53073,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -53636,7 +53106,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -53644,7 +53113,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp 
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -54088,14 +53556,10 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/Pic
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/FonctionsMarmelade.h \
-  Application/General/FrameworkSettings.h \
   Application/General/Helpers.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Menus/Menu.h \
   Application/Menus/PicaDialog.h \
   /usr/include/EGL/egl.h \
@@ -54178,7 +53642,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/Pic
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -54211,7 +53674,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/Pic
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -54220,7 +53682,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/Pic
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -54241,9 +53702,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/Pic
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -54254,17 +53713,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/Pic
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -54290,14 +53746,12 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/Pic
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
   /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -54778,10 +54232,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Languages/PicaStrings.h \
   Application/Menus/Menu.h \
   Application/Menus/SelectMenu.h \
@@ -54867,7 +54318,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -54900,7 +54350,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -54910,7 +54359,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -54931,9 +54379,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -54944,17 +54390,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -54980,7 +54423,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -54988,7 +54430,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/Sel
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -55579,7 +55020,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/S
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -55612,7 +55052,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/S
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -55622,7 +55061,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/S
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -55645,9 +55083,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/S
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -55658,18 +55094,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/S
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -55695,7 +55127,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/S
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -55704,7 +55135,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/S
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -56303,7 +55733,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o: Application/Menu
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -56767,7 +56196,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   Application/Controller/Controller.h \
   Application/Controller/PicaJoystick.h \
   Application/Controller/gamepad_interface.h \
-  Application/Files/File.h \
   Application/General/ClassesFontMarmelade.h \
   Application/General/ClassesMarmelade.h \
   Application/General/ClassesUIMarmelade.h \
@@ -56779,10 +56207,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   Application/General/Helpers.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Internet/VersionChecker.h \
   Application/Internet/WindowsBilling.h \
   Application/Languages/PicaStrings.h \
@@ -56872,7 +56297,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -56905,7 +56329,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -56915,7 +56338,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -56936,9 +56358,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -56949,18 +56369,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -56986,7 +56402,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -56994,7 +56409,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/Star
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -57444,10 +56858,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
   Application/Graphics/Graphics.h \
-  Application/Graphics/RenderManager.h \
   Application/Languages/PicaStrings.h \
   Application/Menus/Menu.h \
   Application/Menus/SettingsWidgets.h \
@@ -57534,7 +56945,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -57567,7 +56977,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -57577,7 +56986,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -57598,9 +57006,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -57611,17 +57017,14 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -57647,7 +57050,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -57655,7 +57057,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/W
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -58314,9 +57715,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: Application/Phys
   Application/General/ProfilageMarmelade.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   Application/Physics/EntityManager.h \
   /usr/include/EGL/egl.h \
   /usr/include/EGL/eglplatform.h \
@@ -58440,7 +57838,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: Application/Phys
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -58461,9 +57858,7 @@ CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: Application/Phys
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -58479,7 +57874,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: Application/Phys
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -58517,7 +57911,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: Application/Phys
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -59190,7 +58583,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o: Application/Physic
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -59874,7 +59266,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o: Application/Physics/Gate.
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -60546,7 +59937,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o: Application/Physi
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -61233,7 +60623,6 @@ CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o: Application/Phy
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -61921,7 +61310,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o: Application/Plane/Aerof
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -62431,15 +61819,11 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   Application/Controller/Controller.h \
   Application/Controller/Gyro.h \
   Application/Controller/HumanController.h \
-  Application/Controller/gamepad_interface.h \
   Application/Files/3ds.h \
   Application/Files/ac3d.h \
-  Application/General/ClassesFontMarmelade.h \
   Application/General/ClassesMarmelade.h \
-  Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/Entity.h \
-  Application/General/FonctionsMarmelade.h \
   Application/General/FrameworkSettings.h \
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
@@ -62526,20 +61910,13 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/SDL2/SDL_stdinc.h \
   /usr/include/SDL2/SDL_surface.h \
   /usr/include/SDL2/SDL_system.h \
-  /usr/include/SDL2/SDL_syswm.h \
   /usr/include/SDL2/SDL_thread.h \
   /usr/include/SDL2/SDL_timer.h \
   /usr/include/SDL2/SDL_touch.h \
-  /usr/include/SDL2/SDL_ttf.h \
   /usr/include/SDL2/SDL_version.h \
   /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/begin_code.h \
   /usr/include/SDL2/close_code.h \
-  /usr/include/X11/X.h \
-  /usr/include/X11/Xatom.h \
-  /usr/include/X11/Xfuncproto.h \
-  /usr/include/X11/Xlib.h \
-  /usr/include/X11/Xosdefs.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
@@ -62556,23 +61933,17 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
-  /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
   /usr/include/c++/14/bits/cxxabi_init_exception.h \
-  /usr/include/c++/14/bits/enable_special_members.h \
   /usr/include/c++/14/bits/erase_if.h \
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
   /usr/include/c++/14/bits/exception_ptr.h \
-  /usr/include/c++/14/bits/fstream.tcc \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
-  /usr/include/c++/14/bits/hashtable.h \
-  /usr/include/c++/14/bits/hashtable_policy.h \
   /usr/include/c++/14/bits/invoke.h \
   /usr/include/c++/14/bits/ios_base.h \
   /usr/include/c++/14/bits/istream.tcc \
@@ -62589,7 +61960,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -62599,7 +61969,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -62622,10 +61991,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
-  /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
   /usr/include/c++/14/bits/utility.h \
@@ -62635,17 +62001,14 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -62657,7 +62020,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
-  /usr/include/c++/14/fstream \
   /usr/include/c++/14/initializer_list \
   /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
@@ -62671,7 +62033,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -62680,7 +62041,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -62696,7 +62056,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/c++/14/tuple \
   /usr/include/c++/14/type_traits \
   /usr/include/c++/14/typeinfo \
-  /usr/include/c++/14/unordered_map \
   /usr/include/c++/14/vector \
   /usr/include/ctype.h \
   /usr/include/endian.h \
@@ -62881,7 +62240,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/glm/vector_relational.hpp \
   /usr/include/inttypes.h \
   /usr/include/limits.h \
-  /usr/include/linux/close_range.h \
   /usr/include/linux/errno.h \
   /usr/include/linux/limits.h \
   /usr/include/locale.h \
@@ -62896,26 +62254,21 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/string.h \
   /usr/include/strings.h \
   /usr/include/time.h \
-  /usr/include/unistd.h \
   /usr/include/wchar.h \
   /usr/include/wctype.h \
   /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
   /usr/include/x86_64-linux-gnu/asm/errno.h \
   /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/confname.h \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
-  /usr/include/x86_64-linux-gnu/bits/environments.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
   /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
   /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
-  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
   /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -62928,7 +62281,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
   /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
   /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -62975,8 +62327,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/x86_64-linux-gnu/bits/typesizes.h \
   /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
   /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
-  /usr/include/x86_64-linux-gnu/bits/utsname.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
@@ -62984,10 +62334,8 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
@@ -63002,7 +62350,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/P
   /usr/include/x86_64-linux-gnu/sys/select.h \
   /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/sys/utsname.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxcomplexintrin.h \
@@ -63168,7 +62515,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   Application/Controller/Gyro.h \
   Application/Controller/HumanController.h \
   Application/Controller/NetworkController.h \
-  Application/Controller/gamepad_interface.h \
   Application/Files/3ds.h \
   Application/Files/ac3d.h \
   Application/General/ClassesFontMarmelade.h \
@@ -63177,7 +62523,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   Application/General/DimensionalScaling.h \
   Application/General/Entete.h \
   Application/General/Entity.h \
-  Application/General/FonctionsMarmelade.h \
   Application/General/FrameworkSettings.h \
   Application/General/GameSettings.h \
   Application/General/Helpers.h \
@@ -63266,7 +62611,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/SDL2/SDL_stdinc.h \
   /usr/include/SDL2/SDL_surface.h \
   /usr/include/SDL2/SDL_system.h \
-  /usr/include/SDL2/SDL_syswm.h \
   /usr/include/SDL2/SDL_thread.h \
   /usr/include/SDL2/SDL_timer.h \
   /usr/include/SDL2/SDL_touch.h \
@@ -63275,11 +62619,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/begin_code.h \
   /usr/include/SDL2/close_code.h \
-  /usr/include/X11/X.h \
-  /usr/include/X11/Xatom.h \
-  /usr/include/X11/Xfuncproto.h \
-  /usr/include/X11/Xlib.h \
-  /usr/include/X11/Xosdefs.h \
   /usr/include/alloca.h \
   /usr/include/arpa/inet.h \
   /usr/include/asm-generic/bitsperlong.h \
@@ -63301,8 +62640,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
-  /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
@@ -63312,7 +62649,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
   /usr/include/c++/14/bits/exception_ptr.h \
-  /usr/include/c++/14/bits/fstream.tcc \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
@@ -63334,7 +62670,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -63344,7 +62679,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -63367,9 +62701,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -63380,18 +62712,15 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -63403,7 +62732,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
-  /usr/include/c++/14/fstream \
   /usr/include/c++/14/initializer_list \
   /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
@@ -63417,7 +62745,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -63426,7 +62753,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -63737,7 +63063,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
   /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
   /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
-  /usr/include/x86_64-linux-gnu/bits/utsname.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
@@ -63745,10 +63070,8 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
@@ -63775,7 +63098,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aero
   /usr/include/x86_64-linux-gnu/sys/socket.h \
   /usr/include/x86_64-linux-gnu/sys/time.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/sys/utsname.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxcomplexintrin.h \
@@ -64131,7 +63453,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o: Application/Pl
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -64847,7 +64168,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o: Application/Pla
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -65534,7 +64854,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o: Application/Plane/Fusel
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -66204,7 +65523,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o: Application/Plane/JetE
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -66901,7 +66219,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o: Application/Plan
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -67578,7 +66895,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o: Application/Plane/Wheel.cp
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -68246,7 +67562,6 @@ CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o: Application/Plane/Wing.cpp 
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -69136,7 +68451,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o: Application/Terrain/O
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -69754,7 +69068,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o: Application/Terrain/Rope.
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -70443,7 +69756,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o: Application/Terrain/Run
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -71061,7 +70373,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o: Application/Terrain/Sk
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -71681,12 +70992,10 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o: Application/Terrain/Sky
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -72302,7 +71611,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Te
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -72335,7 +71643,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Te
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -72345,7 +71652,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Te
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -72368,9 +71674,7 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Te
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -72381,17 +71685,14 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Te
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -72417,7 +71718,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Te
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -72426,7 +71726,6 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Te
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -72872,14 +72171,10 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioMa
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/FonctionsMarmelade.h \
-  Application/General/FrameworkSettings.h \
   Application/General/Helpers.h \
   Application/General/SoundMarmelade.h \
   Application/General/Trace.h \
   Application/General/Vecteurs.h \
-  Application/Graphics/Camera.h \
-  Application/Graphics/FrameBufferObject.h \
-  Application/Graphics/RenderManager.h \
   Application/UI/AudioManager.h \
   /usr/include/EGL/egl.h \
   /usr/include/EGL/eglplatform.h \
@@ -72961,7 +72256,6 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioMa
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -72994,7 +72288,6 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioMa
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -73003,7 +72296,6 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioMa
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -73024,9 +72316,7 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioMa
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -73037,18 +72327,14 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioMa
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -73074,14 +72360,12 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioMa
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
   /usr/include/c++/14/streambuf \
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -73619,7 +72903,6 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/Button
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
   /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
@@ -73652,7 +72935,6 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/Button
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -73661,7 +72943,6 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/Button
   /usr/include/c++/14/bits/requires_hosted.h \
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -73684,9 +72965,7 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/Button
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -73697,17 +72976,14 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/Button
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -73733,7 +73009,6 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/Button
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/stdexcept \
   /usr/include/c++/14/stdlib.h \
@@ -73741,7 +73016,6 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/Button
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -74346,7 +73620,6 @@ CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o: Application/UI/DebugR
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
@@ -74866,16 +74139,13 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   Application/Controller/HumanController.h \
   Application/Controller/NetworkController.h \
   Application/Controller/PicaJoystick.h \
-  Application/Controller/gamepad_interface.h \
   Application/Files/3ds.h \
-  Application/Files/File.h \
   Application/Files/ac3d.h \
   Application/General/ClassesFontMarmelade.h \
   Application/General/ClassesMarmelade.h \
   Application/General/ClassesUIMarmelade.h \
   Application/General/Entete.h \
   Application/General/Entity.h \
-  Application/General/FonctionsMarmelade.h \
   Application/General/FonctionsPointerKeyboardMarmelade.h \
   Application/General/FrameworkSettings.h \
   Application/General/GameSettings.h \
@@ -74974,7 +74244,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/SDL2/SDL_stdinc.h \
   /usr/include/SDL2/SDL_surface.h \
   /usr/include/SDL2/SDL_system.h \
-  /usr/include/SDL2/SDL_syswm.h \
   /usr/include/SDL2/SDL_thread.h \
   /usr/include/SDL2/SDL_timer.h \
   /usr/include/SDL2/SDL_touch.h \
@@ -74983,11 +74252,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/begin_code.h \
   /usr/include/SDL2/close_code.h \
-  /usr/include/X11/X.h \
-  /usr/include/X11/Xatom.h \
-  /usr/include/X11/Xfuncproto.h \
-  /usr/include/X11/Xlib.h \
-  /usr/include/X11/Xosdefs.h \
   /usr/include/alloca.h \
   /usr/include/arpa/inet.h \
   /usr/include/asm-generic/bitsperlong.h \
@@ -75009,8 +74273,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/bits/basic_string.tcc \
   /usr/include/c++/14/bits/char_traits.h \
   /usr/include/c++/14/bits/charconv.h \
-  /usr/include/c++/14/bits/chrono.h \
-  /usr/include/c++/14/bits/codecvt.h \
   /usr/include/c++/14/bits/concept_check.h \
   /usr/include/c++/14/bits/cpp_type_traits.h \
   /usr/include/c++/14/bits/cxxabi_forced.h \
@@ -75020,7 +74282,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/bits/exception.h \
   /usr/include/c++/14/bits/exception_defines.h \
   /usr/include/c++/14/bits/exception_ptr.h \
-  /usr/include/c++/14/bits/fstream.tcc \
   /usr/include/c++/14/bits/functexcept.h \
   /usr/include/c++/14/bits/functional_hash.h \
   /usr/include/c++/14/bits/hash_bytes.h \
@@ -75042,7 +74303,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/bits/node_handle.h \
   /usr/include/c++/14/bits/ostream.tcc \
   /usr/include/c++/14/bits/ostream_insert.h \
-  /usr/include/c++/14/bits/parse_numbers.h \
   /usr/include/c++/14/bits/postypes.h \
   /usr/include/c++/14/bits/predefined_ops.h \
   /usr/include/c++/14/bits/ptr_traits.h \
@@ -75052,7 +74312,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/bits/specfun.h \
   /usr/include/c++/14/bits/sstream.tcc \
   /usr/include/c++/14/bits/std_abs.h \
-  /usr/include/c++/14/bits/std_thread.h \
   /usr/include/c++/14/bits/stl_algo.h \
   /usr/include/c++/14/bits/stl_algobase.h \
   /usr/include/c++/14/bits/stl_bvector.h \
@@ -75075,9 +74334,7 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/bits/streambuf_iterator.h \
   /usr/include/c++/14/bits/string_view.tcc \
   /usr/include/c++/14/bits/stringfwd.h \
-  /usr/include/c++/14/bits/this_thread_sleep.h \
   /usr/include/c++/14/bits/uniform_int_dist.h \
-  /usr/include/c++/14/bits/unique_ptr.h \
   /usr/include/c++/14/bits/unordered_map.h \
   /usr/include/c++/14/bits/uses_allocator.h \
   /usr/include/c++/14/bits/uses_allocator_args.h \
@@ -75088,18 +74345,15 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/cctype \
   /usr/include/c++/14/cerrno \
   /usr/include/c++/14/cfloat \
-  /usr/include/c++/14/chrono \
   /usr/include/c++/14/climits \
   /usr/include/c++/14/clocale \
   /usr/include/c++/14/cmath \
   /usr/include/c++/14/concepts \
-  /usr/include/c++/14/cstdarg \
   /usr/include/c++/14/cstddef \
   /usr/include/c++/14/cstdint \
   /usr/include/c++/14/cstdio \
   /usr/include/c++/14/cstdlib \
   /usr/include/c++/14/cstring \
-  /usr/include/c++/14/ctime \
   /usr/include/c++/14/cwchar \
   /usr/include/c++/14/cwctype \
   /usr/include/c++/14/debug/assertions.h \
@@ -75111,7 +74365,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/ext/numeric_traits.h \
   /usr/include/c++/14/ext/string_conversions.h \
   /usr/include/c++/14/ext/type_traits.h \
-  /usr/include/c++/14/fstream \
   /usr/include/c++/14/initializer_list \
   /usr/include/c++/14/ios \
   /usr/include/c++/14/iosfwd \
@@ -75125,7 +74378,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/pstl/execution_defs.h \
   /usr/include/c++/14/pstl/glue_algorithm_defs.h \
   /usr/include/c++/14/pstl/pstl_config.h \
-  /usr/include/c++/14/ratio \
   /usr/include/c++/14/set \
   /usr/include/c++/14/sstream \
   /usr/include/c++/14/stdexcept \
@@ -75134,7 +74386,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/c++/14/string \
   /usr/include/c++/14/string_view \
   /usr/include/c++/14/system_error \
-  /usr/include/c++/14/thread \
   /usr/include/c++/14/tr1/bessel_function.tcc \
   /usr/include/c++/14/tr1/beta_function.tcc \
   /usr/include/c++/14/tr1/ell_integral.tcc \
@@ -75445,7 +74696,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
   /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
   /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
-  /usr/include/x86_64-linux-gnu/bits/utsname.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
@@ -75453,10 +74703,8 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
-  /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/14/bits/ctype_base.h \
@@ -75483,7 +74731,6 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp 
   /usr/include/x86_64-linux-gnu/sys/socket.h \
   /usr/include/x86_64-linux-gnu/sys/time.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/sys/utsname.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/adxintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxbf16intrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/14/include/amxcomplexintrin.h \
@@ -76377,6 +75624,8 @@ Application/Plane/AerofoilDefinition.cpp:
 
 Application/Heightfield/HeightfieldRuntime.cpp:
 
+/usr/include/c++/14/ctime:
+
 Application/Heightfield/HeightfieldGenerator.cpp:
 
 Application/Heightfield/HeightfieldBuilder.cpp:
@@ -76421,6 +75670,8 @@ Application/Files/3ds.cpp:
 
 Application/Controller/generic/gamepad_register.cpp:
 
+Application/Files/File.h:
+
 Application/Controller/h/gamepad_internal.h:
 
 Application/Controller/h/gamepad_autodefs.h:
@@ -76437,9 +75688,11 @@ Application/Graphics/Shaders.h:
 
 Application/General/FonctionsPointerKeyboardMarmelade.h:
 
-Application/Files/File.h:
-
 Application/Controller/PicaJoystick.h:
+
+/usr/include/c++/14/bits/parse_numbers.h:
+
+Application/Controller/HumanController.cpp:
 
 Application/General/HelpersXML.h:
 
@@ -76451,25 +75704,51 @@ Application/General/WindsockOverlay.h:
 
 Application/Challenge/ChallengeRace.h:
 
-Application/Challenge/ChallengeLimbo.cpp:
+/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
-Application/Menus/ScoreloopMenu.h:
+/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
-Application/Menus/Menu.h:
+/usr/include/wchar.h:
 
-Application/Graphics/Graphics.h:
+/usr/lib/gcc/x86_64-linux-gnu/14/include/tbmintrin.h:
 
-Application/Challenge/ChallengeDuration.h:
+/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
-Application/Challenge/ChallengeDuration.cpp:
+/usr/include/x86_64-linux-gnu/bits/stdint-least.h:
 
-Application/Challenge/Challenge.h:
+/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+
+Application/Bullet/btBulletDynamicsCommon.h:
+
+/usr/include/x86_64-linux-gnu/bits/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix1_lim.h:
+
+/usr/include/x86_64-linux-gnu/bits/locale.h:
+
+/usr/include/x86_64-linux-gnu/bits/mathcalls.h:
+
+Application/Internet/IncomingConnection.cpp:
+
+/usr/include/x86_64-linux-gnu/bits/endian.h:
+
+Application/MapTrace/MapTrace/contour_collection.cpp:
+
+/usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h:
+
+/usr/include/x86_64-linux-gnu/bits/math-vector.h:
+
+/usr/include/glm/ext/scalar_uint_sized.hpp:
+
+Application/Bullet/BulletMultiThreaded/btGpuUtilsSharedCode.h:
 
 /usr/include/x86_64-linux-gnu/bits/fp-logb.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
 /usr/include/SDL2/SDL_guid.h:
+
+Application/Graphics/Graphics.h:
 
 /usr/include/x86_64-linux-gnu/bits/errno.h:
 
@@ -76507,12 +75786,6 @@ Application/Terrain/SkyGrid.cpp:
 
 Application/Bullet/BulletCollision/CollisionShapes/btSphereShape.h:
 
-/usr/include/wchar.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/tbmintrin.h:
-
 /usr/include/glm/mat3x2.hpp:
 
 /usr/include/asm-generic/socket.h:
@@ -76543,7 +75816,17 @@ Application/Bullet/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.c
 
 /usr/include/glm/geometric.hpp:
 
+/usr/include/glm/fwd.hpp:
+
 Application/Files/ac3d.h:
+
+/usr/include/glm/ext/matrix_float2x2.hpp:
+
+Application/Bullet/BulletMultiThreaded/SpuSampleTaskProcess.cpp:
+
+/usr/include/glm/ext/vector_uint2_sized.hpp:
+
+Application/Files/3ds.h:
 
 /usr/include/glm/ext/vector_relational.inl:
 
@@ -76552,10 +75835,6 @@ Application/Bullet/BulletCollision/CollisionShapes/btConvexShape.h:
 /usr/include/glm/ext/vector_float4_precision.hpp:
 
 Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/btSoftBodySolverVertexData_OpenCL.h:
-
-/usr/include/glm/ext/vector_uint2_sized.hpp:
-
-Application/Files/3ds.h:
 
 /usr/include/glm/ext/vector_float3_precision.hpp:
 
@@ -76587,23 +75866,23 @@ Application/Bullet/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h:
 
 /usr/include/glm/ext/vector_bool2_precision.hpp:
 
-/usr/include/glm/ext/scalar_uint_sized.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/math-vector.h:
-
-Application/Bullet/BulletMultiThreaded/btGpuUtilsSharedCode.h:
-
 /usr/include/glm/ext/vector_uint3_sized.hpp:
 
 /usr/include/assert.h:
 
 /usr/include/glm/ext/quaternion_trigonometric.hpp:
 
+Application/Bullet/BulletDynamics/ConstraintSolver/btSliderConstraint.h:
+
+/usr/include/glm/ext/quaternion_transform.hpp:
+
 /usr/include/x86_64-linux-gnu/c++/14/bits/atomic_word.h:
 
 Application/Menus/LoadingScreen.h:
 
 Application/Bullet/BulletMultiThreaded/btGpu3DGridBroadphaseSharedTypes.h:
+
+/usr/include/glm/ext/quaternion_relational.inl:
 
 /usr/include/c++/14/bits/stl_tree.h:
 
@@ -76616,6 +75895,10 @@ Application/Bullet/BulletMultiThreaded/btGpu3DGridBroadphaseSharedTypes.h:
 /usr/lib/gcc/x86_64-linux-gnu/14/include/lwpintrin.h:
 
 /usr/include/SDL2/SDL_scancode.h:
+
+Application/Bullet/BulletDynamics/ConstraintSolver/btContactSolverInfo.h:
+
+Application/Bullet/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.cpp:
 
 Application/Bullet/BulletSoftBody/btSoftBodyHelpers.cpp:
 
@@ -76669,17 +75952,19 @@ Application/Bullet/BulletCollision/CollisionShapes/btTriangleShape.h:
 
 /usr/include/SDL2/SDL_rect.h:
 
+/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
+
 /usr/include/glm/ext/matrix_double4x4.hpp:
 
 /usr/include/glm/ext/matrix_double4x2.hpp:
 
 /usr/include/glm/ext/matrix_double3x4_precision.hpp:
 
-/usr/include/c++/14/bits/uses_allocator.h:
-
 Application/Terrain/Terrain.cpp:
 
 /usr/include/x86_64-linux-gnu/bits/local_lim.h:
+
+/usr/include/c++/14/bits/uses_allocator.h:
 
 /usr/include/glm/ext/matrix_double3x4.hpp:
 
@@ -76709,17 +75994,13 @@ Application/Plane/JetEngine.cpp:
 
 /usr/include/glm/detail/type_vec2.inl:
 
+Application/Bullet/BulletCollision/CollisionDispatch/btGhostObject.cpp:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/mwaitintrin.h:
+
 Application/Bullet/LinearMath/btStackAlloc.h:
 
 /usr/include/glm/detail/type_vec1.inl:
-
-/usr/include/x86_64-linux-gnu/bits/environments.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/amxtileintrin.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/avx512vp2intersectvlintrin.h:
-
-Application/Bullet/BulletCollision/CollisionDispatch/btBox2dBox2dCollisionAlgorithm.h:
 
 /usr/include/glm/detail/type_mat4x4.hpp:
 
@@ -76763,17 +76044,25 @@ Application/Bullet/BulletMultiThreaded/SpuDoubleBuffer.h:
 
 /usr/include/c++/14/bits/alloc_traits.h:
 
-/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/mwaitintrin.h:
-
-Application/Bullet/BulletCollision/CollisionDispatch/btGhostObject.cpp:
+/usr/include/glm/detail/func_matrix.inl:
 
 /usr/include/stdlib.h:
 
 /usr/include/glm/detail/func_integer.inl:
 
 Application/Bullet/LinearMath/btGeometryUtil.h:
+
+Application/MapTrace/MapTrace/texture.cpp:
+
+/usr/include/wctype.h:
+
+/usr/include/c++/14/locale:
+
+/usr/include/c++/14/bits/new_allocator.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/gfniintrin.h:
+
+/usr/include/glm/detail/func_exponential.inl:
 
 /usr/include/strings.h:
 
@@ -76827,19 +76116,33 @@ Application/Bullet/BulletCollision/CollisionShapes/btConvexHullShape.cpp:
 
 /usr/include/GL/glut.h:
 
+/usr/include/x86_64-linux-gnu/bits/iscanonical.h:
+
+/usr/include/c++/14/bits/stl_map.h:
+
+Application/Bullet/BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.cpp:
+
 Application/Controller/gamepad_interface.h:
 
 /usr/include/c++/14/tr1/poly_hermite.tcc:
+
+/usr/include/c++/14/tr1/modified_bessel_func.tcc:
+
+Application/Bullet/BulletCollision/Gimpact/gim_linear_math.h:
+
+Application/Bullet/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h:
 
 Application/Bullet/BulletDynamics/ConstraintSolver/btSolverConstraint.h:
 
 /usr/include/c++/14/math.h:
 
-/usr/include/c++/14/thread:
-
 /usr/include/limits.h:
 
 Application/Bullet/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.cpp:
+
+/usr/include/libintl.h:
+
+/usr/include/x86_64-linux-gnu/bits/long-double.h:
 
 /usr/include/glm/ext/matrix_double2x3_precision.hpp:
 
@@ -76849,13 +76152,15 @@ Application/Bullet/BulletCollision/CollisionShapes/btStaticPlaneShape.cpp:
 
 Application/Bullet/BulletCollision/CollisionShapes/btCylinderShape.h:
 
-/usr/include/x86_64-linux-gnu/asm/errno.h:
-
-Application/Bullet/BulletCollision/CollisionShapes/btCollisionShape.h:
-
 /usr/include/c++/14/pstl/execution_defs.h:
 
 Application/Bullet/BulletCollision/CollisionDispatch/btInternalEdgeUtility.cpp:
+
+Application/Internet/IncomingConnection.h:
+
+Application/Graphics/ParticleEmitter.cpp:
+
+Application/Bullet/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp:
 
 /usr/include/c++/14/map:
 
@@ -76867,7 +76172,9 @@ Application/Bullet/BulletCollision/CollisionShapes/btTriangleBuffer.h:
 
 /usr/include/c++/14/ios:
 
-/usr/include/c++/14/fstream:
+/usr/include/c++/14/exception:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/popcntintrin.h:
 
 /usr/include/c++/14/tr1/hypergeometric.tcc:
 
@@ -76877,40 +76184,6 @@ Application/Bullet/BulletCollision/CollisionShapes/btTriangleBuffer.h:
 
 Application/Bullet/BulletCollision/Gimpact/gim_array.h:
 
-/usr/include/c++/14/cstdlib:
-
-/usr/include/c++/14/cstdint:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/vaesintrin.h:
-
-/usr/include/c++/14/cstddef:
-
-Application/Bullet/BulletMultiThreaded/SpuSampleTask/SpuSampleTask.cpp:
-
-/usr/include/c++/14/cstdarg:
-
-/usr/include/glm/common.hpp:
-
-/usr/include/string.h:
-
-Application/Terrain/Observer.h:
-
-/usr/include/c++/14/climits:
-
-Application/Languages/English.cpp:
-
-Application/Bullet/BulletCollision/CollisionShapes/btPolyhedralConvexShape.cpp:
-
-/usr/include/c++/14/exception:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/popcntintrin.h:
-
-/usr/include/c++/14/cerrno:
-
-/usr/include/glm/ext/vector_int2.hpp:
-
-/usr/include/c++/14/cctype:
-
 Application/Bullet/BulletDynamics/Vehicle/btWheelInfo.h:
 
 Application/Plane/Wing.cpp:
@@ -76918,6 +76191,12 @@ Application/Plane/Wing.cpp:
 /usr/include/glm/detail/type_mat4x3.hpp:
 
 /usr/include/SDL2/SDL_gamecontroller.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/vaesintrin.h:
+
+/usr/include/c++/14/cstddef:
+
+Application/Bullet/BulletMultiThreaded/SpuSampleTask/SpuSampleTask.cpp:
 
 /usr/include/glm/mat2x4.hpp:
 
@@ -76929,9 +76208,7 @@ Application/Bullet/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgo
 
 Application/Bullet/LinearMath/btAlignedObjectArray.h:
 
-/usr/include/glm/fwd.hpp:
-
-/usr/include/c++/14/bits/unique_ptr.h:
+/usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 
 Application/UI/DebugRenderer.h:
 
@@ -76944,10 +76221,6 @@ Application/Bullet/BulletCollision/CollisionShapes/btConvexPointCloudShape.h:
 Application/UI/AudioManager.h:
 
 /usr/include/x86_64-linux-gnu/bits/unistd_ext.h:
-
-/usr/include/c++/14/clocale:
-
-/usr/include/SDL2/SDL_endian.h:
 
 Application/Graphics/Viewport.cpp:
 
@@ -76996,6 +76269,8 @@ Application/Other/MemoryCheck.h:
 /usr/include/glm/trigonometric.hpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/shaintrin.h:
+
+/usr/include/c++/14/cerrno:
 
 Application/Languages/PicaStrings.h:
 
@@ -77047,8 +76322,6 @@ Application/Bullet/BulletSoftBody/btDefaultSoftBodySolver.cpp:
 
 Application/General/Entity.h:
 
-/usr/include/c++/14/bits/this_thread_sleep.h:
-
 /usr/include/SDL2/SDL_events.h:
 
 Application/Bullet/BulletCollision/Gimpact/gim_box_set.cpp:
@@ -77056,6 +76329,12 @@ Application/Bullet/BulletCollision/Gimpact/gim_box_set.cpp:
 Application/Other/MemoryCheck.cpp:
 
 Application/Graphics/ShaderManager.h:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
+
+/usr/include/c++/14/ext/string_conversions.h:
 
 Application/Bullet/LinearMath/btTransform.h:
 
@@ -77083,7 +76362,7 @@ Application/Bullet/BulletCollision/CollisionShapes/btCompoundShape.h:
 
 Application/Bullet/BulletDynamics/ConstraintSolver/btTypedConstraint.h:
 
-/usr/include/x86_64-linux-gnu/bits/getopt_core.h:
+/usr/include/c++/14/cstdlib:
 
 Application/Bullet/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h:
 
@@ -77093,15 +76372,21 @@ Application/Bullet/BulletSoftBody/btSoftBodyConcaveCollisionAlgorithm.cpp:
 
 /usr/include/c++/14/tr1/special_function_util.h:
 
-/usr/include/x86_64-linux-gnu/bits/select.h:
-
 Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/OpenCLC10/SolvePositionsSIMDBatched.cl:
 
 /usr/include/SDL2/SDL_audio.h:
 
 /usr/include/c++/14/bits/basic_string.tcc:
 
+/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
+
+Application/Bullet/BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuContactResult.h:
+
 Application/Bullet/BulletCollision/NarrowPhaseCollision/btGjkEpa2.h:
+
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
+
+/usr/include/glm/ext/matrix_double2x2_precision.hpp:
 
 /usr/include/SDL2/SDL_mouse.h:
 
@@ -77114,6 +76399,8 @@ Application/Bullet/BulletSoftBody/btSoftBodyHelpers.h:
 Application/Bullet/BulletCollision/Gimpact/btTriangleShapeEx.h:
 
 /usr/include/c++/14/bits/hash_bytes.h:
+
+/usr/include/glm/ext/vector_int3.hpp:
 
 /usr/include/SDL2/SDL.h:
 
@@ -77149,6 +76436,12 @@ Application/Bullet/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp:
 
 /usr/include/c++/14/algorithm:
 
+/usr/include/c++/14/climits:
+
+Application/Languages/English.cpp:
+
+Application/Bullet/BulletCollision/CollisionShapes/btPolyhedralConvexShape.cpp:
+
 Application/Bullet/LinearMath/btIDebugDraw.h:
 
 Application/Bullet/BulletCollision/CollisionDispatch/btManifoldResult.h:
@@ -77165,9 +76458,9 @@ Application/Bullet/BulletCollision/CollisionDispatch/btManifoldResult.cpp:
 
 Application/General/ClassesFontMarmelade.h:
 
-/usr/include/c++/14/cwctype:
+Application/Bullet/BulletCollision/BroadphaseCollision/btDbvtBroadphase.cpp:
 
-Application/Bullet/BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h:
+/usr/include/glm/ext/quaternion_float.hpp:
 
 /usr/include/c++/14/iosfwd:
 
@@ -77182,6 +76475,10 @@ Application/Bullet/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h:
 Application/Bullet/BulletCollision/CollisionDispatch/btCollisionObject.cpp:
 
 /usr/include/c++/14/pstl/pstl_config.h:
+
+/usr/include/glm/detail/type_mat4x2.hpp:
+
+/usr/include/linux/close_range.h:
 
 /usr/include/glm/detail/type_mat3x4.inl:
 
@@ -77211,9 +76508,15 @@ Application/Menus/PicaDialog.h:
 
 /usr/include/glm/detail/type_mat3x4.hpp:
 
-/usr/include/glm/ext/matrix_float2x2.hpp:
+/usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h:
 
-Application/Bullet/BulletMultiThreaded/SpuSampleTaskProcess.cpp:
+/usr/include/glm/detail/type_mat2x4.hpp:
+
+Application/Bullet/BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h:
+
+Application/Bullet/BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h:
+
+/usr/include/c++/14/cwctype:
 
 /usr/include/SDL2/SDL_haptic.h:
 
@@ -77259,10 +76562,6 @@ Application/General/Vecteurs.h:
 
 Application/Bullet/BulletCollision/BroadphaseCollision/btDispatcher.h:
 
-Application/Bullet/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h:
-
-/usr/include/c++/14/bits/stl_pair.h:
-
 /usr/include/c++/14/ext/atomicity.h:
 
 Application/Bullet/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.h:
@@ -77281,23 +76580,17 @@ Application/Bullet/BulletCollision/Gimpact/gim_geometry.h:
 
 /usr/include/glm/ext/scalar_int_sized.hpp:
 
-/usr/include/unistd.h:
-
 Application/Bullet/BulletCollision/BroadphaseCollision/btDbvt.h:
 
 Application/Bullet/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h:
 
 /usr/include/c++/14/ext/numeric_traits.h:
 
-/usr/include/c++/14/ctime:
-
-/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/avx512ifmaintrin.h:
-
 Application/Bullet/BulletDynamics/Vehicle/btVehicleRaycaster.h:
 
 /usr/include/c++/14/bits/exception_ptr.h:
+
+Application/Challenge/ChallengeLimbo.cpp:
 
 /usr/include/EGL/eglplatform.h:
 
@@ -77309,43 +76602,17 @@ Application/Bullet/BulletMultiThreaded/SpuLibspe2Support.cpp:
 
 /usr/include/c++/14/bits/stl_uninitialized.h:
 
-/usr/include/c++/14/locale:
-
-/usr/include/c++/14/bits/new_allocator.h:
-
-Application/Challenge/ChallengeFreeFly.h:
-
-/usr/include/sched.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/gfniintrin.h:
-
 /usr/include/glm/vec3.hpp:
 
 Application/Bullet/BulletDynamics/ConstraintSolver/btSolverBody.h:
 
-/usr/include/c++/14/cfloat:
-
-/usr/include/c++/14/bits/string_view.tcc:
-
 Application/Bullet/BulletDynamics/ConstraintSolver/btHinge2Constraint.h:
-
-Application/Bullet/LinearMath/btAabbUtil2.h:
-
-/usr/include/glm/detail/type_mat3x2.inl:
-
-/usr/include/SDL2/SDL_timer.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
 
 /usr/include/X11/Xatom.h:
 
 /usr/include/c++/14/bits/locale_facets.tcc:
-
-/usr/include/c++/14/new:
-
-Application/Bullet/BulletMultiThreaded/SpuFakeDma.h:
-
-/usr/include/c++/14/bits/chrono.h:
 
 /usr/include/glm/ext/matrix_projection.inl:
 
@@ -77367,33 +76634,9 @@ Application/Challenge/Challenge.cpp:
 
 Application/Bullet/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.cpp:
 
-/usr/include/c++/14/tr1/modified_bessel_func.tcc:
-
-Application/Bullet/BulletCollision/Gimpact/gim_linear_math.h:
-
-Application/Bullet/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h:
-
-/usr/include/X11/Xosdefs.h:
-
 Application/Bullet/BulletDynamics/Dynamics/btActionInterface.h:
 
 /usr/include/c++/14/bits/ostream.tcc:
-
-Application/MapTrace/MapTrace/texture.cpp:
-
-/usr/include/wctype.h:
-
-/usr/include/glm/detail/func_exponential.inl:
-
-/usr/include/linux/close_range.h:
-
-/usr/include/glm/detail/type_mat4x2.hpp:
-
-Application/Physics/SimpleObject.h:
-
-Application/Bullet/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h:
-
-/usr/include/x86_64-linux-gnu/bits/wchar.h:
 
 Application/Bullet/BulletDynamics/Vehicle/btRaycastVehicle.h:
 
@@ -77431,6 +76674,10 @@ Application/Bullet/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h
 
 Application/Controller/HumanController.h:
 
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
+
+Application/Bullet/BulletCollision/CollisionDispatch/SphereTriangleDetector.h:
+
 Application/General/ObjectEditingOverlay.cpp:
 
 /usr/include/c++/14/bits/postypes.h:
@@ -77450,6 +76697,10 @@ Application/Internet/AuthorisationChecker.cpp:
 /usr/include/inttypes.h:
 
 /usr/include/c++/14/bits/version.h:
+
+/usr/include/c++/14/ostream:
+
+/usr/include/SDL2/SDL_filesystem.h:
 
 /usr/include/x86_64-linux-gnu/bits/confname.h:
 
@@ -77537,14 +76788,6 @@ Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/OpenCLC10/VSolv
 
 /usr/include/SDL2/SDL_main.h:
 
-Application/Bullet/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.cpp:
-
-Application/Bullet/BulletDynamics/ConstraintSolver/btContactSolverInfo.h:
-
-/usr/include/glm/ext/quaternion_float.hpp:
-
-Application/Bullet/BulletCollision/BroadphaseCollision/btDbvtBroadphase.cpp:
-
 /usr/include/SDL2/SDL_messagebox.h:
 
 /usr/include/SDL2/SDL_metal.h:
@@ -77568,6 +76811,10 @@ Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/OpenCLC10/Updat
 Application/Bullet/BulletSoftBody/btSoftBody.h:
 
 /usr/include/SDL2/SDL_video.h:
+
+/usr/include/c++/14/bits/string_view.tcc:
+
+/usr/include/c++/14/cfloat:
 
 /usr/include/SDL2/SDL_render.h:
 
@@ -77601,13 +76848,19 @@ Application/Graphics/ParticleEmitter.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/tsxldtrkintrin.h:
 
-/usr/include/glm/ext/quaternion_relational.inl:
-
-/usr/include/SDL2/SDL_syswm.h:
-
 /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h:
 
+/usr/include/SDL2/SDL_timer.h:
+
 Application/Bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h:
+
+/usr/include/glm/detail/type_vec4.inl:
+
+/usr/include/x86_64-linux-gnu/bits/semaphore.h:
+
+/usr/include/SDL2/SDL_config.h:
+
+/usr/include/c++/14/bits/specfun.h:
 
 /usr/include/glm/ext/matrix_projection.hpp:
 
@@ -77629,27 +76882,9 @@ Application/Bullet/BulletMultiThreaded/SequentialThreadSupport.h:
 
 /usr/include/SDL2/SDL_version.h:
 
-/usr/include/glm/ext/vector_int3.hpp:
-
-/usr/include/c++/14/bits/cpp_type_traits.h:
-
-/usr/include/c++/14/cassert:
-
-/usr/include/X11/Xlib.h:
-
-Application/AIController/AIController.h:
-
-/usr/include/c++/14/bits/cxxabi_forced.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/avxintrin.h:
-
 /usr/include/glm/ext/matrix_double2x3.hpp:
 
 /usr/include/asm-generic/errno.h:
-
-Application/Controller/HumanController.cpp:
-
-/usr/include/c++/14/bits/parse_numbers.h:
 
 Application/Bullet/BulletDynamics/Dynamics/btDynamicsWorld.h:
 
@@ -77661,13 +76896,17 @@ Application/Bullet/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h:
 
 Application/Bullet/BulletCollision/CollisionShapes/btPolyhedralConvexShape.h:
 
+/usr/include/SDL2/SDL_joystick.h:
+
 Application/Graphics/FrameBufferObject.h:
 
 Application/Physics/EntityManager.h:
 
 Application/Bullet/BulletMultiThreaded/Win32ThreadSupport.h:
 
-/usr/include/SDL2/SDL_joystick.h:
+/usr/include/c++/14/bits/cpp_type_traits.h:
+
+/usr/include/c++/14/cassert:
 
 /usr/include/glm/ext/quaternion_geometric.inl:
 
@@ -77679,9 +76918,9 @@ Application/Bullet/BulletDynamics/ConstraintSolver/btTypedConstraint.cpp:
 
 /usr/include/glm/vec4.hpp:
 
-Application/General/Helpers.h:
+/usr/include/glm/common.hpp:
 
-Application/General/FonctionsMarmelade.h:
+/usr/include/string.h:
 
 /usr/include/c++/14/bits/allocator.h:
 
@@ -77703,19 +76942,29 @@ Application/Bullet/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepth
 
 Application/Bullet/BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h:
 
+/usr/include/SDL2/SDL_endian.h:
+
+/usr/include/c++/14/clocale:
+
+Application/Terrain/Observer.h:
+
 /usr/include/c++/14/bits/basic_ios.tcc:
 
 Application/Graphics/RenderModel.cpp:
 
 /usr/include/c++/14/bits/charconv.h:
 
-Application/Bullet/BulletMultiThreaded/btGpuUtilsSharedDefs.h:
-
-/usr/include/glm/ext/quaternion_exponential.inl:
-
-/usr/include/c++/14/bits/codecvt.h:
-
 /usr/include/c++/14/ext/aligned_buffer.h:
+
+/usr/include/x86_64-linux-gnu/asm/errno.h:
+
+Application/Bullet/BulletCollision/CollisionShapes/btCollisionShape.h:
+
+Application/AIController/AIController.h:
+
+/usr/include/c++/14/bits/cxxabi_forced.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/avxintrin.h:
 
 Application/Terrain/Skybox.h:
 
@@ -77731,19 +76980,9 @@ Application/Plane/Wing.h:
 
 Application/Bullet/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.cpp:
 
-/usr/include/glm/detail/func_matrix.inl:
+/usr/include/glm/ext/vector_int2.hpp:
 
-/usr/include/glm/ext/vector_float4.hpp:
-
-Application/Bullet/BulletCollision/CollisionDispatch/btBoxBoxDetector.cpp:
-
-/usr/include/c++/14/bits/fstream.tcc:
-
-/usr/include/c++/14/bits/stl_map.h:
-
-/usr/include/x86_64-linux-gnu/bits/iscanonical.h:
-
-Application/Bullet/BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.cpp:
+/usr/include/c++/14/cctype:
 
 /usr/include/glm/ext/quaternion_common.hpp:
 
@@ -77756,6 +76995,10 @@ Application/Bullet/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp:
 /usr/include/glm/ext/vector_double3.hpp:
 
 /usr/include/c++/14/bits/functional_hash.h:
+
+/usr/include/x86_64-linux-gnu/curl/curlver.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
 
 Application/Bullet/BulletCollision/Gimpact/gim_clip_polygon.h:
 
@@ -77771,6 +77014,8 @@ Application/Bullet/BulletCollision/CollisionDispatch/btDefaultCollisionConfigura
 
 /usr/include/c++/14/bits/streambuf.tcc:
 
+Application/Challenge/ChallengeDuration.h:
+
 /usr/include/c++/14/bits/memoryfwd.h:
 
 Application/Bullet/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp:
@@ -77782,28 +77027,6 @@ Application/Bullet/BulletCollision/CollisionDispatch/btCollisionObject.h:
 Application/Bullet/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h:
 
 Application/Bullet/BulletDynamics/ConstraintSolver/btHingeConstraint.h:
-
-Application/Heightfield/HeightfieldBuilder.h:
-
-Application/Other/Scoreloop.h:
-
-/usr/include/c++/14/bits/node_handle.h:
-
-Application/Internet/IncomingConnection.cpp:
-
-/usr/include/x86_64-linux-gnu/bits/endian.h:
-
-/usr/include/x86_64-linux-gnu/bits/mathcalls.h:
-
-/usr/include/SDL2/SDL_filesystem.h:
-
-/usr/include/c++/14/ostream:
-
-Application/Internet/IncomingConnection.h:
-
-Application/Graphics/ParticleEmitter.cpp:
-
-Application/Bullet/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp:
 
 /usr/include/SDL2/SDL_hints.h:
 
@@ -77826,8 +77049,6 @@ Application/Bullet/vectormath/scalar/vec_aos.h:
 Application/Controller/NetworkController.h:
 
 Application/Bullet/BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuGatheringCollisionTask.cpp:
-
-/usr/include/c++/14/bits/std_thread.h:
 
 /usr/include/c++/14/bits/stl_function.h:
 
@@ -77881,15 +77102,17 @@ Application/Plane/Engine.h:
 
 Application/Bullet/BulletSoftBody/btSoftSoftCollisionAlgorithm.cpp:
 
+Application/Physics/SimpleObject.h:
+
+Application/Bullet/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h:
+
+/usr/include/x86_64-linux-gnu/bits/wchar.h:
+
 /usr/include/SDL2/SDL_image.h:
 
 /usr/include/glm/ext/matrix_float2x3_precision.hpp:
 
 /usr/include/c++/14/bits/uses_allocator_args.h:
-
-/usr/include/c++/14/cstdio:
-
-Application/Bullet/BulletDynamics/Dynamics/Bullet-C-API.cpp:
 
 /usr/include/x86_64-linux-gnu/asm/socket.h:
 
@@ -77897,71 +77120,19 @@ Application/Controller/Accelerometer.cpp:
 
 /usr/include/c++/14/bits/vector.tcc:
 
-/usr/include/x86_64-linux-gnu/bits/getopt_posix.h:
+/usr/include/c++/14/cstdint:
 
-/usr/include/glm/detail/type_mat2x4.hpp:
+/usr/include/c++/14/bits/stl_pair.h:
 
-Application/Bullet/BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h:
+Application/Bullet/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h:
 
-/usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h:
+Application/Bullet/BulletDynamics/Dynamics/Bullet-C-API.cpp:
 
-/usr/include/x86_64-linux-gnu/bits/locale.h:
+/usr/include/c++/14/cstdio:
 
-/usr/include/x86_64-linux-gnu/bits/posix1_lim.h:
+Application/Bullet/LinearMath/btAabbUtil2.h:
 
-/usr/include/libintl.h:
-
-/usr/include/x86_64-linux-gnu/bits/long-double.h:
-
-/usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
-
-Application/MapTrace/MapTrace/contour_collection.cpp:
-
-/usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h:
-
-/usr/include/x86_64-linux-gnu/curl/curlver.h:
-
-/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
-
-/usr/include/glm/ext/matrix_double2x2_precision.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
-
-/usr/include/c++/14/ext/string_conversions.h:
-
-/usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
-
-/usr/include/x86_64-linux-gnu/bits/setjmp.h:
-
-/usr/include/glm/ext/quaternion_transform.hpp:
-
-Application/Bullet/BulletDynamics/ConstraintSolver/btSliderConstraint.h:
-
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
-
-Application/Bullet/BulletCollision/CollisionDispatch/SphereTriangleDetector.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
-
-Application/Bullet/btBulletDynamicsCommon.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-least.h:
-
-/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
-
-/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
-
-/usr/include/glm/detail/type_vec4.inl:
-
-/usr/include/SDL2/SDL_config.h:
-
-/usr/include/c++/14/bits/specfun.h:
-
-/usr/include/x86_64-linux-gnu/bits/semaphore.h:
-
-/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
-
-Application/Bullet/BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuContactResult.h:
+/usr/include/glm/detail/type_mat3x2.inl:
 
 /usr/include/c++/14/bits/locale_classes.tcc:
 
@@ -77976,6 +77147,10 @@ Application/Bullet/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlg
 /usr/include/glm/gtc/quaternion.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/avx512ifmaintrin.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
@@ -78079,10 +77254,6 @@ Application/Bullet/MiniCL/MiniCLTaskScheduler.cpp:
 
 Application/Bullet/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.h:
 
-/usr/include/x86_64-linux-gnu/sys/utsname.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/14/include/clwbintrin.h:
-
 /usr/include/X11/Xfuncproto.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/amxcomplexintrin.h:
@@ -78090,6 +77261,14 @@ Application/Bullet/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.h:
 Application/Bullet/BulletDynamics/ConstraintSolver/btJacobianEntry.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/amxint8intrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/amxtileintrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/avx512vp2intersectvlintrin.h:
+
+Application/Bullet/BulletCollision/CollisionDispatch/btBox2dBox2dCollisionAlgorithm.h:
+
+/usr/include/x86_64-linux-gnu/bits/environments.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/avx2intrin.h:
 
@@ -78179,6 +77358,10 @@ Application/Bullet/BulletMultiThreaded/SpuNarrowPhaseCollisionTask/SpuMinkowskiP
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/clflushoptintrin.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/14/include/clwbintrin.h:
+
+/usr/include/x86_64-linux-gnu/sys/utsname.h:
+
 /usr/lib/gcc/x86_64-linux-gnu/14/include/cmpccxaddintrin.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/emmintrin.h:
@@ -78205,9 +77388,9 @@ Application/Bullet/BulletMultiThreaded/PosixThreadSupport.cpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/ia32intrin.h:
 
-Application/Challenge/ChallengeFreeFly.cpp:
-
 Application/Bullet/BulletDynamics/ConstraintSolver/btUniversalConstraint.cpp:
+
+Application/Challenge/ChallengeFreeFly.cpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/immintrin.h:
 
@@ -78245,9 +77428,9 @@ Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/btSoftBodySolve
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/sha512intrin.h:
 
-/usr/lib/gcc/x86_64-linux-gnu/14/include/avx512cdintrin.h:
-
 Application/Bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/14/include/avx512cdintrin.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/14/include/sm4intrin.h:
 
@@ -78705,6 +77888,8 @@ Application/Graphics/RenderOverlayObject.h:
 
 Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/OpenCLC10/UpdateNormals.cl:
 
+Application/Menus/Menu.h:
+
 Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/OpenCLC10/UpdatePositionsFromVelocities.cl:
 
 Application/Physics/Gate.h:
@@ -78771,6 +77956,12 @@ Application/Bullet/BulletMultiThreaded/GpuSoftBodySolvers/OpenCL/OpenCLC10/Solve
 
 Application/Bullet/BulletMultiThreaded/btThreadSupportInterface.h:
 
+/usr/include/unistd.h:
+
+/usr/include/x86_64-linux-gnu/bits/getopt_core.h:
+
+/usr/include/x86_64-linux-gnu/bits/getopt_posix.h:
+
 /usr/lib/gcc/x86_64-linux-gnu/14/include/tmmintrin.h:
 
 Application/Bullet/BulletMultiThreaded/SequentialThreadSupport.cpp:
@@ -78780,6 +77971,12 @@ Application/Bullet/LinearMath/btPolarDecomposition.cpp:
 Application/Bullet/BulletMultiThreaded/SpuCollisionObjectWrapper.h:
 
 Application/Bullet/BulletMultiThreaded/SpuContactManifoldCollisionAlgorithm.h:
+
+/usr/include/c++/14/bits/chrono.h:
+
+/usr/include/c++/14/new:
+
+Application/Bullet/BulletMultiThreaded/SpuFakeDma.h:
 
 /usr/include/c++/14/bits/stl_multiset.h:
 
@@ -78815,6 +78012,12 @@ Application/Bullet/BulletCollision/NarrowPhaseCollision/btRaycastCallback.h:
 
 Application/Bullet/BulletMultiThreaded/btGpuDefines.h:
 
+/usr/include/glm/ext/quaternion_exponential.inl:
+
+Application/Bullet/BulletMultiThreaded/btGpuUtilsSharedDefs.h:
+
+/usr/include/SDL2/SDL_syswm.h:
+
 Application/Bullet/BulletMultiThreaded/btParallelConstraintSolver.cpp:
 
 Application/Bullet/BulletMultiThreaded/btThreadSupportInterface.cpp:
@@ -78846,3 +78049,37 @@ Application/Bullet/MiniCL/MiniCLTask/MiniCLTask.h:
 Application/Bullet/BulletCollision/Gimpact/btContactProcessing.cpp:
 
 Application/Bullet/MiniCL/MiniCLTask/MiniCLTask.cpp:
+
+Application/Challenge/Challenge.h:
+
+Application/Challenge/ChallengeDuration.cpp:
+
+Application/Menus/ScoreloopMenu.h:
+
+Application/Heightfield/HeightfieldBuilder.h:
+
+/usr/include/c++/14/bits/node_handle.h:
+
+Application/Other/Scoreloop.h:
+
+/usr/include/sched.h:
+
+Application/Challenge/ChallengeFreeFly.h:
+
+Application/General/Helpers.h:
+
+Application/General/FonctionsMarmelade.h:
+
+/usr/include/X11/Xlib.h:
+
+/usr/include/X11/Xosdefs.h:
+
+/usr/include/c++/14/bits/codecvt.h:
+
+/usr/include/glm/ext/vector_float4.hpp:
+
+Application/Bullet/BulletCollision/CollisionDispatch/btBoxBoxDetector.cpp:
+
+/usr/include/c++/14/bits/fstream.tcc:
+
+/usr/include/c++/14/fstream:

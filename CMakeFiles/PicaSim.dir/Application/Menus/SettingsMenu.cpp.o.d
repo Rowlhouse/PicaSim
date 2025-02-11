@@ -482,22 +482,21 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: \
  /usr/include/SDL2/SDL_misc.h /usr/include/SDL2/SDL_pixels.h \
  /usr/include/SDL2/SDL_render.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entete.h \
- /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_log.h \
- /usr/include/SDL2/SDL_video.h /usr/include/c++/14/cstdarg \
- /usr/include/c++/14/map /usr/include/c++/14/bits/stl_tree.h \
+ /usr/include/SDL2/SDL.h /usr/include/c++/14/map \
+ /usr/include/c++/14/bits/stl_tree.h \
  /usr/include/c++/14/ext/aligned_buffer.h \
  /usr/include/c++/14/bits/node_handle.h \
  /usr/include/c++/14/bits/stl_map.h \
  /usr/include/c++/14/bits/stl_multimap.h \
- /usr/include/c++/14/bits/erase_if.h /usr/include/GL/glew.h \
- /usr/include/GL/glu.h /usr/include/GL/gl.h /usr/include/EGL/egl.h \
- /usr/include/EGL/eglplatform.h /usr/include/KHR/khrplatform.h \
- /usr/include/SDL2/SDL_stdinc.h /usr/include/c++/14/vector \
+ /usr/include/c++/14/bits/erase_if.h /usr/include/c++/14/vector \
  /usr/include/c++/14/bits/stl_uninitialized.h \
  /usr/include/c++/14/bits/stl_vector.h \
  /usr/include/c++/14/bits/stl_bvector.h \
- /usr/include/c++/14/bits/vector.tcc /usr/include/SDL2/SDL_ttf.h \
- /usr/include/c++/14/algorithm /usr/include/c++/14/bits/stl_algo.h \
+ /usr/include/c++/14/bits/vector.tcc /usr/include/GL/glew.h \
+ /usr/include/GL/glu.h /usr/include/GL/gl.h /usr/include/EGL/egl.h \
+ /usr/include/EGL/eglplatform.h /usr/include/KHR/khrplatform.h \
+ /usr/include/SDL2/SDL_ttf.h /usr/include/c++/14/algorithm \
+ /usr/include/c++/14/bits/stl_algo.h \
  /usr/include/c++/14/bits/algorithmfwd.h \
  /usr/include/c++/14/bits/stl_heap.h \
  /usr/include/c++/14/bits/uniform_int_dist.h \
@@ -509,18 +508,37 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: \
  /usr/include/c++/14/bits/hashtable.h \
  /usr/include/c++/14/bits/hashtable_policy.h \
  /usr/include/c++/14/bits/enable_special_members.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Files/File.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entete.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Menus/FileMenu.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/FonctionsMarmelade.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.h \
+ /usr/include/c++/14/fstream /usr/include/c++/14/bits/codecvt.h \
+ /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
+ /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
+ /usr/include/c++/14/bits/fstream.tcc /usr/include/SDL2/SDL_syswm.h \
+ /usr/include/X11/Xlib.h /usr/include/X11/X.h \
+ /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
+ /usr/include/X11/Xatom.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.h \
+ /usr/include/x86_64-linux-gnu/sys/utsname.h \
+ /usr/include/x86_64-linux-gnu/bits/utsname.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+ /usr/include/linux/close_range.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Helpers.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuaternion.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btTransform.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMatrix3x3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btVector3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btScalar.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMinMax.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btAlignedAllocator.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuadWord.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btTransform.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMatrix3x3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuaternion.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btVector3.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuadWord.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/HelpersXML.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/tinyxml/tinyxml.h \
  /usr/include/c++/14/sstream /usr/include/c++/14/bits/sstream.tcc \
@@ -529,7 +547,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesFontMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/Graphics.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entete.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/GameSettings.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/Controller.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/FrameworkSettings.h \
@@ -568,6 +585,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btAlignedObjectArray.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/CollisionShapes/btCompoundShape.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/CollisionShapes/btCollisionShape.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btVector3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMatrix3x3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btScalar.h \
@@ -598,34 +616,6 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: \
  /usr/include/c++/14/bits/stl_multiset.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Plane/Wheel.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/PicaJoystick.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Files/File.h \
- /usr/include/c++/14/cstring \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Menus/PicaDialog.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Trace.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/FonctionsPointerKeyboardMarmelade.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/FonctionsMarmelade.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.h \
- /usr/include/SDL2/SDL_locale.h /usr/include/c++/14/chrono \
- /usr/include/c++/14/bits/chrono.h /usr/include/c++/14/ratio \
- /usr/include/c++/14/ctime /usr/include/c++/14/bits/parse_numbers.h \
- /usr/include/c++/14/fstream /usr/include/c++/14/bits/codecvt.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
- /usr/include/c++/14/bits/fstream.tcc /usr/include/SDL2/SDL_syswm.h \
- /usr/include/X11/Xlib.h /usr/include/X11/X.h \
- /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
- /usr/include/X11/Xatom.h /usr/include/c++/14/thread \
- /usr/include/c++/14/bits/std_thread.h \
- /usr/include/c++/14/bits/unique_ptr.h \
- /usr/include/c++/14/bits/this_thread_sleep.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.h \
- /usr/include/x86_64-linux-gnu/sys/utsname.h \
- /usr/include/x86_64-linux-gnu/bits/utsname.h /usr/include/unistd.h \
- /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
- /usr/include/x86_64-linux-gnu/bits/environments.h \
- /usr/include/x86_64-linux-gnu/bits/confname.h \
- /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
- /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
- /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
- /usr/include/linux/close_range.h /usr/include/SDL2/SDL_keycode.h \
- /usr/include/SDL2/SDL_mouse.h
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/FonctionsPointerKeyboardMarmelade.h

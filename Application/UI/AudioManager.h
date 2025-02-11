@@ -10,7 +10,7 @@
 #include "Entete.h"
 // #include "FonctionsMarmelade.h"
 #include "Vecteurs.h"
-#include <cstdint>
+// #include <cstdint>
 
 class AudioManager
 {

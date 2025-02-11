@@ -1,5 +1,5 @@
-#ifndef SETTINGS_WIDGETS_H
-#define SETTINGS_WIDGETS_H
+#ifndef SETTINGSWIDGETS_H
+#define SETTINGSWIDGETS_H
 
 #include "ClassesUIMarmelade.h"
 #include "GameSettings.h"

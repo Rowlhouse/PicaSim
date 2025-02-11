@@ -1,5 +1,5 @@
-#ifndef AEROPLANE_GRAPHICS_H
-#define AEROPLANE_GRAPHICS_H
+#ifndef AEROPLANEGRAPHICS_H
+#define AEROPLANEGRAPHICS_H
 
 // #include "RenderModel.h"
 

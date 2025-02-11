@@ -1,5 +1,5 @@
-#ifndef AEROPLANE_PHYSICS_H
-#define AEROPLANE_PHYSICS_H
+#ifndef AEROPLANEPHYSICS_H
+#define AEROPLANEPHYSICS_H
 
 //#include "GameSettings.h"
 //#include "btDistanceConstraint.h"

@@ -2,11 +2,11 @@
 #define FILE_H
 
 #include "Entete.h"
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
-#include <string>
-#include <vector>
+//#include <cstdint>
+//#include <cstdio>
+//#include <cstring>
+//#include <string>
+//#include <vector>
 
 typedef FILE s3eFile;
 

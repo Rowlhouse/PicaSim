@@ -12,10 +12,11 @@
 
 #include "Entete.h"
 //#include "FonctionsMarmelade.h"
-#include "LinearMath/btQuaternion.h"
+// #include "LinearMath/btQuaternion.h"
 #include "LinearMath/btTransform.h"
-#include "LinearMath/btVector3.h"
+// #include "LinearMath/btVector3.h"
 #include "Vecteurs.h"
+
 #ifdef _MSC_VER
 #define OVERRIDE override
 #else

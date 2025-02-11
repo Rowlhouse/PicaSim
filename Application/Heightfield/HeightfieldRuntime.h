@@ -2,8 +2,8 @@
   Sss - a slope soaring simulater.
   Copyright (C) 2002 Danny Chapman - flight@rowlhouse.freeserve.co.uk
 */
-#ifndef VERTEX_H
-#define VERTEX_H
+#ifndef HEIGHTFIELDRUNTIME_H
+#define HEIGHTFIELDRUNTIME_H
 
 #include "HeightfieldCommon.h"
 

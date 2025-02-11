@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
 #include <iostream>
-#include <stdexcept>
+// #include <stdexcept>
 
 class Quat;
 class Transform;
@@ -114,7 +114,7 @@ public:
     }
 };
 
-Vector3 Vector3::g_Zero = Vector3();
+
 
 class Vector4 {
 public:
@@ -207,8 +207,6 @@ public :
     static Transform g_Identity;
 };
 
-// Définition de l'instance statique g_Identity
-Transform Transform::g_Identity = Transform();
 
 /*
 | `mTM.SetAxisAngle(glm::vec3(axis), angle)`             | `glm::mat4 mTM = glm::rotate(glm::mat4(1.0f), angle, axis)`                           |*/
@@ -247,11 +245,11 @@ public:
   float & operator()(int i) {return data[i];}
   const float & operator()(int i) const {return data[i];}
 
-  inline float distanceToPoint(const Vector3& pos) const;
+  float distanceToPoint(const Vector3& pos) const;
   
-  inline float distanceToPoint(float x, float y, float z) const;
+  float distanceToPoint(float x, float y, float z) const;
   
-  inline void show() const;
+  void show() const;
   
   friend ClipPlane operator*(const Matrix44 & lhs, const ClipPlane & rhs);
 

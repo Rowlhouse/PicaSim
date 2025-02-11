@@ -1,15 +1,16 @@
 #include "FileMenu.h"
 #include "File.h"
+#include "FonctionsMarmelade.h"
 #include "FonctionsPointerKeyboardMarmelade.h"
-#include "GameSettings.h"
+// #include "GameSettings.h"
 #include "Menu.h"
-#include <cstring>
-#include "Entete.h"
-#include "ClassesUIMarmelade.h"
+// #include <cstring>
+// #include "Entete.h"
+// #include "ClassesUIMarmelade.h"
 #include "SettingsWidgets.h"
-#include "Helpers.h"
+// #include "Helpers.h"
 #include "PicaDialog.h"
-#include "GameSettings.h"
+// #include "GameSettings.h"
 #include "Trace.h"
 
 // #include <IwUI.h>

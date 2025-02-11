@@ -1,13 +1,13 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include "Entete.h"
+#include "ClassesMarmelade.h"
 //#include "Helpers.h"
 //#include <IwGL.h>
 //#include <IwGx.h>
 
 
-#include "Entete.h"
-#include "ClassesMarmelade.h"
 extern int gGLVersion;
 
 typedef GLfloat GLMat44[4][4];

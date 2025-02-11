@@ -4,8 +4,9 @@
 //#include "Graphics.h"
 
 //---------------------------------------------------------------------------------------------------------------------
-#include "Entete.h"
+// #include "Entete.h"
 #include "Helpers.h"
+
 class Shader
 {
 public:

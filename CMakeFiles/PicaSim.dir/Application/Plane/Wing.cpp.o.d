@@ -484,9 +484,8 @@ CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o: \
  /usr/include/SDL2/SDL_render.h /usr/include/SDL2/SDL_shape.h \
  /usr/include/SDL2/SDL_system.h /usr/include/SDL2/SDL_timer.h \
  /usr/include/SDL2/SDL_version.h /usr/include/SDL2/SDL_locale.h \
- /usr/include/SDL2/SDL_misc.h /usr/include/SDL2/SDL_log.h \
- /usr/include/SDL2/SDL_video.h /usr/include/c++/14/cstdarg \
- /usr/include/c++/14/map /usr/include/c++/14/bits/stl_tree.h \
+ /usr/include/SDL2/SDL_misc.h /usr/include/c++/14/map \
+ /usr/include/c++/14/bits/stl_tree.h \
  /usr/include/c++/14/ext/aligned_buffer.h \
  /usr/include/c++/14/bits/node_handle.h \
  /usr/include/c++/14/bits/stl_map.h \
@@ -494,21 +493,18 @@ CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o: \
  /usr/include/c++/14/bits/erase_if.h /usr/include/GL/glew.h \
  /usr/include/GL/glu.h /usr/include/GL/gl.h /usr/include/EGL/egl.h \
  /usr/include/EGL/eglplatform.h /usr/include/KHR/khrplatform.h \
- /usr/include/SDL2/SDL_stdinc.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Languages/PicaStrings.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/tinyxml/tinyxml.h \
  /usr/include/c++/14/sstream /usr/include/c++/14/bits/sstream.tcc \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Helpers.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuaternion.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btTransform.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMatrix3x3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btVector3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btScalar.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMinMax.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btAlignedAllocator.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuadWord.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btTransform.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMatrix3x3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuaternion.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btVector3.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuadWord.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Vecteurs.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Terrain/Rope.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/RenderManager.h \
@@ -531,6 +527,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btAlignedObjectArray.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/CollisionShapes/btCompoundShape.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/CollisionShapes/btCollisionShape.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btVector3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMatrix3x3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btScalar.h \

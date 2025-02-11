@@ -3,14 +3,14 @@
 
 // #include <cassert>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_log.h>
-#include <SDL2/SDL_video.h>
-#include <cstdarg>
-#include <iostream>
+// #include <SDL2/SDL_log.h>
+// #include <SDL2/SDL_video.h>
+// #include <cstdarg>
+// #include <iostream>
 // #include <fstream>
 #include <map>
-// #include <vector>
-// #include <string>
+#include <vector>
+#include <string>
 // #include <cmath>
 // #include <stdio.h>
 // #include <cstdio>
@@ -44,11 +44,11 @@
 // #include <glm/glm.hpp>
 // #include <glm/gtx/norm.hpp>
 
-#include <SDL2/SDL_stdinc.h>
+// #include <SDL2/SDL_stdinc.h>
 #include <cassert>
-#include <vector>
-int ROWLHOUSE = 0;
-int Rowlhouse = ROWLHOUSE;
+// #include <vector>
+extern int ROWLHOUSE;
+extern int Rowlhouse;
 
 constexpr float PI = 3.14159265358979323846f; 
 #define HALF_PI    (0.5f * PI)
@@ -72,14 +72,10 @@ using CIwArray = std::vector<T>;
 typedef SDL_bool s3eBool;
 typedef char IwChar;
 
-s3eBool S3E_FALSE = SDL_FALSE;
-s3eBool S3E_TRUE = SDL_TRUE;
+extern s3eBool S3E_FALSE;
+extern s3eBool S3E_TRUE;
 
-
-SDL_Window* window = SDL_CreateWindow("Native Window Example",
-                                          SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                          800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-
+extern SDL_Window* window;
 
 enum s3ePointerState {
     S3E_POINTER_AVAILABLE,
@@ -164,8 +160,8 @@ enum s3eKey {
 };
 
 
-int mouseX, mouseY;
-s3ePointerState etatMouse = S3E_POINTER_AVAILABLE;
+extern int mouseX, mouseY;
+extern s3ePointerState etatMouse;
 
 
 
@@ -293,68 +289,18 @@ enum GLextension {
     IW_GL_OES_framebuffer_object,
 };
 
-std::map<IwTypeMessage, std::string> MessageTypeMap = {
-    {GAMEPAD_VERBOSE, "VERBOSE"},
-    {GAMEPAD_WARNING, "WARNING"},
-    {GAMEPAD_ERROR, "ERROR"},
-    {GAMEPAD_INFO, "INFO"}
-};
+extern std::map<IwTypeMessage, std::string> MessageTypeMap;
 
 
-inline void IwAssert(int RowlHouse, bool test) {
-    assert(test);
-}
+void IwAssert(int RowlHouse, bool test);
 
-inline void IwAssertMsg(int RowlHouse, bool test, std::string message) {
-    if (!(test)) {
-        std::cerr << "Assertion failed: " << message << std::endl;
-        assert(test);
-    }
-}
+void IwAssertMsg(int RowlHouse, bool test, std::string message);
 
-inline void s3eDebugAssertShow(s3eMessage fenetre, const std::string& message) {
-    //implementation possible d'une fenetre qui demande si l'on doit s'arreter, continuer, ou ignorer
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Assertion failed: %s", message.c_str());
-    std::cerr << message << std::endl;
-    //SDL_Quit();
-    //exit(1);
-}
+void s3eDebugAssertShow(s3eMessage fenetre, const std::string& message);
 
-inline void IwTrace(IwTypeMessage type, const char* format, ...) {
-    // Obtenir l'étiquette correspondant au type
-    std::string typeLabel = MessageTypeMap[type];
+void IwTrace(IwTypeMessage type, const char* format, ...);
 
-    // Extraire les arguments variables
-    va_list args;
-    va_start(args, format);
-
-    // Préparer le message formaté
-    char buffer[512];
-    vsnprintf(buffer, sizeof(buffer), format, args);
-
-    va_end (args);
-
-    // Afficher le message
-    std::cout << "[" << typeLabel << "] " << buffer << std::endl;
-}
-
-inline void IwTrace(unsigned int type, const char* format, ...) {
-    // Obtenir l'étiquette correspondant au type
-    std::string typeLabel = "ROWLHOUSE";
-
-    // Extraire les arguments variables
-    va_list args;
-    va_start(args, format);
-
-    // Préparer le message formaté
-    char buffer[512];
-    vsnprintf(buffer, sizeof(buffer), format, args);
-
-    va_end (args);
-
-    // Afficher le message
-    std::cout << "[" << typeLabel << "] " << buffer << std::endl;
-}
+void IwTrace(unsigned int type, const char* format, ...);
 
 
 

@@ -1,5 +1,5 @@
-#ifndef FRAMEWORK_STRINGS_H
-#define FRAMEWORK_STRINGS_H
+#ifndef PICASTRINGS_H
+#define PICASTRINGS_H
 
 #define TXT(tag) GetPS(tag, language)
 

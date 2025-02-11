@@ -8,9 +8,9 @@
 
 //#include "Entete.h"
 #include "ClassesMarmelade.h"
-#include "Vecteurs.h"
-#include <map>
-#include <vector>
+// #include "Vecteurs.h"
+// #include <map>
+// #include <vector>
 
 struct ShaderProgramModelInfo
 {

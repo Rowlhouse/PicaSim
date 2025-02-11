@@ -1,15 +1,11 @@
 #ifndef CHALLENGEFREEFLY_H
 #define CHALLENGEFREEFLY_H
 
-#include "Challenge.h"
-#include "AIController.h"
-
-
 #include "AIController.h"
 #include "Challenge.h"
 #include "ClassesUIMarmelade.h"
-#include "RenderManager.h"
-#include "Helpers.h"
+// #include "RenderManager.h"
+// #include "Helpers.h"
 
 class ChallengeFreeFly : public Challenge, public RenderGxObject
 {
