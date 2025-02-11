@@ -1,8 +1,9 @@
 #include "Fuselage.h"
-
-// #include "Aeroplane.h"
-// #include "AeroplanePhysics.h"
-// #include "Environment.h"
+#include "AeroplanePhysics.h"
+#include "HelpersXML.h"
+#include "Trace.h"
+#include "Aeroplane.h"
+#include "Environment.h"
 // #include "PicaSim.h"
 
 //----------------------------------------------------------------------------------------------------------------------

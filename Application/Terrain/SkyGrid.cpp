@@ -1,9 +1,9 @@
 #include "SkyGrid.h"
-// #include "RenderManager.h"
-// #include "Trace.h"
-// #include "Graphics.h"
-// #include "ShaderManager.h"
-// #include "Shaders.h"
+#include "RenderManager.h"
+#include "Trace.h"
+#include "Graphics.h"
+#include "ShaderManager.h"
+#include "Shaders.h"
 
 // #include <IwGx.h>
 // #include <IwGxFont.h>
@@ -223,7 +223,7 @@ void SkyGrid::SetBox(float distance)
   bottoms[2] = alongDir * dist1 - acrossDir * dist2;
   bottoms[3] = -alongDir * dist1 - acrossDir * dist2;
   for (int s = 0 ; s != 4 ; ++s)
-    tops[s] = bottoms[s] + Vector3(0,0,height);
+    tops[s] = bottoms[s] + Vector3(0.0f,0.0f,height);
 
   for (int s = 0 ; s != 4 ; s += 2)
   {

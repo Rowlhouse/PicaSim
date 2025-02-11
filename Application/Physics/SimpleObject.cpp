@@ -3,11 +3,11 @@
 #include "BulletCollision/CollisionShapes/btBoxShape.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
+#include "DebugRenderer.h"
 #include "Graphics.h"
 #include "Trace.h"
 #include "Vecteurs.h"
 #include "EntityManager.h"
-//#include "DebugRenderer.h"
 
 #include "PicaSim.h"
 #include "ShaderManager.h"

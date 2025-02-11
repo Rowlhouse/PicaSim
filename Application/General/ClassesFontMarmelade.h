@@ -18,7 +18,8 @@ enum alignmentVer {
     IW_GX_FONT_ALIGN_MIDDLE,
     IW_GX_FONT_ALIGN_UP,
     IW_GX_FONT_ALIGN_DOWN,
-    
+    IW_GX_FONT_ALIGN_BOTTOM,
+    IW_GX_FONT_ALIGN_TOP,    
 };
 
 
@@ -236,7 +237,7 @@ inline bool IwGxFontDrawText(const std::string& text) {
     SDL_Surface* surface = GeneralFont->DrawText(text);
 
     // Créer une texture à partir de la surface pour l'affichage
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(RendererManager::getRenderer(), surface);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(GeneralRender, surface);
     SDL_FreeSurface(surface);
 
     if (!texture) {
@@ -262,7 +263,7 @@ inline bool IwGxFontDrawText(const std::string& text) {
 
     // Dessiner la texture à l'écran
     SDL_Rect dstRect = {x, rect.GetY(), textWidth, textHeight};
-    SDL_RenderCopy(RendererManager::getRenderer(), texture, nullptr, &dstRect);
+    SDL_RenderCopy(GeneralRender, texture, nullptr, &dstRect);
 
     // Libérer la texture après usage
     SDL_DestroyTexture(texture);

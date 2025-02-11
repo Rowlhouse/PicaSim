@@ -3,6 +3,7 @@
 #include "Aeroplane.h"
 #include "AeroplanePhysics.h"
 #include "DimensionalScaling.h"
+#include "HelpersXML.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 Wheel::Wheel()

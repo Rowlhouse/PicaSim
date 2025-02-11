@@ -1,14 +1,16 @@
 #include "StartMenu.h"
+#include "FonctionsMarmelade.h"
+#include "FonctionsPointerKeyboardMarmelade.h"
 #include "GameSettings.h"
+#include "HelpMenu.h"
 #include "Menu.h"
-// #include "SettingsMenu.h"
-// #include "HelpMenu.h"
-// #include "ScoreloopMenu.h"
 // #include "../Scoreloop.h"
-// #include "../VersionChecker.h"
 #include "PicaJoystick.h"
-// #include "../WindowsBilling.h"
-// #include "Menu.h"
+#include "ScoreloopMenu.h"
+#include "SettingsMenu.h"
+#include "Trace.h"
+#include "VersionChecker.h"
+#include "WindowsBilling.h"
 
 // #include <s3eOSExec.h>
 
@@ -222,8 +224,8 @@ CIwUIButton* StartMenu::CreateImageButton(CIwUIElement* parentArea, CIwUILayoutG
   CIwUIButton* button = CreateButton(parentArea, parentLayout, "", column, row, 255);
   button->SetStyle("<button_start_image>");
   CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed(textureName, "CIwTexture");
-  uint32 w = texture->GetWidth();
-  uint32 h = texture->GetHeight();
+  uint32_t w = texture->GetWidth();
+  uint32_t h = texture->GetHeight();
   // style for the image button
   CIwUIStyle style;
   style.InlinePropertySet();
@@ -400,7 +402,7 @@ StartMenuResult DisplayStartMenu(struct GameSettings& gameSettings)
     PrepareForIwGx(false);
     StartMenu* startMenu = new StartMenu(gameSettings); // Gets deleted on IwGetUIView()->DestroyElements()
 
-    uint32 menuTime = 0;
+    uint32_t menuTime = 0;
 
     while (startMenuResult == STARTMENU_MAX)
     {

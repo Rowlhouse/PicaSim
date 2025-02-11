@@ -15,8 +15,8 @@ struct FrameworkSettings
   //void UpdateOS();
 
   //bool isWin10() const { return mOS == "Windows"; }
-  //bool isWindowsDesktop() const { return mOS == "Windows"; }
-  //bool isWindows() const { return mOS == "Windows"; }
+  bool isWindowsDesktop() const { return mOS == S3E_OS_ID_WINDOWS; }
+  bool isWindows() const { return mOS == S3E_OS_ID_WINDOWS; }
   //bool isAndroid() const { return mOS == "Android"; }
   //bool isIOS() const { return mOS == "iOS"; }
 

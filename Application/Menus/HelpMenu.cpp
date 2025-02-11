@@ -6,9 +6,10 @@
 #include "Helpers.h"
 #include "PicaStrings.h"
 #include "FonctionsPointerKeyboardMarmelade.h"
+#include "AudioManager.h"
 
 // #include <s3eOSExec.h>
-//#include "dpiInfo.h"
+// #include "dpiInfo.h"
   
 //---------------------------------------------------------------------------------------------------------------------
 class HelpMenu : public Menu

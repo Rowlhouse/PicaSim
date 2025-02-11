@@ -1,6 +1,8 @@
 #include "Rope.h"
-// #include "ShaderManager.h"
-// #include "Shaders.h"
+#include "Graphics.h"
+#include "Trace.h"
+#include "ShaderManager.h"
+#include "Shaders.h"
 
 //---------------------------------------------------------------------------------------------------------------------
 Rope::Rope() : mColour(1,1,1,0.1f)

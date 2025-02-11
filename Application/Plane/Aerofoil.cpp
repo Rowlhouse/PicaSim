@@ -1,8 +1,10 @@
 #include "Aerofoil.h"
-// #include "AerofoilDefinition.h"
-// #include "Aeroplane.h"
-// #include "AeroplanePhysics.h"
-// #include "Environment.h"
+#include "AerofoilDefinition.h"
+#include "AeroplanePhysics.h"
+#include "Aeroplane.h"
+#include "Environment.h"
+#include "GameSettings.h"
+#include "Trace.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 void Aerofoil::Init(

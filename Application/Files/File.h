@@ -64,5 +64,7 @@ void s3eFileListClose(s3eFileList* fileList);
 
 void s3eFileDelete (const char* chaine);
 
+bool s3eFileCheckExists(const std::string& filename);
+
 
 #endif

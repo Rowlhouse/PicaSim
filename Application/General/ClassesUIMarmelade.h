@@ -45,6 +45,18 @@ public:
     CIwUIPropertySet() : mVisible(true)  {}
 
     // Méthode pour définir une propriété donnée par un nom et une valeur
+    void SetProperty(const std::string& key, int16_t value) {
+        if (key == "sliderMin") {
+            sliderMin = value;
+        }
+        else if (key == "sliderMax") {
+            sliderMax = value;
+        }
+        else {
+            std::cout << "La fonction SetProperty de CIwUIPropertySet ne connait pas la property demande" << key << std::endl;
+        }
+    }
+
     void SetProperty(const std::string& key, const IwHashString value) {
         if (key == "drawableType") {
             drawableType = value;
@@ -106,8 +118,10 @@ public:
     void SetVisible(bool visible) { mVisible = visible; }
     bool IsVisible() const { return mVisible; }
 
-    void SetPosition(Vector2 vec){ pos = vec; }
+    void SetPosition(Vector2 vec) { pos = vec; }
+    void SetPos(Vector2 vec) { pos = vec; }
     Vector2 GetPosition() const { return pos; }
+    Vector2 GetPos() const { return pos; }
 
     void SetSize(const Vector2& Size) { size = Size; }
     Vector2 GetSize() { return size; }
@@ -143,6 +157,8 @@ public:
 
     Vector2 GetSizeMin () { return sizeMin; }
 
+    void SetPosAbsolute (Vector2 posi, Vector2 taille) { pos = posi; size = taille; }
+
 private:
     IwHashString drawableType;
     Texture* texture;
@@ -164,6 +180,8 @@ private:
     CIwPropertyValue alignV = IW_UI_ALIGN_CENTRE;
     std::string caption;
     std::string style;
+    int16_t sliderMin = 0;
+    int16_t sliderMax = 0;
 };
 
 class CIwUIStylesheet {
@@ -177,12 +195,12 @@ private:
 
 class CIwUIStyleManager {
 public:
-    void SetStylesheet(CIwUIStylesheet** stylesheet) {
+    void SetStylesheet(CIwUIStylesheet* stylesheet) {
         styleSheet = stylesheet;
         //std::cout << "Setting stylesheet: " << stylesheet->GetName() << std::endl;
     }
 private :
-    CIwUIStylesheet** styleSheet;
+    CIwUIStylesheet* styleSheet;
 };
 
 class CIwEvent{
@@ -208,7 +226,9 @@ private:
 };
 
 
-class CIwUIElementEventHandler{
+class CIwUIElementEventHandler {
+public :
+    virtual bool HandleEvent(CIwEvent* pEvent) { return false; }
 };
 
 class CIwUIElement : public CIwUIPropertySet {
@@ -217,7 +237,7 @@ public:
     virtual ~CIwUIElement() = default;
 
     void AddChild(CIwUIElement* child) { mChildren.push_back(child); }
-    virtual bool HandleEvent(CIwEvent* pEvent) { return false; }
+    void RemoveChild(CIwUIElement* child) { mChildren.erase(std::remove(mChildren.begin(), mChildren.end(), child), mChildren.end()); }
 
     virtual void Render() {
         std::cout << "Rendering a generic UI element\n";
@@ -436,7 +456,23 @@ public:
         mElements[i].push_back(element); 
     }
 
+    void AddElement(CIwUIElement* element, int i, int j, int k, int l, CIwPropertyValue value) {
+        element->SetProperty("alignH", value);
+        mElements[i].push_back(element); 
+    }
+
     void AddElement(CIwUIElement* element, int x , int y) { mElements[x][y] = element; }
+    void RemoveElement (CIwUIElement* element) { 
+        for (size_t i = 0; i < mElements.size(); ++i) {
+            for (size_t j = 0; j < mElements[i].size(); ++j) {
+                if (mElements[i][j] == element) {
+                    //std::cout << "Suppression de " << value_to_remove << " à (" << i << ", " << j << ")\n";
+                    mElements[i].erase(mElements[i].begin() + j);
+                    --j; // Ajustement de l'index après suppression
+                }
+            }
+        }
+    }
     
     void AddElement(CIwUIElement* element, std::string style, int i = 0) {
         element->SetStyle(style);
@@ -612,7 +648,7 @@ public:
     void TriggerEvent(CIwEventType evType)
     {
         CIwEvent ev(evType, this);
-        for (CIwUIElement* handler : mHandlers)
+        for (CIwUIElementEventHandler* handler : mHandlers)
         {
             handler->HandleEvent(&ev);
         }
@@ -631,23 +667,23 @@ public:
             // Définir la couleur en fonction du focus
             if (mFocused)
             {
-                SDL_SetRenderDrawColor(GeneralRenderManager.getRenderer(), 255, 255, 0, 255); // Jaune si focus
+                SDL_SetRenderDrawColor(GeneralRender, 255, 255, 0, 255); // Jaune si focus
             }
             else
             {
-                SDL_SetRenderDrawColor(GeneralRenderManager.getRenderer(), 128, 128, 128, 255); // Gris sinon
+                SDL_SetRenderDrawColor(GeneralRender, 128, 128, 128, 255); // Gris sinon
             }
 
             // Dessiner le bouton
-            SDL_RenderFillRect(GeneralRenderManager.getRenderer(), &mRect);
+            SDL_RenderFillRect(GeneralRender, &mRect);
 
             // Dessiner le texte (simplifié)
             SDL_Color textColor = {255, 255, 255, 255}; // Blanc
             SDL_Surface *textSurface = TTF_RenderText_Solid(GetPropertyFont()->GetTTF_Font(), mCaption.c_str(), textColor);
-            SDL_Texture *textTexture = SDL_CreateTextureFromSurface(GeneralRenderManager.getRenderer(), textSurface);
+            SDL_Texture *textTexture = SDL_CreateTextureFromSurface(GeneralRender, textSurface);
             SDL_Rect textRect = {mRect.x + 10, mRect.y + 10, textSurface->w, textSurface->h};
 
-            SDL_RenderCopy(GeneralRenderManager.getRenderer(), textTexture, nullptr, &textRect);
+            SDL_RenderCopy(GeneralRender, textTexture, nullptr, &textRect);
 
             // Nettoyer la mémoire
             SDL_FreeSurface(textSurface);
@@ -655,8 +691,8 @@ public:
         }
     }
 
-    void AddEventHandler(CIwUIElement* handler) { mHandlers.push_back(handler); }
-    void RemoveEventHandler(CIwUIElement* handler) {
+    void AddEventHandler(CIwUIElementEventHandler* handler) { mHandlers.push_back(handler); }
+    void RemoveEventHandler(CIwUIElementEventHandler* handler) {
         auto it = std::remove(mHandlers.begin(), mHandlers.end(), handler);
         mHandlers.erase(it, mHandlers.end());
     }
@@ -678,17 +714,25 @@ public:
 private:
     std::string mStyle;
     std::string mCaption;
-    std::vector<CIwUIElement*> mHandlers;
+    std::vector<CIwUIElementEventHandler*> mHandlers;
     bool mFocused = false;
     CIwRect mRect;
 };
 
 class CIwUISlider : public CIwUIElement {
-
+public :
+    void SetValue (int val) { sliderValue = val; }
+    int GetValue () { return sliderValue; }
+private :
+    int sliderValue = 0;
 };
 
 class CIwUICheckbox : public CIwUIElement {
-
+public :
+    void SetChecked (bool val) { check = val; }
+    bool GetChecked () { return check; }
+private :
+    bool check = false;
 };
 
 class CIwUIScrollableView : public CIwUIElement {

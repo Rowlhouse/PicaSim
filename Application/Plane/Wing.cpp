@@ -1,12 +1,14 @@
 #include "Wing.h"
 
-// #include "Aerofoil.h"
-// #include "AerofoilParameters.h"
-// #include "Aeroplane.h"
-// #include "AeroplanePhysics.h"
-// #include "Controller.h"
-// #include "DimensionalScaling.h"
-// #include "PicaSim.h"
+#include "Aerofoil.h"
+#include "AerofoilParameters.h"
+#include "Aeroplane.h"
+#include "AeroplanePhysics.h"
+#include "Controller.h"
+#include "DimensionalScaling.h"
+#include "HelpersXML.h"
+#include "PicaSim.h"
+#include "Trace.h"
 
 // For data that needs to be interpreted for the aerofoil
 struct AerofoilData

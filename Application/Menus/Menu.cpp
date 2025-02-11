@@ -6,9 +6,9 @@
 #include "Trace.h"
 #include "Helpers.h"
 // #include "StartMenu.h"
-// #include "LoadingScreen.h"
 #include "GameSettings.h"
 #include "PicaJoystick.h"
+#include "WindowsBilling.h"
 // #include "../WindowsBilling.h"
 #include <map>
 #include <string>
@@ -140,8 +140,9 @@ bool UpdateResourceGroupForScreen(const GameSettings& gameSettings)
   }
 
   sprintf(txt, "iwui%d", sResourceSettings[index].mScreenSize);
-  CIwResource* pResource = IwGetResManager()->GetResNamed(txt, IW_UI_RESTYPE_STYLESHEET);
-  
+  ////////////////////////////////////////////////////////////////////CIwResource* pResource = IwGetResManager()->GetResNamed(txt, IW_UI_RESTYPE_STYLESHEET);
+  CIwResource* pResource = (CIwResource*)IwGetResManager()->GetResNamed(txt, IW_UI_RESTYPE_STYLESHEET);
+
   IwGetUIStyleManager()->SetStylesheet(IwSafeCast<CIwUIStylesheet*>(pResource));
 
   RecoverFromIwGx(false);
@@ -207,7 +208,9 @@ Texture* GetCachedTexture(std::string path, bool convertTo16Bit)
   IwAssert(ROWLHOUSE, sTextureMap);
 
   std::string pathLower = path;
-  std::transform(pathLower.begin(), pathLower.end(), pathLower.begin(), std::tolower);
+  ///////////////////////////////////////////////////////////////std::transform(pathLower.begin(), pathLower.end(), pathLower.begin(), std::tolower);
+  std::transform(pathLower.begin(), pathLower.end(), pathLower.begin(), static_cast<int(*)(int)>(std::tolower));
+
 
   TextureMap::iterator it = sTextureMap->find(pathLower);
   if (it == sTextureMap->end())
@@ -413,10 +416,10 @@ Texture* AddCentredImage(const char* filename, bool use16Bit, CIwUIImage** image
     uv1.y = (int16_t) ((1.0f - f) * imageHeight);
     uv1.x = imageWidth;
   }
-  uv0.x = ClampToRange(uv0.x, int16_t(0), imageWidth);
-  uv1.x = ClampToRange(uv1.x, int16_t(0), imageWidth);
-  uv0.y = ClampToRange(uv0.y, int16_t(0), imageHeight);
-  uv1.y = ClampToRange(uv1.y, int16_t(0), imageHeight);
+  uv0.x = ClampToRange((int16_t)uv0.x, int16_t(0), imageWidth);
+  uv1.x = ClampToRange((int16_t)uv1.x, int16_t(0), imageWidth);
+  uv0.y = ClampToRange((int16_t)uv0.y, int16_t(0), imageHeight);
+  uv1.y = ClampToRange((int16_t)uv1.y, int16_t(0), imageHeight);
   pImage->SetProperty("uv0", uv0);
   pImage->SetProperty("uv1", uv1);
   pImage->SetSizeToContent(false);
@@ -433,6 +436,7 @@ Texture* AddCentredImage(const char* filename, bool use16Bit, CIwUIImage** image
   return texture;
 }
 
+#if true
 //----------------------------------------------------------------------------------------------------------------------
 void OpenWebsite(const GameSettings& gameSettings)
 {
@@ -503,3 +507,4 @@ void RateMe(const GameSettings& gameSettings)
   }
 }
 
+#endif

@@ -1,19 +1,23 @@
+#include "FileMenu.h"
+#include "FonctionsMarmelade.h"
+#include "Graphics.h"
+#include "MemoryCheck.h"
 #include "PicaSim.h"
 // #include "Scoreloop.h"
-// #include "ShaderManager.h"
-// #include "Menus/Menu.h"
-// #include "Menus/StartMenu.h"
-// #include "Menus/SettingsMenu.h"
-// #include "Menus/FileMenu.h"
-// #include "Menus/LoadingScreen.h"
-// #include "Menus/WhatsNewMenu.h"
-// #include "PicaStrings.h"
+#include "ShaderManager.h"
+#include "Menu.h"
+#include "StartMenu.h"
+#include "SettingsMenu.h"
+#include "FileMenu.h"
+#include "LoadingScreen.h"
+#include "WhatsNewMenu.h"
+#include "PicaStrings.h"
 // #include "Profile.h"
-// #include "VersionChecker.h"
-// #include "AuthorisationChecker.h"
-// #include "PicaJoystick.h"
-// #include "WindowsBilling.h"
-// #include "Menus/PicaDialog.h"
+#include "VersionChecker.h"
+#include "AuthorisationChecker.h"
+#include "PicaJoystick.h"
+#include "WindowsBilling.h"
+#include "PicaDialog.h"
 
 // #include <IwGL.h>
 // #include <IwGx.h>
@@ -139,7 +143,7 @@ static bool InitialiseOptions(GameSettings& gameSettings)
   {
     // Attempt to guess the screen size and CPU power
     float diagonalInches = GetSurfaceDiagonalInches();
-    int32 numCores = s3eDeviceGetInt(S3E_DEVICE_NUM_CPU_CORES);
+    int32_t numCores = s3eDeviceGetInt(S3E_DEVICE_NUM_CPU_CORES);
     TRACE_FILE_IF(1) TRACE("diagonalInches = %5.2f numCores = %d ", diagonalInches, numCores);
 
     if (diagonalInches > 0.0f && numCores > 0)
@@ -191,7 +195,7 @@ static bool InitialiseOptions(GameSettings& gameSettings)
     }
   }
 
-  int32 memoryKB = s3eDeviceGetInt(S3E_DEVICE_MEM_TOTAL);
+  int32_t memoryKB = s3eDeviceGetInt(S3E_DEVICE_MEM_TOTAL);
   TRACE_FILE_IF(1) TRACE("InitialiseOptions: reported memory = %d KB", memoryKB);
   if (memoryKB > 400*1024 || memoryKB <= 0) // -1 on Windows?!
     gameSettings.mOptions.m16BitTextures = false;

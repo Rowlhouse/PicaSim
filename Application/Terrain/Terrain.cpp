@@ -1,14 +1,21 @@
 #include "Terrain.h"
-// #include "PicaSim.h"
-// #include "ShaderManager.h"
-// #include "Shaders.h"
-
-// #include "HeightfieldRuntime.h"
-// #include "HeightfieldBuilder.h"
-// #include "HeightfieldGenerator.h"
+#include "BulletCollision/CollisionShapes/btStaticPlaneShape.h"
+#include "DebugRenderer.h"
+#include "FonctionsMarmelade.h"
+#include "Graphics.h"
+#include "HelpersXML.h"
+#include "PicaDialog.h"
+#include "PicaSim.h"
+#include "ShaderManager.h"
+#include "Shaders.h"
+#include "HeightfieldRuntime.h"
+#include "HeightfieldBuilder.h"
+#include "HeightfieldGenerator.h"
+#include "Trace.h"
+#include "Viewport.h"
+#include "EntityManager.h"
 
 // #include <IwUtil.h>
-// #include "Menus/PicaDialog.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -319,7 +326,7 @@ float Terrain::GetTerrainHeight(float x0, float y0, bool clampToPlain) const
   }
 
   int downwardSlope = (i11 + j11) % 2;
-  return interpolateForZ(Vector3(x0, y0, 0), 
+  return interpolateForZ(Vector3(x0, y0, 0.0f), 
                            pos11,
                            pos12, 
                            pos21,
@@ -481,11 +488,11 @@ void Terrain::CalculateLightmapTexture(unsigned int size, float gamma, const cha
     {
       Vector3 normal;
       float y = ymin + j * (ymax-ymin) / (size-1);
-      Vector3 pos_w(x - dx, y, 0);
-      Vector3 pos_e(x + dx, y, 0);
-      Vector3 pos_s(x, y - dy, 0);
-      Vector3 pos_n(x, y + dy, 0);
-      Vector3 pos(x, y, 0);
+      Vector3 pos_w(x - dx, y, 0.0f);
+      Vector3 pos_e(x + dx, y, 0.0f);
+      Vector3 pos_s(x, y - dy, 0.0f);
+      Vector3 pos_n(x, y + dy, 0.0f);
+      Vector3 pos(x, y, 0.0f);
       GetTerrainHeightFast(pos_w, false);
       GetTerrainHeightFast(pos_e, false);
       GetTerrainHeightFast(pos_s, false);
@@ -579,7 +586,8 @@ void Terrain::CalculateLightmapTexture(unsigned int size, float gamma, const cha
 
 
 //----------------------------------------------------------------------------------------------------------------------
-void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingScreen, uint32& checksum)
+//////////////////////////////////////////////////////////void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingScreen, uint32_t& checksum)
+void Terrain::Init(btSoftRigidDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingScreen, uint32_t& checksum)
 {
   TRACE_METHOD_ONLY(1);
   mLastLOD = 0;

@@ -1,8 +1,11 @@
 #include "WhatsNewMenu.h"
+#include "FonctionsMarmelade.h"
+#include "FonctionsPointerKeyboardMarmelade.h"
 #include "Menu.h"
 #include "Helpers.h"
-// #include "SettingsWidgets.h"
 #include "GameSettings.h"
+#include "SettingsWidgets.h"
+#include "AudioManager.h"
 // #include "../PicaStrings.h"
 
 // #include <s3eOSExec.h>

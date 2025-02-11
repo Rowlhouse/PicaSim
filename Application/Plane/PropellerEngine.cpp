@@ -1,13 +1,16 @@
 #include "PropellerEngine.h"
-
-// #include "Aerofoil.h"
+#include "DebugRenderer.h"
+#include "HelpersXML.h"
+#include "Trace.h"
+#include "Aerofoil.h"
 // #include "AerofoilParameters.h"
-// #include "Aeroplane.h"
-// #include "AeroplanePhysics.h"
-// #include "Controller.h"
-// #include "Environment.h"
-// #include "DimensionalScaling.h"
-// #include "PicaSim.h"
+#include "Aeroplane.h"
+#include "AeroplanePhysics.h"
+#include "Controller.h"
+#include "Environment.h"
+#include "DimensionalScaling.h"
+#include "PicaSim.h"
+#include "EntityManager.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 PropellerEngine::PropellerEngine()

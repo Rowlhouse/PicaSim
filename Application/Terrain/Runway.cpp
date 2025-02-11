@@ -1,9 +1,12 @@
 #include "Runway.h"
 
-// #include "PicaSim.h"
-// #include "ShaderManager.h"
-// #include "Shaders.h"
-// #include "AeroplanePhysics.h"
+#include "Graphics.h"
+#include "PicaSim.h"
+#include "ShaderManager.h"
+#include "Shaders.h"
+#include "AeroplanePhysics.h"
+#include "Trace.h"
+#include "Environment.h"
 
 // #include <IwGL.h>
 // #include <IwGx.h>

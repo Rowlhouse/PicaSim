@@ -1,5 +1,5 @@
 #include "Scoreloop.h"
-//#include "Trace.h"
+#include "Trace.h"
 
 #ifdef ENABLE_SCORELOOP
 

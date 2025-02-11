@@ -1,3 +1,6 @@
+#ifndef BT_H
+#define BT_H
+
 #include "BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
 #include "LinearMath/btScalar.h"
 
@@ -45,3 +48,5 @@ public:
       info->m_upperLimit[0] = SIMD_INFINITY;
    }
 };
+
+#endif

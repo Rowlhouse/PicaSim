@@ -2,9 +2,7 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Challenge/ChallengeFreeFly.cpp \
  /usr/include/stdc-predef.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Challenge/ChallengeFreeFly.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/AIController/AIController.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Plane/Aeroplane.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entity.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Challenge/Challenge.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/GameSettings.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/Controller.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/FrameworkSettings.h \
@@ -466,19 +464,20 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: \
  /usr/include/glm/packing.hpp /usr/include/glm/detail/func_packing.inl \
  /usr/include/glm/detail/type_half.hpp \
  /usr/include/glm/detail/type_half.inl /usr/include/glm/integer.hpp \
- /usr/include/glm/detail/func_integer.inl /usr/include/glm/gtx/norm.hpp \
- /usr/include/glm/gtx/quaternion.hpp /usr/include/glm/gtc/constants.hpp \
- /usr/include/glm/ext/scalar_constants.hpp \
- /usr/include/glm/ext/scalar_constants.inl \
- /usr/include/glm/gtc/constants.inl /usr/include/glm/gtc/quaternion.hpp \
+ /usr/include/glm/detail/func_integer.inl \
  /usr/include/glm/gtc/matrix_transform.hpp \
  /usr/include/glm/ext/matrix_projection.hpp \
+ /usr/include/glm/gtc/constants.hpp \
+ /usr/include/glm/ext/scalar_constants.hpp \
+ /usr/include/glm/ext/scalar_constants.inl \
+ /usr/include/glm/gtc/constants.inl \
  /usr/include/glm/ext/matrix_projection.inl \
  /usr/include/glm/ext/matrix_clip_space.hpp \
  /usr/include/glm/ext/matrix_clip_space.inl \
  /usr/include/glm/ext/matrix_transform.hpp \
  /usr/include/glm/ext/matrix_transform.inl \
- /usr/include/glm/gtc/matrix_transform.inl \
+ /usr/include/glm/gtc/matrix_transform.inl /usr/include/glm/gtx/norm.hpp \
+ /usr/include/glm/gtx/quaternion.hpp /usr/include/glm/gtc/quaternion.hpp \
  /usr/include/glm/ext/vector_relational.hpp \
  /usr/include/glm/ext/vector_relational.inl \
  /usr/include/glm/detail/type_float.hpp \
@@ -506,6 +505,10 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: \
  /usr/include/glm/gtx/component_wise.hpp \
  /usr/include/glm/detail/setup.hpp \
  /usr/include/glm/gtx/component_wise.inl /usr/include/glm/gtx/norm.inl \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/ShaderManager.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/AIController/AIController.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Plane/Aeroplane.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entity.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Terrain/Rope.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/RenderManager.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/Camera.h \
@@ -519,7 +522,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entete.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/RenderObject.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/UI/AudioManager.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/ShaderManager.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/FonctionsMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.h \
@@ -552,8 +554,15 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: \
  /usr/include/c++/14/bits/this_thread_sleep.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.h \
  /usr/include/x86_64-linux-gnu/sys/utsname.h \
- /usr/include/x86_64-linux-gnu/bits/utsname.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Challenge/Challenge.h \
+ /usr/include/x86_64-linux-gnu/bits/utsname.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+ /usr/include/linux/close_range.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Helpers.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/AIController/AIControllerGlider.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/AIController/AIController.h \
@@ -599,7 +608,6 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Plane/Wheel.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesFontMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Menus/Menu.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/Graphics.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Trace.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/UI/PicaSim.h \
@@ -635,6 +643,10 @@ CMakeFiles/PicaSim.dir/Application/Challenge/ChallengeFreeFly.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletDynamics/ConstraintSolver/btContactSolverInfo.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletSoftBody/btSoftRigidDynamicsWorld.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletDynamics/Dynamics/btDynamicsWorld.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletSoftBody/btSoftBody.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/FrameBufferObject.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Heightfield/HeightfieldRuntime.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Heightfield/HeightfieldCommon.h \

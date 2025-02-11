@@ -57,6 +57,10 @@ constexpr float PI = 3.14159265358979323846f;
 
 #define S3E_SURFACE_PIXEL_SIZE_MASK 0xFF
 
+#define MARMALADE_VERSION_STRING_FULL "0"
+
+#define S3E_POINTER_TOUCH_MAX 2
+
 //#define ARRAY_TYPE std::vector
 template <typename T>
 using CIwArray = std::vector<T>; 
@@ -79,11 +83,14 @@ SDL_Window* window = SDL_CreateWindow("Native Window Example",
 
 enum s3ePointerState {
     S3E_POINTER_AVAILABLE,
+    S3E_POINTER_TYPE,
+    S3E_POINTER_TYPE_MOUSE,
     S3E_POINTER_BUTTON_MOUSEWHEELDOWN,
     S3E_POINTER_BUTTON_MOUSEWHEELUP,
     S3E_POINTER_STATE_DOWN,
     S3E_POINTER_STATE_UP,
-    S3E_POINTER_STATE_UNKNOWN
+    S3E_POINTER_STATE_UNKNOWN,
+    S3E_POINTER_STATE_PRESSED
 };
 
 #define S3E_KEY_STATE_PRESSED SDL_PRESSED
@@ -171,6 +178,8 @@ enum fonction {
     S3E_DEVICE_LANGUAGE,
     S3E_DEVICE_OS,
     S3E_DEVICE_OS_VERSION,
+    S3E_DEVICE_NUM_CPU_CORES,
+    S3E_DEVICE_ID,
 };
 
 enum languages {
@@ -256,7 +265,14 @@ enum CIwEventType {
     IWUI_EVENT_HOVER,
     IWUI_EVENT_SCROLL,
     IWUI_EVENT_INPUT,
-    IWUI_EVENT_TABBAR
+    IWUI_EVENT_TABBAR,
+    IWUI_EVENT_KEY,
+    IWUI_EVENT_CHAR,
+    IWUI_EVENT_FOCUS,
+    IWUI_EVENT_SOFTKEY,
+    IWUI_EVENT_TEXT_INPUT,
+    IWUI_EVENT_SLIDER,
+    IWUI_EVENT_CHECKBOX,
 };
 
 enum CIwPropertyValue {
@@ -271,6 +287,10 @@ enum CIwPropertyValue {
 enum IwUIDebug {
     IW_UI_DEBUG_LAYOUT_OUTLINE_F,
     IW_UI_DEBUG_ELEMENT_OUTLINE_F
+};
+
+enum GLextension {
+    IW_GL_OES_framebuffer_object,
 };
 
 std::map<IwTypeMessage, std::string> MessageTypeMap = {

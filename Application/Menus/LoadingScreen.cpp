@@ -1,6 +1,7 @@
 #include "LoadingScreen.h"
 #include "FonctionsMarmelade.h"
 #include "Graphics.h"
+#include "Menu.h"
 #include "Trace.h"
 #include "PicaStrings.h"
 #include "GameSettings.h"

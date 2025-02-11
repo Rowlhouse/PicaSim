@@ -8,6 +8,7 @@
 
 #include "BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "BulletDynamics/Dynamics/btDynamicsWorld.h"
+#include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
 #include "ClassesMarmelade.h"
 #include "FrameBufferObject.h"
 #include "HeightfieldRuntime.h"
@@ -29,7 +30,8 @@ public:
   Terrain();
   ~Terrain();
 
-  void Init(btDynamicsWorld& dynamicsWorld, class LoadingScreenHelper* loadingScreen, uint32_t& checksum);
+  //////////////////////////////////////////////////////////////////////////////////////////////////////void Init(btDynamicsWorld& dynamicsWorld, class LoadingScreenHelper* loadingScreen, uint32_t& checksum);
+  void Init(btSoftRigidDynamicsWorld& dynamicsWorld, class LoadingScreenHelper* loadingScreen, uint32_t& checksum);
   void Terminate();
 
   void RenderUpdate(class Viewport* viewport, int renderLevel) OVERRIDE;

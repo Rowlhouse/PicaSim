@@ -30,8 +30,8 @@ int ShowDialog(const char* title, const char* text, const char* button0, const c
   dialogArea->SetSizeToContent(false); // If true the the whole screen is vertically centred. False places it at the top
   dialogArea->SetSizeMax(CIwVec2(width,height));
   dialogArea->SetLayout(dialogLayout);
-  //CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("DialogBackground", "CIwTexture");
-  CIwTexture* texture = IwGetResManager<CIwTexture>().GetResNamed("DialogBackground", "CIwTexture");
+  CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("DialogBackground", "CIwTexture");
+  
   dialogArea->SetTexture(texture);
 
   IwGetUIView()->AddElement(dialogArea);

@@ -1,7 +1,10 @@
 #include "Gate.h"
+#include "Graphics.h"
+#include "Trace.h"
 // #include "GameSettings.h"
-// #include "PicaSim.h"
-// #include "Environment.h"
+#include "PicaSim.h"
+#include "Environment.h"
+#include "EntityManager.h"
 
 RenderModel* GatePost::mRenderModel = 0;
 int GatePost::mRenderModelReferenceCount = 0;

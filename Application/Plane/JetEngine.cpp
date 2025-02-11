@@ -2,12 +2,15 @@
 
 // #include "Aerofoil.h"
 // #include "AerofoilParameters.h"
-// #include "Aeroplane.h"
-// #include "AeroplanePhysics.h"
+#include "Aeroplane.h"
+#include "HelpersXML.h"
+#include "Trace.h"
+#include "AeroplanePhysics.h"
 // #include "Controller.h"
 // #include "Environment.h"
-// #include "DimensionalScaling.h"
-// #include "PicaSim.h"
+#include "DimensionalScaling.h"
+#include "PicaSim.h"
+#include "EntityManager.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 void JetEngine::Init(class TiXmlElement* engineElement, class Aeroplane* aeroplane)
@@ -171,7 +174,7 @@ void JetEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& turbulen
   float force = mMaxForce * mControl * effectiveness;
   mAeroplane->GetPhysics()->ApplyWorldForceAtWorldPosition(mTM.RowX() * force, mTM.GetTrans());
 
-  mLastWash = (mVel + mTM.RotateVec(Vector3(-mMaxSpeed,0,0))) * mControl;
+  mLastWash = (mVel + mTM.RotateVec(Vector3(-mMaxSpeed,0.0f,0.0f))) * mControl;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

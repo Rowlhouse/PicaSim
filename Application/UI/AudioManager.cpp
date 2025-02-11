@@ -1,11 +1,17 @@
 #include "AudioManager.h"
-//#include "Trace.h"
+#include "Helpers.h"
+#include "Trace.h"
+#include "FonctionsMarmelade.h"
+#include "File.h"
+#include "SoundMarmelade.h"
 
 //#include <IwUtil.h>
 //#include <s3eSound.h>
 //#include <s3eAtomic.h>
-//#include <unistd.h>
-//#include <limits>
+#include <unistd.h>
+#include <limits>
+
+#define S3E_INLINE inline
 
 AudioManager* AudioManager::mInstance = 0;
 
@@ -34,17 +40,17 @@ S3E_INLINE int16_t ClipToInt16(int32_t sval)
       if (sval < minval)
         sval = minval;
   }
-  return (int16)sval;
+  return (int16_t)sval;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 AudioManager::AudioCallbackMonoSource(void* sys, void* user)
+int32_t AudioManager::AudioCallbackMonoSource(void* sys, void* user)
 {
   s3eSoundGenAudioInfo* info = (s3eSoundGenAudioInfo*)sys;
   AudioManager::Channel* channel = (AudioManager::Channel*) user;
 
   info->m_EndSample = S3E_FALSE;
-  int16* target = (int16*)info->m_Target;
+  int16_t* target = (int16_t*)info->m_Target;
 
   int outputSampleSize = info->m_Stereo ? 2 : 1;
   int outputSamplesPlayed = 0;
@@ -114,18 +120,18 @@ int32 AudioManager::AudioCallbackMonoSource(void* sys, void* user)
 
     if (info->m_Stereo)
     {
-      int32 yLeft = (int32) (yF * leftVol);
-      int32 yRight = (int32) (yF * rightVol);
-      int16 origYOutputLeft = info->m_Mix ? *target : 0;
-      int16 origYOutputRight =  info->m_Mix ? *(target+1) : 0;
+      int32_t yLeft = (int32_t) (yF * leftVol);
+      int32_t yRight = (int32_t) (yF * rightVol);
+      int16_t origYOutputLeft = info->m_Mix ? *target : 0;
+      int16_t origYOutputRight =  info->m_Mix ? *(target+1) : 0;
       *target++ = ClipToInt16(yLeft + origYOutputLeft);
       *target++ = ClipToInt16(yRight + origYOutputRight);
     }
     else
     {
       float vol = (leftVol + rightVol) * 0.5f;
-      int32 y = (int32) (yF * vol);
-      int16 origYOutput = info->m_Mix ? *target : 0;
+      int32_t y = (int32_t) (yF * vol);
+      int16_t origYOutput = info->m_Mix ? *target : 0;
       *target++ = ClipToInt16(origYOutput + y);
     }
 
@@ -142,7 +148,7 @@ int32 AudioManager::AudioCallbackMonoSource(void* sys, void* user)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
+int32_t AudioManager::AudioCallbackStereoSource(void* sys, void* user)
 {
   AudioManager::Channel* channel = (AudioManager::Channel*) user;
   if (!channel->mSound->mStereo)
@@ -151,7 +157,7 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
   s3eSoundGenAudioInfo* info = (s3eSoundGenAudioInfo*)sys;
 
   info->m_EndSample = S3E_FALSE;
-  int16* target = (int16*)info->m_Target;
+  int16_t* target = (int16_t*)info->m_Target;
 
   int outputSampleSize = info->m_Stereo ? 2 : 1;
   int outputSamplesPlayed = 0;
@@ -212,11 +218,11 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
     IwAssert(ROWLHOUSE, inputPlaybackPosRight >= 0 && inputPlaybackPosRight < channel->mSound->mSoundSamples);
 
     // copy left (and right) 16bit sample directly from input buffer
-    int16 yInputLeft  = channel->mSound->mSoundData[inputPlaybackPosLeft];
-    int16 yInputRight = channel->mSound->mSoundData[inputPlaybackPosRight];
+    int16_t yInputLeft  = channel->mSound->mSoundData[inputPlaybackPosLeft];
+    int16_t yInputRight = channel->mSound->mSoundData[inputPlaybackPosRight];
 
-    int16 yInputLeftNext  = channel->mSound->mSoundData[inputPlaybackPosLeftNext];
-    int16 yInputRightNext = channel->mSound->mSoundData[inputPlaybackPosRightNext];
+    int16_t yInputLeftNext  = channel->mSound->mSoundData[inputPlaybackPosLeftNext];
+    int16_t yInputRightNext = channel->mSound->mSoundData[inputPlaybackPosRightNext];
 
 #ifdef USE_FILTER
     float origYLeftF = Interpolate(float(yInputLeft), float(yInputLeftNext), inputPlayBackPosFrac);
@@ -235,18 +241,18 @@ int32 AudioManager::AudioCallbackStereoSource(void* sys, void* user)
 
     if (info->m_Stereo)
     {
-      int32 yLeft = (int32) (yLeftF * leftVol);
-      int32 yRight = (int32) (yRightF * rightVol);
-      int16 origYOutputLeft = info->m_Mix ? *target : 0;
-      int16 origYOutputRight =  info->m_Mix ? *(target+1) : 0;
+      int32_t yLeft = (int32_t) (yLeftF * leftVol);
+      int32_t yRight = (int32_t) (yRightF * rightVol);
+      int16_t origYOutputLeft = info->m_Mix ? *target : 0;
+      int16_t origYOutputRight =  info->m_Mix ? *(target+1) : 0;
       *target++ = ClipToInt16(yLeft + origYOutputLeft);
       *target++ = ClipToInt16(yRight + origYOutputRight);
     }
     else
     {
       float vol = (leftVol + rightVol) * 0.5f;
-      int32 y = (int32) ((yLeftF + yRightF) * vol);
-      int16 origYOutput = info->m_Mix ? *target : 0;
+      int32_t y = (int32_t) ((yLeftF + yRightF) * vol);
+      int16_t origYOutput = info->m_Mix ? *target : 0;
       *target++ = ClipToInt16(origYOutput + y);
     }
 
@@ -476,13 +482,13 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
   IwAssert(ROWLHOUSE, fileHandle);
   if (fileHandle)
   {
-    int32 fileNumBytes = s3eFileGetSize(fileHandle);
+    int32_t fileNumBytes = s3eFileGetSize(fileHandle);
     TRACE_FILE_IF(1) TRACE("Reading sound file - %d bytes", fileNumBytes);
     mSoundSamples = fileNumBytes/2; // reading 16 bit values
-    mSoundData = new int16[mSoundSamples];
+    mSoundData = new int16_t[mSoundSamples];
     memset(mSoundData, 0, fileNumBytes);
     unsigned char* buffer = (unsigned char*) mSoundData;
-    int32 result = s3eFileRead(buffer, fileNumBytes, 1, fileHandle);
+    int32_t result = s3eFileRead(buffer, fileNumBytes, 1, fileHandle);
     if (result != 1)
     {
       s3eFileError error = s3eFileGetError();
@@ -491,23 +497,23 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     s3eFileClose(fileHandle);
 
     // Now apply a low pass filter to remove frequencies above half the Nyquist frequency
-    int16 nSamples = (int16) (0.5f + mSampleFrequency / gPlaybackFrequency);
+    int16_t nSamples = (int16_t) (0.5f + mSampleFrequency / gPlaybackFrequency);
     if (nSamples > 0)
     {
-      int16 *filteredSoundData = new int16[mSoundSamples];
-      for (int32 i = 0 ; i != mSoundSamples ; ++i)
+      int16_t *filteredSoundData = new int16_t[mSoundSamples];
+      for (int32_t i = 0 ; i != mSoundSamples ; ++i)
       {
         int total = mSoundData[i];
         if (stereo)
         {
-          for (int32 j = 1 ; j != nSamples ; ++j)
+          for (int32_t j = 1 ; j != nSamples ; ++j)
           {
             total += mSoundData[(mSoundSamples + (i - j)*2) % mSoundSamples];
           }
         }
         else
         {
-          for (int32 j = 1 ; j != nSamples ; ++j)
+          for (int32_t j = 1 ; j != nSamples ; ++j)
           {
             total += mSoundData[(mSoundSamples + i - j) % mSoundSamples];
           }
@@ -522,8 +528,8 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     // Normalise
     if (normaliseOnLoad)
     {
-      int16 maxLevel = 0;
-      for (int32 i = 0 ; i != mSoundSamples ; ++i)
+      int16_t maxLevel = 0;
+      for (int32_t i = 0 ; i != mSoundSamples ; ++i)
       {
         if (mSoundData[i] > maxLevel)
           maxLevel = mSoundData[i];
@@ -532,8 +538,8 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
       }
       if (maxLevel > 0)
       {
-        float scale = std::numeric_limits<int16>::max() / (float) maxLevel;
-        for (int32 i = 0 ; i != mSoundSamples ; ++i)
+        float scale = std::numeric_limits<int16_t>::max() / (float) maxLevel;
+        for (int32_t i = 0 ; i != mSoundSamples ; ++i)
         {
           mSoundData[i] = ClipToInt16((int) (mSoundData[i] * scale));
         }
@@ -543,13 +549,13 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     static bool output = false;
     if (output)
     {
-      int32 maxSamples = 2048;
-      for (int32 i = 0 ; i != std::min(mSoundSamples, maxSamples) ; ++i)
+      int32_t maxSamples = 2048;
+      for (int32_t i = 0 ; i != std::min(mSoundSamples, maxSamples) ; ++i)
       {
-        int16 left = mSoundData[i];
+        int16_t left = mSoundData[i];
         if (stereo)
         {
-          int16 right = mSoundData[++i];
+          int16_t right = mSoundData[++i];
           TRACE_FILE_IF(1) TRACE("%d %d", left, right);
         }
         else

@@ -2,16 +2,19 @@
 #include "ClassesUIMarmelade.h"
 #include "FileMenu.h"
 #include "Helpers.h"
-// #include "SelectMenu.h"
+#include "HelpersXML.h"
+#include "SelectMenu.h"
 #include "Menu.h"
-// #include "../GameSettings.h"
-// #include "../PicaSim.h"
+#include "GameSettings.h"
+#include "PicaSim.h"
 #include "Aeroplane.h"
 #include "SettingsWidgets.h"
-// #include "../AeroplanePhysics.h"
+#include "AeroplanePhysics.h"
 #include "PicaJoystick.h"
-// #include "../Scoreloop.h"
-// #include "PicaDialog.h"
+//#include "Scoreloop.h"
+#include "PicaDialog.h"
+#include "Trace.h"
+#include "FonctionsPointerKeyboardMarmelade.h"
 
 // #include <s3eOSExec.h>
 // #include <s3eImagePicker.h>
@@ -544,9 +547,9 @@ CIwUIButton* SettingsMenu::CreateSummaryAreaAndLayout(
 
   // Add the image
   Texture* thumbnailTexture = GetCachedTexture(thumbnail, gameSettings.mOptions.m16BitTextures);
-  uint32 w = thumbnailTexture->GetWidth();
-  uint32 h = thumbnailTexture->GetHeight();
-  int32 imageWidth = 0;
+  uint32_t w = thumbnailTexture->GetWidth();
+  uint32_t h = thumbnailTexture->GetHeight();
+  int32_t imageWidth = 0;
   if (w != 0 && h != 0)
   {
     CIwUIStyle style;
@@ -557,11 +560,11 @@ CIwUIButton* SettingsMenu::CreateSummaryAreaAndLayout(
 
     float ar = float(w)/float(h);
     float size = 0.4f;
-    imageWidth = int32(ar * height * size);
+    imageWidth = int32_t(ar * height * size);
     imageButton= new CIwUIButton;
     imageButton->SetProperty("aspectRatio", CIwVec2(w,h));
-    imageButton->SetSizeMin(CIwVec2(imageWidth,(int32) (height*size)));
-    imageButton->SetSizeMax(CIwVec2(imageWidth,(int32) (height*size)));
+    imageButton->SetSizeMin(CIwVec2(imageWidth,(int32_t) (height*size)));
+    imageButton->SetSizeMax(CIwVec2(imageWidth,(int32_t) (height*size)));
     imageButton->SetProperty("buttonUp", style);
     imageButton->SetProperty("buttonDown", style);
 
@@ -2270,7 +2273,7 @@ void SettingsMenu::CreateControllerUI(GameSettings& gameSettings)
 //---------------------------------------------------------------------------------------------------------------------
 SettingsMenu::~SettingsMenu()
 {
-  for (uint16 i = 0 ; i != TAB_NUM_TABS ; ++i)
+  for (uint16_t i = 0 ; i != TAB_NUM_TABS ; ++i)
   {
     if (i != mSelectedTab)
     {
@@ -2284,7 +2287,7 @@ SettingsMenu::~SettingsMenu()
 bool SettingsMenu::HandleEvent(CIwEvent* pEvent)
 {
   CIwManaged* sender = pEvent->GetSender();
-  const uint32 eventID = pEvent->GetID();
+  const uint32_t eventID = pEvent->GetID();
 
   if (eventLabel)
   {

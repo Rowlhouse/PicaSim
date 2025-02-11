@@ -15,23 +15,20 @@
 //#include <variant>
 #include "Entete.h"
 
+SDL_Renderer* GeneralRender = nullptr;
+/*namespace RendererManager {
 
-class RendererManager {
-public:
-    RendererManager () { renderer = nullptr; }
-    static void setRenderer(SDL_Renderer* r) {
-        renderer = r;
+    void setRenderer(SDL_Renderer* r) {
+        GeneralRender = r;
     }
 
-    static SDL_Renderer* getRenderer() {
-        if (!renderer) {
+    SDL_Renderer* getRenderer() {
+        if (!GeneralRender) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
         }
-        return renderer;
+        return GeneralRender;
     }
-private:
-    static SDL_Renderer* renderer;
-};
+}*/
 
 
 class Image {
@@ -43,6 +40,7 @@ public :
         RGB_565,
         RGBA_8888,
         ABGR_8888,
+        RGB_888,
     };
 
     static constexpr Uint32 SDL_RGBA_4444 = SDL_PIXELFORMAT_RGBA4444;
@@ -304,7 +302,7 @@ public:
 
     bool CopyFromImage(Image* Image) {
         // Utilisation du renderer global
-        SDL_Renderer* renderer = RendererManager::getRenderer();
+        SDL_Renderer* renderer = GeneralRender;
         if (!renderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
@@ -325,6 +323,56 @@ public:
         SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
         return true;
     }
+
+    bool CopyFromBuffer (int width, int height, Image::Format format, int pitch, const void* buffer, int flags) {
+        if (!buffer) {
+            std::cerr << "Erreur : Buffer invalide." << std::endl;
+            return false;
+        }
+    
+        FreeResources();  // Libérer les ressources existantes
+    
+        SDL_Renderer* renderer = GeneralRender;
+        if (!renderer) {
+            std::cerr << "Erreur : Renderer non initialisé." << std::endl;
+            return false;
+        }
+    
+        // Déterminer le format SDL équivalent
+        Uint32 sdlFormat = SDL_PIXELFORMAT_RGB24; // Par défaut pour RGB_888
+        if (format == Image::RGBA_8888) {
+            sdlFormat = SDL_PIXELFORMAT_RGBA8888;
+        } else if (format == Image::RGB_888) {
+            sdlFormat = SDL_PIXELFORMAT_RGB24;
+        }
+    
+        // Créer une surface SDL à partir du buffer
+        SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(
+            (void*)buffer, width, height, 24, pitch, sdlFormat);
+    
+        if (!surface) {
+            std::cerr << "Erreur de création de surface : " << SDL_GetError() << std::endl;
+            return false;
+        }
+    
+        // Convertir la surface en texture
+        texture = SDL_CreateTextureFromSurface(renderer, surface);
+        if (!texture) {
+            std::cerr << "Erreur de création de texture : " << SDL_GetError() << std::endl;
+            SDL_FreeSurface(surface);
+            return false;
+        }
+    
+        // Stocker les infos
+        this->width = width;
+        this->height = height;
+        this->formatHW = format;
+        this->flags = flags;
+    
+        SDL_FreeSurface(surface);
+        return true;
+    }
+    
 
     void SetModifiable(bool val) {modifiable = val;}
 
@@ -356,7 +404,7 @@ public:
             height = 0;
         }
 
-        SDL_Renderer* renderer = RendererManager::getRenderer();
+        SDL_Renderer* renderer = GeneralRender;
         if (!renderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
@@ -379,10 +427,9 @@ public:
         return true;
     }
 
-    bool SetImage(Image* Image)
-    {
+    bool SetImage(Image* Image) {
         // Utilisation du renderer global
-        SDL_Renderer* renderer = RendererManager::getRenderer();
+        SDL_Renderer* renderer = GeneralRender;
         if (!renderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
@@ -422,7 +469,7 @@ public:
             return;
         }
 
-        SDL_Renderer* renderer = RendererManager::getRenderer();
+        SDL_Renderer* renderer = GeneralRender;
         if (!renderer) {
             std::cerr << "Erreur : Renderer non initialisé pour l'upload." << std::endl;
             return;
@@ -635,14 +682,6 @@ private:
 
 
 
-
-
-
-
-
-
-
-RendererManager GeneralRenderManager;
 
 
 #endif

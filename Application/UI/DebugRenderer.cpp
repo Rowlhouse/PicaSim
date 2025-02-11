@@ -1,10 +1,12 @@
 #include "DebugRenderer.h"
-//#include "RenderManager.h"
-//#include "Trace.h"
-//#include "Graphics.h"
-//#include "ShaderManager.h"
-//#include "Shaders.h"
-//#include "Viewport.h"
+#include "ClassesFontMarmelade.h"
+#include "ClassesUIMarmelade.h"
+#include "RenderManager.h"
+#include "Trace.h"
+#include "Graphics.h"
+#include "ShaderManager.h"
+#include "Shaders.h"
+#include "Viewport.h"
 
 //#include <IwGx.h>
 //#include <IwGxFont.h>

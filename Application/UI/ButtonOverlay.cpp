@@ -1,10 +1,13 @@
 #include "ButtonOverlay.h"
-//#include "RenderManager.h"
-//#include "Trace.h"
-//#include "Helpers.h"
-//#include "ShaderManager.h"
-//#include "Shaders.h"
-//#include "Viewport.h"
+#include "FonctionsMarmelade.h"
+#include "FonctionsPointerKeyboardMarmelade.h"
+#include "Graphics.h"
+#include "RenderManager.h"
+#include "Trace.h"
+#include "Helpers.h"
+#include "ShaderManager.h"
+#include "Shaders.h"
+#include "Viewport.h"
 
 //#include <s3e.h>
 //#include <IwGx.h>

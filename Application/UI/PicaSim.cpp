@@ -708,8 +708,8 @@ int PicaSim::ShowInGameDialog(float width, float height, const char* title, cons
     dialogArea->SetSizeToContent(false); // If true the the whole screen is vertically centred. False places it at the top
     dialogArea->SetSizeMax(CIwVec2(dialogWidth, dialogHeight));
     dialogArea->SetLayout(dialogLayout);
-    ///////////////////////////////////////////////////////////////////////////////////// CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("DialogBackground", "CIwTexture");
-    CIwTexture* texture = IwGetResManager<CIwTexture>().GetResNamed("DialogBackground", "CIwTexture");
+    CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("DialogBackground", "CIwTexture");
+  
     dialogArea->SetTexture(texture);
 
     CIwColour col;
@@ -888,8 +888,7 @@ void PicaSim::ShowHelpOverlays()
     dialogArea->SetSizeToContent(false); // If true the the whole screen is vertically centred. False places it at the top
     dialogArea->SetSizeMax(CIwVec2(dialogWidth, dialogHeight));
     dialogArea->SetLayout(dialogLayout);
-    //CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("MenuBackground", "CIwTexture");
-    CIwTexture* texture = IwGetResManager<CIwTexture>().GetResNamed("MenuBackground", "CIwTexture");
+    CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("MenuBackground", "CIwTexture");
     dialogArea->SetTexture(texture);
 
     CIwColour col;

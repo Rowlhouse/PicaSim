@@ -219,19 +219,20 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: \
  /usr/include/glm/packing.hpp /usr/include/glm/detail/func_packing.inl \
  /usr/include/glm/detail/type_half.hpp \
  /usr/include/glm/detail/type_half.inl /usr/include/glm/integer.hpp \
- /usr/include/glm/detail/func_integer.inl /usr/include/glm/gtx/norm.hpp \
- /usr/include/glm/gtx/quaternion.hpp /usr/include/glm/gtc/constants.hpp \
- /usr/include/glm/ext/scalar_constants.hpp \
- /usr/include/glm/ext/scalar_constants.inl \
- /usr/include/glm/gtc/constants.inl /usr/include/glm/gtc/quaternion.hpp \
+ /usr/include/glm/detail/func_integer.inl \
  /usr/include/glm/gtc/matrix_transform.hpp \
  /usr/include/glm/ext/matrix_projection.hpp \
+ /usr/include/glm/gtc/constants.hpp \
+ /usr/include/glm/ext/scalar_constants.hpp \
+ /usr/include/glm/ext/scalar_constants.inl \
+ /usr/include/glm/gtc/constants.inl \
  /usr/include/glm/ext/matrix_projection.inl \
  /usr/include/glm/ext/matrix_clip_space.hpp \
  /usr/include/glm/ext/matrix_clip_space.inl \
  /usr/include/glm/ext/matrix_transform.hpp \
  /usr/include/glm/ext/matrix_transform.inl \
- /usr/include/glm/gtc/matrix_transform.inl \
+ /usr/include/glm/gtc/matrix_transform.inl /usr/include/glm/gtx/norm.hpp \
+ /usr/include/glm/gtx/quaternion.hpp /usr/include/glm/gtc/quaternion.hpp \
  /usr/include/glm/ext/vector_relational.hpp \
  /usr/include/glm/ext/vector_relational.inl \
  /usr/include/glm/detail/type_float.hpp \
@@ -513,6 +514,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: \
  /usr/include/c++/14/bits/hashtable.h \
  /usr/include/c++/14/bits/hashtable_policy.h \
  /usr/include/c++/14/bits/enable_special_members.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/RenderManager.h \
  /usr/include/SDL2/SDL_locale.h /usr/include/c++/14/chrono \
  /usr/include/c++/14/bits/chrono.h /usr/include/c++/14/ratio \
  /usr/include/c++/14/ctime /usr/include/c++/14/bits/parse_numbers.h \
@@ -528,7 +530,14 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: \
  /usr/include/c++/14/bits/this_thread_sleep.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.h \
  /usr/include/x86_64-linux-gnu/sys/utsname.h \
- /usr/include/x86_64-linux-gnu/bits/utsname.h \
+ /usr/include/x86_64-linux-gnu/bits/utsname.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+ /usr/include/linux/close_range.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/Graphics.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Helpers.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuaternion.h \
@@ -542,7 +551,6 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btQuaternion.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btVector3.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/UI/DebugRenderer.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/RenderManager.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/RenderObject.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Graphics/RenderOverlayObject.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Trace.h \

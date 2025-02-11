@@ -1,8 +1,18 @@
 #include "EntityManager.h"
+#include "BulletCollision/BroadphaseCollision/btDbvtBroadphase.h"
+#include "BulletCollision/CollisionDispatch/btCollisionDispatcher.h"
+#include "BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
+#include "BulletCollision/CollisionShapes/btTriangleShape.h"
+#include "BulletCollision/NarrowPhaseCollision/btManifoldPoint.h"
 //#include "../Bullet/btBulletDynamicsCommon.h"
-//#include "FrameworkSettings.h"
+#include "FrameworkSettings.h"
 //#include "Profile.h"
-//#include "Trace.h"
+#include "BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
+#include "BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h"
+#include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
+#include "FonctionsMarmelade.h"
+#include "Trace.h"
+#include "ProfilageMarmelade.h"
 
 //#include <IwGeom.h> 
 

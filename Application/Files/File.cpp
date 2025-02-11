@@ -1,4 +1,5 @@
 #include "File.h"
+#include <fstream>
 
 
 s3eFile* s3eFileOpen(const char* filename, const char* mode)
@@ -94,6 +95,11 @@ void s3eFileListClose(s3eFileList* fileList)
         fileList->Close();
         delete fileList;  // Libérer la mémoire allouée pour l'objet fileList
     }
+}
+
+bool s3eFileCheckExists(const std::string& filename) {
+    std::ifstream file(filename);
+    return file.good();
 }
 
 

@@ -1,7 +1,17 @@
 #include "ThermalManager.h"
-//#include "PicaSim.h"
+#include "DebugRenderer.h"
+#include "Graphics.h"
+#include "PicaSim.h"
 //#include "AeroplaneGraphics.h"
-//#include "Environment.h"
+#include "Environment.h"
+#include "GameSettings.h"
+#include "LoadingScreenHelper.h"
+#include "ProfilageMarmelade.h"
+#include "RenderManager.h"
+#include "Trace.h"
+#include "Viewport.h"
+#include "EntityManager.h"
+// #include "ClassesMarmelade.h"
 
 #define DEBUG_DRAWx
 
@@ -307,7 +317,7 @@ Vector3 ThermalManager::GetThermalWindAtPosition(const Thermal& thermal, const V
 
   updraft *= heightScale;
 
-  Vector3 thermalWind(0,0,updraft);
+  Vector3 thermalWind(0.0f,0.0f,updraft);
 
   // inflow
   float inflowFracVert = -FastSin(PI * ClampToRange(heightAboveThermal / thermalDepth, -1.0f, 1.0f));
@@ -346,7 +356,7 @@ void ThermalManager::RenderUpdate(class Viewport* viewport, int renderLevel)
     ShaderProgramModelInfo shaderInfo;
 
     for (int i = 0 ; i != NUM_LODS ; ++i)
-      mRenderDetails[i].resize_quick(0);
+      mRenderDetails[i].resize(0);
 
     const float gravitationalAcceleration = EntityManager::GetInstance().GetDynamicsWorld().getGravity().length();
     const float flightSpeed = 10.0f;
@@ -416,8 +426,8 @@ void ThermalManager::RenderUpdate(class Viewport* viewport, int renderLevel)
       {
         mRenderModel[iLOD].PartRenderPre(0, false, shaderInfo, 0, options.mSeparateSpecular);
 
-        uint32 num = mRenderDetails[iLOD].size();
-        for (uint32 iDetail = 0 ; iDetail != num ; ++iDetail)
+        uint32_t num = mRenderDetails[iLOD].size();
+        for (uint32_t iDetail = 0 ; iDetail != num ; ++iDetail)
         {
           const RenderDetail& renderDetail = mRenderDetails[iLOD][iDetail];
 

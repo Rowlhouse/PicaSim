@@ -1,8 +1,11 @@
 #include "Observer.h"
-// #include "Environment.h"
-// #include "PicaSim.h"
-// #include "Controller.h"
-// #include "AeroplanePhysics.h"
+#include "Environment.h"
+#include "Graphics.h"
+#include "PicaSim.h"
+#include "Controller.h"
+#include "AeroplanePhysics.h"
+#include "Trace.h"
+#include "EntityManager.h"
 
 const float observerHeight = 1.65f;
 
@@ -15,7 +18,7 @@ void Observer::Init(const Vector3& point, CameraTarget* target)
   TRACE_METHOD_ONLY(1);
   const GameSettings& gs = PicaSim::GetInstance().GetSettings();
 
-  mCameraOffset = Vector3(0,0,observerHeight);
+  mCameraOffset = Vector3(0.0f,0.0f,observerHeight);
   mTarget = target;
   Transform tm;
   tm.SetIdentity();
@@ -244,7 +247,7 @@ void Observer::RenderUpdate(Viewport* viewport, int renderLevel)
     glDisable(GL_BLEND);
 
     Transform TM = mTM;
-    TM.SetTrans(TM.GetTrans() + Vector3(0,0,-0.25f));
+    TM.SetTrans(TM.GetTrans() + Vector3(0.0f,0.0f,-0.25f));
 
     esPushMatrix();
     GLMat44 glTM;

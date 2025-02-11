@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/norm.hpp>
 #include <iostream>
 #include <stdexcept>
@@ -186,10 +187,21 @@ public :
     void Transpose() { m = glm::transpose(m); }
     void SetIdentity() { m = glm::mat3(1.0f);}
     void SetTrans(const Vector3& translation) { t.vec = translation.vec;}
+    void SetRotZ (const float rot, bool truc1 = false, bool truc2 = false) {m = glm::mat3(glm::rotate(glm::mat4(1.0f), rot, Vector3(0,0,1).vec ));}
+    void SetRotY (const float rot) {m = glm::mat3(glm::rotate(glm::mat4(1.0f), rot, Vector3(0,1,0).vec ));}
     void SetAxisAngle (const Vector3& v, const float angle) {m = glm::mat3(glm::rotate(glm::mat4(1.0f), angle, v.vec));}
     void PostRotate(const Quat& Q);
 
     //glm::translate(glm::mat4(m), t);
+
+    void Normalise() { ///////////////////////////Verifier
+      m[0] = glm::normalize(m[0]);
+      m[1] = glm::normalize(m[1]);
+      m[2] = glm::cross(m[0], m[1]);
+      m[1] = glm::cross(m[2], m[0]);
+  }
+
+    Transform PostMult(const Transform& other) { return *this * other; }
 
     // Méthode statique pour obtenir la transformation identité
     static Transform g_Identity;
@@ -219,7 +231,7 @@ public :
 
     void operator=(const Quat& other) { quat = other.quat;}
 
-    Vector3 RotateVector(Vector3& vector)  {return Vector3(glm::rotate(quat, vector.vec));}
+    Vector3 RotateVector(const Vector3& vector) const {return Vector3(glm::rotate(quat, vector.vec));}
 
 };
 

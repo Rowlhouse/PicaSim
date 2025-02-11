@@ -1,6 +1,7 @@
 #ifndef FONCTIONSPOINTERKEYBOARDMARMELADE_H
 #define FONCTIONSPOINTERKEYBOARDMARMELADE_H
 
+#include "Entete.h"
 #include "FonctionsMarmelade.h"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keycode.h>
@@ -21,6 +22,9 @@ inline int s3ePointerGetInt (s3ePointerState param) {
         else {
             return 0;
         }
+    }
+    else if (param == S3E_POINTER_TYPE) {
+        return S3E_POINTER_TYPE_MOUSE;
     }
     else {
         std::cerr << "Parametre à renvoyer non défini. Veuillez redéfinir le paramètre." << std::endl;
@@ -99,18 +103,25 @@ inline bool s3ePointerGetState(s3ePointerState etat) {
 }
 
 inline s3ePointerState s3ePointerGetTouchState(int touchIndex) {
-    int numFingers = SDL_GetNumTouchFingers(0);
+    int numFingers = SDL_GetNumTouchFingers(0);  // Récupère le nombre de doigts actifs
     if (touchIndex < 0 || touchIndex >= numFingers) {
-        return S3E_POINTER_STATE_UNKNOWN;
+        return S3E_POINTER_STATE_UNKNOWN;  // Si l'index du doigt est invalide, retourne un état inconnu
     }
 
-    SDL_Finger* finger = SDL_GetTouchFinger(0, touchIndex);
+    SDL_Finger* finger = SDL_GetTouchFinger(0, touchIndex);  // Récupère les informations du doigt
     if (finger) {
-        return S3E_POINTER_STATE_DOWN;
+        // Pour SDL2, on utilise la position du doigt et les événements pour savoir si le doigt est pressé ou non.
+        if (finger->pressure > 0.0f) {
+            return S3E_POINTER_STATE_PRESSED;  // Si le doigt a une pression > 0, il est "pressé"
+        } else {
+            return S3E_POINTER_STATE_DOWN;  // Si la pression est nulle, il est "relâché"
+        }
     }
 
-    return S3E_POINTER_STATE_UP;
+    return S3E_POINTER_STATE_UP;  // Si aucun doigt n'est détecté, retourne un état inconnu
 }
+
+
 
 inline float s3ePointerGetTouchX(int touchIndex) {
     int numFingers = SDL_GetNumTouchFingers(0);

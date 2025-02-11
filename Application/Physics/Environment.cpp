@@ -1,11 +1,17 @@
 #include "Environment.h"
-// #include "PicaSim.h"
-// #include "Aeroplane.h"
-// #include "Menus/LoadingScreen.h"
-// #include "SimpleObject.h"
-// #include "ObjectEditingOverlay.h"
-// #include "Menus/PicaDialog.h"
+#include "HelpersXML.h"
+#include "LoadingScreenHelper.h"
+#include "ObjectEditingOverlay.h"
+#include "ProfilageMarmelade.h"
+#include "Runway.h"
+#include "SimpleObject.h"
+#include "Trace.h"
+#include "PicaSim.h"
+#include "Aeroplane.h"
+// #include "LoadingScreen.h"
+#include "PicaDialog.h"
 // #include "AeroplanePhysics.h"
+#include "EntityManager.h"
 
 // #include <IwUtil.h>
 
@@ -409,7 +415,10 @@ TurbulenceData Environment::PrepareTurbulenceData(const Vector3& pos)
 
   TurbulenceData turbulenceData;
   turbulenceData.mPosition = pos;
-  turbulenceData.mTurbulence = turbulenceData.mTurbulencePerX = turbulenceData.mTurbulencePerY = turbulenceData.mTurbulencePerZ = Vector3(0,0,0);
+  turbulenceData.mTurbulence = Vector3(0,0,0);
+  turbulenceData.mTurbulencePerX = Vector3(0,0,0);
+  turbulenceData.mTurbulencePerY = Vector3(0,0,0);
+  turbulenceData.mTurbulencePerZ = Vector3(0,0,0);
 
   if (es.mTurbulenceAmount < 0.0001f)
     return turbulenceData;

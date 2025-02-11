@@ -182,8 +182,8 @@ IntSlider::IntSlider(
   // Slider
   mElements.mSlider = new CIwUISlider;
   mElements.mSlider->SetStyle("<slider>");
-  mElements.mSlider->SetProperty("sliderMin", int16(minVal));
-  mElements.mSlider->SetProperty("sliderMax", int16(maxVal));
+  mElements.mSlider->SetProperty("sliderMin", int16_t(minVal));
+  mElements.mSlider->SetProperty("sliderMax", int16_t(maxVal));
   mElements.mSlider->SetValue(val);
 
   mElements.mDataArea->AddChild(mElements.mSlider);
@@ -268,20 +268,20 @@ FloatSlider::FloatSlider(
   mElements.mSlider->SetStyle("<slider>");
   mElements.mSlider->SetProperty("sliderMin", sliderMin);
   mElements.mSlider->SetProperty("sliderMax", sliderMax);
-  mElements.mSlider->SetProperty("sliderStep", (int16) ((sliderMax - sliderMin)/100));
+  mElements.mSlider->SetProperty("sliderStep", (int16_t) ((sliderMax - sliderMin)/100));
 
   float frac = (val - minVal) / (maxVal - minVal);
   frac = powf(frac, 1.0f / mPower);
 
   int intVal = (int) (sliderMin + 
     frac * (sliderMax - sliderMin));
-  int16 int16Val;
+  int16_t int16Val;
   if (intVal < sliderMin)
     int16Val = sliderMin;
   else if (intVal > sliderMax)
     int16Val = sliderMax;
   else
-    int16Val = (int16) intVal;
+    int16Val = (int16_t) intVal;
 
   mElements.mSlider->SetValue(int16Val);
 
@@ -292,7 +292,7 @@ FloatSlider::FloatSlider(
 //---------------------------------------------------------------------------------------------------------------------
 void FloatSlider::SetFromSlider()
 {
-  int16 value = mElements.mSlider->GetValue();
+  int16_t value = mElements.mSlider->GetValue();
   float frac = (float(value) - sliderMin) / (sliderMax - sliderMin);
   frac = powf(frac, mPower);
   *mVal = mMinVal + frac * (mMaxVal - mMinVal);
@@ -415,8 +415,8 @@ Enum::Enum(
   // Slider
   mElements.mSlider = new CIwUISlider;
   mElements.mSlider->SetStyle("<slider>");
-  mElements.mSlider->SetProperty("sliderMin", int16(0));
-  mElements.mSlider->SetProperty("sliderMax", int16(numTexts-1));
+  mElements.mSlider->SetProperty("sliderMin", int16_t(0));
+  mElements.mSlider->SetProperty("sliderMax", int16_t(numTexts-1));
   mElements.mSlider->SetValue(val);
 
   mElements.mDataArea->AddChild(mElements.mSlider);
@@ -491,8 +491,8 @@ String::String(
   // Slider
   mElements.mSlider = new CIwUISlider;
   mElements.mSlider->SetStyle("<slider>");
-  mElements.mSlider->SetProperty("sliderMin", int16(0));
-  mElements.mSlider->SetProperty("sliderMax", int16(mTexts.size()-1));
+  mElements.mSlider->SetProperty("sliderMin", int16_t(0));
+  mElements.mSlider->SetProperty("sliderMax", int16_t(mTexts.size()-1));
   mElements.mSlider->SetValue(val);
 
   mElements.mDataArea->AddChild(mElements.mSlider);

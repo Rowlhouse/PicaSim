@@ -1,13 +1,24 @@
 #include "AeroplanePhysics.h"
-// #include "Aeroplane.h"
-// #include "Aerofoil.h"
-// #include "Controller.h"
-// #include "Wing.h"
-// #include "Fuselage.h"
-// #include "JetEngine.h"
-// #include "PropellerEngine.h"
-// #include "PicaSim.h"
-// #include "DimensionalScaling.h"
+#include "Aeroplane.h"
+#include "Aerofoil.h"
+#include "BulletCollision/CollisionShapes/btBoxShape.h"
+#include "BulletCollision/CollisionShapes/btConvexHullShape.h"
+#include "BulletCollision/CollisionShapes/btShapeHull.h"
+#include "BulletSoftBody/btSoftBodyHelpers.h"
+#include "Controller.h"
+#include "DebugRenderer.h"
+#include "HelpersXML.h"
+#include "ProfilageMarmelade.h"
+#include "Runway.h"
+#include "Trace.h"
+#include "Wing.h"
+#include "Fuselage.h"
+#include "JetEngine.h"
+#include "PropellerEngine.h"
+#include "PicaSim.h"
+#include "DimensionalScaling.h"
+#include "Environment.h"
+#include "EntityManager.h"
 
 // #include "tinyxml.h"
 // #include <vector>
@@ -116,7 +127,7 @@ void* PicaSimVehicleRaycaster::castRay(const btVector3& from,const btVector3& to
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, uint32& checksum)
+void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, uint32_t& checksum)
 {
   TRACE_METHOD_ONLY(1);
   mAeroplane = aeroplane;
@@ -846,7 +857,7 @@ void AeroplanePhysics::EntityUpdate(float deltaTime, int entityLevel)
         float handleD = 0.16f * as.mSizeScale; // Only go up, to avoid going down through the ground
         float planeD = 0.02f * as.mSizeScale;
         float compression = Maximum(2.0f * fabsf(mTwist + 0.25f) - 0.5f, 0.0f);
-        DrawTether(mRopeUpper, mRopeSoftBody->m_nodes, startRopePos + Vector3(0,0,handleD), endRopePos - mTM.RowX() * planeD, numSegments, 0.1f);
+        DrawTether(mRopeUpper, mRopeSoftBody->m_nodes, startRopePos + Vector3(0.0f,0.0f,handleD), endRopePos - mTM.RowX() * planeD, numSegments, 0.1f);
         DrawTether(mRopeLower, mRopeSoftBody->m_nodes, startRopePos                       , endRopePos + mTM.RowX() * planeD, numSegments, 0.1f);
         Rope* ropes[] = {&mRopeUpper, &mRopeLower};
         CompressTethers(ropes, 2, compression);
