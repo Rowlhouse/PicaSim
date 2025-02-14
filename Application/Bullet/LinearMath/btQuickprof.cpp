@@ -14,8 +14,10 @@
 // Ogre (www.ogre3d.org).
 
 #include "btQuickprof.h"
+#include "LinearMath/btScalar.h"
+#include <cstddef>
 
-#ifndef BT_NO_PROFILE
+#if BT_NO_PROFILE
 
 
 static btClock gProfileClock;

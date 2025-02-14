@@ -1,6 +1,10 @@
 #include "ClassesUIMarmelade.h"
 
 CIwMaterial* GeneralMaterial = nullptr;
+CIwUITextInput* UITextInput;
+CIwUIStyleManager* UIManager;
+CIwUIController* UIController;
+CIwUIView* UIView;
 
 
 CIwResManager* IwGetResManager() {

@@ -14,10 +14,14 @@
 // #include <cstdint>
 // #include <string>
 // #include <iostream>
-#include <fstream>
+// #include <fstream>
 #include <SDL2/SDL_syswm.h>
 // #include <thread>
 #include "gamepad_interface.h"
+
+extern uint64_t frameStart;
+extern uint64_t frameEnd;
+extern double freq;
 
 #if defined(_WIN32) || defined(_WIN64)  // Windows
     #include <windows.h>
@@ -150,84 +154,22 @@
     #include <unistd.h>
 
     namespace DPI {
-        float GetDPIFromXft() {
-            FILE* pipe = popen("xrdb -query | grep Xft.dpi | awk '{print $2}'", "r");
-            if (!pipe) return 96; // Valeur par défaut
+        void dpiInit ();
 
-            float dpi = 96;
-            fscanf(pipe, "%f", &dpi);
-            pclose(pipe);
+        float GetDPIFromXft();
 
-            return dpi;
-        }
+        int dpiGetScreenDPI();
 
-        int dpiGetScreenDPI() {
-            Display* dpy = XOpenDisplay(nullptr);
-            if (!dpy) {
-                std::cerr << "Erreur : Impossible d'ouvrir X11, tentative avec Xft...\n";
-                return static_cast<int>(GetDPIFromXft());
-            }
-
-            int screen = DefaultScreen(dpy);
-            int width_px = DisplayWidth(dpy, screen);
-            int width_mm = DisplayWidthMM(dpy, screen);
-            XCloseDisplay(dpy);
-
-            if (width_mm > 0) {
-                return static_cast<int>(width_px * 25.4 / width_mm);
-            }
-
-            return static_cast<int>(GetDPIFromXft());
-        }
+        void dpiTerminate();
     }
 
-    int getLinuxVersion() {
-        struct utsname buffer;
-        if (uname(&buffer) == 0) {
-            int major = 0, minor = 0;
-            sscanf(buffer.release, "%d.%d", &major, &minor);
-            return (major << 16) | minor;
-        }
-        return 0; // Erreur
-    }
+    int getLinuxVersion();
 
-    long getTotalMemoryLinux() {
-        std::ifstream meminfo("/proc/meminfo");
-        std::string line;
-        long totalMemory = 0;
+    long getTotalMemoryLinux();
 
-        if (meminfo.is_open())
-        {
-            while (std::getline(meminfo, line))
-            {
-                if (line.find("MemTotal:") == 0) // Rechercher la ligne "MemTotal"
-                {
-                    std::sscanf(line.c_str(), "MemTotal: %ld kB", &totalMemory);
-                    totalMemory *= 1024; // Convertir kB en bytes
-                    break;
-                }
-            }
-            meminfo.close();
-        }
-        return totalMemory;
-    }
+    int GetCPUCoreCount();
 
-    int GetCPUCoreCount() {
-        return sysconf(_SC_NPROCESSORS_ONLN);
-    }
-
-    std::string GetDeviceID() {
-        std::ifstream file("/etc/machine-id");
-        if (!file) file.open("/var/lib/dbus/machine-id"); // Backup file
-
-        std::string id;
-        if (file) {
-            std::getline(file, id);
-            file.close();
-        }
-
-        return id.empty() ? "UNKNOWN" : id;
-    }
+    std::string GetDeviceID();
 
 #elif defined(__ANDROID__)
     #include <jni.h>
@@ -375,4 +317,75 @@ void s3eMemorySetInt(MemoryOption option, int value);
 
 bool IwGLExtAvailable(GLextension extension);
 
+
+
+
+typedef struct {
+    const char *section;
+    const char *key;
+    int value;
+} ConfigEntry;
+
+// Exemple de configuration (ceci pourrait être remplacé par un fichier de configuration)
+extern ConfigEntry config[];
+
+// Fonction qui simule l'appel à s3eConfigGetInt pour récupérer une valeur à partir de la configuration
+int s3eConfigGetInt(const char *section, const char *key, int *value);
+
+
+
+
+
+
+
+
+// Définir les événements personnalisés pour la mise en pause et la reprise
+#define S3E_DEVICE_PAUSE 1
+#define S3E_DEVICE_UNPAUSE 2
+
+// Définir les types de callbacks
+typedef void (*DeviceCallback)(void *data);
+
+// Structure pour enregistrer les callbacks pour chaque type d'événement
+typedef struct {
+    int deviceType;
+    DeviceCallback callback;
+    void *data;
+} DeviceEventHandler;
+
+// Liste pour enregistrer les événements et leurs callbacks
+#define MAX_HANDLERS 10
+extern DeviceEventHandler handlers[MAX_HANDLERS];
+extern int handlerCount;
+
+// Fonction pour enregistrer un callback pour un événement
+int s3eDeviceRegister(int deviceType, DeviceCallback callback, void *data);
+
+// Fonction pour simuler un événement (pause ou unpause)
+void triggerDeviceEvent(int deviceType);
+
+// Exemple de callback pour la mise en pause
+void pauseCallback(void *data);
+
+// Exemple de callback pour la reprise
+void unpauseCallback(void *data);
+
+
+
+
+
+
+
+
+
+
+void IwUIInit();
+
+void Iw2DInit();
+
+void Iw2DTerminate();
+
+void IwUITerminate();
+
+double IW_PROFILE_NEWFRAME();
 #endif

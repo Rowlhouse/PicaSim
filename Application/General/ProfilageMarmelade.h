@@ -31,7 +31,7 @@ private:
 };
 
 // Global profiler instance
-Profiler gProfiler;
+extern Profiler gProfiler;
 
 // Remplacer les macros et appels de profilage dans votre code
 #define IW_PROFILE(section) gProfiler.start(section)

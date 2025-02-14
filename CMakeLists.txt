@@ -4,7 +4,7 @@ project(PicaSim)                    # Nom du projet
 # Définitions globales pour le compilateur
 set(CMAKE_CXX_STANDARD 17)          # Version de C++
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "-Wall -g -DBT_NO_PROFILE -DIW_HTTP_SSL -DIW_GXFONT_TTF") # Flags du compilateur
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -g -DBT_NO_PROFILE -DIW_HTTP_SSL -DIW_GXFONT_TTF") # Flags du compilateur -Werror 
 
 # Inclure les répertoires des headers
 include_directories(
@@ -28,16 +28,21 @@ include_directories(
     Application/Controller/windows
     Application/AIController
     Application/UI
+    Application/Bullet/BulletCollision
+    Application/Bullet/BulletDynamics
+    Application/Bullet/LinearMath
     Application/Bullet
     Application/tinyxml
     Application/MapTrace
-    Application/ProcessUI
     Application/Other
+    Application
 )
 
 # Rechercher automatiquement tous les fichiers .cpp dans les répertoires spécifiés
-file(GLOB_RECURSE SRCS 
-    Application/*.cpp
+file(GLOB_RECURSE SRCS Application/*.cpp)
+
+list(APPEND SRCS 
+    #Application/Controller/CustomController.cpp
 )
 
 # Ajout des bibliothèques externes
@@ -47,14 +52,24 @@ set(LIBRARIES
     EGL
     GLESv2
     GLEW
-    BulletDynamics
-    BulletCollision
-    LinearMath
+    X11
+    OpenCL
+    OpenGL
+    glut
+    GL
+    SDL2_ttf 
+    SDL2_image
+    tiff
+    GLU
 )
 
 # Ajout des chemins pour les bibliothèques statiques ou dynamiques
 link_directories(
+    Application/Bullet/BulletCollision
+    Application/Bullet/BulletDynamics
+    Application/Bullet/LinearMath
     Application/Bullet
+    Application/tinyxml
 )
 
 # Recherche et intégration de libcurl

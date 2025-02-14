@@ -1,5 +1,22 @@
 #include "FonctionsMarmelade.h"
+//#include "FrameworkSettings.h"
 #include <thread>
+#include <fstream>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/types.h>
+#include <sys/stat.h>
+#endif
+
+int handlerCount = 0;
+uint64_t frameStart = 0.0f;
+uint64_t frameEnd = 0.0f;
+double freq;
+DeviceEventHandler handlers[MAX_HANDLERS];
+std::map<std::string, ExtensionInfo> g_ExtensionRegistry;
+std::vector<SDL_Sensor*> accelerometers;
 
 const char* OS_NAMES[6] = {
     "Windows",
@@ -9,6 +26,294 @@ const char* OS_NAMES[6] = {
     "iOS",
     "Unknown"
 };
+
+ConfigEntry config[] = {
+    {"S3E", "SysGlesVersion", 2},       // SysGlesVersion avec une valeur par défaut
+    {"PICASIM", "EnablePVRVFrame", 1},  // EnablePVRVFrame activé par défaut
+    {NULL, NULL, 0}                      // Entrée de fin
+};
+
+
+
+
+std::string deviceID;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if defined(_WIN32) || defined(_WIN64)  // Windows
+    #include <windows.h>
+    #include <shellscalingapi.h>
+    #pragma comment(lib, "Shcore.lib")
+    #include <iostream>
+    #include <sstream>
+
+    int getWindowsVersion() {
+        OSVERSIONINFO osvi;
+        ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
+        if (GetVersionEx(&osvi)) {
+            return (osvi.dwMajorVersion << 16) | osvi.dwMinorVersion;
+        }
+        return 0; // Erreur
+    }
+    long getTotalMemoryWindows() {
+        MEMORYSTATUSEX status;
+        status.dwLength = sizeof(MEMORYSTATUSEX);
+        GlobalMemoryStatusEx(&status);
+        return status.ullTotalPhys; // Mémoire totale physique
+    }
+
+    int GetScreenDPI() {
+        HMONITOR hMonitor = MonitorFromWindow(GetDesktopWindow(), MONITOR_DEFAULTTONEAREST);
+        UINT dpiX, dpiY;
+        
+        if (GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY) == S_OK) {
+            return dpiX; // dpiX = dpiY en général
+        }
+
+        // Méthode alternative pour Windows 7
+        HDC screen = GetDC(0);
+        int dpi = GetDeviceCaps(screen, LOGPIXELSX);
+        ReleaseDC(0, screen);
+        return dpi;
+    }
+
+    int GetCPUCoreCount() {
+        SYSTEM_INFO sysInfo;
+        GetSystemInfo(&sysInfo);
+        return sysInfo.dwNumberOfProcessors;
+    }
+    
+    std::string GetDeviceID() {
+        char buffer[128];
+        std::string result = "";
+        FILE* pipe = _popen("wmic csproduct get UUID", "r"); // Exécute la commande WMIC
+        if (!pipe) return "UNKNOWN";
+
+        while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+            result += buffer;
+        }
+        _pclose(pipe);
+
+        size_t pos = result.find("UUID");
+        if (pos != std::string::npos) {
+            result = result.substr(pos + 4); // Ignore "UUID" au début
+        }
+
+        // Nettoyage des espaces et retours à la ligne
+        result.erase(remove(result.begin(), result.end(), '\n'), result.end());
+        result.erase(remove(result.begin(), result.end(), '\r'), result.end());
+        result.erase(remove(result.begin(), result.end(), ' '), result.end());
+
+        return result.empty() ? "UNKNOWN" : result;
+    }   
+
+
+
+#elif defined(__APPLE__)  // macOS
+    #include <ApplicationServices/ApplicationServices.h>
+    #include <sys/utsname.h>
+    #include <unistd.h>
+    #include <stdio.h>
+
+    int getMacOSVersion() {
+        struct utsname buffer;
+        if (uname(&buffer) == 0) {
+            int major = 0, minor = 0;
+            sscanf(buffer.release, "%d.%d", &major, &minor);
+            return (major << 16) | minor;
+        }
+        return 0; // Erreur
+    }
+    long getTotalMemoryIOS() {
+        int mib[2] = {CTL_HW, HW_MEMSIZE};
+        size_t length;
+        long memSize;
+
+        sysctl(mib, 2, &memSize, &length, NULL, 0);
+        return memSize;
+    }
+
+    int GetScreenDPI() {
+        CGDirectDisplayID displayID = CGMainDisplayID();
+        CGSize displaySize = CGDisplayScreenSize(displayID);
+        int widthPx = CGDisplayPixelsWide(displayID);
+        
+        if (displaySize.width > 0) {
+            return static_cast<int>(widthPx * 25.4 / displaySize.width); // Conversion mm -> pouces
+        }
+        return 96; // Valeur par défaut
+    }
+
+    int GetCPUCoreCount() {
+        return sysconf(_SC_NPROCESSORS_ONLN);
+    }
+    
+    std::string GetDeviceID() {
+        char buffer[128];
+        std::string result = "";
+        FILE* pipe = popen("ioreg -rd1 -c IOPlatformExpertDevice | grep IOPlatformUUID | awk -F '\"' '{print $4}'", "r");
+        if (!pipe) return "UNKNOWN";
+
+        while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+            result += buffer;
+        }
+        pclose(pipe);
+
+        return result.empty() ? "UNKNOWN" : result;
+    }
+
+#elif defined(__linux__)  // Linux (X11 et Xft)
+    #include <X11/Xlib.h>
+    #include <cstdlib>
+    #include <sys/utsname.h>
+    #include <unistd.h>
+
+    namespace DPI {
+        void dpiInit () {
+
+        }
+
+        float GetDPIFromXft() {
+            FILE* pipe = popen("xrdb -query | grep Xft.dpi | awk '{print $2}'", "r");
+            if (!pipe) return 96; // Valeur par défaut
+
+            float dpi = 96;
+            fscanf(pipe, "%f", &dpi);
+            pclose(pipe);
+
+            return dpi;
+        }
+
+        int dpiGetScreenDPI() {
+            Display* dpy = XOpenDisplay(nullptr);
+            if (!dpy) {
+                std::cerr << "Erreur : Impossible d'ouvrir X11, tentative avec Xft...\n";
+                return static_cast<int>(GetDPIFromXft());
+            }
+
+            int screen = DefaultScreen(dpy);
+            int width_px = DisplayWidth(dpy, screen);
+            int width_mm = DisplayWidthMM(dpy, screen);
+            XCloseDisplay(dpy);
+
+            if (width_mm > 0) {
+                return static_cast<int>(width_px * 25.4 / width_mm);
+            }
+
+            return static_cast<int>(GetDPIFromXft());
+        }
+
+        void dpiTerminate() {
+
+        }
+    }
+
+    int getLinuxVersion() {
+        struct utsname buffer;
+        if (uname(&buffer) == 0) {
+            int major = 0, minor = 0;
+            sscanf(buffer.release, "%d.%d", &major, &minor);
+            return (major << 16) | minor;
+        }
+        return 0; // Erreur
+    }
+
+    long getTotalMemoryLinux() {
+        std::ifstream meminfo("/proc/meminfo");
+        std::string line;
+        long totalMemory = 0;
+
+        if (meminfo.is_open())
+        {
+            while (std::getline(meminfo, line))
+            {
+                if (line.find("MemTotal:") == 0) // Rechercher la ligne "MemTotal"
+                {
+                    std::sscanf(line.c_str(), "MemTotal: %ld kB", &totalMemory);
+                    totalMemory *= 1024; // Convertir kB en bytes
+                    break;
+                }
+            }
+            meminfo.close();
+        }
+        return totalMemory;
+    }
+
+    int GetCPUCoreCount() {
+        return sysconf(_SC_NPROCESSORS_ONLN);
+    }
+
+    std::string GetDeviceID() {
+        std::ifstream file("/etc/machine-id");
+        if (!file) file.open("/var/lib/dbus/machine-id"); // Backup file
+
+        std::string id;
+        if (file) {
+            std::getline(file, id);
+            file.close();
+        }
+
+        return id.empty() ? "UNKNOWN" : id;
+    }
+
+#elif defined(__ANDROID__)
+    #include <jni.h>
+    int getAndroidVersion(JNIEnv* env) {
+        jclass buildClass = env->FindClass("android/os/Build$VERSION");
+        jfieldID sdkIntField = env->GetStaticFieldID(buildClass, "SDK_INT", "I");
+        jint sdkInt = env->GetStaticIntField(buildClass, sdkIntField);
+        return (sdkInt << 16); // Android utilise seulement la version majeure
+    }
+    long getTotalMemoryAndroid() {
+        // Implémentation Android spécifique
+        // Cela pourrait être une interaction avec Java (JNI) pour obtenir la mémoire totale
+        return 1000000000L; // Exemple de mémoire (1GB)
+    }*
+    
+#else
+    #error "OS non supporté"
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 void s3eDebugErrorShow(errors Erreur, const char* message) {
@@ -169,13 +474,13 @@ int s3eDeviceGetInt(fonction param) {
 const char* s3eDeviceGetString(fonction param) {
 
     if (param == S3E_DEVICE_ID) {
-        return GetDeviceID().c_str();
+        deviceID = GetDeviceID();
     }
     else {
         std::cerr << "Parametre dont on veut les specs inconnu dans la fonction s3eDeviceGetString" << std::endl;
-        const char retour [5] = "NULL";
-        return retour;
+        deviceID = "NULL";
     }
+    return deviceID.c_str();
 }
 
 int s3eSurfaceGetInt (surface param) {
@@ -747,4 +1052,104 @@ bool IwGLExtAvailable(GLextension extension) {
         return true;  // L'extension est disponible
     }
     return false;  // L'extension n'est pas disponible
+}
+
+
+int s3eConfigGetInt(const char *section, const char *key, int *value)
+{
+    for (int i = 0; config[i].section != NULL; ++i) {
+        if (strcmp(config[i].section, section) == 0 && strcmp(config[i].key, key) == 0) {
+            *value = config[i].value;
+            return 1; // Retourne 1 si la valeur est trouvée
+        }
+    }
+    return 0; // Retourne 0 si la valeur n'est pas trouvée
+}
+
+
+
+int s3eDeviceRegister(int deviceType, DeviceCallback callback, void *data) {
+    if (handlerCount < MAX_HANDLERS) {
+        handlers[handlerCount].deviceType = deviceType;
+        handlers[handlerCount].callback = callback;
+        handlers[handlerCount].data = data;
+        handlerCount++;
+        return 1; // Succès
+    }
+    return 0; // Échec, trop d'enregistrements
+}
+
+// Fonction pour simuler un événement (pause ou unpause)
+void triggerDeviceEvent(int deviceType) {
+    for (int i = 0; i < handlerCount; i++) {
+        if (handlers[i].deviceType == deviceType) {
+            handlers[i].callback(handlers[i].data); // Appeler le callback associé
+        }
+    }
+}
+
+// Exemple de callback pour la mise en pause
+void pauseCallback(void *data) {
+    printf("Device Paused!\n");
+    // Ajouter ici le code pour gérer la mise en pause
+}
+
+// Exemple de callback pour la reprise
+void unpauseCallback(void *data) {
+    printf("Device Unpaused!\n");
+    // Ajouter ici le code pour gérer la reprise
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void IwUIInit() {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+    } else {
+        std::cout << "IwUIInit has been called" << std::endl;
+    }
+}
+
+void Iw2DInit() {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cerr << "SDL could not initialize 2D! SDL_Error: " << SDL_GetError() << std::endl;
+    } else {
+        std::cout << "Iw2DInit has been called" << std::endl;
+    }
+}
+
+void Iw2DTerminate() {
+    std::cout << "Iw2DTerminate has been called" << std::endl;
+    SDL_Quit();
+}
+
+void IwUITerminate() {
+    std::cout << "IwUITerminate has been called" << std::endl;
+    SDL_Quit();
+}
+
+double IW_PROFILE_NEWFRAME() {
+    frameStart = SDL_GetPerformanceCounter();
+    freq = (double)(frameEnd - frameStart) / SDL_GetPerformanceFrequency() * 1000.0;
+    frameEnd = frameStart;
+    return freq;
 }

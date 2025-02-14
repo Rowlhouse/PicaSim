@@ -16,9 +16,10 @@
 #define GAMEPAD_INTERNAL_H
 
 //#include "s3eTypes.h"
-#include "File.h"
-#include "gamepad.h"
-#include "gamepad_autodefs.h"
+// #include "File.h"
+// #include "gamepad.h"
+// #include "gamepad_autodefs.h"
+#include "Entete.h"
 
 
 /**

@@ -17,6 +17,8 @@
 #include "gamepad.h"
 #include "FonctionsMarmelade.h"
 //Declarations of Init and Term functions
+// #include "Entete.h"
+
 extern s3eResult gamepadInit();
 extern void gamepadTerminate();
 

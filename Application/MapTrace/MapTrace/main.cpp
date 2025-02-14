@@ -89,11 +89,11 @@ const char license[]="MapTrace v2.0.0 Copyright (C) 2013 Danny Chapman:\n"
 "    picasimulator@gmail.com\n"
 "MapTrace comes with ABSOLUTELY NO WARRANTY\n";
 
-int main(int argc, char * argv[])
+/*int main(int argc, char * argv[])
 {
   cout << license << endl;
 
-  // /* OPENFILENAME ofn ;
+  // OPENFILENAME ofn ;
   // char szFile[512] ;
   // // open a file name
   // ZeroMemory( &ofn , sizeof( ofn));
@@ -121,7 +121,7 @@ int main(int argc, char * argv[])
   // {
   //   cout << "Need to pick a valid source image\n";
   //   exit(-1);
-  // } */
+  // }
   // Demander à l'utilisateur de saisir le chemin du fichier
   cout << "Entrez le chemin du fichier TIFF à charger: ";
   cin >> map_file;
@@ -162,7 +162,7 @@ int main(int argc, char * argv[])
   glutMainLoop();
 
   return 0;
-}
+}*/
 
 void setup_projection()
 {

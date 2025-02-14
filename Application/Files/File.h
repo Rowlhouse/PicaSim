@@ -1,12 +1,15 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "Entete.h"
+// #include "Entete.h"
 //#include <cstdint>
 //#include <cstdio>
 //#include <cstring>
 //#include <string>
 //#include <vector>
+
+#include "Entete.h"
+#include <cstdio>
 
 typedef FILE s3eFile;
 
@@ -66,5 +69,6 @@ void s3eFileDelete (const char* chaine);
 
 bool s3eFileCheckExists(const std::string& filename);
 
+int s3eFileMakeDirectory(const char *path);
 
 #endif

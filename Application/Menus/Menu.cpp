@@ -508,4 +508,10 @@ void RateMe(const GameSettings& gameSettings)
   }
 }
 
+CIwGxFont* GetFont(const GameSettings& gameSettings)
+{
+  CIwGxFont* font = (CIwGxFont*) IwGetResManager()->GetResNamed("normal", IW_GX_RESTYPE_FONT);
+  return font;
+}
+
 #endif

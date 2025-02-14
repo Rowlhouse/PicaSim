@@ -2449,24 +2449,10 @@ CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/PicaJoystick.cpp" -o CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.s
 
-CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: CMakeFiles/PicaSim.dir/flags.make
-CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: Application/Controller/gamepad_interface.cpp
-CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_171) "Building CXX object CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.cpp"
-
-CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.cpp" > CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.i
-
-CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.cpp" -o CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.s
-
 CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: Application/Controller/generic/gamepad.cpp
 CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_172) "Building CXX object CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_171) "Building CXX object CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/generic/gamepad.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.i: cmake_force
@@ -2476,6 +2462,20 @@ CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.i: cmake_force
 CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/generic/gamepad.cpp" -o CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o: Application/Controller/generic/gamepad_interface.cpp
+CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_172) "Building CXX object CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/generic/gamepad_interface.cpp"
+
+CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/generic/gamepad_interface.cpp" > CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Controller/generic/gamepad_interface.cpp" -o CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.s
 
 CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o: Application/Controller/generic/gamepad_register.cpp
@@ -2547,10 +2547,94 @@ CMakeFiles/PicaSim.dir/Application/Files/ac3dTexture.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Files/ac3dTexture.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Files/ac3dTexture.cpp" -o CMakeFiles/PicaSim.dir/Application/Files/ac3dTexture.cpp.s
 
+CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o: Application/General/ClassesFontsMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_178) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesFontsMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesFontsMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesFontsMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o: Application/General/ClassesMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_179) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o: Application/General/ClassesUIMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_180) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ClassesUIMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o: Application/General/Entete.cpp
+CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_181) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/Entete.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/Entete.cpp" > CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/Entete.cpp" -o CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o: Application/General/FonctionsMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_182) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/FonctionsMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/FonctionsMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/FonctionsMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o: Application/General/FonctionsPointersKeyboardMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_183) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/FonctionsPointersKeyboardMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/FonctionsPointersKeyboardMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/FonctionsPointersKeyboardMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.s
+
 CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: Application/General/FrameworkSettings.cpp
 CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_178) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_184) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/FrameworkSettings.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.i: cmake_force
@@ -2564,7 +2648,7 @@ CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: Application/General/GameSettings.cpp
 CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_179) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_185) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.i: cmake_force
@@ -2578,7 +2662,7 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o: Application/General/Helpers.cpp
 CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_180) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_186) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/Helpers.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.i: cmake_force
@@ -2592,7 +2676,7 @@ CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o: Application/General/HelpersXML.cpp
 CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_181) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_187) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/HelpersXML.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.i: cmake_force
@@ -2606,7 +2690,7 @@ CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o: Application/General/ObjectEditingOverlay.cpp
 CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_182) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_188) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ObjectEditingOverlay.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.i: cmake_force
@@ -2617,10 +2701,52 @@ CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.s: cmake_for
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ObjectEditingOverlay.cpp" -o CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.s
 
+CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o: Application/General/ProfilageMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_189) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ProfilageMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ProfilageMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/ProfilageMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o: Application/General/SocketMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_190) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/SocketMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/SocketMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/SocketMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.s
+
+CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o: Application/General/SoundMarmelade.cpp
+CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_191) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/SoundMarmelade.cpp"
+
+CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/SoundMarmelade.cpp" > CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/SoundMarmelade.cpp" -o CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.s
+
 CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: Application/General/Trace.cpp
 CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_183) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_192) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/Trace.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.i: cmake_force
@@ -2634,7 +2760,7 @@ CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o: Application/General/Vecteurs.cpp
 CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_184) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_193) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/Vecteurs.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.i: cmake_force
@@ -2648,7 +2774,7 @@ CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o: Application/General/WindsockOverlay.cpp
 CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_185) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_194) "Building CXX object CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o -MF CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/WindsockOverlay.cpp"
 
 CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.i: cmake_force
@@ -2662,7 +2788,7 @@ CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o: Application/Graphics/Camera.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_186) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_195) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/Camera.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.i: cmake_force
@@ -2676,7 +2802,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Camera.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o: Application/Graphics/FrameBufferObject.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_187) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_196) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/FrameBufferObject.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.i: cmake_force
@@ -2690,7 +2816,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/FrameBufferObject.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: Application/Graphics/Graphics.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_188) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_197) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/Graphics.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.i: cmake_force
@@ -2704,7 +2830,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Graphics.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o: Application/Graphics/ParticleEmitter.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_189) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_198) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/ParticleEmitter.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.i: cmake_force
@@ -2718,7 +2844,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEmitter.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o: Application/Graphics/ParticleEngine.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_190) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_199) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/ParticleEngine.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.i: cmake_force
@@ -2732,7 +2858,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/ParticleEngine.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: Application/Graphics/RenderManager.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_191) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_200) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/RenderManager.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.i: cmake_force
@@ -2746,7 +2872,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderManager.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o: Application/Graphics/RenderModel.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_192) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_201) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/RenderModel.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.i: cmake_force
@@ -2760,7 +2886,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/RenderModel.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o: Application/Graphics/ShaderManager.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_193) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_202) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/ShaderManager.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.i: cmake_force
@@ -2774,7 +2900,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/ShaderManager.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o: Application/Graphics/Shaders.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_194) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_203) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/Shaders.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.i: cmake_force
@@ -2788,7 +2914,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Shaders.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o: Application/Graphics/Viewport.cpp
 CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_195) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_204) "Building CXX object CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Graphics/Viewport.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.i: cmake_force
@@ -2802,7 +2928,7 @@ CMakeFiles/PicaSim.dir/Application/Graphics/Viewport.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o: Application/Heightfield/HeightfieldBuilder.cpp
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_196) "Building CXX object CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_205) "Building CXX object CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Heightfield/HeightfieldBuilder.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.i: cmake_force
@@ -2816,7 +2942,7 @@ CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldBuilder.cpp.s: cmake_f
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o: Application/Heightfield/HeightfieldGenerator.cpp
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_197) "Building CXX object CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_206) "Building CXX object CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Heightfield/HeightfieldGenerator.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.i: cmake_force
@@ -2830,7 +2956,7 @@ CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldGenerator.cpp.s: cmake
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o: Application/Heightfield/HeightfieldRuntime.cpp
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_198) "Building CXX object CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_207) "Building CXX object CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Heightfield/HeightfieldRuntime.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.i: cmake_force
@@ -2844,7 +2970,7 @@ CMakeFiles/PicaSim.dir/Application/Heightfield/HeightfieldRuntime.cpp.s: cmake_f
 CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: Application/Internet/AuthorisationChecker.cpp
 CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_199) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_208) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Internet/AuthorisationChecker.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.i: cmake_force
@@ -2858,7 +2984,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/AuthorisationChecker.cpp.s: cmake_fo
 CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o: Application/Internet/ConnectionListener.cpp
 CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_200) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_209) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Internet/ConnectionListener.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.i: cmake_force
@@ -2872,7 +2998,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/ConnectionListener.cpp.s: cmake_forc
 CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: Application/Internet/IncomingConnection.cpp
 CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_201) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_210) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Internet/IncomingConnection.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.i: cmake_force
@@ -2886,7 +3012,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/IncomingConnection.cpp.s: cmake_forc
 CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: Application/Internet/VersionChecker.cpp
 CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_202) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_211) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Internet/VersionChecker.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.i: cmake_force
@@ -2900,7 +3026,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/VersionChecker.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o: Application/Internet/WindowsBilling.cpp
 CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_203) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_212) "Building CXX object CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Internet/WindowsBilling.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.i: cmake_force
@@ -2914,7 +3040,7 @@ CMakeFiles/PicaSim.dir/Application/Internet/WindowsBilling.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o: Application/Languages/English.cpp
 CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_204) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_213) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Languages/English.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.i: cmake_force
@@ -2928,7 +3054,7 @@ CMakeFiles/PicaSim.dir/Application/Languages/English.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o: Application/Languages/French.cpp
 CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_205) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_214) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Languages/French.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.i: cmake_force
@@ -2942,7 +3068,7 @@ CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o: Application/Languages/German.cpp
 CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_206) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_215) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Languages/German.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.i: cmake_force
@@ -2956,7 +3082,7 @@ CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: Application/Languages/PicaStrings.cpp
 CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_207) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_216) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Languages/PicaStrings.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.i: cmake_force
@@ -2970,7 +3096,7 @@ CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o: Application/Languages/Portugese.cpp
 CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_208) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_217) "Building CXX object CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Languages/Portugese.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.i: cmake_force
@@ -2981,10 +3107,24 @@ CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Languages/Portugese.cpp" -o CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.s
 
+CMakeFiles/PicaSim.dir/Application/Main.cpp.o: CMakeFiles/PicaSim.dir/flags.make
+CMakeFiles/PicaSim.dir/Application/Main.cpp.o: Application/Main.cpp
+CMakeFiles/PicaSim.dir/Application/Main.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_218) "Building CXX object CMakeFiles/PicaSim.dir/Application/Main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Main.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Main.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Main.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Main.cpp"
+
+CMakeFiles/PicaSim.dir/Application/Main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/Main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Main.cpp" > CMakeFiles/PicaSim.dir/Application/Main.cpp.i
+
+CMakeFiles/PicaSim.dir/Application/Main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Main.cpp" -o CMakeFiles/PicaSim.dir/Application/Main.cpp.s
+
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o: Application/MapTrace/MapTrace/contour.cpp
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_209) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_219) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o -MF CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/MapTrace/MapTrace/contour.cpp"
 
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.i: cmake_force
@@ -2998,7 +3138,7 @@ CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o: Application/MapTrace/MapTrace/contour_collection.cpp
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_210) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_220) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o -MF CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/MapTrace/MapTrace/contour_collection.cpp"
 
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.i: cmake_force
@@ -3012,7 +3152,7 @@ CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.s: c
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o: Application/MapTrace/MapTrace/detailed_dem.cpp
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_211) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_221) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o -MF CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/MapTrace/MapTrace/detailed_dem.cpp"
 
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.i: cmake_force
@@ -3026,7 +3166,7 @@ CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.s: cmake_f
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o: Application/MapTrace/MapTrace/main.cpp
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_212) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_222) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o -MF CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/MapTrace/MapTrace/main.cpp"
 
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.i: cmake_force
@@ -3040,7 +3180,7 @@ CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/main.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o: Application/MapTrace/MapTrace/ridge_collection.cpp
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_213) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_223) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o -MF CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/MapTrace/MapTrace/ridge_collection.cpp"
 
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.i: cmake_force
@@ -3054,7 +3194,7 @@ CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/ridge_collection.cpp.s: cma
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o: Application/MapTrace/MapTrace/text_overlay.cpp
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_214) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_224) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o -MF CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/MapTrace/MapTrace/text_overlay.cpp"
 
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.i: cmake_force
@@ -3068,7 +3208,7 @@ CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/text_overlay.cpp.s: cmake_f
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o: Application/MapTrace/MapTrace/texture.cpp
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_215) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_225) "Building CXX object CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o -MF CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/MapTrace/MapTrace/texture.cpp"
 
 CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.i: cmake_force
@@ -3082,7 +3222,7 @@ CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/texture.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: Application/Menus/FileMenu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_216) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_226) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/FileMenu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.i: cmake_force
@@ -3096,7 +3236,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/FileMenu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: Application/Menus/HelpMenu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_217) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_227) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/HelpMenu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.i: cmake_force
@@ -3110,7 +3250,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/HelpMenu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: Application/Menus/LoadingScreen.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_218) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_228) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/LoadingScreen.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.i: cmake_force
@@ -3124,7 +3264,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/LoadingScreen.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: Application/Menus/Menu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_219) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_229) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/Menu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.i: cmake_force
@@ -3138,7 +3278,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/Menu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: Application/Menus/PicaDialog.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_220) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_230) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/PicaDialog.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.i: cmake_force
@@ -3152,7 +3292,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/PicaDialog.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o: Application/Menus/ScoreloopMenu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_221) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_231) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/ScoreloopMenu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.i: cmake_force
@@ -3166,7 +3306,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopMenu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o: Application/Menus/ScoreloopSetData.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_222) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_232) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/ScoreloopSetData.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.i: cmake_force
@@ -3180,7 +3320,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/ScoreloopSetData.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: Application/Menus/SelectMenu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_223) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_233) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/SelectMenu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.i: cmake_force
@@ -3194,7 +3334,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/SelectMenu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: Application/Menus/SettingsMenu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_224) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_234) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/SettingsMenu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.i: cmake_force
@@ -3208,7 +3348,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsMenu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o: Application/Menus/SettingsWidgets.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_225) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_235) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/SettingsWidgets.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.i: cmake_force
@@ -3222,7 +3362,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/SettingsWidgets.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: Application/Menus/StartMenu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_226) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_236) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/StartMenu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.i: cmake_force
@@ -3236,7 +3376,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/StartMenu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: Application/Menus/WhatsNewMenu.cpp
 CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_227) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_237) "Building CXX object CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/WhatsNewMenu.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.i: cmake_force
@@ -3250,7 +3390,7 @@ CMakeFiles/PicaSim.dir/Application/Menus/WhatsNewMenu.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o: Application/Other/MemoryCheck.cpp
 CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_228) "Building CXX object CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_238) "Building CXX object CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Other/MemoryCheck.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.i: cmake_force
@@ -3264,7 +3404,7 @@ CMakeFiles/PicaSim.dir/Application/Other/MemoryCheck.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o: Application/Other/Profile.cpp
 CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_229) "Building CXX object CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_239) "Building CXX object CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Other/Profile.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.i: cmake_force
@@ -3278,7 +3418,7 @@ CMakeFiles/PicaSim.dir/Application/Other/Profile.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o: Application/Other/Scoreloop.cpp
 CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_230) "Building CXX object CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_240) "Building CXX object CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Other/Scoreloop.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.i: cmake_force
@@ -3292,7 +3432,7 @@ CMakeFiles/PicaSim.dir/Application/Other/Scoreloop.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: Application/Physics/EntityManager.cpp
 CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_231) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_241) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Physics/EntityManager.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.i: cmake_force
@@ -3306,7 +3446,7 @@ CMakeFiles/PicaSim.dir/Application/Physics/EntityManager.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o: Application/Physics/Environment.cpp
 CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_232) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_242) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Physics/Environment.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.i: cmake_force
@@ -3320,7 +3460,7 @@ CMakeFiles/PicaSim.dir/Application/Physics/Environment.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o: Application/Physics/Gate.cpp
 CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_233) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_243) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Physics/Gate.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.i: cmake_force
@@ -3334,7 +3474,7 @@ CMakeFiles/PicaSim.dir/Application/Physics/Gate.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o: Application/Physics/SimpleObject.cpp
 CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_234) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_244) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Physics/SimpleObject.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.i: cmake_force
@@ -3348,7 +3488,7 @@ CMakeFiles/PicaSim.dir/Application/Physics/SimpleObject.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o: Application/Physics/ThermalManager.cpp
 CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_235) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_245) "Building CXX object CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Physics/ThermalManager.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.i: cmake_force
@@ -3362,7 +3502,7 @@ CMakeFiles/PicaSim.dir/Application/Physics/ThermalManager.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o: Application/Plane/Aerofoil.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_236) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_246) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/Aerofoil.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.i: cmake_force
@@ -3376,7 +3516,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aerofoil.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: Application/Plane/AerofoilDefinition.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_237) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_247) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/AerofoilDefinition.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.i: cmake_force
@@ -3390,7 +3530,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/AerofoilDefinition.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: Application/Plane/Aeroplane.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_238) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_248) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/Aeroplane.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.i: cmake_force
@@ -3404,7 +3544,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/Aeroplane.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o: Application/Plane/AeroplaneGraphics.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_239) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_249) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/AeroplaneGraphics.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.i: cmake_force
@@ -3418,7 +3558,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/AeroplaneGraphics.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o: Application/Plane/AeroplanePhysics.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_240) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_250) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/AeroplanePhysics.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.i: cmake_force
@@ -3432,7 +3572,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/AeroplanePhysics.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o: Application/Plane/Fuselage.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_241) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_251) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/Fuselage.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.i: cmake_force
@@ -3446,7 +3586,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/Fuselage.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o: Application/Plane/JetEngine.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_242) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_252) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/JetEngine.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.i: cmake_force
@@ -3460,7 +3600,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o: Application/Plane/PropellerEngine.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_243) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_253) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/PropellerEngine.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.i: cmake_force
@@ -3474,7 +3614,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o: Application/Plane/Wheel.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_244) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_254) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/Wheel.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.i: cmake_force
@@ -3488,7 +3628,7 @@ CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o: Application/Plane/Wing.cpp
 CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_245) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_255) "Building CXX object CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/Wing.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.i: cmake_force
@@ -3499,24 +3639,10 @@ CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Plane/Wing.cpp" -o CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.s
 
-CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o: CMakeFiles/PicaSim.dir/flags.make
-CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o: Application/ProcessUI/main.cpp
-CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_246) "Building CXX object CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o -MF CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/ProcessUI/main.cpp"
-
-CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/ProcessUI/main.cpp" > CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.i
-
-CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/ProcessUI/main.cpp" -o CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.s
-
 CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o: Application/Terrain/Observer.cpp
 CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_247) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_256) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Terrain/Observer.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.i: cmake_force
@@ -3530,7 +3656,7 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o: Application/Terrain/Rope.cpp
 CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_248) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_257) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Terrain/Rope.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.i: cmake_force
@@ -3544,7 +3670,7 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o: Application/Terrain/Runway.cpp
 CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_249) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_258) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Terrain/Runway.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.i: cmake_force
@@ -3558,7 +3684,7 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o: Application/Terrain/SkyGrid.cpp
 CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_250) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_259) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Terrain/SkyGrid.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.i: cmake_force
@@ -3572,7 +3698,7 @@ CMakeFiles/PicaSim.dir/Application/Terrain/SkyGrid.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o: Application/Terrain/Skybox.cpp
 CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_251) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_260) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Terrain/Skybox.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.i: cmake_force
@@ -3586,7 +3712,7 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Skybox.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: Application/Terrain/Terrain.cpp
 CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_252) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_261) "Building CXX object CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o -MF CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Terrain/Terrain.cpp"
 
 CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.i: cmake_force
@@ -3600,7 +3726,7 @@ CMakeFiles/PicaSim.dir/Application/Terrain/Terrain.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: Application/UI/AudioManager.cpp
 CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_253) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_262) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o -MF CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/UI/AudioManager.cpp"
 
 CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.i: cmake_force
@@ -3614,7 +3740,7 @@ CMakeFiles/PicaSim.dir/Application/UI/AudioManager.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: Application/UI/ButtonOverlay.cpp
 CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_254) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_263) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o -MF CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/UI/ButtonOverlay.cpp"
 
 CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.i: cmake_force
@@ -3628,7 +3754,7 @@ CMakeFiles/PicaSim.dir/Application/UI/ButtonOverlay.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o: Application/UI/DebugRenderer.cpp
 CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_255) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_264) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o -MF CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/UI/DebugRenderer.cpp"
 
 CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.i: cmake_force
@@ -3642,7 +3768,7 @@ CMakeFiles/PicaSim.dir/Application/UI/DebugRenderer.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: Application/UI/PicaSim.cpp
 CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_256) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_265) "Building CXX object CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o -MF CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/UI/PicaSim.cpp"
 
 CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.i: cmake_force
@@ -3656,7 +3782,7 @@ CMakeFiles/PicaSim.dir/Application/UI/PicaSim.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o: Application/tinyxml/tinystr.cpp
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_257) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_266) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o -MF CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/tinyxml/tinystr.cpp"
 
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.i: cmake_force
@@ -3670,7 +3796,7 @@ CMakeFiles/PicaSim.dir/Application/tinyxml/tinystr.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o: Application/tinyxml/tinyxml.cpp
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_258) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_267) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o -MF CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/tinyxml/tinyxml.cpp"
 
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.i: cmake_force
@@ -3684,7 +3810,7 @@ CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxml.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o: Application/tinyxml/tinyxmlerror.cpp
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_259) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_268) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o -MF CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/tinyxml/tinyxmlerror.cpp"
 
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.i: cmake_force
@@ -3698,7 +3824,7 @@ CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.s: cmake_force
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o: CMakeFiles/PicaSim.dir/flags.make
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o: Application/tinyxml/tinyxmlparser.cpp
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o: CMakeFiles/PicaSim.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_260) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_269) "Building CXX object CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o -MF CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o.d -o CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o -c "/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/tinyxml/tinyxmlparser.cpp"
 
 CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.i: cmake_force
@@ -3881,18 +4007,27 @@ PicaSim_OBJECTS = \
 "CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Controller/NetworkController.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o" \
-"CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Files/3ds.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Files/File.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Files/ac3d.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Files/ac3dTexture.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o" \
@@ -3919,6 +4054,7 @@ PicaSim_OBJECTS = \
 "CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o" \
+"CMakeFiles/PicaSim.dir/Application/Main.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o" \
@@ -3956,7 +4092,6 @@ PicaSim_OBJECTS = \
 "CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o" \
-"CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o" \
 "CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o" \
@@ -4145,18 +4280,27 @@ PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/Gyro.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/HumanController.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/NetworkController.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/PicaJoystick.cpp.o
-PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/gamepad_interface.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_interface.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Controller/generic/gamepad_register.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Files/3ds.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Files/File.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Files/ac3d.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Files/ac3dTexture.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/ClassesFontsMarmelade.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/ClassesMarmelade.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/ClassesUIMarmelade.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/Entete.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/FonctionsMarmelade.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/FonctionsPointersKeyboardMarmelade.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/FrameworkSettings.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/Helpers.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/HelpersXML.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/ObjectEditingOverlay.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/ProfilageMarmelade.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/SocketMarmelade.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/General/SoundMarmelade.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/Trace.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/Vecteurs.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/General/WindsockOverlay.cpp.o
@@ -4183,6 +4327,7 @@ PicaSim: CMakeFiles/PicaSim.dir/Application/Languages/French.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Languages/German.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Languages/PicaStrings.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Languages/Portugese.cpp.o
+PicaSim: CMakeFiles/PicaSim.dir/Application/Main.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/contour_collection.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/MapTrace/MapTrace/detailed_dem.cpp.o
@@ -4220,7 +4365,6 @@ PicaSim: CMakeFiles/PicaSim.dir/Application/Plane/JetEngine.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Plane/PropellerEngine.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Plane/Wheel.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Plane/Wing.cpp.o
-PicaSim: CMakeFiles/PicaSim.dir/Application/ProcessUI/main.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Terrain/Observer.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Terrain/Rope.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/Terrain/Runway.cpp.o
@@ -4237,8 +4381,9 @@ PicaSim: CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlerror.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/Application/tinyxml/tinyxmlparser.cpp.o
 PicaSim: CMakeFiles/PicaSim.dir/build.make
 PicaSim: /usr/lib/x86_64-linux-gnu/libcurl.so
+PicaSim: /usr/lib/x86_64-linux-gnu/libcurl.so
 PicaSim: CMakeFiles/PicaSim.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_261) "Linking CXX executable PicaSim"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_270) "Linking CXX executable PicaSim"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/PicaSim.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

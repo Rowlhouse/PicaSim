@@ -1,5 +1,6 @@
 #include "File.h"
 #include <fstream>
+#include <sys/stat.h>
 
 
 s3eFile* s3eFileOpen(const char* filename, const char* mode)
@@ -105,4 +106,23 @@ bool s3eFileCheckExists(const std::string& filename) {
 
 void s3eFileDelete (const char* chaine){
     ////////////////////////////////////////////////////////////////////////////////////////////Compléter
+}
+
+
+
+// Fonction pour créer un répertoire de manière portable
+int s3eFileMakeDirectory(const char *path) {
+    // Sur Windows, utiliser CreateDirectory
+    #ifdef _WIN32
+        if (CreateDirectory(path, NULL) || GetLastError() == ERROR_ALREADY_EXISTS) {
+            return 1; // Répertoire créé ou existe déjà
+        }
+        return 0; // Erreur lors de la création du répertoire
+    #else
+        // Sur Unix-like (Linux/macOS), utiliser mkdir
+        if (mkdir(path, 0777) == 0 || errno == EEXIST) {
+            return 1; // Répertoire créé ou existe déjà
+        }
+        return 0; // Erreur lors de la création
+    #endif
 }

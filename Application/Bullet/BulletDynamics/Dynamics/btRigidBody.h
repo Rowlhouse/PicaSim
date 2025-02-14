@@ -17,6 +17,7 @@ subject to the following restrictions:
 #define BT_RIGIDBODY_H
 
 #include "LinearMath/btAlignedObjectArray.h"
+#include "LinearMath/btMotionState.h"
 #include "LinearMath/btTransform.h"
 #include "BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
 #include "BulletCollision/CollisionDispatch/btCollisionObject.h"

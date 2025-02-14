@@ -1,5 +1,8 @@
 #include "ClassesFontMarmelade.h"
 
+CIwGxFont* GeneralFont;
+
+
 bool IwGxFontSetFont(CIwGxFont* font) {
     if (!GeneralFont) {
         std::cerr << "GeneralFont non créé pour être utilisé" << std::endl;

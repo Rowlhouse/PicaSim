@@ -1,0 +1,16 @@
+Calling IwUIInit
+IwUIInit has been called
+Calling Iw2DInit
+Iw2DInit has been called
+Calling dpiInit
+dpi = 96 so physical diagonal = 10.42 inches
+dpiInit has been called
+Calling AudioManager::Init()
+AudioManager::Init()
+AudioManager::Init() has been called
+Options: reported memory = -1651027968 KB
+Options: Using 16 bit textures = 0
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:EnvironmentSettings():1155 [0x7ffecadc2658]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ObjectsSettings():968 [0x7ffecadc2910]: 
+Calling MenuInit
+Loading Menus/Menu_1536.group

@@ -519,14 +519,10 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: \
  /usr/include/c++/14/bits/hashtable.h \
  /usr/include/c++/14/bits/hashtable_policy.h \
  /usr/include/c++/14/bits/enable_special_members.h \
- /usr/include/c++/14/fstream /usr/include/c++/14/bits/codecvt.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/basic_file.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/c++io.h \
- /usr/include/c++/14/bits/fstream.tcc /usr/include/SDL2/SDL_syswm.h \
- /usr/include/X11/Xlib.h /usr/include/X11/X.h \
- /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
- /usr/include/X11/Xatom.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/gamepad_interface.h \
+ /usr/include/SDL2/SDL_syswm.h /usr/include/X11/Xlib.h \
+ /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h \
+ /usr/include/X11/Xosdefs.h /usr/include/X11/Xatom.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Controller/h/gamepad_interface.h \
  /usr/include/x86_64-linux-gnu/sys/utsname.h \
  /usr/include/x86_64-linux-gnu/bits/utsname.h /usr/include/unistd.h \
  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
@@ -554,8 +550,8 @@ CMakeFiles/PicaSim.dir/Application/General/GameSettings.cpp.o: \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMinMax.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletDynamics/Dynamics/btRigidBody.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btAlignedObjectArray.h \
- /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/CollisionDispatch/btCollisionObject.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/LinearMath/btMotionState.h \
+ /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/Bullet/BulletCollision/CollisionDispatch/btCollisionObject.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/ClassesMarmelade.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/Entity.h \
  /home/user/Documents/2024-2025\ (ENS)/Lift\ Contest/Application/PicaSimTest/Application/General/RenderObject.h \

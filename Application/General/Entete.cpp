@@ -7,6 +7,8 @@ int Rowlhouse = ROWLHOUSE;
 s3eBool S3E_FALSE = SDL_FALSE;
 s3eBool S3E_TRUE = SDL_TRUE;
 
+int mouseX = 0, mouseY = 0;
+
 SDL_Window* window = SDL_CreateWindow("Native Window Example",
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
     800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);

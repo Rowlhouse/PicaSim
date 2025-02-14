@@ -6,6 +6,7 @@
 #include "Trace.h"
 #include "PicaSim.h"
 #include "Environment.h"
+#include "ClassesFontMarmelade.h"
 // #include "ClassesFontMarmelade.h"
 // #include "Aeroplane.h"
 // #include "AeroplanePhysics.h"
