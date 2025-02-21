@@ -1,0 +1,25 @@
+
+<Aerofoil
+  name="Wing"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.01"
+  CDStalled="1.7"
+  CM0="-0.02"
+  CMPerDeg="0.003"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"
+  
+  useData="0"
+  
+  CL0 = "0.1"
+  CLPerDeg = "0.08"
+  positiveAttachedAngle = "10"
+  positiveStallRange = "12"
+  negativeAttachedAngle = "-9"
+  negativeStallRange = "-10"
+  dragBucketFactor = "0.0"
+  dragBucketLowerAngle = "-2.0"
+  dragBucketUpperAngle = "6.0"
+/>

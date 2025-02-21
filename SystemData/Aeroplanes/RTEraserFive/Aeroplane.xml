@@ -1,0 +1,475 @@
+<!--
+RTEraserFive - 4 channel indoor plane based on the Eraser Five by Robin Trumpp
+-->
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="1.2"
+    wingChord="0.2"
+    CMRollFromY="0.0"
+    friction="0.2"
+    frictionScaleX="1"
+    frictionScaleY="1"
+    frictionScaleZ="1"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing
+      name="FuselageVertical"
+      aerofoil="SystemData/Aerofoils/Symmetric/Flat"
+      numPieces="2"
+      numSections="1"
+      mass="0.01"
+
+      positionX="-0.1"
+      positionY="0.0"
+      positionZ="-0.07"
+      roll="90"
+      extentsX="0.6"
+      extentsY="0.14"
+      extentsZ="0.01"
+      wingAspectRatio="1.0"
+      render="true"
+
+      washFromEngineName="Engine"
+      washFromEngineFraction="0.0"
+    />
+    
+    <Wing
+      name="FuselageHorizontal"
+      aerofoil="SystemData/Aerofoils/Symmetric/Flat"
+      numPieces="2"
+      numSections="1"
+      mass="0.01"
+
+      positionX="-0.0"
+      positionY="-0.04"
+      positionZ="-0.0"
+      extentsX="0.55"
+      extentsY="0.08"
+      extentsZ="0.01"
+      wingAspectRatio="1.0"
+      render="true"
+
+      washFromEngineName="Engine"
+      washFromEngineFraction="0.0"
+    />
+
+    <Wing 
+      name="Left1"
+      aerofoil="SystemData/Aeroplanes/RTEraserFive/Wing"
+      numSections="3"
+      mass="0.015"
+
+      positionX="0.04"
+      positionY="0.05"
+      positionZ="0.0"
+      extentsX="0.18"
+      extentsY="0.16"
+      extentsZ="0.01"
+      wingAspectRatio="9.0"
+      groundEffect="1"
+      
+      CLPerDegree="0.003"
+      CDPerDegree="0.01"
+      CMPerDegree="-0.013"
+      flapFraction="0.55"
+      degreesPerControl="55"
+      slopDegreesPerNewton="5"
+      
+      washFromEngineName="Engine"
+      washFromEngineFraction="0.6"
+
+      controlRate="20"
+      controlPerChannel0="1"
+    />
+
+    <Wing
+      name="Left2"
+      aerofoil="SystemData/Aeroplanes/RTEraserFive/Wing"
+      numSections="3"
+      mass="0.01"
+
+      positionX="0.055"
+      positionY="0.21"
+      positionZ="0.0"
+      extentsX="0.15"
+      extentsY="0.19"
+      extentsZ="0.01"
+      wingAspectRatio="5.0"
+      groundEffect="1"
+      
+      CLPerDegree="0.003"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.013"
+      flapFraction="0.65"
+      degreesPerControl="55"
+      
+      washFromEngineName="Engine"
+      washFromEngineFraction="0.0"
+
+      controlRate="20"
+      controlPerChannel0="1"
+    />
+
+    <Wing
+      name="Right1"
+      copy="Left1"
+      mirror="1"
+    />
+
+    <Wing
+      name="Right2"
+      copy="Left2"
+      mirror="1"
+      trimControl="-0.03"
+    />
+
+    <Wing
+      name="WingTipLeft"
+      aerofoil="SystemData/Aerofoils/Symmetric/Flat"
+      numSections="1"
+      mass="0.002"
+
+      positionX="0.01"
+      positionY="0.41"
+      positionZ="-0.03"
+      rotationX="90.0"
+      extentsX="0.03"
+      extentsY="0.06"
+      extentsZ="0.001"
+      wingAspectRatio="5.0"
+      groundEffect="1"
+       
+      collide="true"
+    />
+
+    <Wing
+      name="WingTipRight"
+      copy="WingTipLeft"
+      mirror="1"
+    />
+
+
+    <Wing
+      name="Tail"
+      aerofoil="SystemData/Aerofoils/Symmetric/Flat"
+      numSections="2"
+      mass="0.009"
+
+      positionX="-0.44"
+      positionY="-0.19"
+      positionZ="0.00"
+      extentsX="0.12"
+      extentsY="0.38"
+      extentsZ="0.01"
+      rotationY="0.75"
+      wingAspectRatio="5.0"
+      groundEffect="1"
+      
+      washFromWingName1="Left1"
+      washFromWingName2="Right1"
+      washFromWingFraction1="0.7"
+      washFromWingFraction2="0.7"
+
+      CLPerDegree="0.0"
+      CDPerDegree="0.002"
+      CMPerDegree="0"
+      flapFraction="0.9"
+      degreesPerControl="55"
+      slopDegreesPerNewton="7"
+      
+      washFromEngineName="Engine"
+      washFromEngineFraction="0.6"
+      
+      controlRate="20"
+      controlPerChannel1="1"
+    />
+
+    <Wing
+      name="Fin"
+      aerofoil="SystemData/Aerofoils/Symmetric/Flat"
+      numSections="2"
+      mass="0.008"
+
+      positionX="-0.51"
+      positionY="0.0"
+      positionZ="-0.05"
+      rotationX="90.0"
+      extentsX="0.17"
+      extentsY="0.22"
+      extentsZ="0.01"
+      wingAspectRatio="4.0"
+      
+      CLPerDegree="0.0"
+      CDPerDegree="0.002"
+      CMPerDegree="0"
+      flapFraction="1.0"
+      degreesPerControl="45"
+      slopDegreesPerNewton="7"
+      
+      washFromEngineName="Engine"
+      washFromEngineFraction="0.7"
+
+      controlRate="20"
+      controlPerChannel2="-1"
+      collide="false"
+    />
+
+    <PropellerEngine
+      name="Engine"
+      positionX="0.290 "
+      positionZ="0.0"
+      rotationY="1"
+      
+      numBlades = "2"
+      radius = "0.1016"
+      pitch = "0.1016"
+      bladeChord = "0.01"
+      CL0 = "0.3"
+      CLPerDegree = "0.1"
+      CD0="0.01"
+      CDInducedMultiplier="1.0"
+      stallAngle="20"
+      inertia = "0.000015"
+      maxTorque = "0.01"
+      maxRPM = "11000.0"
+      minRPM = "0.0"
+      frictionTorque ="0.006"
+      aeroTorqueScale="1.0"
+      washRotationFraction = "0.00"
+      propDiskAreaScale = "1.0"
+      propPredictionTime = "0.08"
+      propPredictionMaxAngSpeed = "3.0"
+      isVariable="0"
+
+      controlExp="1.0"
+      controlRate="20"
+      controlPerChannel3="1"
+
+      audioFile="SystemData/Audio/NewMotor44100Mono.raw"
+      audioStereo="0"
+      audioSampleRate="44100"
+      audioRadius="0.2"
+      audioMinVolume="0.0"
+      audioMaxVolume="1"
+      audioMinFreqScale="0.25"
+      audioMaxFreqScale="0.8"
+
+      colourX="0.5"
+      colourY="0.5"
+      colourZ="0.5"
+      colourW="0.1"
+    />
+
+    <Fuselage
+      name="Fuselage"
+      mass="0.014"
+      positionX="0.24"
+      positionY="0.0"
+      positionZ="0.0"
+      extentsX="0.05"
+      extentsY="0.05"
+      extentsZ="0.05"
+
+      CDX="6.0"
+      CDY="2"
+      CDZ="2"
+      render="true"
+      collide="false"
+    />
+	</Aerodynamics>
+
+  <Wheels>
+    <Wheel
+      name="Left"
+      positionX="0.14"
+      positionY="0.3"
+      positionZ="0.015"
+      directionX="0.0"
+      directionY="-0.5"
+      directionZ="-0.5"
+      axleX="0.0"
+      axleY="1.0"
+      axleZ="0.0"
+      suspensionRestLength = "0.41"
+      wheelRadius = "0.02"
+      suspensionStiffness = "200.0"
+      suspensionDampingRatio = "0.1"
+      suspensionCompressionDampingRatio = "0.2"
+      rollInfluence = "1.0"
+      wheelFriction = "1"
+      maxSuspensionTravelCm = "10.0"
+      maxSuspensionForce = "100"
+      brake = "0.1"
+    />
+    <Wheel
+      name="Right"
+      positionX="0.14"
+      positionY="-0.3"
+      positionZ="0.015"
+      directionX="0.0"
+      directionY="0.5"
+      directionZ="-0.5"
+      axleX="0.0"
+      axleY="1.0"
+      axleZ="0.0"
+      suspensionRestLength = "0.41"
+      wheelRadius = "0.02"
+      suspensionStiffness = "200.0"
+      suspensionDampingRatio = "0.1"
+      suspensionCompressionDampingRatio = "0.2"
+      rollInfluence = "1.0"
+      wheelFriction = "1"
+      maxSuspensionTravelCm = "10.0"
+      maxSuspensionForce = "100"
+      brake = "0.1"
+    />
+    <Wheel
+      name="TailWheel"
+      positionX="-0.45"
+      positionY="0.0"
+      positionZ="-0.04"
+      directionX="0.0"
+      directionY="0.0"
+      directionZ="-1.0"
+      axleX="0.0"
+      axleY="1.0"
+      axleZ="0.0"
+      suspensionRestLength = "0.05"
+      wheelRadius = "0.02"
+      suspensionStiffness = "500.0"
+      suspensionDampingRatio = "0.5"
+      suspensionCompressionDampingRatio = "0.5"
+      rollInfluence = "0.0"
+      wheelFriction = "0.3"
+      maxSuspensionTravelCm = "1.0"
+      maxSuspensionForce = "100"
+      brake = "0.1"
+      anglePerChannel2="0"
+    />
+  </Wheels>
+  
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+    <Shape
+      type="box"
+      name="Nose weight"
+      mass="0.037"
+      positionX="0.23"
+      positionY="0.0"
+      positionZ="-0.01"
+      extentsX="0.06"
+      extentsY="0.03"
+      extentsZ="0.03"
+      render="true"
+      collide="false"
+    />
+
+    <Shape
+      type="box"
+      name="Fin"
+      mass="0.0"
+      positionX="-0.54"
+      positionY="0.0"
+      positionZ="0.05"
+      extentsX="0.12"
+      extentsY="0.02"
+      extentsZ="0.2"
+      render="true"
+      collide="true"
+    />
+
+  </Geometry>
+
+  <CrashShapes>
+    <CrashShape
+      type="box"
+      name="Prop"
+      engineName="Engine"
+      crashPropSpeed="30"
+      positionX="0.29"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationX="45"
+      extentsX="0.01"
+      extentsY="0.15"
+      extentsZ="0.15"
+      />
+  </CrashShapes>
+</Physics>
+
+<Graphics>
+  <Model 
+    name="Standard" 
+    model3DS="SystemData/Aeroplanes/RTEraserFive/RTEraserFiveTextured.ac" 
+    modelScale="1.0" 
+    cullBackFace="true" 
+    unsetColourR="255" unsetColourG="255" unsetColourB="0"
+    offsetX="0" offsetY="0.0" offsetZ="0.0"/>
+
+  <ControlSurface
+    name="AileronLeft"
+    source="Left1"
+    angleMultiplier="1"
+    hingePoint1X="-0.360"
+    hingePoint1Y="0.001"
+    hingePoint1Z="-0.076"
+    hingePoint2X="-0.054"
+    hingePoint2Y="0.001"
+    hingePoint2Z="-0.021"
+  />
+  <ControlSurface
+    name="AileronRight"
+    source="Right1"
+    angleMultiplier="-1"
+    hingePoint1X="0.360"
+    hingePoint1Y="0.001"
+    hingePoint1Z="-0.076"
+    hingePoint2X="0.054"
+    hingePoint2Y="0.001"
+    hingePoint2Z="-0.021"
+  />
+  <ControlSurface
+    name="Elevator"
+    source="Tail"
+    angleMultiplier="1"
+    hingePoint1X="-0.070"
+    hingePoint1Y="0.001"
+    hingePoint1Z="0.413"
+    hingePoint2X="0.070"
+    hingePoint2Y="0.001"
+    hingePoint2Z="0.413"
+  />
+  <ControlSurface
+    name="Rudder"
+    source="Fin"
+    angleMultiplier="-1"
+    hingePoint1X="0"
+    hingePoint1Y="-0.077"
+    hingePoint1Z="0.462"
+    hingePoint2X="0"
+    hingePoint2Y="0.098"
+    hingePoint2Z="0.462"
+  />
+  <ControlSurface
+    name="Propeller"
+    source="Engine"
+    hingePoint1X="0"
+    hingePoint1Y="0"
+    hingePoint1Z="1"
+    hingePoint2X="0"
+    hingePoint2Y="0"
+    hingePoint2Z="0"
+  />
+</Graphics>
+

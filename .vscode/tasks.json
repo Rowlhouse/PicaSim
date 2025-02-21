@@ -1,0 +1,54 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build C++",
+            "type": "shell",
+            "command": "make",
+            "args": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Debug puis Valgrind",
+            "type": "shell",
+            "command": "gdb",
+            "args": ["-ex", "run", "-ex", "quit", "--args", "${workspaceFolder}/PicaSim"],
+            "problemMatcher": [],
+            "dependsOn": "Build C++",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Valgrind après GDB",
+            "type": "shell",
+            "command": "valgrind",
+            "args": ["--leak-check=full", "--track-origins=yes", "${workspaceFolder}/PicaSim"],
+            "problemMatcher": [],
+            "dependsOn": "Debug puis Valgrind",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Analyser avec Valgrind",
+            "type": "shell",
+            "command": "valgrind",
+            "args": [
+                "--leak-check=full",
+                "--track-origins=yes",
+                "${workspaceFolder}/PicaSim"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            }
+        }
+    ]
+}

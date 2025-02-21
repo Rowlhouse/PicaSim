@@ -72,7 +72,7 @@ void TracePrintf(const char *fmt, ...)
   // now to file
   if (logFile)
   {
-    fprintf(logFile, str);
+    fprintf(logFile, "%s", str);
     fprintf(logFile, "\n");
     // flush it line-by-line so we don't miss any
     fflush(logFile);

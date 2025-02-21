@@ -1,0 +1,25 @@
+
+<Aerofoil
+  name="WortmannFX60-126"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.008"
+  CDStalled="1.7"
+  CM0="-0.08"
+  CMPerDeg="0.002"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"
+  
+  useData="0"
+  
+  CL0 = "0.25"
+  CLPerDeg = "0.09"
+  positiveAttachedAngle = "8"
+  positiveStallRange = "10"
+  negativeAttachedAngle = "-6.5"
+  negativeStallRange = "-8"
+  dragBucketFactor = "0.1"
+  dragBucketLowerAngle = "-2.0"
+  dragBucketUpperAngle = "6.0"
+/>

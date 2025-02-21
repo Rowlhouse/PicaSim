@@ -1,0 +1,25 @@
+<Aerofoil
+  name="AG455CT"  
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.009"
+  CDStalled="1.2"
+  CM0="-0.03"
+  CMPerDeg="0.003"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"
+
+  useData="0"
+  
+  CL0 = "0.2"
+  CLPerDeg = "0.1"
+  positiveAttachedAngle = "7.5"
+  positiveStallRange = "15"
+  negativeAttachedAngle = "-4.5"
+  negativeStallRange = "-9"
+  dragBucketFactor = "0.2"
+  dragBucketLowerAngle = "-2.0"
+  dragBucketUpperAngle = "5.0"
+/>
+

@@ -9,9 +9,7 @@ s3eBool S3E_TRUE = SDL_TRUE;
 
 int mouseX = 0, mouseY = 0;
 
-SDL_Window* window = SDL_CreateWindow("Native Window Example",
-    SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-    800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+
 
 s3ePointerState etatMouse = S3E_POINTER_AVAILABLE;
 
@@ -21,6 +19,10 @@ std::map<IwTypeMessage, std::string> MessageTypeMap = {
     {GAMEPAD_ERROR, "ERROR"},
     {GAMEPAD_INFO, "INFO"}
 };
+
+
+SDL_Renderer* gRenderer = nullptr;
+SDL_Window* gWindow = nullptr;
 
 
 void IwAssert(int RowlHouse, bool test) {

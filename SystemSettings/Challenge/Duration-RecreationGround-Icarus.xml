@@ -1,0 +1,22 @@
+
+<ChallengeSettings
+  mTitle="Duration challenge with the Icarus DLG"
+  mInfo="Keep flying for as long as possible."
+  mThumbnail="SystemSettings/Thumbnails/Icarus.jpg"
+  mChallengeMode="3"
+  mChallengeID="99"
+  mWindSpeedOverride="0.2"
+  mThermalDensityOverride="14"
+  mTurbulenceOverride="0.5"
+  mSurfaceTurbulenceOverride="0.5"
+  mReferenceTime="120"
+  mAllowAeroplaneSettings="0"
+  mAllowWindStrengthSetting="0"
+  mAllowEnvironmentSettings="0"
+  mAeroplaneSettingsFile="SystemSettings/Aeroplane/Icarus.xml"
+  mEnvironmentSettingsFile="SystemSettings/Environment/RecreationGroundPanoramic.xml"
+  mLightingSettingsFile="SystemSettings/Lighting/CloudyDaytime.xml"
+  mDefaultToChaseView="0"
+  mThermalSeed="2457"
+/>
+

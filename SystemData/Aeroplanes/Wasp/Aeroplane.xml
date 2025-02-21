@@ -1,0 +1,568 @@
+<!--
+Wasp - Quadcopter - motors separated by 45cm along the diagonal
+-->
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    friction="1.0"
+    frictionScaleX="1"
+    frictionScaleY="1"
+    frictionScaleZ="1"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <PropellerEngine
+      name="FL"
+      positionX="0.159"
+      positionY="0.159"
+      positionZ="0.04"
+      rotationY="-90.0"
+      
+      numBlades = "2"
+      numRings = "4"
+      radius = "0.127"
+      pitch = "0.114"
+      bladeChord = "0.01"
+      CL0 = "0.5"
+      CLPerDegree = "0.1"
+      CD0="0.1"
+      CDInducedMultiplier="2.0"
+      stallAngle="15"
+      inertia = "0.0001"
+      maxTorque = "0.75"
+      maxRPM = "-7000"
+      minRPM = "0"
+      frictionTorque ="0.02"
+      transitionalLiftAmount="0.05"
+      transitionalLiftSpeed="3.0"
+
+      controlExp="0.655"
+      controlRate="50"
+      
+      gyroName0="Pitch"
+      controlPerGyro0="1"
+      
+      gyroName1="Roll"
+      controlPerGyro1="-1"
+
+      gyroName2="Yaw"
+      controlPerGyro2="-1"
+
+      gyroName3="Throttle"
+      controlPerGyro3="1"
+      
+      audioFile="SystemData/Audio/Motor22050Mono.raw"
+      audioStereo="0"
+      audioSampleRate="22050"
+      audioRadius="0.2"
+      audioMinVolume="0"
+      audioMaxVolume="1"
+      audioMinFreqScale="0.2"
+      audioMaxFreqScale="2"
+
+      colourX="0.0"
+      colourY="1.0"
+      colourZ="0.0"
+      colourW="0.1"
+    />
+
+    <PropellerEngine
+      name="FR"
+      positionX="0.159"
+      positionY="-0.159"
+      positionZ="0.04"
+      rotationY="-90.0"
+      
+      numBlades = "2"
+      numRings = "4"
+      radius = "0.127"
+      pitch = "0.114"
+      bladeChord = "0.01"
+      CL0 = "0.5"
+      CLPerDegree = "0.1"
+      CD0="0.1"
+      CDInducedMultiplier="2.0"
+      stallAngle="15"
+      inertia = "0.0001"
+      maxTorque = "0.75"
+      maxRPM = "7000"
+      minRPM = "0"
+      frictionTorque ="0.02"
+      transitionalLiftAmount="0.05"
+      transitionalLiftSpeed="3.0"
+
+      controlExp="0.655"
+      controlRate="50"
+
+      gyroName0="Pitch"
+      controlPerGyro0="1"
+
+      gyroName1="Roll"
+      controlPerGyro1="1"
+
+      gyroName2="Yaw"
+      controlPerGyro2="1"
+
+      gyroName3="Throttle"
+      controlPerGyro3="1"
+
+      audioFile="SystemData/Audio/Motor22050Mono.raw"
+      audioStereo="0"
+      audioSampleRate="22050"
+      audioRadius="0.2"
+      audioMinVolume="0"
+      audioMaxVolume="1"
+      audioMinFreqScale="0.2"
+      audioMaxFreqScale="2"
+
+      colourX="0.0"
+      colourY="1.0"
+      colourZ="0.0"
+      colourW="0.1"
+    />
+
+    <PropellerEngine
+      name="BL"
+      positionX="-0.159"
+      positionY="0.159"
+      positionZ="0.04"
+      rotationY="-90.0"
+      
+      numBlades = "2"
+      numRings = "4"
+      radius = "0.127"
+      pitch = "0.114"
+      bladeChord = "0.01"
+      CL0 = "0.5"
+      CLPerDegree = "0.1"
+      CD0="0.1"
+      CDInducedMultiplier="2.0"
+      stallAngle="15"
+      inertia = "0.0001"
+      maxTorque = "0.75"
+      maxRPM = "7000"
+      minRPM = "0"
+      frictionTorque ="0.02"
+      transitionalLiftAmount="0.05"
+      transitionalLiftSpeed="3.0"
+
+      controlExp="0.655"
+      controlRate="50"
+
+      gyroName0="Pitch"
+      controlPerGyro0="-1"
+
+      gyroName1="Roll"
+      controlPerGyro1="-1"
+
+      gyroName2="Yaw"
+      controlPerGyro2="1"
+
+      gyroName3="Throttle"
+      controlPerGyro3="1"
+
+      audioFile="SystemData/Audio/Motor22050Mono.raw"
+      audioStereo="0"
+      audioSampleRate="22050"
+      audioRadius="0.2"
+      audioMinVolume="0"
+      audioMaxVolume="1"
+      audioMinFreqScale="0.2"
+      audioMaxFreqScale="2"
+
+      colourX="1.0"
+      colourY="0.0"
+      colourZ="0.0"
+      colourW="0.1"
+    />
+
+    <PropellerEngine
+      name="BR"
+      positionX="-0.159"
+      positionY="-0.159"
+      positionZ="0.04"
+      rotationY="-90.0"
+      
+      numBlades = "2"
+      numRings = "4"
+      radius = "0.127"
+      pitch = "0.114"
+      bladeChord = "0.01"
+      CL0 = "0.5"
+      CLPerDegree = "0.1"
+      CD0="0.1"
+      CDInducedMultiplier="2.0"
+      stallAngle="15"
+      inertia = "0.0001"
+      maxTorque = "0.75"
+      maxRPM = "-7000"
+      minRPM = "0"
+      frictionTorque ="0.02"
+      transitionalLiftAmount="0.05"
+      transitionalLiftSpeed="3.0"
+
+      controlExp="0.655"
+      controlRate="50"
+
+      gyroName0="Pitch"
+      controlPerGyro0="-1"
+
+      gyroName1="Roll"
+      controlPerGyro1="1"
+
+      gyroName2="Yaw"
+      controlPerGyro2="-1"
+
+      gyroName3="Throttle"
+      controlPerGyro3="1"
+
+      audioFile="SystemData/Audio/Motor22050Mono.raw"
+      audioStereo="0"
+      audioSampleRate="22050"
+      audioRadius="0.2"
+      audioMinVolume="0"
+      audioMaxVolume="1"
+      audioMinFreqScale="0.2"
+      audioMaxFreqScale="2"
+
+      colourX="1.0"
+      colourY="0.0"
+      colourZ="0.0"
+      colourW="0.1"
+    />
+
+    <Fuselage
+      name="Payload"
+      mass="0.35"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.01"
+      extentsX="0.1"
+      extentsY="0.1"
+      extentsZ="0.08"
+      CDX="1"
+      CDY="1"
+      CDZ="1"
+      render="false"      
+    />
+
+    <Fuselage
+      name="Frame1"
+      mass="0.14"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.0"
+      yaw="45"
+      extentsX="0.5"
+      extentsY="0.05"
+      extentsZ="0.01"
+      CDX="1"
+      CDY="1"
+      CDZ="1"
+      render="false"
+    />
+
+    <Fuselage
+      name="Frame2"
+      mass="0.14"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.0"
+      yaw="-45"
+      extentsX="0.5"
+      extentsY="0.05"
+      extentsZ="0.01"
+      CDX="1"
+      CDY="1"
+      CDZ="1"
+      render="false"
+    />
+
+    <Wing
+      name="FwdBack"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.0"
+
+      positionX="0.0"
+      positionY="-0.05"
+      positionZ="0.0"
+      extentsX="0.1"
+      extentsY="0.1"
+      extentsZ="0.01"
+      
+      wingAspectRatio="1.0"
+      render="true"
+    />
+
+    <Wing
+      name="BackFwd"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.0"
+
+      positionX="0.0"
+      positionY="0.05"
+      positionZ="0.0"
+      extentsX="0.1"
+      extentsY="0.1"
+      extentsZ="0.01"
+      yaw="180"
+      
+      wingAspectRatio="1.0"
+      render="true"
+    />
+
+    <Wing
+      name="LeftRight"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.0"
+
+      positionX="0.05"
+      positionY="0.0"
+      positionZ="0.0"
+      yaw="90"
+      extentsX="0.1"
+      extentsY="0.1"
+      extentsZ="0.01"
+      
+      wingAspectRatio="1.0"
+      render="true"
+    />
+
+    <Wing
+      name="RightLeft"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.0"
+
+      positionX="-0.05"
+      positionY="0.0"
+      positionZ="0.0"
+      yaw="-90"
+      extentsX="0.1"
+      extentsY="0.1"
+      extentsZ="0.01"
+      
+      wingAspectRatio="1.0"
+      render="true"
+    />
+
+  </Aerodynamics>
+
+  <Gyros>
+    <Gyro
+      name="Yaw"
+      axisX="0"
+      axisY="0"
+      axisZ="1"
+      gain="0.05"
+      initialMode="axis"
+      rotationRatePerChannel2="12"
+    />
+    <Gyro
+      name="Throttle"
+      axisX="0"
+      axisY="0"
+      axisZ="0"
+      gain="1.0"
+      initialMode="passThrough"
+      passThroughPerChannel3="1"
+      heightRatePerChannel3="10"
+    />
+    <Gyro
+      name="Roll"
+      axisX="1"
+      axisY="0"
+      axisZ="0"
+      gain="0.25"
+      channelForMode="6"
+      anglePerChannel0="45"
+      rotationRatePerChannel0="-6"      
+      speedPerChannel0="10"
+      tiltPerSpeed="10"
+      maxTilt="45"
+    />
+    <Gyro
+      name="Pitch"
+      axisX="0"
+      axisY="1"
+      axisZ="0"
+      gain="0.25"
+      channelForMode="6"
+      anglePerChannel1="45"
+      rotationRatePerChannel1="-6"
+      speedPerChannel1="10"
+      tiltPerSpeed="10"
+      maxTilt="45"
+    />
+  </Gyros>
+
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+    <Shape
+      type="box"
+      name="FL"
+      mass="0.09"
+      positionX="0.159"
+      positionY="0.159"
+      positionZ="0.02"
+      extentsX="0.02"
+      extentsY="0.02"
+      extentsZ="0.04"
+      colourTopX="1"
+      colourTopY="0"
+      colourTopZ="0"
+      colourSidesX="1"
+      colourSidesY="0"
+      colourSidesZ="0"
+      colourBottomX="1"
+      colourBottomY="0"
+      colourBottomZ="0"
+      render="true"
+    />
+    <Shape
+      type="box"
+      name="FR"
+      mass="0.09"
+      positionX="0.159"
+      positionY="-0.159"
+      positionZ="0.02"
+      extentsX="0.02"
+      extentsY="0.02"
+      extentsZ="0.04"
+      colourTopX="1"
+      colourTopY="0"
+      colourTopZ="0"
+      colourSidesX="1"
+      colourSidesY="0"
+      colourSidesZ="0"
+      colourBottomX="1"
+      colourBottomY="0"
+      colourBottomZ="0"
+      render="true"
+    />
+    <Shape
+      type="box"
+      name="BL"
+      mass="0.09"
+      positionX="-0.159"
+      positionY="0.159"
+      positionZ="0.02"
+      extentsX="0.02"
+      extentsY="0.02"
+      extentsZ="0.04"
+      colourTopX="0"
+      colourTopY="1"
+      colourTopZ="0"
+      colourSidesX="0"
+      colourSidesY="1"
+      colourSidesZ="0"
+      colourBottomX="0"
+      colourBottomY="1"
+      colourBottomZ="0"
+      render="true"
+    />
+    <Shape
+      type="box"
+      name="BR"
+      mass="0.09"
+      positionX="-0.159"
+      positionY="-0.159"
+      positionZ="0.02"
+      extentsX="0.02"
+      extentsY="0.02"
+      extentsZ="0.04"
+      colourTopX="0"
+      colourTopY="1"
+      colourTopZ="0"
+      colourSidesX="0"
+      colourSidesY="1"
+      colourSidesZ="0"
+      colourBottomX="0"
+      colourBottomY="1"
+      colourBottomZ="0"
+      render="true"
+    />
+  </Geometry>
+
+  <CrashShapes>
+    <CrashShape
+      type="box"
+      name="Props"
+      engineName="FL"
+      crashPropSpeed="30"
+      positionX="0.0"
+      positionY="0.0"
+      positionZ="0.06"
+      rotationX="0"
+      extentsX="0.6"
+      extentsY="0.6"
+      extentsZ="0.05"
+      render="false"
+      />
+  </CrashShapes>
+
+</Physics>
+
+<Graphics>
+  <Model
+    name="Standard"
+    model3DS="SystemData/Aeroplanes/Wasp/Wasp.ac"
+    modelScale="1.0"
+    cullBackFace="true"
+    unsetColourR="255" unsetColourG="255" unsetColourB="0"
+    offsetX="0" offsetY="0.0" offsetZ="0.0"
+    />
+  <ControlSurface
+    name="PropellerFL"
+    source="FL"
+    hingePoint1X="-0.155563"
+    hingePoint1Y="1"
+    hingePoint1Z="-0.155564"
+    hingePoint2X="-0.155563"
+    hingePoint2Y="0"
+    hingePoint2Z="-0.155564"
+  />
+  <ControlSurface
+    name="PropellerFR"
+    source="FR"
+    hingePoint1X="0.155563"
+    hingePoint1Y="0"
+    hingePoint1Z="-0.155564"
+    hingePoint2X="0.155563"
+    hingePoint2Y="1"
+    hingePoint2Z="-0.155564"
+  />
+  <ControlSurface
+    name="PropellerBL"
+    source="BL"
+    hingePoint1X="-0.155563"
+    hingePoint1Y="0"
+    hingePoint1Z="0.155564"
+    hingePoint2X="-0.155563"
+    hingePoint2Y="1"
+    hingePoint2Z="0.155564"
+  />
+  <ControlSurface
+    name="PropellerBR"
+    source="BR"
+    hingePoint1X="0.155563"
+    hingePoint1Y="1"
+    hingePoint1Z="0.155564"
+    hingePoint2X="0.155563"
+    hingePoint2Y="0"
+    hingePoint2Z="0.155564"
+  />
+</Graphics>
+

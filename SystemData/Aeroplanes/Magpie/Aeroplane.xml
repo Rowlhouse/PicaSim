@@ -1,0 +1,243 @@
+<!--
+Magpie
+-->
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="0.9"
+    wingChord="0.2"
+    CMRollFromY="0.0"
+    friction="0.5"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing
+      name="Mid"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/RG15"
+      numSections="1"
+      mass="0.05"
+
+      positionX="-0.0"
+      positionY="-0.05"
+      positionZ="0.0"
+      extentsX="0.2"
+      extentsY="0.1"
+      extentsZ="0.01"
+      wingAspectRatio="10.0"
+      
+      CLPerDegree="0.0"
+      CDPerDegree="0.5"
+      CMPerDegree="0.0"
+      flapFraction="0.01"
+      degreesPerControl="1.0"
+
+      controlPerChannel3="-1"
+      />
+
+    <Wing 
+      name="Left"
+      aerofoil="SystemData/Aerofoils/SemiSymmetric/RG15"
+      numSections="3"
+      mass="0.05"
+
+      positionX="-0.0"
+      positionY="0.05"
+      positionZ="0.0"
+      extentsX="0.2"
+      extentsY="0.4"
+      extentsZ="0.01"
+      roll="5"
+      wingAspectRatio="10.0"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="1.0"
+      degreesPerControl="8.0"
+
+      controlPerChannel0="1"
+      controlPerChannel3="-0.3"
+    />
+
+    <Wing
+      name="Right"
+      copy="Left"
+      mirror="1"
+    />
+
+    <Wing
+      name="Tail"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0006"
+      numSections="2"
+      mass="0.015"
+
+      positionX="-0.4"
+      positionY="-0.15"
+      positionZ="0.03"
+      rotationX="0.0"
+      rotationY="0.4"
+      rotationZ="0.0"
+      extentsX="0.20"
+      extentsY="0.3"
+      extentsZ="0.01"
+      wingAspectRatio="2.0"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="0.5"
+      degreesPerControl="10.0"
+
+      controlPerChannel1="1"
+      controlPerChannel3="-0.2"
+    />
+
+    <Wing
+      name="Fin"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0006"
+      numSections="2"
+      mass="0.01"
+
+      positionX="-0.45"
+      positionY="0.0"
+      positionZ="-0.05"
+      rotationX="90.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.12"
+      extentsY="0.15"
+      extentsZ="0.01"
+      wingAspectRatio="1.0"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="0.5"
+      degreesPerControl="20.0"
+
+      controlPerChannel0="0"
+      controlPerChannel1="0"
+      controlPerChannel2="-1"
+      controlPerChannel3="0"
+    />
+
+    <Fuselage
+      name="Fuselage"
+      mass="0.02"
+      positionX="-0.15"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.7"
+      extentsY="0.04"
+      extentsZ="0.04"
+
+      CDX="0.9"
+      CDY="0.9"
+      CDZ="0.9"
+      render="true"
+    />
+  </Aerodynamics>
+
+  <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+
+    <Shape
+      type="box"
+      mass="0.04"
+      positionX="0.3"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.05"
+      extentsY="0.05"
+      extentsZ="0.05"
+      render="false"
+      collide="false"
+    />
+  </Geometry>  
+</Physics>
+
+<Graphics>
+  <Model name="Standard" model3DS="SystemData/Aeroplanes/Magpie/Magpie.ac" modelScale="1.0" cullBackFace="true" unsetColourR="32" unsetColourG="32" unsetColourB="32"/>
+
+  <ControlSurface
+    name="Tail"
+    source="Tail"
+    angleMultiplier="1"
+    hingePoint1X="-0.020"
+    hingePoint1Y="0.019"
+    hingePoint1Z="0.199"
+    hingePoint2X="0.020"
+    hingePoint2Y="0.019"
+    hingePoint2Z="0.199"
+  />
+
+  <ControlSurface
+    name="WingLeft"
+    source="Left"
+    angleMultiplier="-1"
+    hingePoint1X="-0.059"
+    hingePoint1Y="0.006"
+    hingePoint1Z="-0.046"
+    hingePoint2X="-0.426"
+    hingePoint2Y="0.013"
+    hingePoint2Z="-0.030"
+  />
+
+  <ControlSurface
+    name="WingRight"
+    source="Right"
+    angleMultiplier="1"
+    hingePoint1X="0.059"
+    hingePoint1Y="0.006"
+    hingePoint1Z="-0.046"
+    hingePoint2X="0.426"
+    hingePoint2Y="0.013"
+    hingePoint2Z="-0.030"
+  />
+
+  <ControlSurface
+    name="Head"
+    source="Fin"
+    angleMultiplier="1"
+    hingePoint1X="0.0"
+    hingePoint1Y="-0.024"
+    hingePoint1Z="-0.129"
+    hingePoint2X="0.0"
+    hingePoint2Y="0.024"
+    hingePoint2Z="-0.129"
+  />
+
+
+</Graphics>
+
+<Audio>
+  <AirFlow
+    file="SystemData/Audio/Glider22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="15"
+    mFreqScalePerSpeed=".125"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume=".1"
+  />
+</Audio>

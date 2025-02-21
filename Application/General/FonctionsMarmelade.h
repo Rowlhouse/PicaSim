@@ -1,10 +1,8 @@
 #ifndef FONCTIONSMARMELADE_H
 #define FONCTIONSMARMELADE_H
 
-// #include "ClassesMarmelade.h"
 // #include "Helpers.h"
-#include "ClassesUIMarmelade.h"
-// #include "Vecteurs.h"
+// #include "ClassesUIMarmelade.h"
 // #include "RenderManager.h"
 // #include "Entete.h"
 // #include <SDL2/SDL.h>
@@ -12,11 +10,13 @@
 // #include <cassert>
 // #include <chrono>
 // #include <cstdint>
-// #include <string>
 // #include <iostream>
 // #include <fstream>
 #include <SDL2/SDL_syswm.h>
+#include <string>
 // #include <thread>
+#include "ClassesMarmelade.h"
+#include "Vecteurs.h"
 #include "gamepad_interface.h"
 
 extern uint64_t frameStart;
@@ -224,19 +224,28 @@ bool IwGxDrawRectScreenSpace(Vector2* pos, Vector2* wh);
 // Fonction IwSafeCast générique
 template <typename T>
 T IwSafeCast(CIwResource* resource) {
-    // Vérifier si le pointeur est nul
     if (!resource) {
+        std::cerr << "Erreur : Pointeur null passé à IwSafeCast." << std::endl;
         return nullptr;
     }
 
-    // Utiliser dynamic_cast pour tenter de convertir le pointeur en un type dérivé
+    // Récupérer la ressource sous forme de CIwResource*
+    if (!resource) {
+        std::cerr << "Erreur : La ressource est null." << std::endl;
+        return nullptr;
+    }
+
+    // Vérifier si le cast est possible
     T castedResource = dynamic_cast<T>(resource);
     if (!castedResource) {
-        std::cerr << "Erreur : Le cast de type a échoué." << std::endl;
+        std::cerr << "Erreur : Le cast a échoué. Type source : " 
+                  << typeid(*resource).name() << " -> Type cible : " << typeid(T).name() 
+                  << std::endl;
     }
 
     return castedResource;
 }
+
 
 // Définir les drapeaux comme des constantes bitmasks
 constexpr unsigned int IW_GX_COLOUR_BUFFER_F = 0x01;  // Bit 0

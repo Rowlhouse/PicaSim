@@ -75,8 +75,6 @@ typedef char IwChar;
 extern s3eBool S3E_FALSE;
 extern s3eBool S3E_TRUE;
 
-extern SDL_Window* window;
-
 enum s3ePointerState {
     S3E_POINTER_AVAILABLE,
     S3E_POINTER_TYPE,
@@ -290,6 +288,10 @@ enum GLextension {
 };
 
 extern std::map<IwTypeMessage, std::string> MessageTypeMap;
+
+extern SDL_Renderer* gRenderer;
+extern SDL_Window* gWindow;
+
 
 
 void IwAssert(int RowlHouse, bool test);

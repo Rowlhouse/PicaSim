@@ -8,9 +8,80 @@ dpiInit has been called
 Calling AudioManager::Init()
 AudioManager::Init()
 AudioManager::Init() has been called
-Options: reported memory = -1651027968 KB
+Options: reported memory = -1382547456 KB
 Options: Using 16 bit textures = 0
-/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:EnvironmentSettings():1155 [0x7ffecadc2658]: 
-/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ObjectsSettings():968 [0x7ffecadc2910]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:EnvironmentSettings():1155 [0x1ffeffdfd8]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ObjectsSettings():968 [0x1ffeffe290]: 
 Calling MenuInit
 Loading Menus/Menu_1536.group
+MenuInit has been called
+Making settings directories if necessary
+Loading game settings
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2869 [0x1ffeffd820]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():480 [0x1ffeffd830]: 
+Options: reported memory = -1382547456 KB
+Options: Using 16 bit textures = 0
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2211 [0x1ffeffd9f0]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1985 [0x1ffeffddb0]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1985 [0x1ffeffde68]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1985 [0x1ffeffdf20]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1851 [0x1ffeffd9f8]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1245 [0x1ffeffdfd8]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:EnvironmentSettings():1155 [0x1ffeffd240]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():753 [0x1ffeffe070]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():878 [0x1ffeffe198]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1058 [0x1ffeffe290]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ObjectsSettings():968 [0x1ffeffd390]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:~ObjectsSettings():974 [0x1ffeffd390]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():157 [0x1ffeffe360]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2479 [0x1ffeffe398]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe4a8]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe598]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe688]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe4bc]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe5ac]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe69c]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe4d0]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe5c0]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe6b0]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe4e4]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe5d4]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe6c4]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe4f8]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe5e8]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe6d8]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe50c]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe5fc]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe6ec]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe520]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe610]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe700]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe534]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe624]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe714]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe548]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe638]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe728]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe55c]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe64c]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe73c]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe570]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe660]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe750]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe584]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe674]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2563 [0x1ffeffe764]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2662 [0x1ffeffe7c0]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1388 [0x1ffeffe9b0]: 
+mCheckpoints.size = 0
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():1704 [0x1ffeffe2c0]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/General/GameSettings.cpp:ReadFromDoc():2788 [0x1ffeffeb00]: 
+/home/user/Documents/2024-2025 (ENS)/Lift Contest/Application/PicaSimTest/Application/Menus/LoadingScreen.cpp:LoadingScreen():51 [0x1cc11c00]: 
+AddCentredImage():370: 
+Creating texture
+Loading texture Menus/StartBackground.jpg
+Disable mipmapping
+Before upload
+After upload
+Before adding element
+Before adding element to layout

@@ -1,0 +1,73 @@
+
+<ChallengeSettings
+  mTitle="Cliff race with Tigger"
+  mInfo="F3F style race - 10 laps between two gates 100m apart, starting on the gate to the left of the launch point within 30 seconds of launch. Increasing the glider ballast often helps."
+  mThumbnail="SystemSettings/Thumbnails/Tigger.jpg"
+  mChallengeMode="1"
+  mChallengeID="97"
+  mReferenceTime="60"
+  mPreparationTime="30"
+  mWindSpeedOverride="12.0"
+  mAllowAeroplaneSettings="0"
+  mAllowWindStrengthSetting="0"
+  mAllowEnvironmentSettings="0"
+  mAeroplaneSettingsFile="SystemSettings/Aeroplane/Tigger.xml"
+  mEnvironmentSettingsFile="SystemSettings/Environment/Cliff.xml"
+  mLightingSettingsFile="SystemSettings/Lighting/CloudyDaytime.xml"
+  mDefaultToChaseView="0"
+/>
+
+<Gates>
+  <Gate
+    mID="0"
+    mType="0"
+    mDraw2="0"
+    mPos2X="-45"
+    mPos2Y="100"
+    mPos2Z="77"
+    mDraw1="0"
+    mPos1X="-500"
+    mPos1Y="100"
+    mPos1Z="0"
+  />
+  <Gate
+    mID="1"
+    mType="0"
+    mDraw1="1"
+    mPos1X="-45"
+    mPos1Y="100"
+    mPos1Z="77"
+    mDraw2="0"
+    mPos2X="-500"
+    mPos2Y="100"
+    mPos2Z="0"
+  />
+  <Gate
+    mID="2"
+    mType="0"
+    mDraw2="1"
+    mPos2X="-60"
+    mPos2Y="200"
+    mPos2Z="77"
+    mDraw1="0"
+    mPos1X="-500"
+    mPos1Y="200"
+    mPos1Z="0"
+  />
+</Gates>
+
+<Checkpoints mCheckpointForTimer="1">
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="0"/>
+
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+</Checkpoints>

@@ -1,4 +1,6 @@
 #include "FonctionsMarmelade.h"
+#include "ClassesUIMarmelade.h"
+#include "Entete.h"
 //#include "FrameworkSettings.h"
 #include <thread>
 #include <fstream>
@@ -486,8 +488,8 @@ const char* s3eDeviceGetString(fonction param) {
 int s3eSurfaceGetInt (surface param) {
     if (param == S3E_SURFACE_HEIGHT) {
         int width; int height;
-        if (window) {
-            SDL_GetWindowSize(window, &width, &height);
+        if (gWindow) {
+            SDL_GetWindowSize(gWindow, &width, &height);
         } else {
             std::cerr << "Erreur : La fenêtre SDL n'est pas valide." << std::endl;
             width = -1; height = -1;
@@ -497,8 +499,8 @@ int s3eSurfaceGetInt (surface param) {
 
     else if (param == S3E_SURFACE_WIDTH) {
         int width; int height;
-        if (window) {
-            SDL_GetWindowSize(window, &width, &height);
+        if (gWindow) {
+            SDL_GetWindowSize(gWindow, &width, &height);
         } else {
             std::cerr << "Erreur : La fenêtre SDL n'est pas valide." << std::endl;
             width = -1; height = -1;
@@ -521,7 +523,7 @@ int s3eSurfaceGetInt (surface param) {
 
     else if (param == S3E_SURFACE_PIXEL_TYPE) {
 
-        SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_GetWindowPixelFormat(window));  // Récupérer le format du pixel
+        SDL_PixelFormat* pixelFormat = SDL_AllocFormat(SDL_GetWindowPixelFormat(gWindow));  // Récupérer le format du pixel
         int bitsPerPixel = pixelFormat->BitsPerPixel;
 ;  // Obtenir la profondeur en bits du pixel
 
@@ -545,7 +547,7 @@ uint64_t s3eTimerGetMs() {
 
 bool IwGxDrawRectScreenSpace(Vector2* pos, Vector2* wh) {
     
-    SDL_Renderer* renderer = GeneralRender;
+    SDL_Renderer* renderer = gRenderer;
         if (!renderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
@@ -590,27 +592,27 @@ bool IwGxFlush() {
 }
 
 bool IwGxSwapBuffers(){
-    SDL_GL_SwapWindow(window);
+    SDL_GL_SwapWindow(gWindow);
     return true;
 }
 
 bool IwGLSwapBuffers() {
-    SDL_GL_SwapWindow(window); //////////////////////////////////////////////////// Peut etre faire direct openGL
+    SDL_GL_SwapWindow(gWindow); //////////////////////////////////////////////////// Peut etre faire direct openGL
     return true;
 }
 
 uint32_t IwGxGetScreenWidth() {
     int width = 0, height = 0;
-    if (window) {
-        SDL_GetWindowSize(window, &width, &height);
+    if (gWindow) {
+        SDL_GetWindowSize(gWindow, &width, &height);
     }
     return static_cast<uint32_t>(width);
 }
 
 uint32_t IwGxGetScreenHeight() {
     int width = 0, height = 0;
-    if (window) {
-        SDL_GetWindowSize(window, &width, &height);
+    if (gWindow) {
+        SDL_GetWindowSize(gWindow, &width, &height);
     }
     return static_cast<uint32_t>(height);
 }
@@ -949,7 +951,7 @@ EGLNativeWindowType s3eGLGetNativeWindow() {
     SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
     
-        if (!SDL_GetWindowWMInfo(window, &wmInfo)) {
+        if (!SDL_GetWindowWMInfo(gWindow, &wmInfo)) {
             std::cerr << "Erreur : " << SDL_GetError() << std::endl;
             return 0;
         }
@@ -984,12 +986,12 @@ bool s3eDeviceCheckQuitRequest() {
 }
 
 bool IwGxPrintSetColour(int r, int g, int b) {
-    SDL_SetRenderDrawColor(GeneralRender, r, g, b, 255);
+    SDL_SetRenderDrawColor(gRenderer, r, g, b, 255);
     return true;
 }
 
 bool IwGxSetColClear(int r, int g, int b, int a) {
-    SDL_SetRenderDrawColor(GeneralRender, r, g, b, a);
+    SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
     return true;
 }
 
@@ -1124,26 +1126,57 @@ void unpauseCallback(void *data) {
 void IwUIInit() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
-    } else {
-        std::cout << "IwUIInit has been called" << std::endl;
+        return;
     }
+
+    gWindow = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+    if (!gWindow) {
+        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return;
+    }
+
+    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    if (!gRenderer) {
+        std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        SDL_DestroyWindow(gWindow);
+        SDL_Quit();
+        return;
+    }
+
+    std::cout << "IwUIInit has been successfully initialized" << std::endl;
 }
 
 void Iw2DInit() {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "SDL could not initialize 2D! SDL_Error: " << SDL_GetError() << std::endl;
-    } else {
-        std::cout << "Iw2DInit has been called" << std::endl;
-    }
+    //IwUIInit(); // Réutilisation de la fonction d'initialisation si similaire
+    GeneralMaterial = new CIwMaterial;
+    UITextInput = new CIwUITextInput;
+    UIManager = new CIwUIStyleManager;
+    UIController = new CIwUIController;
+    UIView = new CIwUIView;
+    std::cout << "Iw2DInit has been called" << std::endl;
 }
 
 void Iw2DTerminate() {
+    delete GeneralMaterial;
+    delete UITextInput;
+    delete UIManager;
+    delete UIController;
+    delete UIView;
     std::cout << "Iw2DTerminate has been called" << std::endl;
-    SDL_Quit();
+    
 }
 
 void IwUITerminate() {
     std::cout << "IwUITerminate has been called" << std::endl;
+    if (gRenderer) {
+        SDL_DestroyRenderer(gRenderer);
+        gRenderer = nullptr;
+    }
+    if (gWindow) {
+        SDL_DestroyWindow(gWindow);
+        gWindow = nullptr;
+    }
     SDL_Quit();
 }
 

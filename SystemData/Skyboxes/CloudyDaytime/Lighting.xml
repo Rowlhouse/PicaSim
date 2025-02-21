@@ -1,0 +1,11 @@
+
+<Lighting
+  lightBearing="-50.0"
+  lightElevation="55.0"
+  ambientLightR="0.4"
+  ambientLightG="0.4"
+  ambientLightB="0.4"
+  diffuseLightR="1"
+  diffuseLightG="1"
+  diffuseLightB="1"
+/>

@@ -1,0 +1,53 @@
+
+<ChallengeSettings
+  mTitle="Cross country race with the Genie"
+  mInfo="Fly between the checkpoints as quickly as possible. Adding glider ballast will help the ability to penetrate into wind, but will increase the sink speed."
+  mThumbnail="SystemSettings/Thumbnails/Genie.jpg"
+  mChallengeMode="1"
+  mChallengeID="95"
+  mReferenceTime="480"
+  mPreparationTime="0"
+  mAllowAeroplaneSettings="0"
+  mAllowWindStrengthSetting="0"
+  mAllowEnvironmentSettings="0"
+  mAeroplaneSettingsFile="SystemSettings/Aeroplane/Genie.xml"
+  mEnvironmentSettingsFile="SystemSettings/Environment/LowHills.xml"
+  mLightingSettingsFile="SystemSettings/Lighting/CloudyDaytime.xml"
+  mDefaultToChaseView="1"
+/>
+
+<Gates>
+  <Gate
+    mID="-1"
+    mType="1"
+    mDraw1="0"
+    mPos1X="189.3"
+    mPos1Y="-551.1"
+    mPos1Z="40.6"
+    mRadius ="4.0"
+  />
+  <Gate
+    mID="0"
+    mType="1"
+    mDraw1="1"
+    mPos1X="-1945"
+    mPos1Y="-54"
+    mPos1Z="0"
+    mRadius ="20.0"
+  />
+  <Gate
+    mID="1"
+    mType="1"
+    mDraw1="1"
+    mPos1X="200"
+    mPos1Y="-553.6"
+    mPos1Z="0"
+    mRadius ="20.0"
+  />
+</Gates>
+
+<Checkpoints mCheckpointForTimer="-1">
+  <Checkpoint gateID="-1"/>
+  <Checkpoint gateID="0"/>
+  <Checkpoint gateID="1"/>
+</Checkpoints>

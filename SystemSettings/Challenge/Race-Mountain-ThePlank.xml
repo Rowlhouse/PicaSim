@@ -1,0 +1,73 @@
+
+<ChallengeSettings
+  mTitle="Mountain race with The Plank"
+  mInfo="F3F style race - 10 laps between two gates 100m apart, starting on the gate to the left of the launch point within 30 seconds of launch. Increasing the glider ballast often helps."
+  mThumbnail="SystemSettings/Thumbnails/ThePlank.jpg"
+  mChallengeMode="1"
+  mChallengeID="91"
+  mReferenceTime="60"
+  mPreparationTime="30"
+  mWindSpeedOverride="6.0"
+  mAllowAeroplaneSettings="0"
+  mAllowWindStrengthSetting="0"
+  mAllowEnvironmentSettings="0"
+  mAeroplaneSettingsFile="SystemSettings/Aeroplane/ThePlank.xml"
+  mEnvironmentSettingsFile="SystemSettings/Environment/MountainsPanoramic.xml"
+  mLightingSettingsFile="SystemSettings/Lighting/CloudyDaytime.xml"
+  mDefaultToChaseView="0"
+/>
+
+<Gates>
+  <Gate
+    mID="0"
+    mType="0"
+    mDraw2="0"
+    mPos2X="-310"
+    mPos2Y="820"
+    mPos2Z="120"
+    mDraw1="0"
+    mPos1X="-310"
+    mPos1Y="450"
+    mPos1Z="120"
+  />
+  <Gate
+    mID="1"
+    mType="0"
+    mDraw1="1"
+    mPos1X="-310"
+    mPos1Y="820"
+    mPos1Z="120"
+    mDraw2="0"
+    mPos2X="-310"
+    mPos2Y="450"
+    mPos2Z="120"
+  />
+  <Gate
+    mID="2"
+    mType="0"
+    mDraw2="1"
+    mPos2X="-410"
+    mPos2Y="820"
+    mPos2Z="115"
+    mDraw1="0"
+    mPos1X="-410"
+    mPos1Y="450"
+    mPos1Z="115"
+  />
+</Gates>
+
+<Checkpoints mCheckpointForTimer="1">
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="0"/>
+
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+  <Checkpoint gateID="2"/>
+  <Checkpoint gateID="1"/>
+</Checkpoints>

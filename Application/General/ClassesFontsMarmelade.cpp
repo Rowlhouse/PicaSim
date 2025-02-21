@@ -94,7 +94,7 @@ bool IwGxFontDrawText(const std::string& text) {
     SDL_Surface* surface = GeneralFont->DrawText(text);
 
     // Créer une texture à partir de la surface pour l'affichage
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(GeneralRender, surface);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, surface);
     SDL_FreeSurface(surface);
 
     if (!texture) {
@@ -120,7 +120,7 @@ bool IwGxFontDrawText(const std::string& text) {
 
     // Dessiner la texture à l'écran
     SDL_Rect dstRect = {x, rect.GetY(), textWidth, textHeight};
-    SDL_RenderCopy(GeneralRender, texture, nullptr, &dstRect);
+    SDL_RenderCopy(gRenderer, texture, nullptr, &dstRect);
 
     // Libérer la texture après usage
     SDL_DestroyTexture(texture);

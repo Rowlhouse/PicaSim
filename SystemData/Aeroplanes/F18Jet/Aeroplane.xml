@@ -1,0 +1,472 @@
+<!--
+F18 1.5m span EDF/Jet
+-->
+
+
+<Misc
+  launchOffsetX="2.0"
+  launchOffsetY="0.0"
+  launchOffsetZ="0.2"
+  launchSpeed="6.0"
+/>
+<Physics>
+  <Dynamics
+    wingSpan="1.5"
+    wingChord="0.3"
+    CMRollFromY="0.0"
+    friction="0.5"
+    frictionScaleX="1"
+    frictionScaleY="2"
+    frictionScaleZ="2"
+    />
+
+  <Aerodynamics>
+    <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
+    Note that X is forward, Y is left and Z is up-->
+
+    <Wing
+      name="FuselageBackHor"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.0"
+
+      positionX="-0.5"
+      positionY="-0.08"
+      positionZ="-0.0"
+      extentsX="0.2"
+      extentsY="0.16"
+      extentsZ="0.01"
+      wingAspectRatio="3.0"
+    />
+
+    <Wing
+      name="FuselageBackVert"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="1"
+      mass="0.0"
+
+      positionX="-0.5"
+      positionY="0"
+      positionZ="-0.05"
+      rotationX="90"
+      extentsX="0.2"
+      extentsY="0.1"
+      extentsZ="0.01"
+      wingAspectRatio="3.0"
+    />
+
+
+    <Wing 
+      name="Left"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="3"
+      mass="2.4"
+
+      positionX="0.0"
+      positionY="-0.1"
+      positionZ="0.0"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      yaw="20.0"
+      extentsX="0.25"
+      extentsY="0.9"
+      extentsZ="0.01"
+      wingAspectRatio="3.0"
+      groundEffect="1"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="0.2"
+      degreesPerControl="12"
+      
+      controlPerChannel0="1"
+    />
+
+    <Wing
+      name="Right"
+      copy="Left"
+      mirror="1"
+    />
+
+    <Wing
+      name="Tail"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="2"
+      mass="0.5"
+
+      positionX="-0.75"
+      positionY="-0.35"
+      positionZ="-0.03"
+      rotationX="0.0"
+      rotationY="0.17"
+      rotationZ="0.0"
+      extentsX="0.17"
+      extentsY="0.7"
+      extentsZ="0.01"
+      wingAspectRatio="2.0"
+      groundEffect="1"
+
+      washFromWingName1="Left"
+      washFromWingName2="Right"
+      washFromWingFraction1="0.5"
+      washFromWingFraction2="0.5"
+      
+      
+      CLPerDegree="0.0"
+      CDPerDegree="0.0"
+      CMPerDegree="-0.05"
+      flapFraction="1.0"
+      degreesPerControl="6"
+      
+      controlPerChannel1="1"
+    />
+
+    <Wing
+      name="FinLeft"
+      aerofoil="SystemData/Aerofoils/Symmetric/NACA0009"
+      numSections="2"
+      mass="0.3"
+
+      positionX="-0.55"
+      positionY="0.09"
+      positionZ="0.0"
+      rotationX="90.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      roll="-18"
+      extentsX="0.16"
+      extentsY="0.28"
+      extentsZ="0.01"
+      wingAspectRatio="2.0"
+      
+      CLPerDegree="0.022"
+      CDPerDegree="0.02"
+      CMPerDegree="-0.01"
+      flapFraction="0.3"
+      degreesPerControl="17"
+      
+      controlPerChannel2="-1"
+    />
+
+    <Wing
+      name="FinRight"
+      copy="FinLeft"
+      mirror="1"
+      controlPerChannel2="-1"
+    />
+
+    <Fuselage
+      name="Fuselage"
+      mass="1.5"
+      positionX="-0.15"
+      positionY="0.0"
+      positionZ="-0.03"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="1.1"
+      extentsY="0.3"
+      extentsZ="0.1"
+
+      CDX="1"
+      CDY="1"
+      CDZ="1"
+      render="true"
+    />
+
+    <JetEngine
+      name="Engine"
+      positionX="-0.75"      
+      maxForce="250.0"
+      maxSpeed="150.0"
+      minSpeed="-100.0"
+      
+      controlPerChannel3="1"
+      controlRate="0.3"
+
+      audioFile="SystemData/Audio/Glider22050Stereo.raw"
+      audioStereo="1"
+      audioSampleRate="22050"
+      audioRadius="1"
+      audioMinVolume="0"
+      audioMaxVolume="1"
+      audioMinFreqScale="3"
+      audioMaxFreqScale="5"
+    />
+
+  </Aerodynamics>
+
+  <Wheels>
+    <Wheel
+      name="WheelFront"
+      positionX="0.44"
+      positionY="0.0"
+      positionZ="-0.1"
+      directionX="-0.1"
+      directionY="-0.0"
+      directionZ="-1.0"
+      axleX="0.0"
+      axleY="1.0"
+      axleZ="0.0"
+      suspensionRestLength = "0.08"
+      wheelRadius = "0.071"
+      suspensionStiffness = "300.0"
+      suspensionDampingRatio = "0.4"
+      suspensionCompressionDampingRatio = "0.4"
+      rollInfluence = "1.0"
+      wheelFriction = "1"
+      maxSuspensionTravelCm = "10.0"
+      maxSuspensionForce = "1000"
+      brake = "3"
+      retractionPerChannel6="1"
+      unretractedDrag="0.005"
+      dragOffsetMultiplier="-1"
+      angleForRetraction="-120"
+      anglePerChannel2="-12"
+      suspensionCrashForce="500"
+    />
+    <Wheel
+      name="WheelBackLeft"
+      positionX="-0.21"
+      positionY="0.183845"
+      positionZ="-0.08"
+      directionX="-0.0"
+      directionY="-0.0"
+      directionZ="-1.0"
+      axleX="0.0"
+      axleY="1.0"
+      axleZ="0.0"
+      suspensionRestLength = "0.08"
+      wheelRadius = "0.091"
+      suspensionStiffness = "300.0"
+      suspensionDampingRatio = "0.4"
+      suspensionCompressionDampingRatio = "0.4"
+      rollInfluence = "1.0"
+      wheelFriction = "1"
+      maxSuspensionTravelCm = "10.0"
+      maxSuspensionForce = "1000"
+      brake = "30"
+      retractionPerChannel6="1"
+      unretractedDrag="0.005"
+      dragOffsetMultiplier="-1"
+      angleForRetraction="-120"
+      brakePerChannel3="-0.9"
+      suspensionCrashForce="500"
+    />
+    <Wheel
+      name="WheelBackRight"
+      positionX="-0.21"
+      positionY="-0.183845"
+      positionZ="-0.08"
+      directionX="-0.0"
+      directionY="-0.0"
+      directionZ="-1.0"
+      axleX="0.0"
+      axleY="1.0"
+      axleZ="0.0"
+      suspensionRestLength = "0.08"
+      wheelRadius = "0.091"
+      suspensionStiffness = "300.0"
+      suspensionDampingRatio = "0.4"
+      suspensionCompressionDampingRatio = "0.4"
+      rollInfluence = "1.0"
+      wheelFriction = "1"
+      maxSuspensionTravelCm = "10.0"
+      maxSuspensionForce = "1000"
+      brake = "20"
+      retractionPerChannel6="1"
+      unretractedDrag="0.005"
+      dragOffsetMultiplier="-1"
+      angleForRetraction="120"
+      brakePerChannel3="-0.9"
+      suspensionCrashForce="500"
+    />
+  </Wheels>
+    <Geometry>
+    <!-- Additional geometry on top of the wing components etc -->
+    <Shape
+      type="box"
+      mass="3.0"
+      positionX="0.08"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="1.7"
+      extentsY="0.06"
+      extentsZ="0.06"
+      render="true"
+    />
+
+    <Shape
+      type="box"
+      mass="0.6"
+      positionX="-0.52"
+      positionY="0.0"
+      positionZ="0.0"
+      rotationX="0.0"
+      rotationY="0.0"
+      rotationZ="0.0"
+      extentsX="0.05"
+      extentsY="0.05"
+      extentsZ="0.05"
+      render="false"
+      collide="false"
+    />
+  </Geometry>
+  
+</Physics>
+
+<Graphics>
+  <Model name="Standard" model3DS="SystemData/Aeroplanes/F18Jet/F18Simple.ac" modelScale="1.0" cullBackFace="true"/>
+
+  <ControlSurface
+    name="Elevator"
+    source="Tail"
+    angleMultiplier="1"
+    hingePoint1X="-0.117"
+    hingePoint1Y="-0.036"
+    hingePoint1Z="0.530"
+    hingePoint2X="0.117"
+    hingePoint2Y="-0.036"
+    hingePoint2Z="0.530"
+  />
+
+  <ControlSurface
+    name="AileronLeft"
+    source="Left"
+    angleMultiplier="-1"
+    hingePoint1X="-0.438"
+    hingePoint1Y="-0.015"
+    hingePoint1Z="0.276"
+    hingePoint2X="-0.574"
+    hingePoint2Y="-0.0215"
+    hingePoint2Z="0.288"
+  />
+
+  <ControlSurface
+    name="FlapLeft"
+    source="Left"
+    angleMultiplier="-1"
+    hingePoint1X="-0.132"
+    hingePoint1Y="-0.00"
+    hingePoint1Z="0.249"
+    hingePoint2X="-0.438"
+    hingePoint2Y="-0.015"
+    hingePoint2Z="0.276"
+  />
+
+  <ControlSurface
+    name="AileronRight"
+    source="Right"
+    angleMultiplier="1"
+    hingePoint1X="0.438"
+    hingePoint1Y="-0.015"
+    hingePoint1Z="0.276"
+    hingePoint2X="0.574"
+    hingePoint2Y="-0.0215"
+    hingePoint2Z="0.288"
+  />
+
+  <ControlSurface
+    name="FlapRight"
+    source="Right"
+    angleMultiplier="1"
+    hingePoint1X="0.132"
+    hingePoint1Y="-0.00"
+    hingePoint1Z="0.249"
+    hingePoint2X="0.438"
+    hingePoint2Y="-0.015"
+    hingePoint2Z="0.276"
+  />
+
+  <ControlSurface
+    name="RudderLeft"
+    source="FinLeft"
+    angleMultiplier="-1"
+    hingePoint1X="-0.107"
+    hingePoint1Y="0.019"
+    hingePoint1Z="0.525"
+    hingePoint2X="-0.181"
+    hingePoint2Y="0.233"
+    hingePoint2Z="0.580"
+  />
+
+  <ControlSurface
+    name="RudderRight"
+    source="FinRight"
+    angleMultiplier="1"
+    hingePoint1X="0.107"
+    hingePoint1Y="0.019"
+    hingePoint1Z="0.525"
+    hingePoint2X="0.181"
+    hingePoint2Y="0.233"
+    hingePoint2Z="0.580"
+  />
+
+  <ControlSurface
+    name="WheelFront"
+    source="WheelFront"
+    angleMultiplier="1.0"
+    hingePoint1X="-1"
+    hingePoint1Y="-0.0895122"
+    hingePoint1Z="-0.460815"
+    hingePoint2X="1"
+    hingePoint2Y="-0.0895122"
+    hingePoint2Z="-0.460815"
+  />
+
+  <ControlSurface
+    name="WheelBackLeft"
+    source="WheelBackLeft"
+    angleMultiplier="1.0"
+    hingePoint1X="-0.112613"
+    hingePoint1Y="-0.108049"
+    hingePoint1Z="0.145317"
+    hingePoint2X="1.0"
+    hingePoint2Y="-0.9"
+    hingePoint2Z="0.145317"
+  />
+
+  <ControlSurface
+    name="WheelBackRight"
+    source="WheelBackRight"
+    angleMultiplier="1.0"
+    hingePoint1X="0.112613"
+    hingePoint1Y="-0.108049"
+    hingePoint1Z="0.145317"
+    hingePoint2X="-1.0"
+    hingePoint2Y="-0.9"
+    hingePoint2Z="0.145317"
+  />
+
+s</Graphics>
+
+<Audio>
+  <AirFlow
+    file="SystemData/Audio/Glider22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="15"
+    mFreqScalePerSpeed=".125"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".02"
+    mVolPow="2"
+    mMaxVolume=".3"
+  />
+
+  <AirFlow
+    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    sampleRate="22050"
+    mMinSpeedRelAir ="30"
+    mFreqScalePerSpeed=".1"
+    mMinFreqScale=".9"
+    mMaxFreqScale="1.2"
+    mVolScalePerSpeed=".05"
+    mVolPow="2"
+    mMaxVolume=".3"
+  />
+</Audio>

@@ -2,6 +2,7 @@
 #define CLASSESFONTMARMELADE_H
 
 #include "ClassesMarmelade.h"
+// #include "ClassesUIMarmelade.h"
 // #include "GameSettings.h"
 #include <SDL2/SDL_ttf.h>
 #include <stdexcept>
@@ -23,7 +24,7 @@ enum alignmentVer {
 };
 
 
-class CIwGxFont  {
+class CIwGxFont : public CIwResource {
 public:
     // Constructeur
     CIwGxFont(const std::string& fontName = "", int fontSize = 12) : fontName(fontName), fontSize(fontSize), font(nullptr), colour({255, 255, 255, 255}), AlignmentHor(IW_GX_FONT_ALIGN_LEFT), AlignmentVer(IW_GX_FONT_ALIGN_MIDDLE) {

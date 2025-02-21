@@ -4,6 +4,7 @@
 
 // #include "GameSettings.h"
 // #include "ClassesFontMarmelade.h"
+// #include "ClassesUIMarmelade.h"
 #include "Vecteurs.h"
 // #include "ClassesFontMarmelade.h"
 #include <SDL2/SDL_events.h>
@@ -15,7 +16,16 @@
 //#include <variant>
 #include "Entete.h"
 
-extern SDL_Renderer* GeneralRender;
+
+class CIwResource {
+public:
+    virtual ~CIwResource();
+private:
+};
+
+
+GLenum ConvertSDLFormatToOpenGL(Uint32 sdlFormat);
+
 
 class Image {
 public : 
@@ -29,20 +39,20 @@ public :
         RGB_888,
     };
 
-    static constexpr Uint32 SDL_RGBA_4444 = SDL_PIXELFORMAT_RGBA4444;
-    static constexpr Uint32 SDL_RGB_565 = SDL_PIXELFORMAT_RGB565;
-    static constexpr Uint32 SDL_RGBA_8888 = SDL_PIXELFORMAT_RGBA8888;
-    static constexpr Uint32 SDL_ABGR_8888 = SDL_PIXELFORMAT_ABGR8888;
+    // static constexpr Uint32 SDL_RGBA_4444 = SDL_PIXELFORMAT_RGBA4444;
+    // static constexpr Uint32 SDL_RGB_565 = SDL_PIXELFORMAT_RGB565;
+    // static constexpr Uint32 SDL_RGBA_8888 = SDL_PIXELFORMAT_RGBA8888;
+    // static constexpr Uint32 SDL_ABGR_8888 = SDL_PIXELFORMAT_ABGR8888;
 
 
     //using Format = SDL_PixelFormat*;
 
     Image() : surface(nullptr), format(nullptr), width(0), height(0) {}
-    Image(const char* Filename) {LoadFromFile(Filename);}
+    Image(const char* Filename) : surface(nullptr), format(nullptr), width(0), height(0) {LoadFromFile(Filename);}
     ~Image() { free(); }
 
     bool LoadFromFile(const char* Filename) {
-        free(); // Libérer les ressources existantes, si besoin
+        free();
 
         filename = Filename;
 
@@ -63,16 +73,9 @@ public :
     // Obtenir la largeur et la hauteur de l'image
     int GetWidth() const { return surface ? surface->w : 0; }
     int GetHeight() const { return surface ? surface->h : 0; }
-    SDL_Surface* GetSurface() const {return surface;}
+    SDL_Surface* GetSurface() const { return surface; }
 
-    Format GetFormat() const {
-        if (!surface) {
-            std::cerr << "Surface non chargée." << std::endl;
-            return NULL_FORMAT;
-        }
-        
-        return GetEnumFormatFromSDL (surface->format);
-    }
+    Format GetFormat() const ;
 
     // Obtenir les texels (données de pixels) de l'image
     Uint8* GetTexels() const {
@@ -84,20 +87,7 @@ public :
     }
 
 
-    void SetFormat(Format newFormat) {
-
-        format = GetSDLFormatFromEnum(newFormat);
-        if (surface && newFormat) {
-            // Convertir la surface actuelle au nouveau format
-            SDL_Surface* newSurface = SDL_ConvertSurfaceFormat(surface, format->format, 0);
-            if (newSurface) {
-                SDL_FreeSurface(surface);  // Libérer l'ancienne surface
-                surface = newSurface;
-            } else {
-                std::cerr << "Erreur de conversion de format : " << SDL_GetError() << std::endl;
-            }
-        }
-    }
+    void SetFormat(Format newFormat);
 
     // Définir la largeur et la hauteur
     void SetWidth(int newWidth) {
@@ -187,41 +177,21 @@ private :
         format= nullptr;
     }
 
-    SDL_PixelFormat* GetSDLFormatFromEnum(Format format) {
-        switch (format) {
-            case RGBA_4444:
-                return SDL_AllocFormat(SDL_PIXELFORMAT_RGBA4444);
-            case RGB_565:
-                return SDL_AllocFormat(SDL_PIXELFORMAT_RGB565);
-            case RGBA_8888:
-                return SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
-            case ABGR_8888: 
-                return SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
-            default:
-                std::cerr << "Format non supporté dans GetSDLFormatFromEnum." << std::endl;
-                return nullptr;
-        }
-    }
-
-    Format GetEnumFormatFromSDL (SDL_PixelFormat* Format) const {
-        switch (Format->format) {
-            case SDL_RGBA_4444:
-                return RGBA_4444;
-            case SDL_RGB_565:
-                return RGB_565;
-            case SDL_RGBA_8888:
-                return RGBA_8888;
-            default:
-                std::cerr << "Format non supporté : " << Format->format << std::endl;
-                return NULL_FORMAT;
-        }
-    }
+    
 
 };
 
-GLenum ConvertFormatToOpenGL(Image::Format formatHW);
 
-class Texture {
+
+SDL_PixelFormat* GetSDLFormatFromEnum(Image::Format format);
+
+Image::Format GetEnumFormatFromSDL (SDL_PixelFormat* Format);
+
+
+
+
+
+class Texture : public CIwResource {
 public : 
 private:
     SDL_Texture* texture;
@@ -233,7 +203,7 @@ private:
     bool mipmaping;
     bool filtering;
     bool clamping;
-    Image::Format formatHW;
+    GLenum formatTexture;
     int flags;
     bool modifiable = true;
 
@@ -271,25 +241,31 @@ public:
 
     bool CopyFromImage(Image* Image) {
         // Utilisation du renderer global
-        SDL_Renderer* renderer = GeneralRender;
-        if (!renderer) {
+        if (!gRenderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
         }
 
         image = Image;
-        image->SetHeight(height);
-        image->SetWidth(width);
+        if (height != 0 && width != 0) {
+            image->SetHeight(height);
+            image->SetWidth(width);
+        }
 
         // Convertir la surface en texture pour le rendu
-        texture = SDL_CreateTextureFromSurface(renderer, image->GetSurface());
+        texture = SDL_CreateTextureFromSurface(gRenderer, image->GetSurface());
         if (!texture) {
             std::cerr << "Erreur de création de texture : " << SDL_GetError() << std::endl;
             return false;
         }
 
-        // Obtenir les dimensions
-        SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+        // Obtenir le format de la texture et ses dimensions
+        Uint32 formatPixel;
+        SDL_QueryTexture(texture, &formatPixel, nullptr, &width, &height);
+
+        SDL_PixelFormat* pixelFormat = SDL_AllocFormat(formatPixel);
+        formatTexture = ConvertSDLFormatToOpenGL(pixelFormat->format);
+        SDL_FreeFormat(pixelFormat);
         return true;
     }
 
@@ -301,8 +277,7 @@ public:
     
         FreeResources();  // Libérer les ressources existantes
     
-        SDL_Renderer* renderer = GeneralRender;
-        if (!renderer) {
+        if (!gRenderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
         }
@@ -325,7 +300,7 @@ public:
         }
     
         // Convertir la surface en texture
-        texture = SDL_CreateTextureFromSurface(renderer, surface);
+        texture = SDL_CreateTextureFromSurface( gRenderer, surface);
         if (!texture) {
             std::cerr << "Erreur de création de texture : " << SDL_GetError() << std::endl;
             SDL_FreeSurface(surface);
@@ -335,8 +310,14 @@ public:
         // Stocker les infos
         this->width = width;
         this->height = height;
-        this->formatHW = format;
         this->flags = flags;
+
+        Uint32 formatPixel;
+        SDL_QueryTexture(texture, &formatPixel, nullptr, &width, &height);
+
+        SDL_PixelFormat* pixelFormat = SDL_AllocFormat(formatPixel);
+        formatTexture = ConvertSDLFormatToOpenGL(pixelFormat->format);
+        SDL_FreeFormat(pixelFormat);
     
         SDL_FreeSurface(surface);
         return true;
@@ -373,8 +354,8 @@ public:
             height = 0;
         }
 
-        SDL_Renderer* renderer = GeneralRender;
-        if (!renderer) {
+        // SDL_Renderer* renderer = gRenderer;
+        if (!gRenderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
         }
@@ -398,8 +379,7 @@ public:
 
     bool SetImage(Image* Image) {
         // Utilisation du renderer global
-        SDL_Renderer* renderer = GeneralRender;
-        if (!renderer) {
+        if (!gRenderer) {
             std::cerr << "Erreur : Renderer non initialisé." << std::endl;
             return false;
         }
@@ -407,7 +387,7 @@ public:
         image = Image;
 
         // Convertir la surface en texture pour le rendu
-        texture = SDL_CreateTextureFromSurface(renderer, image->GetSurface());
+        texture = SDL_CreateTextureFromSurface(gRenderer, image->GetSurface());
         if (!texture) {
             std::cerr << "Erreur de création de texture : " << SDL_GetError() << std::endl;
             return false;
@@ -427,7 +407,7 @@ public:
             std::cerr << "Erreur : pas de format HW spécifié" << std::endl;
             return false;
         }
-        formatHW = format;
+        formatTexture = ConvertSDLFormatToOpenGL(GetSDLFormatFromEnum(format)->format);
 
         return true;
     }
@@ -438,8 +418,7 @@ public:
             return;
         }
 
-        SDL_Renderer* renderer = GeneralRender;
-        if (!renderer) {
+        if (!gRenderer) {
             std::cerr << "Erreur : Renderer non initialisé pour l'upload." << std::endl;
             return;
         }
@@ -461,10 +440,9 @@ public:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamping ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 
         // Transférer les données des pixels à OpenGL
-        GLenum format = ConvertFormatToOpenGL(formatHW);
         GLenum pixelType = GL_UNSIGNED_BYTE; // Par défaut, mais vous pouvez l'adapter selon les besoins
 
-        glTexImage2D(GL_TEXTURE_2D, 0, format, image->GetSurface()->w, image->GetSurface()->h, 0, format, pixelType, image->GetSurface()->pixels);
+        glTexImage2D(GL_TEXTURE_2D, 0, formatTexture, image->GetSurface()->w, image->GetSurface()->h, 0, formatTexture, pixelType, image->GetSurface()->pixels);
 
         m_HWID = textureID;
 
@@ -647,7 +625,6 @@ public:
 private:
     std::string str;
 };
-
 
 
 

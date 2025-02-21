@@ -1,0 +1,25 @@
+
+<Aerofoil
+  name="Wing tip"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.01"
+  CDStalled="1.7"
+  CM0="-0.02"
+  CMPerDeg="0.001"
+  refRe="200000"
+  CDPower="-0.1"
+  minReFrac="0.1"
+  
+  useData="0"
+  
+  CL0 = "0.05"
+  CLPerDeg = "0.09"
+  positiveAttachedAngle = "10"
+  positiveStallRange = "8"
+  negativeAttachedAngle = "-10"
+  negativeStallRange = "-8"
+  dragBucketFactor = "0.0"
+  dragBucketLowerAngle = "-2.0"
+  dragBucketUpperAngle = "6.0"
+/>

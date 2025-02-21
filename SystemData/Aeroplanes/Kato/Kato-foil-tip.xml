@@ -1,0 +1,26 @@
+
+<Aerofoil
+  name="Kato-foil-tip"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.01"
+  CDStalled="1.0"
+  CDInducedMultiplier="1.0"
+  CM0="0.001"
+  CMPerDeg="-0.006"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"
+  
+  useData="0"
+  
+  CL0 = "0.0"
+  CLPerDeg = "0.08"
+  positiveAttachedAngle = "10"
+  positiveStallRange = "10"
+  negativeAttachedAngle = "-10"
+  negativeStallRange = "-10"
+  dragBucketFactor = "0.3"
+  dragBucketLowerAngle = "-3.0"
+  dragBucketUpperAngle = "3.0"
+/>

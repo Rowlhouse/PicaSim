@@ -1,10 +1,46 @@
 #include "ClassesUIMarmelade.h"
+#include "Trace.h"
+// #include "ClassesFontMarmelade.h"
 
 CIwMaterial* GeneralMaterial = nullptr;
-CIwUITextInput* UITextInput;
-CIwUIStyleManager* UIManager;
-CIwUIController* UIController;
-CIwUIView* UIView;
+CIwUITextInput* UITextInput = nullptr;
+CIwUIStyleManager* UIManager = nullptr;
+CIwUIController* UIController = nullptr;
+CIwUIView* UIView = nullptr;
+
+
+void CIwResManager::CreateRessource() {
+    switch (resType) {
+        case IW_GX_RESTYPE_FONT:
+            ressource = new CIwGxFont;
+            break;
+        case IW_UI_RESTYPE_STYLESHEET:
+            ressource = new CIwUIStylesheet;
+            break;
+        case IW_UI_RESTYPE_TEXTURE:
+            ressource = new Texture;
+            break;
+        default:
+            std::cerr << "Erreur: Type de ressource inconnu" << std::endl;
+            ressource = nullptr;
+    }
+}
+
+void* CIwResManager::GetResNamed(const std::string& resourceName, std::string ResType) {
+    if (ResType == "CIwTexture") {
+        resType = IW_UI_RESTYPE_TEXTURE;
+    }
+    CreateRessource();
+    resourceList.push_back(ressource);
+    return ressource;
+}
+
+void* CIwResManager::GetResNamed(const std::string& resourceName, resourceType ResType) {
+    resType = ResType;
+    CreateRessource();
+    resourceList.push_back(ressource);
+    return ressource;
+}
 
 
 CIwResManager* IwGetResManager() {
@@ -23,20 +59,32 @@ bool IwGxSetMaterial(CIwMaterial* material) {
 }
 
 CIwUITextInput* IwGetUITextInput() {
+    if (!UITextInput) {
+        TRACE_FILE_IF(1) TRACE("UITextInput not init ou free before the end");
+    }
     //static CIwUITextInput textInput;
     return UITextInput;
 }
 
 CIwUIStyleManager* IwGetUIStyleManager() {
+    if (!UIManager) {
+        TRACE_FILE_IF(1) TRACE("UIManager not init ou free before the end");
+    }
     //static CIwUIStyleManager manager;
     return UIManager;
 }
 
 CIwUIController* IwGetUIController() {
+    if (!UIController) {
+        TRACE_FILE_IF(1) TRACE("UIController not init ou free before the end");
+    }
     return UIController;
 }
 
 CIwUIView* IwGetUIView() {
+    if (!UIView) {
+        TRACE_FILE_IF(1) TRACE("UIView not init ou free before the end");
+    }
     return UIView;
 }
 
