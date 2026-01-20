@@ -5,324 +5,333 @@
 #include "ShaderManager.h"
 #include "Shaders.h"
 #include "Viewport.h"
+#include "Graphics.h"
+#include "../Platform/S3ECompat.h"
+#include "../Platform/Input.h"
+#include "../Platform/FontRenderer.h"
 
-#include <s3e.h>
-#include <IwGx.h>
-#include <IwGxFont.h>
+// TODO: Font rendering needs to be replaced with ImGui or custom solution
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void ButtonOverlay::Init(
-  float size, float paddingFraction,
-  AnchorH anchorH, AnchorV anchorV, 
-  float x, float y, 
-  GLubyte alpha, bool enabled, bool enableText)
+    float size, float paddingFraction,
+    AnchorH anchorH, AnchorV anchorV, 
+    float x, float y, 
+    GLubyte alpha, bool enabled, bool enableText)
 {
-  mSize = size; 
-  mPaddingFraction = paddingFraction; 
-  mAnchorH = anchorH; mAnchorV = anchorV; 
-  mText.clear(); 
-  mX = x; mY = y; mX0 = 0; mY0 = 0; mX1 = 0; mY1 = 0; 
-  mEnabled = enabled; 
-  mEnableText = enableText;
-  mColour[0] = mColour[1] = mColour[2] = 255;
-  mColour[3] = alpha;
-  mTextColour = Vector4(1,1,1,1);
-  mFont = 0;
-  mTextAnchorV = ANCHOR_V_BOT;
-  RenderManager::GetInstance().RegisterRenderOverlayObject(this, 0);
+    mSize = size; 
+    mPaddingFraction = paddingFraction; 
+    mAnchorH = anchorH; mAnchorV = anchorV; 
+    mText.clear(); 
+    mX = x; mY = y; mX0 = 0; mY0 = 0; mX1 = 0; mY1 = 0; 
+    mEnabled = enabled; 
+    mEnableText = enableText;
+    mColour[0] = mColour[1] = mColour[2] = 255;
+    mColour[3] = alpha;
+    mTextColour = Vector4(1,1,1,1);
+    mTextAnchorV = ANCHOR_V_BOT;
+    RenderManager::GetInstance().RegisterRenderOverlayObject(this, 0);
 
-  int pointerType = s3ePointerGetInt(S3E_POINTER_TYPE);
-  if (pointerType == S3E_POINTER_TYPE_MOUSE)
-    mPaddingFraction = 0.0f;
+    int pointerType = s3ePointerGetInt(S3E_POINTER_TYPE);
+    if (pointerType == S3E_POINTER_TYPE_MOUSE)
+        mPaddingFraction = 0.0f;
 
-  if (enabled)
-    mAlpha = alpha/255.0f;
-  else
-    mAlpha = 0.0f;
-  mAlphaRate = 0.0f;
+    if (enabled)
+        mAlpha = alpha/255.0f;
+    else
+        mAlpha = 0.0f;
+    mAlphaRate = 0.0f;
 
-  if (mEnableText)
-    RenderManager::GetInstance().RegisterRenderGxObject(this, 0);
+    if (mEnableText)
+        RenderManager::GetInstance().RegisterRenderGxObject(this, 0);
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 ButtonOverlay::ButtonOverlay(
-  const char* imageFile, float size, float paddingFraction,
-  AnchorH anchorH, AnchorV anchorV, 
-  float x, float y, 
-  GLubyte alpha, bool enabled, bool enableText)
+    const char* imageFile, float size, float paddingFraction,
+    AnchorH anchorH, AnchorV anchorV, 
+    float x, float y, 
+    GLubyte alpha, bool enabled, bool enableText)
 {
-  mOwnsTexture = true;
-  mTexture = new Texture;
-  LoadTextureFromFile(*mTexture, imageFile);
-  mTexture->SetFormatHW(CIwImage::RGBA_4444);
-  mTexture->Upload();
-  TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", imageFile, mTexture->m_HWID);
-  Init(size, paddingFraction, anchorH, anchorV, x, y, alpha, enabled, enableText);
+    mOwnsTexture = true;
+    mTexture = new Texture;
+    LoadTextureFromFile(*mTexture, imageFile);
+    mTexture->SetFormatHW(CIwImage::RGBA_4444);
+    mTexture->Upload();
+    TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", imageFile, mTexture->mHWID);
+    Init(size, paddingFraction, anchorH, anchorV, x, y, alpha, enabled, enableText);
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 ButtonOverlay::ButtonOverlay(
-  Texture* texture, float size, float paddingFraction,
-  AnchorH anchorH, AnchorV anchorV, 
-  float x, float y, 
-  GLubyte alpha, bool enabled, bool enableText)
+    Texture* texture, float size, float paddingFraction,
+    AnchorH anchorH, AnchorV anchorV, 
+    float x, float y, 
+    GLubyte alpha, bool enabled, bool enableText)
 {
-  mOwnsTexture = false;
-  mTexture = texture;
-  Init(size, paddingFraction, anchorH, anchorV, x, y, alpha, enabled, enableText);
+    mOwnsTexture = false;
+    mTexture = texture;
+    Init(size, paddingFraction, anchorH, anchorV, x, y, alpha, enabled, enableText);
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 ButtonOverlay::~ButtonOverlay()
 {
-  RenderManager::GetInstance().UnregisterRenderOverlayObject(this, 0);
-  if (mEnableText)
-    RenderManager::GetInstance().UnregisterRenderGxObject(this, 0);
-  if (mOwnsTexture)
-    delete mTexture;
+    RenderManager::GetInstance().UnregisterRenderOverlayObject(this, 0);
+    if (mEnableText)
+        RenderManager::GetInstance().UnregisterRenderGxObject(this, 0);
+    if (mOwnsTexture)
+        delete mTexture;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 bool ButtonOverlay::IsPressed(uint32_t pressMask) const
 {
-  if (!mEnabled)
-    return false;
+    if (!mEnabled)
+        return false;
 
-  uint32 displayWidth = IwGxGetScreenWidth(); 
-  uint32 displayHeight = IwGxGetScreenHeight(); 
+    uint32 displayWidth = IwGxGetScreenWidth(); 
+    uint32 displayHeight = IwGxGetScreenHeight(); 
 
-  float paddingX = mPaddingFraction * (mX1 - mX0);
-  float paddingY = mPaddingFraction * (mY1 - mY0);
+    float paddingX = mPaddingFraction * (mX1 - mX0);
+    float paddingY = mPaddingFraction * (mY1 - mY0);
 
-  for (uint32 iTouch = 0 ; iTouch != S3E_POINTER_TOUCH_MAX ; ++iTouch)
-  {
-    if (
-      ( (pressMask & PRESS_DOWN) && s3ePointerGetTouchState(iTouch) & S3E_POINTER_STATE_DOWN) ||
-      ( (pressMask & PRESS_CLICKED) && s3ePointerGetTouchState(iTouch) & S3E_POINTER_STATE_PRESSED)
-      )
+    for (uint32 iTouch = 0 ; iTouch != S3E_POINTER_TOUCH_MAX ; ++iTouch)
     {
-      int32 touchX = s3ePointerGetTouchX(iTouch);
-      int32 touchY = s3ePointerGetTouchY(iTouch);
+        s3ePointerState touchState = s3ePointerGetTouchState(iTouch);
+        if (
+            ( (pressMask & PRESS_DOWN) && (touchState & S3E_POINTER_STATE_DOWN)) ||
+            ( (pressMask & PRESS_CLICKED) && (touchState == S3E_POINTER_STATE_PRESSED))
+            )
+        {
+            int32 touchX = s3ePointerGetTouchX(iTouch);
+            int32 touchY = s3ePointerGetTouchY(iTouch);
 
-      float x = (float) touchX / displayWidth;
-      float y = 1.0f - (float) touchY / displayHeight;
+            float x = (float) touchX / displayWidth;
+            float y = 1.0f - (float) touchY / displayHeight;
 
-      if (
-        x > (mX0 -paddingX) && x < (mX1 + paddingX) && 
-        y > (mY0 - paddingY) && y < (mY1 + paddingY)
-        )
-      {
-        return true;
-      }
+            if (
+                x > (mX0 -paddingX) && x < (mX1 + paddingX) && 
+                y > (mY0 - paddingY) && y < (mY1 + paddingY)
+                )
+            {
+                return true;
+            }
+        }
     }
-  }
-  return false;
+    return false;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void ButtonOverlay::RenderOverlayUpdate(float deltaTime)
 {
-  float smoothTime = 0.2f;
-  if (!mEnabled)
-    SmoothCD(mAlpha, mAlphaRate, deltaTime, 0.0f, smoothTime);
-    //mAlpha = 0.0f;
-  else
-    SmoothCD(mAlpha, mAlphaRate, deltaTime, mColour[3]/255.0f, smoothTime);
+    float smoothTime = 0.2f;
+    if (!mEnabled)
+        SmoothCD(mAlpha, mAlphaRate, deltaTime, 0.0f, smoothTime);
+        //mAlpha = 0.0f;
+    else
+        SmoothCD(mAlpha, mAlphaRate, deltaTime, mColour[3]/255.0f, smoothTime);
 }
 
 static GLfloat uvs[] = {
-  0, 1,
-  1, 1,
-  1, 0,
-  0, 0,
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0,
 };
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void ButtonOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displayConfig)
 {
-  // Need to calculate the touch positions so don't early out if disabled yet
+    // Need to calculate the touch positions so don't early out if disabled yet
 
-  // s is the full size in pixels
-  // The buttons are arranged horizontally so it's more useful for the size to be the horizontal size - so they can be set to fill the space.
-  float s = mSize * Maximum(displayConfig.mWidth, displayConfig.mHeight);
-  float s2 = s * 0.5f; // half width
+    // s is the full size in pixels
+    // Use height-based scaling to prevent buttons becoming huge on ultrawide monitors
+    // Cap the effective aspect ratio at 16:9 to maintain reasonable button sizes
+    float effectiveWidth = (float)displayConfig.mWidth;
+    float effectiveHeight = (float)displayConfig.mHeight;
+    float maxAspect = 16.0f / 9.0f;
+    if (effectiveWidth > effectiveHeight * maxAspect)
+        effectiveWidth = effectiveHeight * maxAspect;
+    float s = mSize * Maximum(effectiveWidth, effectiveHeight);
+    float s2 = s * 0.5f; // half width
 
-  float x0, x1, y0, y1;
+    float x0, x1, y0, y1;
 
-  // midpoint of the button
-  float x = displayConfig.mLeft + mX * displayConfig.mWidth;
-  float y = displayConfig.mBottom + mY * displayConfig.mHeight;
-  x0 = x - mAnchorH * s2;
-  x1 = x0 + s;
-  y0 = y - mAnchorV * s2;
-  y1 = y0 + s;
+    // midpoint of the button
+    float x = displayConfig.mLeft + mX * displayConfig.mWidth;
+    float y = displayConfig.mBottom + mY * displayConfig.mHeight;
+    x0 = x - mAnchorH * s2;
+    x1 = x0 + s;
+    y0 = y - mAnchorV * s2;
+    y1 = y0 + s;
 
-  if (displayConfig.mViewpointIndex == 0)
-  {
-    const FrameworkSettings& fs = RenderManager::GetInstance().GetFrameworkSettings();
-    mX0 = x0/fs.mScreenWidth;
-    mY0 = y0/fs.mScreenHeight;
-    mX1 = x1/fs.mScreenWidth;
-    mY1 = y1/fs.mScreenHeight;
-  }
+    if (displayConfig.mViewpointIndex == 0)
+    {
+        const FrameworkSettings& fs = RenderManager::GetInstance().GetFrameworkSettings();
+        mX0 = x0/fs.mScreenWidth;
+        mY0 = y0/fs.mScreenHeight;
+        mX1 = x1/fs.mScreenWidth;
+        mY1 = y1/fs.mScreenHeight;
+    }
 
-  if (!mEnabled)
-    return;
+    if (!mEnabled)
+        return;
 
-  if (mAlpha < 0.001f)
-    return;
+    if (mAlpha < 0.001f)
+        return;
 
-  if (!(mTexture->GetFlags() & Texture::UPLOADED_F))
-    return;
+    if (!(mTexture->GetFlags() & Texture::UPLOADED_F))
+        return;
 
-  DisableDepthTest disableDepthTest;
-  DisableDepthMask disableDepthMask;
-  EnableBlend enableBlend;
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    DisableDepthTest disableDepthTest;
+    DisableDepthMask disableDepthMask;
+    EnableBlend enableBlend;
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  GLfloat pts[] = {
-    x0, y0, 0,
-    x1, y0, 0,
-    x1, y1, 0,
-    x0, y1, 0,
-  };
+    GLfloat pts[] = {
+        x0, y0, 0,
+        x1, y0, 0,
+        x1, y1, 0,
+        x0, y1, 0,
+    };
 
-  int mvpLoc = -1;
+    int mvpLoc = -1;
 
-  if (gGLVersion == 1)
-  {
-    glEnable(GL_TEXTURE_2D);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glDisableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, pts);
-    glTexCoordPointer(2, GL_FLOAT, 0, uvs);
+    if (gGLVersion == 1)
+    {
+        glEnable(GL_TEXTURE_2D);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        glDisableClientState(GL_COLOR_ARRAY);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glVertexPointer(3, GL_FLOAT, 0, pts);
+        glTexCoordPointer(2, GL_FLOAT, 0, uvs);
 
-    glColor4ub(mColour[0], mColour[1], mColour[2], (GLubyte) (mAlpha * 255));
-  }
-  else
-  {
-    const OverlayShader* overlayShader = (OverlayShader*) ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
-    overlayShader->Use();
+        glColor4ub(mColour[0], mColour[1], mColour[2], (GLubyte) (mAlpha * 255));
+    }
+    else
+    {
+        const OverlayShader* overlayShader = (OverlayShader*) ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
+        overlayShader->Use();
 
-    // Get the variable locations
-    glUniform1i(overlayShader->u_texture, 0);
+        // Get the variable locations
+        glUniform1i(overlayShader->u_texture, 0);
 
-    glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
-    glEnableVertexAttribArray(overlayShader->a_position);
+        glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+        glEnableVertexAttribArray(overlayShader->a_position);
 
-    glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
-    glEnableVertexAttribArray(overlayShader->a_texCoord);
+        glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
+        glEnableVertexAttribArray(overlayShader->a_texCoord);
 
-    glUniform4f(overlayShader->u_colour, mColour[0]/255.0f, mColour[1]/255.0f, mColour[2]/255.0f, mAlpha);
-    esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
-  }
+        glUniform4f(overlayShader->u_colour, mColour[0]/255.0f, mColour[1]/255.0f, mColour[2]/255.0f, mAlpha);
+        esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
+    }
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, mTexture->m_HWID);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture->mHWID);
 
-  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-  if (gGLVersion == 1)
-  {
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisable(GL_TEXTURE_2D);
-  }
+    if (gGLVersion == 1)
+    {
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisable(GL_TEXTURE_2D);
+    }
+    else
+    {
+        const OverlayShader* overlayShader = (OverlayShader*) ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
+        glDisableVertexAttribArray(overlayShader->a_position);
+        glDisableVertexAttribArray(overlayShader->a_texCoord);
+    }
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-void ButtonOverlay::SetText(const char* txt, CIwGxFont* font, AnchorH textAnchorH, AnchorV textAnchorV, float offsetX, float offsetY)
+//======================================================================================================================
+void ButtonOverlay::SetText(const char* txt, AnchorH textAnchorH, AnchorV textAnchorV, float offsetX, float offsetY)
 {
-  mText = txt;
-  mFont = font;
-  mTextAnchorH = textAnchorH;
-  mTextAnchorV = textAnchorV;
-  mTextOffsetX = offsetX;
-  mTextOffsetY = offsetY;
+    mText = txt;
+    mTextAnchorH = textAnchorH;
+    mTextAnchorV = textAnchorV;
+    mTextOffsetX = offsetX;
+    mTextOffsetY = offsetY;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void ButtonOverlay::UpdateText(const char* txt)
 {
-  mText = txt;
+    mText = txt;
 }
 
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void ButtonOverlay::SetTextColour(const Vector4& colour)
 {
-  mTextColour = colour;
+    mTextColour = colour;
 }
 
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void ButtonOverlay::GxRender(int renderLevel, DisplayConfig& displayConfig)
 {
-  if (mText.empty() || !mFont || !mEnabled)
-    return;
+    if (mText.empty() || !mEnabled)
+        return;
 
-  IwGxFontSetFont(mFont);
+    FontRenderer& font = FontRenderer::GetInstance();
+    uint32 origColour = font.GetColourABGR();
+    uint8 r = ClampToRange((int) (mTextColour.x * 255), 0, 255);
+    uint8 g = ClampToRange((int) (mTextColour.y * 255), 0, 255);
+    uint8 b = ClampToRange((int) (mTextColour.z * 255), 0, 255);
+    uint8 a = ClampToRange((int) (mTextColour.w * 255), 0, 255);
+    font.SetColour(r, g, b, a);
+    uint16 fontHeight = font.GetFontHeight();
 
-  Colour origColour = IwGxFontGetCol();
-  CIwColour colour;
-  colour.r = ClampToRange((int) (mTextColour.x * 255), 0, 255);
-  colour.g = ClampToRange((int) (mTextColour.y * 255), 0, 255);
-  colour.b = ClampToRange((int) (mTextColour.z * 255), 0, 255);
-  colour.a = ClampToRange((int) (mTextColour.w * 255), 0, 255);
-  IwGxFontSetCol(colour);
-  IwGxLightingOn();
-  uint16 fontHeight = mFont->GetHeight();
+    float X1 = displayConfig.mLeft + mX1 * displayConfig.mWidth;
+    float Y1 = displayConfig.mBottom + mY1 * displayConfig.mHeight;
 
-  float X1 = displayConfig.mLeft + mX1 * displayConfig.mWidth;
-  float Y1 = displayConfig.mBottom + mY1 * displayConfig.mHeight;
+    int x, y;
+    int w = (int) displayConfig.mWidth;
+    int h = (int) ((mY1 - mY0) * displayConfig.mHeight);
 
-  int x, y;
-  int w = (int) displayConfig.mWidth;
-  int h = (int) ((mY1 - mY0) * displayConfig.mHeight);
+    if (mTextAnchorH == ANCHOR_H_LEFT)
+    {
+        font.SetAlignmentHor(FONT_ALIGN_LEFT);
+        x = (int) (displayConfig.mLeft + mX0 * displayConfig.mWidth);
+    }
+    else if (mTextAnchorH == ANCHOR_H_RIGHT)
+    {
+        font.SetAlignmentHor(FONT_ALIGN_RIGHT);
+        x = (int) (displayConfig.mLeft + mX0 * displayConfig.mWidth - w);
+    }
+    else
+    {
+        font.SetAlignmentHor(FONT_ALIGN_CENTRE);
+        x = (int) (displayConfig.mLeft + mX0 * displayConfig.mWidth - w/2);
+    }
 
-  if (mTextAnchorH == ANCHOR_H_LEFT)
-  {
-    IwGxFontSetAlignmentHor(IW_GX_FONT_ALIGN_LEFT);
-    x = (int) (displayConfig.mLeft + mX0 * displayConfig.mWidth);
-  }
-  else if (mTextAnchorH == ANCHOR_H_RIGHT)
-  {
-    IwGxFontSetAlignmentHor(IW_GX_FONT_ALIGN_RIGHT);
-    x = (int) (displayConfig.mLeft + mX0 * displayConfig.mWidth - w);
-  }
-  else
-  {
-    IwGxFontSetAlignmentHor(IW_GX_FONT_ALIGN_CENTRE);
-    x = (int) (displayConfig.mLeft + mX0 * displayConfig.mWidth - w/2);
-  }
+    if (mTextAnchorV == ANCHOR_V_TOP)
+    {
+        font.SetAlignmentVer(FONT_ALIGN_BOTTOM);
+        y = (int) ((1.0f-mY1) * displayConfig.mHeight) - h;
+    }
+    else if (mTextAnchorV == ANCHOR_V_BOT)
+    {
+        font.SetAlignmentVer(FONT_ALIGN_TOP);
+        y = (int) ((1.0f-mY1) * displayConfig.mHeight) + h;
+    }
+    else
+    {
+        font.SetAlignmentVer(FONT_ALIGN_MIDDLE);
+        y = (int) ((1.0f-mY1) * displayConfig.mHeight) + h/2;
+    }
 
-  if (mTextAnchorV == ANCHOR_V_TOP)
-  {
-    IwGxFontSetAlignmentVer(IW_GX_FONT_ALIGN_BOTTOM);
-    y = (int) ((1.0f-mY1) * displayConfig.mHeight) - h;
-  }
-  else if (mTextAnchorV == ANCHOR_V_BOT)
-  {
-    IwGxFontSetAlignmentVer(IW_GX_FONT_ALIGN_TOP);
-    y = (int) ((1.0f-mY1) * displayConfig.mHeight) + h;
-  }
-  else
-  {
-    IwGxFontSetAlignmentVer(IW_GX_FONT_ALIGN_MIDDLE);
-    y = (int) ((1.0f-mY1) * displayConfig.mHeight) + h/2;
-  }
+    float s = mSize * Maximum(displayConfig.mWidth, displayConfig.mHeight);
+    x += (int) (mTextOffsetX * s);
+    y -= (int) (mTextOffsetY * s);
 
-  float s = mSize * Maximum(displayConfig.mWidth, displayConfig.mHeight);
-  x += (int) (mTextOffsetX * s);
-  y -= (int) (mTextOffsetY * s);
+    font.SetRect(x,y,w,h);
+    font.RenderText(mText.c_str());
 
-  IwGxFontSetRect(CIwRect(x,y,w,h));
-  IwGxFontDrawText(mText.c_str());
-
-  IwGxFontSetCol(origColour);
-  IwGxLightingOff();
+    font.SetColourABGR(origColour);
 }
 

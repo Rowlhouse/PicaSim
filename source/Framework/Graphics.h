@@ -2,9 +2,24 @@
 #define GRAPHICS_H
 
 #include "Helpers.h"
+#include "../Platform/Platform.h"
+#include "../Platform/Texture.h"
 
-#include <IwGL.h>
-#include <IwGx.h>
+// OpenGL headers
+#ifdef _WIN32
+#include <glad/glad.h>
+#else
+#ifdef PS_PLATFORM_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#elif defined(PS_PLATFORM_IOS)
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#else
+#include <GL/gl.h>
+#include <GL/glext.h>
+#endif
+#endif
 
 extern int gGLVersion;
 
@@ -13,57 +28,54 @@ typedef GLfloat GLMat33[3][3];
 typedef GLfloat GLVec4[4];
 typedef GLfloat GLVec3[3];
 
-typedef CIwTexture Texture;
+// Note: Texture typedef is now defined in Platform/Texture.h
 
-// Use this to restore OpenGL etc to a sensible state after the menu
-void RecoverFromIwGx(bool clear);
-
-// Use this to put Marmalade into a decent state for rendering menus
-void PrepareForIwGx(bool clear);
+// Graphics state reset functions (for transitioning between UI and 3D rendering)
+void ResetGraphicsState(bool clear);
+void PrepareForUIRendering(bool clear);
 
 void SaveScreenshot();
+void SaveScreenshotAsTexture(Texture* texture);
 
-void SaveScreenshotAsTexture(CIwTexture* texture);
-
-/// Initialises the OpenGL context and gets the best RGB/depth buffer combination possible. 
-/// Returns 0 if successful.
-int eglInit(bool createSurface);
+// Graphics initialization (now uses SDL2 Window - see Platform/Window.h)
+// Legacy compatibility - these now delegate to Window class
+int eglInit(bool createSurface, int msaaSamples = 0);
 void eglTerm(bool destroySurface);
 
 inline void ConvertTransformToGLMat44(const Transform& tm, GLMat44& mat44)
 {
-  mat44[0][0] = tm.RowX().x;
-  mat44[0][1] = tm.RowX().y;
-  mat44[0][2] = tm.RowX().z;
-  mat44[0][3] = 0.0;
-  mat44[1][0] = tm.RowY().x;
-  mat44[1][1] = tm.RowY().y;
-  mat44[1][2] = tm.RowY().z;
-  mat44[1][3] = 0.0;
-  mat44[2][0] = tm.RowZ().x;
-  mat44[2][1] = tm.RowZ().y;
-  mat44[2][2] = tm.RowZ().z;
-  mat44[2][3] = 0.0;
-  mat44[3][0] = tm.GetTrans().x;
-  mat44[3][1] = tm.GetTrans().y;
-  mat44[3][2] = tm.GetTrans().z;
-  mat44[3][3] = 1.0;
+    mat44[0][0] = tm.RowX().x;
+    mat44[0][1] = tm.RowX().y;
+    mat44[0][2] = tm.RowX().z;
+    mat44[0][3] = 0.0;
+    mat44[1][0] = tm.RowY().x;
+    mat44[1][1] = tm.RowY().y;
+    mat44[1][2] = tm.RowY().z;
+    mat44[1][3] = 0.0;
+    mat44[2][0] = tm.RowZ().x;
+    mat44[2][1] = tm.RowZ().y;
+    mat44[2][2] = tm.RowZ().z;
+    mat44[2][3] = 0.0;
+    mat44[3][0] = tm.GetTrans().x;
+    mat44[3][1] = tm.GetTrans().y;
+    mat44[3][2] = tm.GetTrans().z;
+    mat44[3][3] = 1.0;
 }
 
 inline void ConvertGLMat44ToTransform(const GLMat44& mat44, Transform& tm)
 {
-  tm.m[0][0] =     mat44[0][0];
-  tm.m[0][1] =     mat44[0][1];
-  tm.m[0][2] =     mat44[0][2];
-  tm.m[1][0] =     mat44[1][0];
-  tm.m[1][1] =     mat44[1][1];
-  tm.m[1][2] =     mat44[1][2];
-  tm.m[2][0] =     mat44[2][0];
-  tm.m[2][1] =     mat44[2][1];
-  tm.m[2][2] =     mat44[2][2];
-  tm.t.x = mat44[3][0];
-  tm.t.y = mat44[3][1];
-  tm.t.z = mat44[3][2];
+    tm.m[0][0] =     mat44[0][0];
+    tm.m[0][1] =     mat44[0][1];
+    tm.m[0][2] =     mat44[0][2];
+    tm.m[1][0] =     mat44[1][0];
+    tm.m[1][1] =     mat44[1][1];
+    tm.m[1][2] =     mat44[1][2];
+    tm.m[2][0] =     mat44[2][0];
+    tm.m[2][1] =     mat44[2][1];
+    tm.m[2][2] =     mat44[2][2];
+    tm.t.x = mat44[3][0];
+    tm.t.y = mat44[3][1];
+    tm.t.z = mat44[3][2];
 }
 
 /// Loads an image into the texture, making sure that if it's too big then it gets scaled down safely.
@@ -197,87 +209,79 @@ void esSetLighting(const struct LightShaderInfo lightShaderInfo[5]);
 
 // Returns the view transform (inverse of camera) as well as setting up the GL modelview matrix (OpenGL 1)
 void LookAt(
-  GLMat44& viewTM,
-  GLfloat eyex, GLfloat eyey, GLfloat eyez,
-  GLfloat centerx, GLfloat centery, GLfloat centerz,
-  GLfloat upx, GLfloat upy, GLfloat upz);
+    GLMat44& viewTM,
+    GLfloat eyex, GLfloat eyey, GLfloat eyez,
+    GLfloat centerx, GLfloat centery, GLfloat centerz,
+    GLfloat upx, GLfloat upy, GLfloat upz);
 
 // Natural lighting state is off
 struct EnableLighting {
-  EnableLighting() {if (gGLVersion == 1) glEnable(GL_LIGHTING);}
-  ~EnableLighting() {if (gGLVersion == 1) glDisable(GL_LIGHTING);}
+    EnableLighting() {if (gGLVersion == 1) glEnable(GL_LIGHTING);}
+    ~EnableLighting() {if (gGLVersion == 1) glDisable(GL_LIGHTING);}
 };
 
 struct EnableBlend {
-  EnableBlend() {glEnable(GL_BLEND);}
-  ~EnableBlend() {glDisable(GL_BLEND);}
+    EnableBlend() {glEnable(GL_BLEND);}
+    ~EnableBlend() {glDisable(GL_BLEND);}
 };
 
 struct DisableDepthMask {
-  DisableDepthMask() {glDepthMask(GL_FALSE);}
-  ~DisableDepthMask() {glDepthMask(GL_TRUE);}
+    DisableDepthMask() {glDepthMask(GL_FALSE);}
+    ~DisableDepthMask() {glDepthMask(GL_TRUE);}
 };
 
 struct DisableDepthTest {
-  DisableDepthTest() {glDisable(GL_DEPTH_TEST);}
-  ~DisableDepthTest() {glEnable(GL_DEPTH_TEST);}
+    DisableDepthTest() {glDisable(GL_DEPTH_TEST);}
+    ~DisableDepthTest() {glEnable(GL_DEPTH_TEST);}
 };
 
 struct EnableNormalScaling {
-  EnableNormalScaling() {if (gGLVersion == 1) glEnable(GL_RESCALE_NORMAL);}
-  ~EnableNormalScaling() {if (gGLVersion == 1) glDisable(GL_RESCALE_NORMAL);}
+    EnableNormalScaling() {if (gGLVersion == 1) glEnable(GL_RESCALE_NORMAL);}
+    ~EnableNormalScaling() {if (gGLVersion == 1) glDisable(GL_RESCALE_NORMAL);}
 };
 
 struct EnableNormalNormalisation {
-  EnableNormalNormalisation() {if (gGLVersion == 1) glEnable(GL_NORMALIZE);}
-  ~EnableNormalNormalisation() {if (gGLVersion == 1) glDisable(GL_NORMALIZE);}
+    EnableNormalNormalisation() {if (gGLVersion == 1) glEnable(GL_NORMALIZE);}
+    ~EnableNormalNormalisation() {if (gGLVersion == 1) glDisable(GL_NORMALIZE);}
 };
 
 struct EnableCullFace {
-  EnableCullFace(GLenum mode) {glEnable(GL_CULL_FACE); glCullFace(mode);}
-  ~EnableCullFace() {glDisable(GL_CULL_FACE);}
+    EnableCullFace(GLenum mode) {glEnable(GL_CULL_FACE); glCullFace(mode);}
+    ~EnableCullFace() {glDisable(GL_CULL_FACE);}
 };
 
 struct FrontFaceCW {
-  FrontFaceCW() {glFrontFace(GL_CW);}
-  ~FrontFaceCW() {glFrontFace(GL_CCW);}
+    FrontFaceCW() {glFrontFace(GL_CW);}
+    ~FrontFaceCW() {glFrontFace(GL_CCW);}
 };
 
 struct PushMatrix {
-  PushMatrix() {esPushMatrix();}
-  ~PushMatrix() {esPopMatrix();}
+    PushMatrix() {esPushMatrix();}
+    ~PushMatrix() {esPopMatrix();}
 };
 
-#define FOG_ENABLEDx
-
-#ifdef FOG_ENABLED
+// Fog is disabled - DisableFog is a no-op RAII guard
 struct DisableFog {
-  DisableFog() {if (gGLVersion == 1) glDisable(GL_FOG);}
-  ~DisableFog() {if (gGLVersion == 1) glEnable(GL_FOG);}
+    DisableFog() {}
+    ~DisableFog() {}
 };
-#else
-struct DisableFog {
-  DisableFog() {}
-  ~DisableFog() {}
-};
-#endif
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 struct RGB 
 {
-  RGB(float R = 0.0f, float G = 0.0f, float B = 0.0f) : r(R), g(G), b(B) {}
-  float r;       // 0-1
-  float g;       // 0-1
-  float b;       // 0-1
+    RGB(float R = 0.0f, float G = 0.0f, float B = 0.0f) : r(R), g(G), b(B) {}
+    float r;       // 0-1
+    float g;       // 0-1
+    float b;       // 0-1
 };
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 struct HSV 
 {
-  HSV(float H = 0.0f, float S = 0.0f, float V = 0.0f) : h(H), s(S), v(V) {}
-  float h;       // angle in degrees
-  float s;       // 0-1
-  float v;       // 0-1
+    HSV(float H = 0.0f, float S = 0.0f, float V = 0.0f) : h(H), s(S), v(V) {}
+    float h;       // angle in degrees
+    float s;       // 0-1
+    float v;       // 0-1
 };
 
 HSV RGB2HSV(RGB in);
@@ -289,6 +293,65 @@ Vector3 HSV2RGB(const Vector3& rgb);
 // Offsets the HSV version of col, with offset = 0-1
 void OffsetColour(float col[4], float offset);
 
-CIwColour ConvertToColour(const Vector3& colour);
+// Convert Vector3 (0-1 RGB) to Colour class
+Colour ConvertToColour(const Vector3& colour);
+
+//==============================================================================
+// OpenGL ES 1.x Compatibility Layer
+// These functions/macros provide compatibility for code written for OpenGL ES 1.x
+//==============================================================================
+
+#ifdef _WIN32
+// Desktop OpenGL uses double versions - provide float wrappers
+inline void glFrustumf(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+{
+        glFrustum((GLdouble)left, (GLdouble)right, (GLdouble)bottom, (GLdouble)top, (GLdouble)zNear, (GLdouble)zFar);
+}
+
+inline void glOrthof(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+{
+        glOrtho((GLdouble)left, (GLdouble)right, (GLdouble)bottom, (GLdouble)top, (GLdouble)zNear, (GLdouble)zFar);
+}
+
+// OpenGL ES 1.x OES extension function mappings for framebuffers
+// These are the same as the standard GL_ARB_framebuffer_object extensions
+#ifndef GL_FRAMEBUFFER_OES
+#define GL_FRAMEBUFFER_OES GL_FRAMEBUFFER
+#define GL_RENDERBUFFER_OES GL_RENDERBUFFER
+#define GL_DEPTH_COMPONENT16_OES GL_DEPTH_COMPONENT16
+#define GL_COLOR_ATTACHMENT0_OES GL_COLOR_ATTACHMENT0
+#define GL_DEPTH_ATTACHMENT_OES GL_DEPTH_ATTACHMENT
+#define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE
+#endif
+
+// OES function mappings
+#ifndef glGenFramebuffersOES
+#define glGenFramebuffersOES glGenFramebuffers
+#define glDeleteFramebuffersOES glDeleteFramebuffers
+#define glBindFramebufferOES glBindFramebuffer
+#define glFramebufferTexture2DOES glFramebufferTexture2D
+#define glFramebufferRenderbufferOES glFramebufferRenderbuffer
+#define glCheckFramebufferStatusOES glCheckFramebufferStatus
+#define glGenRenderbuffersOES glGenRenderbuffers
+#define glDeleteRenderbuffersOES glDeleteRenderbuffers
+#define glBindRenderbufferOES glBindRenderbuffer
+#define glRenderbufferStorageOES glRenderbufferStorage
+#endif
+
+#endif // _WIN32
+
+// OpenGL ES 1.x fixed-function compatibility stubs (for GL 2.0 path)
+// When gGLVersion == 1, these functions are called. On desktop, they may not exist.
+#ifndef GL_RESCALE_NORMAL
+#define GL_RESCALE_NORMAL 0x803A
+#endif
+
+#ifndef GL_LUMINANCE
+#define GL_LUMINANCE 0x1909
+#endif
+
+#ifndef GL_LUMINANCE_ALPHA
+#define GL_LUMINANCE_ALPHA 0x190A
+#endif
 
 #endif

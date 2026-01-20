@@ -1,141 +1,133 @@
 #ifndef AUDIOMANAGER_H
 #define AUDIOMANAGER_H
 
-#include <Helpers.h>
-
-#include <s3eTypes.h>
+#include "Helpers.h"
 
 #include <vector>
+
+// OpenAL headers
+#include <AL/al.h>
+#include <AL/alc.h>
 
 class AudioManager
 {
 public:
-  /// A sound that has been loaded
-  struct Sound
-  {
-    Sound(const char* soundFile, int sampleFrequency, bool stereo, bool loop, bool normalise);
-    ~Sound();
-    char mName[256];      // Name (for debugging)
-    int     mRefCount;
-    int16*  mSoundData;        // Buffer that holds the sound data
-    int     mSoundSamples;     // Length of sound data in 16-bit samples
-    int     mSampleFrequency;
-    bool    mStereo;
-    bool    mLoop;
-    bool    mNormaliseOnLoad;
-  };
+    /// A sound that has been loaded
+    struct Sound
+    {
+        Sound(const char* soundFile, int sampleFrequency, bool stereo, bool loop, bool normalise);
+        ~Sound();
+        char mName[256];      // Name (for debugging)
+        int     mRefCount;
+        int16*  mSoundData;        // Buffer that holds the sound data
+        int     mSoundSamples;     // Length of sound data in 16-bit samples
+        int     mSampleFrequency;
+        bool    mStereo;
+        bool    mLoop;
+        bool    mNormaliseOnLoad;
 
-  /// Used to refer to a channel 
-  typedef int SoundChannel;
+        ALuint  mALBuffer;         // OpenAL buffer handle
+    };
 
-  static void Init();
-  static void Terminate();
+    /// Used to refer to a channel
+    typedef int SoundChannel;
 
-  static AudioManager& GetInstance() {IwAssert(ROWLHOUSE, mInstance); return *mInstance;}
+    static void Init();
+    static void Terminate();
 
-  void Update(float dt);
+    static AudioManager& GetInstance() {IwAssert(ROWLHOUSE, mInstance); return *mInstance;}
 
-  /// Sets the position of the listener
-  void SetTransformAndVelocity(const Transform& tm, const Vector3& vel) {mTM = tm; mVelocity = vel;}
+    void Update(float dt);
 
-  /// This stops playing all sounds and marks them all as not in use.
-  void StopAllChannels();
+    /// Sets the position of the listener
+    void SetTransformAndVelocity(const Transform& tm, const Vector3& vel) {mTM = tm; mVelocity = vel;}
 
-  /// Just sets all the volumes to zero - will be restored on the next update
-  void SetAllChannelsToZeroVolume();
+    /// This stops playing all sounds and marks them all as not in use.
+    void StopAllChannels();
 
-  /// Sets the overall volume (without smoothing). Note that volScale can be > 1
-  void SetVolume(float volScale) {mVolScale = volScale;}
+    /// Just sets all the volumes to zero - will be restored on the next update
+    void SetAllChannelsToZeroVolume();
 
-  /// Returns a free sound channel (if one exists). This marks the channel as in-use. 
-  /// Once a sound starts playing on a channel, it becomes "owned" by the caller,
-  /// even if the sound is non-loooping and it finishes. The sound needs to be stopped 
-  /// if that channel is to become available for re-use.
-  /// Returns -1 if no free channel is found
-  SoundChannel AllocateSoundChannel(float soundSourceRadius, bool use3D);
-  void ReleaseSoundChannel(SoundChannel soundChannel);
+    /// Sets the overall volume (without smoothing). Note that volScale can be > 1
+    void SetVolume(float volScale) {mVolScale = volScale;}
 
-  void StartSoundOnChannel(SoundChannel soundChannel, Sound* sound, bool loop);
-  /// Pauses playing the sound but doesn't mark it as not in-use
-  void PauseSoundOnChannel(SoundChannel soundChannel);
+    /// Returns a free sound channel (if one exists). This marks the channel as in-use.
+    /// Once a sound starts playing on a channel, it becomes "owned" by the caller,
+    /// even if the sound is non-loooping and it finishes. The sound needs to be stopped
+    /// if that channel is to become available for re-use.
+    /// Returns -1 if no free channel is found
+    SoundChannel AllocateSoundChannel(float soundSourceRadius, bool use3D);
+    void ReleaseSoundChannel(SoundChannel soundChannel);
 
-  bool IsSoundPlayingOnChannel(SoundChannel soundChannel);
+    void StartSoundOnChannel(SoundChannel soundChannel, Sound* sound, bool loop);
+    /// Pauses playing the sound but doesn't mark it as not in-use
+    void PauseSoundOnChannel(SoundChannel soundChannel);
 
-  void SetChannelPositionAndVelocity(SoundChannel soundChannel, const Vector3& pos, const Vector3& velocity);
-  void SetChannelFrequencyScale(SoundChannel soundChannel, float freqScale);
+    bool IsSoundPlayingOnChannel(SoundChannel soundChannel);
 
-  void SetChannelTargetVolumeScale(SoundChannel soundChannel, float targetVolScale, float volScaleRate = 2.0f);
-  /// Sets the volume directly. Use the target if possible as that will be less likely to cause popping
-  void SetChannelVolumeScale(SoundChannel soundChannel, float volScale);
+    void SetChannelPositionAndVelocity(SoundChannel soundChannel, const Vector3& pos, const Vector3& velocity);
+    void SetChannelFrequencyScale(SoundChannel soundChannel, float freqScale);
 
-  /// Sounds should all be loaded in one go to prevent stalls. Sounds will be reference counted, 
-  /// so this will only actually load if necessary.
-  Sound* LoadSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop, bool normalise);
+    void SetChannelTargetVolumeScale(SoundChannel soundChannel, float targetVolScale, float volScaleRate = 2.0f);
+    /// Sets the volume directly. Use the target if possible as that will be less likely to cause popping
+    void SetChannelVolumeScale(SoundChannel soundChannel, float volScale);
 
-  void UnloadSound(Sound* sound);
+    /// Sounds should all be loaded in one go to prevent stalls. Sounds will be reference counted,
+    /// so this will only actually load if necessary.
+    Sound* LoadSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop, bool normalise);
+
+    void UnloadSound(Sound* sound);
+
 private:
-  struct Channel
-  {
-    Channel();
-    bool         mInUse;
-    bool         mUse3D;
-    const Sound* mSound;
-    /// This is how many samples, or left/right pairs of samples we've played. 
-    /// Multiply by 2 if stereo to get the offset. Float so that we can handle 
-    /// sample rate scaling
-    float         mPlaybackPosF;
+    struct Channel
+    {
+        Channel();
+        bool         mInUse;
+        bool         mUse3D;
+        const Sound* mSound;
 
-    /// Derived values used in the sound callback - so these will be updated (ideally atomically!)
-    float         mVolumeScale;
-    float         mLeftVolF;
-    float         mRightVolF;
-    float         mPlaybackFrequencyMultiplierF;
+        ALuint       mALSource;         // OpenAL source handle
 
-    /// These are set by the game
-    float         mSoundSourceRadius;
-    Vector3       mSourcePosition;
-    Vector3       mSourceVelocity;
-    float         mFrequencyScale;
-    float         mTargetVolumeScaleF; // The target overall volume - there's a fade into/out of this
-    float         mTargetVolumeScaleFRate; // The rate of change of the overall volume
+        /// Volume and frequency control (volume ramping handled manually)
+        float        mVolumeScale;
+        float        mTargetVolumeScaleF;
+        float        mTargetVolumeScaleFRate;
+        float        mFrequencyScale;
 
-    /// Only used in the callback
-    float         mCurrentLeftVolF;
-    float         mCurrentRightVolF;
-    float         mCurrentFrequencyMultiplierF;
-    float         mLastOutputLeftF;
-    float         mLastOutputRightF;
-  };
+        /// 3D position and velocity
+        float        mSoundSourceRadius;
+        Vector3      mSourcePosition;
+        Vector3      mSourceVelocity;
+    };
 
-  typedef std::vector<Sound*> Sounds;
+    typedef std::vector<Sound*> Sounds;
 
-  AudioManager();
-  ~AudioManager();
+    AudioManager();
+    ~AudioManager();
 
-  // returns the 
-  Sounds::iterator FindLoadedSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop);
+    Sounds::iterator FindLoadedSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop);
 
-  /// Callback for playing the audio when the source is stereo
-  static int32 AudioCallbackStereoSource(void* sys, void* user);
-  static int32 AudioCallbackMonoSource(void* sys, void* user);
+    /// Updates the derived quantities based on the listener and channel pos etc
+    void UpdateChannel(SoundChannel soundChannel, float deltaTime);
 
-  static AudioManager* mInstance;
+    static AudioManager* mInstance;
 
-  /// Updates the derived quantities based on the listener and channel pos etc
-  void UpdateChannel(SoundChannel soundChannel, float deltaTime);
+    /// OpenAL device and context
+    ALCdevice* mALDevice;
+    ALCcontext* mALContext;
 
-  /// Details on the channels available
-  int mNumAvailableChannels;
-  Channel* mChannels;
+    /// Details on the channels available
+    int mNumAvailableChannels;
+    Channel* mChannels;
 
-  /// All the loaded sounds. On the heap so that push_back doesn't invalidate 
-  /// references to already loaded sounds.
-  Sounds mSounds;
+    /// All the loaded sounds. On the heap so that push_back doesn't invalidate
+    /// references to already loaded sounds.
+    Sounds mSounds;
 
-  Transform mTM;
-  Vector3 mVelocity;
+    Transform mTM;
+    Vector3 mVelocity;
 
-  float mVolScale;
+    float mVolScale;
 };
 
 #endif

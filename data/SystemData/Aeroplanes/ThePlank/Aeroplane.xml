@@ -193,7 +193,7 @@ The Plank - High performance flying wing
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="5"
     mFreqScalePerSpeed=".125"
@@ -205,7 +205,7 @@ The Plank - High performance flying wing
   />
 
   <AirFlow
-    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    file="SystemData/Audio/GliderWhistle22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".1"

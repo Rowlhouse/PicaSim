@@ -257,7 +257,6 @@ RTEraserFive - 4 channel indoor plane based on the Eraser Five by Robin Trumpp
       controlPerChannel3="1"
 
       audioFile="SystemData/Audio/NewMotor44100Mono.raw"
-      audioStereo="0"
       audioSampleRate="44100"
       audioRadius="0.2"
       audioMinVolume="0.0"

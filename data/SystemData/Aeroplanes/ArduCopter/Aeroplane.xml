@@ -61,7 +61,6 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
       controlPerGyro3="1"
       
       audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioStereo="0"
       audioSampleRate="22050"
       audioRadius="0.2"
       audioMinVolume="0"
@@ -116,7 +115,6 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
       controlPerGyro3="1"
 
       audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioStereo="0"
       audioSampleRate="22050"
       audioRadius="0.2"
       audioMinVolume="0"
@@ -171,7 +169,6 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
       controlPerGyro3="1"
 
       audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioStereo="0"
       audioSampleRate="22050"
       audioRadius="0.2"
       audioMinVolume="0"
@@ -226,7 +223,6 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
       controlPerGyro3="1"
 
       audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioStereo="0"
       audioSampleRate="22050"
       audioRadius="0.2"
       audioMinVolume="0"

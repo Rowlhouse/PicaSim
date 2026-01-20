@@ -1,12 +1,9 @@
 #include "Profile.h"
 
+// Profiling implementation - currently stubbed out
+// The Marmalade profiling system has been removed
+// A custom profiling system can be added here later if needed
+
 #ifdef IW_USE_PROFILE
-
-void CIwMenuItemProfile::Select()
-{
-  // Create debug menu
-   new CIwProfileMenu();
-  CIwProfileManager::Get().SetActive(true);
-}
-
+// Legacy Marmalade profiling code would go here
 #endif

@@ -1,41 +1,47 @@
 #include "FrameworkSettings.h"
 #include "Trace.h"
 #include "Helpers.h"
-
-#include <s3e.h>
-#include <IwDebug.h>
+#include "../Platform/Window.h"
 
 #include <cstring>
 #include <algorithm>
 
-//---------------------------------------------------------------------------------------------------------------------
-FrameworkSettings::FrameworkSettings() 
-  : 
-  mPhysicsSubsteps(8),
-  mNearClipPlaneDistance(0.5f),
-  mFarClipPlaneDistance(50000.0f),
-  mUseMultiLights(true)
-{
-  mOS = (s3eDeviceOSID) s3eDeviceGetInt(S3E_DEVICE_OS);
-  //mOS = S3E_OS_ID_ANDROID;
-  TRACE_FILE_IF(1) TRACE("OS = %d", mOS);
+// External window reference
+extern Window* gWindow;
 
-  UpdateScreenDimensions();
+//======================================================================================================================
+FrameworkSettings::FrameworkSettings()
+    :
+    mPhysicsSubsteps(8),
+    mNearClipPlaneDistance(0.5f),
+    mFarClipPlaneDistance(50000.0f),
+    mUseMultiLights(true)
+{
+    // Get OS type from Platform abstraction
+    mOS = (s3eDeviceOSID)s3eDeviceGetInt(S3E_DEVICE_OS);
+    TRACE_FILE_IF(1) TRACE("OS = %d", mOS);
+
+    UpdateScreenDimensions();
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void FrameworkSettings::UpdateScreenDimensions() const
 {
-  // Alternatively
-  mScreenWidth = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
-  mScreenHeight = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
+    // Get screen dimensions from Window if available, otherwise from Platform
+    if (gWindow && gWindow->IsInitialized())
+    {
+        mScreenWidth = gWindow->GetWidth();
+        mScreenHeight = gWindow->GetHeight();
+    }
+    else
+    {
+        mScreenWidth = Platform::GetScreenWidth();
+        mScreenHeight = Platform::GetScreenHeight();
+    }
 
-  if (IsMarmaladeVersionLessThan(6,2,0) && mOS == S3E_OS_ID_IPHONE)
-    std::swap(mScreenWidth, mScreenHeight);
-
-  // MARMALDE WORKAROUND - screen dimensions are flipped on the first update. Assume landscape.
-  if (mOS == S3E_OS_ID_IPHONE && mScreenHeight > mScreenWidth)
-  {
-    std::swap(mScreenWidth, mScreenHeight);
-  }
+    // On iOS, ensure landscape orientation (width > height)
+    if (mOS == S3E_OS_ID_IPHONE && mScreenHeight > mScreenWidth)
+    {
+        std::swap(mScreenWidth, mScreenHeight);
+    }
 }

@@ -260,7 +260,6 @@ Extra3D - 4 channel powered plane
       controlPerChannel3="1"
 
       audioFile="SystemData/Audio/NewMotor44100Mono.raw"
-      audioStereo="0"
       audioSampleRate="22050"
       audioRadius="0.7"
       audioMinVolume="0"
@@ -521,7 +520,7 @@ Extra3D - 4 channel powered plane
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".125"

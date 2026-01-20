@@ -17,156 +17,162 @@ struct DisplayConfig;
 
 enum RenderLevels
 {
-  RENDER_LEVEL_ANY = -9999,  // Only used for queries
-  RENDER_LEVEL_SKYBOX  =            0,
-  RENDER_LEVEL_PLAIN   =           10,
-  RENDER_LEVEL_TERRAIN =           20,
-  RENDER_LEVEL_OBJECTS =           30,
-  RENDER_LEVEL_TERRAIN_SHADOW =    40,
-  RENDER_LEVEL_DEBUG   =           50,
+    RENDER_LEVEL_ANY = -9999,  // Only used for queries
+    RENDER_LEVEL_SKYBOX  =            0,
+    RENDER_LEVEL_PLAIN   =           10,
+    RENDER_LEVEL_TERRAIN =           20,
+    RENDER_LEVEL_OBJECTS =           30,
+    RENDER_LEVEL_TERRAIN_SHADOW =    40,
+    RENDER_LEVEL_DEBUG   =           50,
 };
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 struct ShadowCaster
 {
-  RenderObject*      mRenderObject;
-  Texture*           mTexture;
-  FrameBufferObject* mFrameBufferObject;
+    RenderObject*      mRenderObject;
+    Texture*           mTexture;
+    FrameBufferObject* mFrameBufferObject;
 };
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 class RenderGxObject
 {
 public:
-  virtual ~RenderGxObject() {}
-  virtual void GxRender(int renderLevel, DisplayConfig& displayConfig) = 0;
+    virtual ~RenderGxObject() {}
+    virtual void GxRender(int renderLevel, DisplayConfig& displayConfig) = 0;
 };
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 class RenderManager
 {
 public:
-  typedef std::vector<RenderObject*> ShadowCasterObjects;
+    typedef std::vector<RenderObject*> ShadowCasterObjects;
 
-  /// Gets the singleton
-  static RenderManager& GetInstance(); 
+    /// Gets the singleton
+    static RenderManager& GetInstance(); 
 
-  /// Creates the singleton, and initially no viewports and cameras will exist
-  static void Init(FrameworkSettings& frameworkSettings, class LoadingScreenHelper* loadingScreen);
+    static bool GetExists() { return mInstance != nullptr; }
 
-  /// Destroys the singleton. Note that any created viewports and cameras will be destroyed
-  static void Terminate();
+    /// Creates the singleton, and initially no viewports and cameras will exist
+    static void Init(FrameworkSettings& frameworkSettings, class LoadingScreenHelper* loadingScreen);
 
-  /// realDeltaTime is the real time since the last render update. gameDeltaTime is the game time - 
-  /// i.e. zero when paused, and scaled according to time scale - so for effects that should follow slow mo.
-  void Update(float realDeltaTime, float gameDeltaTime);
+    /// Destroys the singleton. Note that any created viewports and cameras will be destroyed
+    static void Terminate();
 
-  void RenderUpdate();
+    /// realDeltaTime is the real time since the last render update. gameDeltaTime is the game time - 
+    /// i.e. zero when paused, and scaled according to time scale - so for effects that should follow slow mo.
+    void Update(float realDeltaTime, float gameDeltaTime);
 
-  DebugRenderer& GetDebugRenderer() {return *mDebugRenderer;}
+    void RenderUpdate();
 
-  /// Register for a render callback. The ordering is determined by the level, smaller 
-  /// numbers happen earlier, with ranges suggested by RenderLevels
-  void RegisterRenderObject(RenderObject* renderObject, int renderLevel);
-  void UnregisterRenderObject(RenderObject* renderObject, int renderLevel);
-  bool IsRenderObjectRegistered(const RenderObject* renderObject, int renderLevel = RENDER_LEVEL_ANY) const;
+    /// Renders the game without swapping buffers - use this when you want to overlay
+    /// ImGui or other UI on top of the game before swapping
+    void RenderWithoutSwap();
 
-  /// Register for a render overlay callback. The ordering is determined by the level, smaller 
-  /// numbers happen earlier, with ranges suggested by RenderLevels
-  void RegisterRenderOverlayObject(RenderOverlayObject* renderOverlayObject, int renderLevel);
-  void UnregisterRenderOverlayObject(RenderOverlayObject* renderOverlayObject, int renderLevel);
-  bool IsRenderOverlayObjectRegistered(const RenderOverlayObject* renderOverlayObject, int renderLevel) const;
+    DebugRenderer& GetDebugRenderer() {return *mDebugRenderer;}
 
-  void RegisterShadowCasterObject(RenderObject* renderObject);
-  void UnregisterShadowCasterObject(RenderObject* renderObject);
-  bool IsShadowCasterObjectRegistered(const RenderObject* renderObject) const;
+    /// Register for a render callback. The ordering is determined by the level, smaller 
+    /// numbers happen earlier, with ranges suggested by RenderLevels
+    void RegisterRenderObject(RenderObject* renderObject, int renderLevel);
+    void UnregisterRenderObject(RenderObject* renderObject, int renderLevel);
+    bool IsRenderObjectRegistered(const RenderObject* renderObject, int renderLevel = RENDER_LEVEL_ANY) const;
 
-  size_t GetNumShadowCasterObjects() const {return mShadowCasterObjects.size();}
-  RenderObject& GetShadowCasterObject(size_t i) {return *mShadowCasterObjects[i];}
-  const RenderObject& GetShadowCasterObject(size_t i) const {return *mShadowCasterObjects[i];}
+    /// Register for a render overlay callback. The ordering is determined by the level, smaller 
+    /// numbers happen earlier, with ranges suggested by RenderLevels
+    void RegisterRenderOverlayObject(RenderOverlayObject* renderOverlayObject, int renderLevel);
+    void UnregisterRenderOverlayObject(RenderOverlayObject* renderOverlayObject, int renderLevel);
+    bool IsRenderOverlayObjectRegistered(const RenderOverlayObject* renderOverlayObject, int renderLevel) const;
 
-  /// call this to register (or clear) a IwGx renderer - used to overlay text etc
-  void RegisterRenderGxObject(RenderGxObject* renderGxObject, int renderLevel);
-  void UnregisterRenderGxObject(RenderGxObject* renderGxObject, int renderLevel);
-  bool IsRenderGxObjectRegistered(const RenderGxObject* renderObject, int renderLevel) const;
+    void RegisterShadowCasterObject(RenderObject* renderObject);
+    void UnregisterShadowCasterObject(RenderObject* renderObject);
+    bool IsShadowCasterObjectRegistered(const RenderObject* renderObject) const;
 
-  /// Creates and returns a viewport that is associated with a camera (that can be shared between 
-  /// viewports). Currently viewports are rendered in the order they are created, so the most 
-  /// recently created viewport renders on top of the others.
-  Viewport* CreateViewport(float left, float bottom, float right, float top, Camera* camera);
+    size_t GetNumShadowCasterObjects() const {return mShadowCasterObjects.size();}
+    RenderObject& GetShadowCasterObject(size_t i) {return *mShadowCasterObjects[i];}
+    const RenderObject& GetShadowCasterObject(size_t i) const {return *mShadowCasterObjects[i];}
 
-  /// Destroys the viewport
-  void DestroyViewport(Viewport* viewport);
+    /// call this to register (or clear) a IwGx renderer - used to overlay text etc
+    void RegisterRenderGxObject(RenderGxObject* renderGxObject, int renderLevel);
+    void UnregisterRenderGxObject(RenderGxObject* renderGxObject, int renderLevel);
+    bool IsRenderGxObjectRegistered(const RenderGxObject* renderObject, int renderLevel) const;
 
-  /// Create and return a camera. 
-  Camera* CreateCamera();
+    /// Creates and returns a viewport that is associated with a camera (that can be shared between 
+    /// viewports). Currently viewports are rendered in the order they are created, so the most 
+    /// recently created viewport renders on top of the others.
+    Viewport* CreateViewport(float left, float bottom, float right, float top, Camera* camera);
 
-  /// Destroys the camera
-  void DestroyCamera(Camera* camera);
+    /// Destroys the viewport
+    void DestroyViewport(Viewport* viewport);
 
-  size_t GetNumCameras() const {return mCameras.size();}
+    /// Create and return a camera. 
+    Camera* CreateCamera();
 
-  Camera* GetCamera(size_t index) {return mCameras[index];}
+    /// Destroys the camera
+    void DestroyCamera(Camera* camera);
 
-  const Vector3& GetLightingAmbientColour() const {return mLightingAmbientColour;}
-  const Vector3& GetLightingDiffuseColour() const {return mLightingDiffuseColour;}
-  const Vector3& GetLightingDirection() const {return mLightingDirection;}
+    size_t GetNumCameras() const {return mCameras.size();}
 
-  void SetLightingAmbientColour(const Vector3& colour) {mLightingAmbientColour = colour;}
-  void SetLightingDiffuseColour(const Vector3& colour) {mLightingDiffuseColour = colour;}
+    Camera* GetCamera(size_t index) {return mCameras[index];}
 
-  void SetShadowStrength(float shadowStrength) {mShadowStrength = shadowStrength;}
-  void SetShadowDecayHeight(float shadowDecayHeight) {mShadowDecayHeight = shadowDecayHeight;}
-  void SetShadowSizeScale(float shadowSizeScale) {mShadowSizeScale = shadowSizeScale;}
-  float GetShadowStrength() const {return mShadowStrength;}
-  float GetShadowDecayHeight() const {return mShadowDecayHeight;}
-  float GetShadowSizeScale() const {return mShadowSizeScale;}
+    const Vector3& GetLightingAmbientColour() const {return mLightingAmbientColour;}
+    const Vector3& GetLightingDiffuseColour() const {return mLightingDiffuseColour;}
+    const Vector3& GetLightingDirection() const {return mLightingDirection;}
 
-  void SetLightingDirection(const Vector3& direction) {mLightingDirection = direction;}
-  void SetLightingDirection(float bearing, float elevation);
+    void SetLightingAmbientColour(const Vector3& colour) {mLightingAmbientColour = colour;}
+    void SetLightingDiffuseColour(const Vector3& colour) {mLightingDiffuseColour = colour;}
 
-  void EnableStereoscopy(bool enable) {mEnableStereoscopy = enable;}
-  void SetStereoSeparation(float separation) {mStereoSeparation = separation;}
+    void SetShadowStrength(float shadowStrength) {mShadowStrength = shadowStrength;}
+    void SetShadowDecayHeight(float shadowDecayHeight) {mShadowDecayHeight = shadowDecayHeight;}
+    void SetShadowSizeScale(float shadowSizeScale) {mShadowSizeScale = shadowSizeScale;}
+    float GetShadowStrength() const {return mShadowStrength;}
+    float GetShadowDecayHeight() const {return mShadowDecayHeight;}
+    float GetShadowSizeScale() const {return mShadowSizeScale;}
 
-  const struct FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
+    void SetLightingDirection(const Vector3& direction) {mLightingDirection = direction;}
+    void SetLightingDirection(float bearing, float elevation);
+
+    void EnableStereoscopy(bool enable) {mEnableStereoscopy = enable;}
+    void SetStereoSeparation(float separation) {mStereoSeparation = separation;}
+
+    const struct FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
 
 private:
-  /// Key into RenderObjects is the "level", so smaller numbers get rendered first.
-  typedef std::multimap<int, RenderObject*> RenderObjects;
-  typedef std::multimap<int, RenderOverlayObject*> RenderOverlayObjects;
-  typedef std::multimap<int, RenderGxObject*> RenderGxObjects;
-  typedef std::vector<Viewport*>  Viewports;
-  typedef std::vector<Camera*>    Cameras;
+    /// Key into RenderObjects is the "level", so smaller numbers get rendered first.
+    typedef std::multimap<int, RenderObject*> RenderObjects;
+    typedef std::multimap<int, RenderOverlayObject*> RenderOverlayObjects;
+    typedef std::multimap<int, RenderGxObject*> RenderGxObjects;
+    typedef std::vector<Viewport*>  Viewports;
+    typedef std::vector<Camera*>    Cameras;
 
-  RenderManager(FrameworkSettings& frameworkSettings);
-  ~RenderManager();
+    RenderManager(FrameworkSettings& frameworkSettings);
+    ~RenderManager();
 
-  void RenderFPS();
-  void SetupLighting();
+    void RenderFPS();
+    void SetupLighting();
 
-  static RenderManager* mInstance;
+    static RenderManager* mInstance;
 
-  Viewports mViewports;
-  Cameras mCameras;
-  RenderObjects mRenderObjects;
-  RenderGxObjects mRenderGxObjects;
-  RenderOverlayObjects mRenderOverlayObjects;
-  ShadowCasterObjects mShadowCasterObjects;
+    Viewports mViewports;
+    Cameras mCameras;
+    RenderObjects mRenderObjects;
+    RenderGxObjects mRenderGxObjects;
+    RenderOverlayObjects mRenderOverlayObjects;
+    ShadowCasterObjects mShadowCasterObjects;
 
-  DebugRenderer* mDebugRenderer;
+    DebugRenderer* mDebugRenderer;
 
-  Vector3 mLightingDiffuseColour;
-  Vector3 mLightingAmbientColour;
-  Vector3 mLightingDirection;
-  float   mShadowStrength;
-  float   mShadowDecayHeight;
-  float   mShadowSizeScale;
+    Vector3 mLightingDiffuseColour;
+    Vector3 mLightingAmbientColour;
+    Vector3 mLightingDirection;
+    float   mShadowStrength;
+    float   mShadowDecayHeight;
+    float   mShadowSizeScale;
 
-  bool    mEnableStereoscopy;
-  float   mStereoSeparation;
-  bool    mUseMultiLights;
+    bool    mEnableStereoscopy;
+    float   mStereoSeparation;
+    bool    mUseMultiLights;
 
-  FrameworkSettings& mFrameworkSettings;
+    FrameworkSettings& mFrameworkSettings;
 };
 
 #endif

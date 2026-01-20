@@ -1,8 +1,0 @@
-CIwResGroup
-{
-	name	iwui_fonts
-
-	./font_640.gxfont
-	./font_640_small.gxfont
-	./font_640_large.gxfont
-}

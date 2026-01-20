@@ -318,7 +318,7 @@ Genie sailplane, based on the design by Harley Michaelis
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="5"
     mFreqScalePerSpeed=".125"
@@ -330,7 +330,7 @@ Genie sailplane, based on the design by Harley Michaelis
   />
 
   <AirFlow
-    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    file="SystemData/Audio/GliderWhistle22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".1"

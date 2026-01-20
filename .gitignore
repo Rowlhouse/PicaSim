@@ -1,0 +1,41 @@
+ReferenceMaterial/
+Screenshots/
+
+# Build directories
+build/
+out/
+dist/
+cmake-build-*/
+
+# User data directories (created at runtime, not committed)
+data/UserData/
+data/UserSettings/
+data/trace.txt
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.ncb
+*.sdf
+*.opensdf
+
+# vcpkg
+vcpkg_installed/
+
+# IDE
+.idea/
+*.swp
+*~
+
+# Compiled files
+*.obj
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdb
+imgui.ini
+nul
+CodingStyleQueries.md

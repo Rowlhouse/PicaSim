@@ -165,7 +165,6 @@ Electric Kato
       controlPerChannel3="1"
 
       audioFile="SystemData/Audio/NewMotor44100Mono.raw"
-      audioStereo="0"
       audioSampleRate="44100"
       audioRadius="0.2"
       audioMinVolume="0.0"
@@ -282,7 +281,7 @@ Electric Kato
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="5"
     mFreqScalePerSpeed=".125"

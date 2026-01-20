@@ -5,71 +5,71 @@
 
 struct ACUV
 {
-  float u, v;
+    float u, v;
 };
 
 
 struct ACSurface
 {
-  std::vector<int> vertref;
-  std::vector<ACUV> uvs;
-  std::vector<Vector3> vertexNormals;
-  Vector3 normal;
-  int flags;
-  int mat;
+    std::vector<int> vertref;
+    std::vector<ACUV> uvs;
+    std::vector<Vector3> vertexNormals;
+    Vector3 normal;
+    int flags;
+    int mat;
 };
 
 struct ACObject
 {
-  Vector3 loc;
-  std::string name;
-  std::string data;
-  std::string url;
-  std::vector<Vector3> vertices;
+    Vector3 loc;
+    std::string name;
+    std::string data;
+    std::string url;
+    std::vector<Vector3> vertices;
 
-  std::vector<ACSurface> surfaces;
-  float texture_repeat_x, texture_repeat_y;
-  float texture_offset_x, texture_offset_y;
+    std::vector<ACSurface> surfaces;
+    float texture_repeat_x, texture_repeat_y;
+    float texture_offset_x, texture_offset_y;
 
-  float creaseAngle;
-  std::vector<ACObject> mObjects;
-  float matrix[9];
-  int type;
-  std::string textureName;
+    float creaseAngle;
+    std::vector<ACObject> mObjects;
+    float matrix[9];
+    int type;
+    std::string textureName;
 };
 
 struct ACCol
 {
-  float r, g, b, a;
+    float r, g, b, a;
 };
 
 struct ACMaterial
 {
-  ACCol rgb; /* diffuse **/
-  ACCol ambient;
-  ACCol specular;
-  ACCol emissive;
-  float shininess;
-  float transparency;
-  std::string name;
+    ACCol rgb; /* diffuse **/
+    ACCol ambient;
+    ACCol specular;
+    ACCol emissive;
+    float shininess;
+    float transparency;
+    std::string name;
 };
 
 typedef std::vector<ACMaterial> Materials;
 
 struct ACModel
 {
-  ACObject mObject;
-  Materials mMaterials;
+    ACObject mObject;
+    Materials mMaterials;
 };
 
 struct ACImage
 {
-  unsigned short width, height, depth;    
-  void *data; 
-  int index;
-  std::string name;
-  int amask;
-  std::string origname; /** do not set - set automatically in texture_read function **/
+    unsigned short width, height, depth;    
+    void *data; 
+    int index;
+    std::string name;
+    int amask;
+    std::string origname; /** do not set - set automatically in texture_read function **/
 
 };
 

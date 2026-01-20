@@ -5,48 +5,61 @@
 
 #include <cstdio>
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
+// Score struct for challenge results
+struct Score
+{
+    Score(double result, double minorResult, uint32 mode)
+        : mResult(result), mMinorResult(minorResult), mMode(mode) {}
+    Score() : mResult(0.0), mMinorResult(0.0), mMode(0) {}
+
+    double mResult;
+    double mMinorResult;
+    uint32 mMode;
+};
+
+//======================================================================================================================
 class Challenge
 {
 public:
-  Challenge() {}
-  /// This constructor overrides various things according to the challenge settings
-  Challenge(GameSettings& gameSettings);
-  virtual ~Challenge() {}
-  virtual void Terminate() {}
+    Challenge() {}
+    /// This constructor overrides various things according to the challenge settings
+    Challenge(GameSettings& gameSettings);
+    virtual ~Challenge() {}
+    virtual void Terminate() {}
 
-  enum ChallengeResult
-  {
-    CHALLENGE_CONTINUE,
-    CHALLENGE_RELAUNCH
-  };
-  virtual ChallengeResult UpdateChallenge(float deltaTime) = 0;
+    enum ChallengeResult
+    {
+        CHALLENGE_CONTINUE,
+        CHALLENGE_RELAUNCH
+    };
+    virtual ChallengeResult UpdateChallenge(float deltaTime) = 0;
 
-  virtual void ReinitOverlays() {}
+    virtual void ReinitOverlays() {}
 
-  virtual void Init(class Aeroplane* aeroplane, LoadingScreenHelper* loadingScreen) = 0;
+    virtual void Init(class Aeroplane* aeroplane, LoadingScreenHelper* loadingScreen) = 0;
 
-  virtual void Reset() {}
+    virtual void Reset() {}
 
-  virtual void Relaunched() {}
+    virtual void Relaunched() {}
 
-  virtual void Validate();
+    virtual void Validate();
 
 protected:
-  class Aeroplane* mAeroplane;
-  bool mValidated;
+    class Aeroplane* mAeroplane;
+    bool mValidated;
 };
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 inline char* FormatTime(char* text, float time)
 {
-  int minutes = (int) (time / 60.0f);
-  float seconds = time - minutes * 60.0f;
-  if (minutes > 0)
-    sprintf(text, "%d:%05.2f", minutes, seconds);
-  else
-    sprintf(text, "%4.2f", seconds);
-  return text;
+    int minutes = (int) (time / 60.0f);
+    float seconds = time - minutes * 60.0f;
+    if (minutes > 0)
+        sprintf(text, "%d:%05.2f", minutes, seconds);
+    else
+        sprintf(text, "%4.2f", seconds);
+    return text;
 }
 
 

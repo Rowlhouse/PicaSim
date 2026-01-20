@@ -11,33 +11,33 @@ class AerofoilDefinition;
 class Aerofoil
 {
 public:
-  void Init(
-    const char* name, 
-    const AerofoilConfiguration& configuration, 
-    Aeroplane* aeroplane,
-    uint32& checksum);
+    void Init(
+        const char* name, 
+        const AerofoilConfiguration& configuration, 
+        Aeroplane* aeroplane,
+        uint32& checksum);
 
-  void Terminate();
+    void Terminate();
 
-  AerofoilParameters& GetParameters() {return mParameters;}
+    AerofoilParameters& GetParameters() {return mParameters;}
 
-  /// Opportunity to apply forces
-  void UpdatePrePhysics(
-    float deltaTime, 
-    const AerofoilControl& aerofoilControl, 
-    const struct TurbulenceData& turbulenceData,
-    Vector3& wash, Vector3& force);
+    /// Opportunity to apply forces
+    void UpdatePrePhysics(
+        float deltaTime, 
+        const AerofoilControl& aerofoilControl, 
+        const struct TurbulenceData& turbulenceData,
+        Vector3& wash, Vector3& force);
 
-  /// Updates the aerofoils to update their position etc after the physics step
-  void UpdatePostPhysics(float deltaTime);
+    /// Updates the aerofoils to update their position etc after the physics step
+    void UpdatePostPhysics(float deltaTime);
 
 private:
-  AerofoilParameters mParameters;
-  AerofoilConfiguration mConfiguration;
-  AerofoilDefinition* mDefinition;
-  Aeroplane* mAeroplane;
-  float mPrevFlying;
-  float mLastAoA;
+    AerofoilParameters mParameters;
+    AerofoilConfiguration mConfiguration;
+    AerofoilDefinition* mDefinition;
+    Aeroplane* mAeroplane;
+    float mPrevFlying;
+    float mLastAoA;
 };
 
 #endif

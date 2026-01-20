@@ -264,7 +264,6 @@ GeeBee
       controlPerChannel3="1"
 
       audioFile="SystemData/Audio/PetrolFlying44100Mono.raw"
-      audioStereo="0"
       audioSampleRate="44100"
       audioRadius="1.0"
       audioMinVolume="0.1"
@@ -480,7 +479,7 @@ GeeBee
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".125"

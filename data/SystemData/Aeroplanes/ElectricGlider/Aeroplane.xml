@@ -206,7 +206,6 @@ Electric glider
       controlPerChannel3="1"
 
       audioFile="SystemData/Audio/NewMotor44100Mono.raw"
-      audioStereo="0"
       audioSampleRate="44100"
       audioRadius="0.2"
       audioMinVolume="0.0"
@@ -328,7 +327,7 @@ Electric glider
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="5"
     mFreqScalePerSpeed=".125"
@@ -340,7 +339,7 @@ Electric glider
   />
 
   <AirFlow
-    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    file="SystemData/Audio/GliderWhistle22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".1"

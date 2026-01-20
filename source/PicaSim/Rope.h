@@ -6,19 +6,19 @@
 class Rope : public RenderObject
 {
 public:
-  typedef std::vector<Vector3> Points;
+    typedef std::vector<Vector3> Points;
 
-  Rope();
-  ~Rope();
+    Rope();
+    ~Rope();
 
-  Points& GetPoints() {return mPoints;}
+    Points& GetPoints() {return mPoints;}
 
-  void SetColour(const Vector4& colour) {mColour = colour;}
+    void SetColour(const Vector4& colour) {mColour = colour;}
 
-  virtual void RenderUpdate(class Viewport* viewport, int renderLevel);
+    virtual void RenderUpdate(class Viewport* viewport, int renderLevel);
 private:
-  Points mPoints;
-  Vector4 mColour;
+    Points mPoints;
+    Vector4 mColour;
 };
 #endif
 

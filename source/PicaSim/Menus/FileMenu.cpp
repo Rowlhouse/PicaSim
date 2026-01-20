@@ -1,907 +1,837 @@
 #include "FileMenu.h"
-#include "SettingsWidgets.h"
-#include "Menu.h"
-#include "Helpers.h"
-#include "PicaDialog.h"
+#include "UIHelpers.h"
 #include "../GameSettings.h"
-
-#include <IwUI.h>
-#include <IwUITextField.h>
-#include <s3eSocket.h>
-#include <s3eOSExec.h>
-
+#include "../PicaStrings.h"
+#include "../../Platform/S3ECompat.h"
+#include "Platform.h"
 #include <string>
 #include <vector>
-#include <list>
+
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
+
+// Forward declarations from Graphics.cpp
+void IwGxClear();
+void IwGxSwapBuffers();
+void PrepareForIwGx(bool fullscreen);
+void RecoverFromIwGx(bool clear);
+
+// Forward declaration from Helpers.cpp
+float GetImagesPerLoadScreen(const GameSettings& gameSettings);
+Texture* GetCachedTexture(std::string path, bool convertTo16Bit);
 
 static const size_t MAX_FILENAME_LEN = 48;
 
 static const char validChars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=_+&!(){}[]#";
 static const size_t numValidChars = sizeof(validChars);
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 bool IsCharValid(char c)
 {
-  for (size_t i = 0 ; i != numValidChars-1 ; ++i)
-  {
-    if (c == validChars[i])
-      return true;
-  }
-  return false;
+    for (size_t i = 0 ; i != numValidChars-1 ; ++i)
+    {
+        if (c == validChars[i])
+            return true;
+    }
+    return false;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void RemoveInvalidCharacters(std::string& text)
 {
-  char result[MAX_FILENAME_LEN+1] = "";
-  const char* origText = text.c_str();
+    char result[MAX_FILENAME_LEN+1] = "";
+    const char* origText = text.c_str();
 
-  size_t origLen = strlen(origText); // not including null
-  if (origLen > MAX_FILENAME_LEN)
-    origLen = MAX_FILENAME_LEN;
+    size_t origLen = strlen(origText);
+    if (origLen > MAX_FILENAME_LEN)
+        origLen = MAX_FILENAME_LEN;
 
-  for (size_t i = 0 ; i != origLen ; ++i)
-  {
-    result[i] = origText[i];
-    if (!IsCharValid(result[i]))
-      result[i] = '_';
-  }
-  result[origLen] = 0;
-  text = result;
+    for (size_t i = 0 ; i != origLen ; ++i)
+    {
+        result[i] = origText[i];
+        if (!IsCharValid(result[i]))
+            result[i] = '_';
+    }
+    result[origLen] = 0;
+    text = result;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-class FileMenu : public Menu
+//======================================================================================================================
+void RemoveExtension(char* filename, const char* extension)
 {
-public:
-  enum Mode {LOAD, SAVE, DELETE};
+    if (!extension || !filename)
+        return;
+    size_t extensionLen = strlen(extension);
+    size_t filenameLen = strlen(filename);
 
-  FileMenu(
-    const GameSettings& gameSettings, 
-    const char*         systemPath, 
-    const char*         userPath, 
-    const char*         extension, 
-    const Mode          mode, 
-    const char*         title,
-    const char*         tabTitles[], 
-    const size_t        numTabs,
-    const int           selectedTab,
-    const char*         cancelButtonText,
-    const char*         altButtonText, 
-    FileMenuType        fileMenuType,
-    float               imagesPerScreen,
-    IncludeCallback*    includeCallback);
+    if (extensionLen > filenameLen)
+        return;
 
-  ~FileMenu();
+    for (size_t i = extensionLen ; i-- != 0 ; )
+    {
+        char ext = extension[i];
+        if (filename[filenameLen - extensionLen + i] != ext)
+        {
+            return;
+        }
+    }
+    filename[(filenameLen - extensionLen)] = 0;
+}
 
-  bool HandleEvent(CIwEvent* pEvent) OVERRIDE;
-  int32 Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings) OVERRIDE;
+//======================================================================================================================
+void RemovePath(char* filename)
+{
+    int origLen = strlen(filename);
+    for (int i = origLen-1 ; i != -1 ; --i)
+    {
+        if (filename[i] == '/' || filename[i] == '\\')
+        {
+            if (i == 0)
+                return;
+            int j = 0;
+            for (++i ; i != origLen + 1 ; ++i, ++j)
+            {
+                filename[j] = filename[i];
+            }
+            return;
+        }
+    }
+}
 
-  // This will return -1 if the menu has been closed by selecting something rather than switching tab
-  int GetSelectedTab() const {return mSelectedTab;}
-
-  int AddFiles(const GameSettings& gameSettings, const char* path, const char* extension, CIwUIElement* pContainer, 
-    CIwUILayoutVertical* layout, const char* labelText, FileMenuType fileMenuType, float imagesPerScreen,
-    bool useTitleFromFile, IncludeCallback* includeCallback);
-  void AddNewFile(const GameSettings& gameSettings, CIwUIElement* pContainer, CIwUILayoutGrid* layout);
-
-  bool GetFinished() const {return mFinished;}
-
-  FileMenuResult GetResult(std::string& selectedString) const {selectedString = mSelectedString; return mResult;}
-private:
-  struct Button
-  {
-    Button() : mTextButton(0), mImageButton(0), mAvailable(true), mUse(true) {}
-    CIwUIButton* mTextButton;
-    CIwUIButton* mImageButton;
-    bool mAvailable;
-    bool mUse;
-  };
-  typedef std::vector<Button> Buttons;
-
-  Button CreateButton(
-    const GameSettings& gameSettings, 
-    CIwUIElement* pContainer, 
-    CIwUILayoutVertical* layout, 
-    const std::string& fullPath, 
-    const char* label, 
-    FileMenuType fileMenuType, 
-    float imagesPerScreen,
-    bool useTitleFromFile);
-
-  void CreateContentAndButtonsAreaAndLayout(
-    const GameSettings&   gameSettings, 
-    CIwUIScrollableView*& filenameArea, 
-    CIwUILayoutVertical*& filenameLayout, 
-    const char*           cancelButtonText, 
-    const char*           altButtonText,
-    const char*           title,
-    const char*           tabTitles[],
-    const size_t          numTabs);
-
-  CIwUIButton* mOKButton;
-  CIwUIButton* mAltButton;
-  CIwUIButton* mCancelButton;
-  CIwUITextField* mTextField;
-  CIwUIScrollableView* mFilenameArea;
-  CIwUITabBar* mTabBar;
-
-  Buttons mButtons;
-  std::vector<std::string> mFilenames;
-
-  std::string mSelectedString;
-  FileMenuResult mResult;
-
-  int mNumLines;
-  bool mFinished;
-  Mode mMode;
-  int mSelectedTab;
-
-  const GameSettings& mGameSettings;
+//======================================================================================================================
+struct FileMenuItem
+{
+    std::string fullPath;      // Full path for selection result
+    std::string displayName;   // Filename without extension
+    std::string title;         // Title from settings file (or displayName)
+    std::string info;          // Description from settings file
+    Texture* thumbnail;        // NULL for FILEMENUTYPE_FILE
+    uint32 typeMask;           // For tab filtering (0xFFFFFFFF = all tabs)
+    bool isFromUserPath;       // True if from UserSettings directory
 };
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
+class FileMenu
+{
+public:
+    enum Mode { LOAD, SAVE, DELETE_MODE };  // DELETE is a Windows macro
+
+    FileMenu(const GameSettings& gameSettings,
+                      const char* systemPath, const char* userPath,
+                      const char* extension, Mode mode, const char* title,
+                      const char* tabTitles[], size_t numTabs, int initialTab,
+                      const char* cancelButtonText, const char* altButtonText,
+                      FileMenuType fileMenuType, float imagesPerScreen,
+                      IncludeCallback* includeCallback);
+    ~FileMenu();
+
+    bool Update();  // Returns true when finished
+    int GetSelectedTab() const { return mSelectedTab; }
+    FileMenuResult GetResult(std::string& selectedPath) const;
+    bool GetFinished() const { return mFinished; }
+
+private:
+    void LoadFilesFromDirectory(const char* path, bool isUserPath, bool useTitleFromFile);
+    void Render();
+    bool PassesTabFilter(const FileMenuItem& item) const;
+
+    // Configuration
+    const GameSettings& mGameSettings;
+    std::string mSystemPath;
+    std::string mUserPath;
+    std::string mExtension;
+    Mode mMode;
+    std::string mTitle;
+    std::vector<std::string> mTabTitles;
+    std::string mCancelText;
+    std::string mAltText;
+    FileMenuType mFileMenuType;
+    float mImagesPerScreen;
+    IncludeCallback* mIncludeCallback;
+
+    // State
+    std::vector<FileMenuItem> mItems;
+    int mSelectedTab;
+    bool mFinished;
+    FileMenuResult mResult;
+    std::string mSelectedPath;
+
+    // For SAVE mode
+    char mFilenameBuffer[MAX_FILENAME_LEN + 1];
+};
+
+//======================================================================================================================
+FileMenu::FileMenu(const GameSettings& gameSettings,
+                                      const char* systemPath, const char* userPath,
+                                      const char* extension, Mode mode, const char* title,
+                                      const char* tabTitles[], size_t numTabs, int initialTab,
+                                      const char* cancelButtonText, const char* altButtonText,
+                                      FileMenuType fileMenuType, float imagesPerScreen,
+                                      IncludeCallback* includeCallback)
+    : mGameSettings(gameSettings)
+    , mSystemPath(systemPath ? systemPath : "")
+    , mUserPath(userPath ? userPath : "")
+    , mExtension(extension ? extension : "")
+    , mMode(mode)
+    , mTitle(title ? title : "")
+    , mCancelText(cancelButtonText ? cancelButtonText : "")
+    , mAltText(altButtonText ? altButtonText : "")
+    , mFileMenuType(fileMenuType)
+    , mImagesPerScreen(imagesPerScreen)
+    , mIncludeCallback(includeCallback)
+    , mSelectedTab(initialTab)
+    , mFinished(false)
+    , mResult(FILEMENURESULT_CANCEL)
+{
+    memset(mFilenameBuffer, 0, sizeof(mFilenameBuffer));
+
+    // Copy tab titles
+    if (tabTitles && numTabs > 0)
+    {
+        for (size_t i = 0; i < numTabs; ++i)
+        {
+            mTabTitles.push_back(tabTitles[i] ? tabTitles[i] : "");
+        }
+    }
+
+    // Load files based on mode
+    if (mMode == LOAD)
+    {
+        // System files first (with title from file), then user files (filename only)
+        if (!mSystemPath.empty())
+            LoadFilesFromDirectory(mSystemPath.c_str(), false, true);
+        if (!mUserPath.empty())
+            LoadFilesFromDirectory(mUserPath.c_str(), true, false);
+    }
+    else
+    {
+        // SAVE and DELETE only show user files
+        if (!mUserPath.empty())
+            LoadFilesFromDirectory(mUserPath.c_str(), true, false);
+    }
+}
+
+//======================================================================================================================
 FileMenu::~FileMenu()
 {
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-FileMenu::Button FileMenu::CreateButton(
-  const GameSettings& gameSettings, 
-  CIwUIElement* pContainer, 
-  CIwUILayoutVertical* layout, 
-  const std::string& fullPath, 
-  const char* caption, 
-  FileMenuType fileMenuType,
-  float imagesPerScreen,
-  bool useTitleFromFile)
+//======================================================================================================================
+void FileMenu::LoadFilesFromDirectory(const char* path, bool isUserPath, bool useTitleFromFile)
 {
-  Button result;
-  if (fileMenuType == FILEMENUTYPE_FILE)
-  {
-    result.mTextButton = new CIwUIButton;
-    result.mTextButton->SetStyle("<button_expanding>");
-    result.mTextButton->SetSizeToContent(false);
-    result.mTextButton->SetCaption(caption);
-    pContainer->AddChild(result.mTextButton);
-    layout->AddElement(result.mTextButton);
-    return result;
-  }
-  else
-  {
-    int height = gameSettings.mOptions.mFrameworkSettings.mScreenHeight;
-    int width = gameSettings.mOptions.mFrameworkSettings.mScreenWidth;
+    s3eFileList* fileList = s3eFileListDirectory(path);
+    if (!fileList)
+        return;
 
-    std::string info;
-    std::string title;
-    Texture* texture = 0;
+    const int filenameLen = 512;
+    char filename[filenameLen];
 
-    CIwColour unavailableCol;
-    unavailableCol.r = 255;
-    unavailableCol.g = 255;
-    unavailableCol.b = 255;
-    unavailableCol.a = 64;
-
-    bool requestFocus = false;
-    switch (fileMenuType)
+    while (s3eFileListNext(fileList, filename, filenameLen) == S3E_RESULT_SUCCESS)
     {
-    case FILEMENUTYPE_AEROPLANE:
-      {
-        AeroplaneSettings as;
-        as.LoadBasicsFromFile(fullPath);
-        info = as.mInfo;
-        title = as.mTitle;
-        if (mSelectedTab > 0)
-          result.mUse = (as.mType & (1 << (mSelectedTab-1))) != 0;
-        texture = result.mUse && as.mThumbnail.empty() ? 0 : GetCachedTexture(as.mThumbnail, gameSettings.mOptions.m16BitTextures);
-        if (title == gameSettings.mAeroplaneSettings.mTitle)
-          requestFocus = true;
-        if (as.mAvailability > gameSettings.mStatistics.mAppType)
-          result.mAvailable = false;
-      }
-      break;
-    case FILEMENUTYPE_SCENERY:
-      {
-        EnvironmentSettings es;
-        es.LoadBasicsFromFile(fullPath);
-        info = es.mInfo;
-        title = es.mTitle;
-        if (mSelectedTab > 0)
-          result.mUse = (es.mType & (1 << (mSelectedTab-1))) != 0;
-        texture = result.mUse && es.mThumbnail.empty() ? 0 : GetCachedTexture(es.mThumbnail, gameSettings.mOptions.m16BitTextures);
-        if (title == gameSettings.mEnvironmentSettings.mTitle)
-          requestFocus = true;
-        if (es.mAvailability > gameSettings.mStatistics.mAppType)
-          result.mAvailable = false;
-      }
-      break;
-    case FILEMENUTYPE_CHALLENGE:
-      {
-        ChallengeSettings cs;
-        cs.LoadBasicsFromFile(fullPath);
-        info = cs.mInfo;
-        title = cs.mTitle;
-        texture = cs.mThumbnail.empty() ? 0 : GetCachedTexture(cs.mThumbnail, gameSettings.mOptions.m16BitTextures);
-      }
-      break;
-    case FILEMENUTYPE_LIGHTING:
-      {
-        LightingSettings ls;
-        ls.LoadBasicsFromFile(fullPath);
-        info = ls.mInfo;
-        title = ls.mTitle;
-        texture = ls.mThumbnail.empty() ? 0 : GetCachedTexture(ls.mThumbnail, gameSettings.mOptions.m16BitTextures);
-        if (title == gameSettings.mLightingSettings.mTitle)
-          requestFocus = true;
-      }
-      break;
-    }
+        std::string fullPath = std::string(path) + "/" + filename;
 
-    if (!result.mUse)
-      return result;
+        // Apply include callback filter if provided
+        if (mIncludeCallback && !mIncludeCallback->GetInclude(fullPath.c_str()))
+            continue;
 
-    if (!useTitleFromFile)
-    {
-      title = caption;
-      info.clear();
-    }
+        FileMenuItem item;
+        item.fullPath = fullPath;
+        item.isFromUserPath = isUserPath;
+        item.typeMask = 0xFFFFFFFF;  // All tabs by default
+        item.thumbnail = nullptr;
 
-    // Summary area
-    CIwUIElement* summaryArea = new CIwUIElement;
-    summaryArea->SetSizeToContent(false);
+        // Strip extension for display name
+        RemoveExtension(filename, mExtension.c_str());
+        item.displayName = filename;
 
-    // Summary layout
-    CIwUILayoutHorizontal* summaryLayout = new CIwUILayoutHorizontal;
-    summaryLayout->SetSizeToSpace(true);
-    summaryArea->SetLayout(summaryLayout);
-
-    // Add the texture
-    int32 imageW = 0;
-    int32 imageH = (int32) (height/imagesPerScreen);
-    if (texture)
-    {
-      uint32 w = texture->GetWidth();
-      uint32 h = texture->GetHeight();
-      if (w == 0 || h == 0)
-        return result;
-
-      CIwUIStyle style;
-      style.InlinePropertySet();
-      CIwUIPropertySet* pImageProps = style.GetInlinePropertySet();
-      pImageProps->SetProperty("drawableType", IwHashString("image"));
-      pImageProps->SetProperty("texture", texture);
-
-      float ar = float(w)/float(h);
-      result.mImageButton = new CIwUIButton;
-      result.mImageButton->SetProperty("aspectRatio", CIwVec2(w,h));
-      imageW = int32(ar * height/imagesPerScreen);
-      result.mImageButton->SetSizeMin(CIwVec2(imageW, imageH));
-      result.mImageButton->SetSizeMax(CIwVec2(imageW, imageH));
-      result.mImageButton->SetProperty("buttonUp", style);
-      result.mImageButton->SetProperty("buttonDown", style);
-      if (!result.mAvailable)
-      {
-        result.mImageButton->SetColour(unavailableCol);
-        CIwGxFont* font = GetFont(gameSettings);
-        Language language = gameSettings.mOptions.mLanguage;
-        result.mImageButton->SetFont(font);
-        result.mImageButton->SetCaption(TXT(PS_INFULLVERSION));
-        result.mImageButton->SetProperty("alignH", IW_UI_ALIGN_CENTRE);
-        result.mImageButton->SetProperty("alignV", IW_UI_ALIGN_BOTTOM);
-        CIwUIColour textColour(0,0,0,128);
-        result.mImageButton->SetTextColour(textColour);
-      }
-
-      summaryLayout->AddElement(result.mImageButton, 0, IW_UI_ALIGN_CENTRE, IW_UI_ALIGN_MIDDLE, CIwSVec2(2,2));
-      summaryArea->AddChild(result.mImageButton);
-    }
-    else
-    {
-      result.mImageButton = 0;
-    }
-    // Add the info
-
-    // Summary area
-    CIwUIElement* infoArea = new CIwUIElement;
-    infoArea->SetSizeToContent(true);
-
-    // Summary layout
-    CIwUILayoutVertical* infoLayout = new CIwUILayoutVertical;
-    infoLayout->SetSizeToSpace(true);
-    infoArea->SetLayout(infoLayout);
-
-    summaryArea->AddChild(infoArea);
-    summaryLayout->AddElement(infoArea, 0, IW_UI_ALIGN_LEFT, IW_UI_ALIGN_MIDDLE);
-
-    std::string buttonString;
-    if (title.empty())
-     buttonString = info;
-    else if (info.empty())
-     buttonString = title;
-    else
-     buttonString = title + ": " + info;
-
-    result.mTextButton = new CIwUIButton;
-    result.mTextButton->SetStyle("<button_expanding>");
-    result.mTextButton->SetCaption(buttonString.c_str());
-    result.mTextButton->SetSizeMin(CIwVec2(width-imageW, imageH));
-    result.mTextButton->SetSizeMax(CIwVec2(width-imageW, imageH));
-    if (!result.mAvailable)
-    {
-      result.mTextButton->SetColour(unavailableCol);
-      CIwColour col;
-      col.r = 128;
-      col.g = 128;
-      col.b = 128;
-      col.a = 255;
-      result.mTextButton->SetTextColour(col);
-    }
-    infoArea->AddChild(result.mTextButton);
-    infoLayout->AddElement(result.mTextButton);
-
-    // attach to the parent
-    pContainer->AddChild(summaryArea);
-    layout->AddElement(summaryArea, result.mAvailable ? 0 : 10);
-
-    if (requestFocus)
-    {
-      result.mTextButton->RequestFocus();
-    }
-    return result;
-
-  }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void FileMenu::CreateContentAndButtonsAreaAndLayout(
-  const GameSettings& gameSettings,
-  CIwUIScrollableView*& filenameArea, 
-  CIwUILayoutVertical*& filenameLayout,
-  const char* cancelButtonText,
-  const char* altButtonText,
-  const char* title,
-  const char* tabTitles[],
-  const size_t numTabs)
-{
-  const Language language = gameSettings.mOptions.mLanguage;
-
-  int height = gameSettings.mOptions.mFrameworkSettings.mScreenHeight;
-  int width = gameSettings.mOptions.mFrameworkSettings.mScreenWidth;
-
-  // Screen area
-  CIwUIImage* screenArea = new CIwUIImage;
-  screenArea->SetSizeToContent(false);
-  CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("MenuBackground", "CIwTexture");
-  screenArea->SetTexture(texture);
-
-  // Layout
-  CIwUILayoutGrid* screenLayout = new CIwUILayoutGrid;
-  screenLayout->SetSizeToSpace(true); // Stops the filename view pushing everything else down
-  screenLayout->AddColumn();
-  screenLayout->AddRow(); // Nav bar
-  if (mMode == SAVE)
-  {
-    // Text entry plus a label
-    screenLayout->AddRow();
-    AddNewFile(gameSettings, screenArea, screenLayout);
-  }
-  screenLayout->AddRow();
-  screenArea->SetLayout(screenLayout);
-
-  // Navigation bar area
-  CIwUILabel* navigationArea = new CIwUILabel;
-  navigationArea->SetStyle("<label_bar_background>");
-  navigationArea->SetSizeToContent(false);
-  screenArea->AddChild(navigationArea);
-  screenLayout->AddElement(navigationArea, 0, 0);
-
-  // Layout
-  CIwUILayoutHorizontal* navigationLayout = new CIwUILayoutHorizontal;
-  navigationLayout->SetSizeToSpace(true);
-  navigationArea->SetLayout(navigationLayout);
-
-  // Cancel button
-  mCancelButton = new CIwUIButton;
-  mCancelButton->SetStyle("<button_wide>");
-  mCancelButton->SetCaption(cancelButtonText);
-  navigationLayout->AddElement(mCancelButton);
-  navigationArea->AddChild(mCancelButton);
-
-  CIwUIElement* spacer1 = new CIwUIElement;
-  navigationLayout->AddElement(spacer1);
-  navigationArea->AddChild(spacer1);
-
-  CIwUILabel* titleLabel = 0;
-  mTabBar = 0;
-  if (title)
-  {
-    titleLabel = CreateLabel(gameSettings, navigationArea, navigationLayout, title, LABEL_TYPE_CENTERED_TITLE);
-  }
-
-  CIwUIElement* spacer2 = new CIwUIElement;
-  navigationLayout->AddElement(spacer2);
-  navigationArea->AddChild(spacer2);
-
-  if (numTabs && tabTitles)
-  {
-    mTabBar = new CIwUITabBar;
-    mTabBar->SetSizeToContent(false);
-    for (size_t i = 0 ; i != numTabs ; ++i)
-    {
-      if (i == 0)
-        mTabBar->SetRadioButtonStyle((int16) i, "<radio_left>");
-      else if (i == numTabs - 1)
-        mTabBar->SetRadioButtonStyle((int16) i, "<radio_right>");
-      else
-        mTabBar->SetRadioButtonStyle((int16) i, "<radio_centre>");
-      mTabBar->SetRadioButtonCaption((int16) i, tabTitles[i]);
-    }
-    mTabBar->SetSelected(mSelectedTab);
-    navigationArea->AddChild(mTabBar);
-    navigationLayout->AddElement(mTabBar, mTabBar->GetStyle());
-  }
-
-  // Filename Layout
-  filenameLayout = new CIwUILayoutVertical;
-  filenameLayout->SetSizeToSpace(true);
-
-  // Filename area
-  filenameArea = new CIwUIScrollableView;
-  filenameArea->SetSizeToContent(false);
-  filenameArea->SetSizeHint(CIwVec2(-1, height));
-  filenameArea->SetLayout(filenameLayout);
-
-  screenArea->AddChild(filenameArea);
-  if (mMode == SAVE)
-    screenLayout->AddElement(filenameArea, 0, 2);
-  else
-    screenLayout->AddElement(filenameArea, 0, 1);
-
-  // Buttons layout
-  int numButtons = mMode == SAVE ? 1 : 0;
-  numButtons += altButtonText ? 1 : 0;
-  if (numButtons)
-  {
-    screenLayout->AddRow();
-    // Buttons area
-    CIwUILabel* buttonsArea = new CIwUILabel;
-    buttonsArea->SetStyle("<label_bar_background>");
-    buttonsArea->SetSizeToContent(true);
-
-    screenArea->AddChild(buttonsArea);
-    if (mMode == SAVE)
-      screenLayout->AddElement(buttonsArea, 0, 3);
-    else
-      screenLayout->AddElement(buttonsArea, 0, 2);
-
-    CIwUILayoutGrid* buttonsLayout = new CIwUILayoutGrid;
-    buttonsLayout->SetSizeToSpace(true);
-    buttonsLayout->AddRow();
-    buttonsArea->SetLayout(buttonsLayout);
-
-    // Buttons
-
-    mOKButton = 0;
-    mAltButton = 0;
-
-    int iButton = 0;
-    // OK button
-    if (mMode == SAVE)
-    {
-      mOKButton = new CIwUIButton;
-      mOKButton->SetStyle("<button_expanding>");
-      mOKButton->SetCaption(TXT(PS_OK));
-      buttonsLayout->AddColumn(0, width/numButtons);
-      buttonsLayout->AddElement(mOKButton, iButton++, 0);
-      buttonsArea->AddChild(mOKButton);
-    }
-
-    // Alt button
-    if (altButtonText)
-    {
-      mAltButton = new CIwUIButton;
-      mAltButton->SetStyle("<button_expanding>");
-      mAltButton->SetCaption(altButtonText);
-      buttonsLayout->AddColumn(0, width/numButtons);
-      buttonsLayout->AddElement(mAltButton, iButton++, 0);
-      buttonsArea->AddChild(mAltButton);
-    }
-  }
-  IwGetUIView()->AddElement(screenArea);
-  IwGetUIView()->AddElementToLayout(screenArea);
-
-  // Picks up all the events
-  screenArea->AddEventHandler(this); 
-
-  // Add padding if necessary
-  IwGetUIController()->Update();
-  int titleSize = titleLabel ? titleLabel->GetSize().x : 0;
-  int tabSize = mTabBar ? mTabBar->GetSize().x : 0;
-  int cancelSize = mCancelButton->GetSize().x;
-  int s = (width - (cancelSize + titleSize + tabSize)) / 2;
-  if (s > 1)
-  {
-    spacer1->SetSizeMin(CIwVec2(s,-1));
-    spacer2->SetSizeMin(CIwVec2(s,-1));
-  }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-int32 FileMenu::Update(bool keepAwake, bool throttle, bool& resourcesHaveChanged, const struct GameSettings& gameSettings)
-{
-  mScrollArea = mFilenameArea;
-
-  if (mMode == SAVE)
-  {
-    std::string txt = mTextField->GetCaption();
-    RemoveInvalidCharacters(txt);
-    mTextField->SetCaption(txt.c_str());
-  }
-  return Menu::Update(keepAwake, throttle, resourcesHaveChanged, gameSettings);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-bool FileMenu::HandleEvent(CIwEvent* pEvent) 
-{
-  CIwManaged* sender = pEvent->GetSender();
-  const uint32 eventID = pEvent->GetID();
-  const Language language = mGameSettings.mOptions.mLanguage;
-
-  if (eventID == IWUI_EVENT_BUTTON)
-  {
-    if (sender == mOKButton)
-    {
-      if (mMode == SAVE)
-      {
-        mSelectedString = mTextField->GetCaption();
-      }
-      mResult = FILEMENURESULT_SELECTED;
-      mFinished = true;
-      return true;
-    }
-    if (sender == mAltButton)
-    {
-      mFinished = true;
-      mResult = FILEMENURESULT_ALT;
-      return true;
-    }
-    if (sender == mCancelButton)
-    {
-      mFinished = true;
-      mResult = FILEMENURESULT_CANCEL;
-      return true;
-    }
-    for (size_t i = 0 ; i != mButtons.size() ; ++i)
-    {
-      if (sender == mButtons[i].mTextButton || sender == mButtons[i].mImageButton)
-      {
-        if (mMode == SAVE)
+        // Load metadata based on file type
+        if (mFileMenuType != FILEMENUTYPE_FILE && useTitleFromFile)
         {
-          mTextField->SetCaption(mButtons[i].mTextButton->GetCaption());
+            switch (mFileMenuType)
+            {
+                case FILEMENUTYPE_AEROPLANE:
+                {
+                    AeroplaneSettings as;
+                    as.LoadBasicsFromFile(fullPath);
+                    item.title = as.mTitle;
+                    item.info = as.mInfo;
+                    item.typeMask = as.mType;
+                    if (!as.mThumbnail.empty())
+                        item.thumbnail = GetCachedTexture(as.mThumbnail, mGameSettings.mOptions.m16BitTextures);
+                    break;
+                }
+                case FILEMENUTYPE_SCENERY:
+                {
+                    EnvironmentSettings es;
+                    es.LoadBasicsFromFile(fullPath);
+                    item.title = es.mTitle;
+                    item.info = es.mInfo;
+                    item.typeMask = es.mType;
+                    if (!es.mThumbnail.empty())
+                        item.thumbnail = GetCachedTexture(es.mThumbnail, mGameSettings.mOptions.m16BitTextures);
+                    break;
+                }
+                case FILEMENUTYPE_CHALLENGE:
+                {
+                    ChallengeSettings cs;
+                    cs.LoadBasicsFromFile(fullPath);
+                    item.title = cs.mTitle;
+                    item.info = cs.mInfo;
+                    if (!cs.mThumbnail.empty())
+                        item.thumbnail = GetCachedTexture(cs.mThumbnail, mGameSettings.mOptions.m16BitTextures);
+                    break;
+                }
+                case FILEMENUTYPE_LIGHTING:
+                {
+                    LightingSettings ls;
+                    ls.LoadBasicsFromFile(fullPath);
+                    item.title = ls.mTitle;
+                    item.info = ls.mInfo;
+                    if (!ls.mThumbnail.empty())
+                        item.thumbnail = GetCachedTexture(ls.mThumbnail, mGameSettings.mOptions.m16BitTextures);
+                    break;
+                }
+                default:
+                    item.title = item.displayName;
+                    break;
+            }
         }
         else
         {
-          mSelectedString = mFilenames[i];
-          mFinished = true;
-          if (mButtons[i].mAvailable)
-          {
+            // Use filename as title
+            item.title = item.displayName;
+        }
+
+        mItems.push_back(item);
+    }
+    s3eFileListClose(fileList);
+}
+
+//======================================================================================================================
+bool FileMenu::PassesTabFilter(const FileMenuItem& item) const
+{
+    if (mSelectedTab == 0 || mTabTitles.empty())
+        return true;  // Tab 0 = "All" or no tabs
+    return (item.typeMask & (1 << (mSelectedTab - 1))) != 0;
+}
+
+//======================================================================================================================
+FileMenuResult FileMenu::GetResult(std::string& selectedPath) const
+{
+    selectedPath = mSelectedPath;
+    return mResult;
+}
+
+//======================================================================================================================
+bool FileMenu::Update()
+{
+    IwGxClear();
+    Render();
+    IwGxSwapBuffers();
+    s3eDeviceYield();
+
+    return mFinished;
+}
+
+//======================================================================================================================
+void FileMenu::Render()
+{
+    int width = Platform::GetScreenWidth();
+    int height = Platform::GetScreenHeight();
+    float scale = UIHelpers::GetFontScale();
+    Language language = mGameSettings.mOptions.mLanguage;
+
+    // Begin ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+    UIHelpers::ApplyFontScale();
+
+    // Light theme styling (consistent with HelpMenu)
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.70f, 0.75f, 0.82f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.85f, 0.88f, 0.92f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Tab, ImVec4(0.75f, 0.78f, 0.85f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(0.85f, 0.88f, 0.95f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_TabActive, ImVec4(0.90f, 0.92f, 0.98f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.75f, 0.78f, 0.85f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.85f, 0.88f, 0.95f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.65f, 0.68f, 0.75f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));  // For InputText
+
+    // Full-screen window
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2((float)width, (float)height));
+    ImGui::Begin("FileMenu", nullptr,
+        ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+
+    float buttonH = 32.0f * scale;
+    float padding = ImGui::GetStyle().WindowPadding.y;
+
+    // === TOP ROW: Back button + Title + Tabs ===
+    if (ImGui::Button(mCancelText.c_str(), ImVec2(0, buttonH)))
+    {
+        mResult = FILEMENURESULT_CANCEL;
+        mFinished = true;
+    }
+    ImGui::SameLine();
+
+    // Centered title
+    float titleWidth = ImGui::CalcTextSize(mTitle.c_str()).x;
+    float titleX = (width - titleWidth) * 0.5f;
+    ImGui::SetCursorPosX(titleX);
+    ImGui::AlignTextToFramePadding();
+    ImGui::Text("%s", mTitle.c_str());
+
+    // Tab bar (right side, LOAD mode only if tabs provided)
+    if (mMode == LOAD && !mTabTitles.empty())
+    {
+        ImGui::SameLine();
+
+        // Position tabs at right edge
+        float tabsWidth = 0;
+        for (const auto& tab : mTabTitles)
+            tabsWidth += ImGui::CalcTextSize(tab.c_str()).x + 20.0f * scale;
+
+        ImGui::SetCursorPosX((float)width - tabsWidth - padding);
+
+        float fontSize = ImGui::GetFontSize();
+        float tabPaddingY = (buttonH - fontSize) * 0.5f;
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f * scale, tabPaddingY));
+        if (ImGui::BeginTabBar("FileTabs", ImGuiTabBarFlags_FittingPolicyScroll))
+        {
+            for (size_t i = 0; i < mTabTitles.size(); ++i)
+            {
+                if (ImGui::BeginTabItem(mTabTitles[i].c_str()))
+                {
+                    mSelectedTab = (int)i;
+                    ImGui::EndTabItem();
+                }
+            }
+            ImGui::EndTabBar();
+        }
+        ImGui::PopStyleVar();
+    }
+
+    // === SAVE MODE: Filename input ===
+    if (mMode == SAVE)
+    {
+        ImGui::Text("%s", GetPS(PS_FILENAME, language));
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputText("##filename", mFilenameBuffer, sizeof(mFilenameBuffer));
+
+        // Sanitize input
+        std::string sanitized = mFilenameBuffer;
+        RemoveInvalidCharacters(sanitized);
+        strncpy(mFilenameBuffer, sanitized.c_str(), sizeof(mFilenameBuffer) - 1);
+    }
+
+    // === SCROLLABLE FILE LIST ===
+    float topY = ImGui::GetCursorPosY();
+
+    // Calculate bottom button area height
+    float bottomAreaHeight = 0;
+    if (mMode == SAVE)
+        bottomAreaHeight = buttonH + padding;  // OK button
+    else if (!mAltText.empty())
+        bottomAreaHeight = buttonH + padding;  // Alt button
+
+    float contentHeight = height - topY - bottomAreaHeight - padding;
+
+    ImGui::BeginChild("FileList", ImVec2(-1, contentHeight), true);
+
+    float rowHeight = (float)height / mImagesPerScreen;
+    bool hasUserFiles = false;
+    bool userFilesLabelDrawn = false;
+
+    // Check if we have any user files
+    for (const auto& item : mItems)
+    {
+        if (item.isFromUserPath)
+        {
+            hasUserFiles = true;
+            break;
+        }
+    }
+
+    // Render file items
+    for (size_t i = 0; i < mItems.size(); ++i)
+    {
+        const FileMenuItem& item = mItems[i];
+
+        // Tab filtering (LOAD mode only)
+        if (mMode == LOAD && !PassesTabFilter(item))
+            continue;
+
+        // Draw "User files:" label before first user file
+        if (item.isFromUserPath && !userFilesLabelDrawn)
+        {
+            userFilesLabelDrawn = true;
+            ImGui::TextUnformatted("User files:");
+        }
+
+        ImGui::PushID((int)i);
+
+        // Determine row height - use fixed height for image menus, auto for text-only
+        float imgSize = (mFileMenuType != FILEMENUTYPE_FILE) ? rowHeight - 8.0f : 0;
+
+        // Thumbnail (if available and not FILE type)
+        if (item.thumbnail && mFileMenuType != FILEMENUTYPE_FILE)
+        {
+            uint32 texW = item.thumbnail->GetWidth();
+            uint32 texH = item.thumbnail->GetHeight();
+            GLuint texID = item.thumbnail->GetTextureID();
+
+            if (texW > 0 && texH > 0)
+            {
+                // Calculate display size: fill row height, extend width to maintain aspect ratio
+                float ar = (float)texW / (float)texH;
+                float displayH = imgSize;
+                float displayW = imgSize * ar;
+
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.3f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 0.3f));
+
+                if (ImGui::ImageButton("thumb", (ImTextureID)(intptr_t)texID,
+                        ImVec2(displayW, displayH)))
+                {
+                    mSelectedPath = item.fullPath;
+                    mResult = FILEMENURESULT_SELECTED;
+                    mFinished = true;
+                }
+                ImGui::PopStyleColor(3);
+                ImGui::SameLine();
+            }
+        }
+
+        // Text button
+        std::string buttonText = item.title;
+        if (!item.info.empty())
+            buttonText += ": " + item.info;
+
+        float buttonWidth = ImGui::GetContentRegionAvail().x;
+        float buttonHeight = (mFileMenuType != FILEMENUTYPE_FILE && imgSize > 0) ? imgSize : buttonH;
+
+        if (ImGui::Button(buttonText.c_str(), ImVec2(buttonWidth, buttonHeight)))
+        {
+            if (mMode == SAVE)
+            {
+                // In SAVE mode, clicking populates the filename input
+                strncpy(mFilenameBuffer, item.displayName.c_str(), sizeof(mFilenameBuffer) - 1);
+            }
+            else if (mMode == DELETE_MODE)
+            {
+                // In DELETE mode, clicking selects for deletion
+                mSelectedPath = item.fullPath;
+                mResult = FILEMENURESULT_SELECTED;
+                mFinished = true;
+            }
+            else
+            {
+                // LOAD mode - select the file
+                mSelectedPath = item.fullPath;
+                mResult = FILEMENURESULT_SELECTED;
+                mFinished = true;
+            }
+        }
+
+        ImGui::PopID();
+    }
+
+    // Show "No files found" in DELETE mode if no user files
+    if (mMode == DELETE_MODE && !hasUserFiles)
+    {
+        ImGui::TextUnformatted("User files:");
+        ImGui::TextUnformatted("No files found");
+    }
+
+    ImGui::EndChild();
+
+    // === BOTTOM BUTTONS ===
+    if (mMode == SAVE)
+    {
+        // OK button for SAVE mode
+        ImGui::SetCursorPosY((float)height - buttonH - padding);
+        if (ImGui::Button(GetPS(PS_OK, language), ImVec2(-1, buttonH)))
+        {
+            mSelectedPath = mFilenameBuffer;  // Just the filename, path built by caller
             mResult = FILEMENURESULT_SELECTED;
-          }
-          else
-          {
-            mResult = FILEMENURESULT_PURCHASE;
-          }
+            mFinished = true;
         }
-        return true;
-      }
     }
-  }
-  else if (eventID == IWUI_EVENT_TABBAR)
-  {
-    if (sender == mTabBar)
+    else if (!mAltText.empty())
     {
-      mSelectedTab = mTabBar->GetSelected();
-      mResult = FILEMENURESULT_SELECTED;
-      mFinished = true;
-    }
-  }
-  return false;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-FileMenu::FileMenu(
-  const GameSettings& gameSettings, 
-  const char*         systemPath, 
-  const char*         userPath, 
-  const char*         extension, 
-  const Mode          mode, 
-  const char*         title,
-  const char*         tabTitles[], 
-  const size_t        numTabs,
-  const int           selectedTab,
-  const char*         cancelButtonText,
-  const char*         altButtonText,
-  FileMenuType        fileMenuType,
-  float               imagesPerScreen,
-  IncludeCallback*    includeCallback = 0) 
-  : mResult(FILEMENURESULT_CANCEL), mNumLines(0), mFinished(false), mMode(mode), mTextField(0), mGameSettings(gameSettings), mSelectedTab(selectedTab)
-{
-  CIwUILayoutVertical* filenameLayout;
-  CreateContentAndButtonsAreaAndLayout(gameSettings, mFilenameArea, filenameLayout, cancelButtonText, altButtonText, title, tabTitles, numTabs);
-
-  if (mMode == SAVE)
-  {
-    IwAssert(ROWLHOUSE, userPath);
-  }
-  else if (systemPath)
-  {
-    AddFiles(gameSettings, systemPath, extension, mFilenameArea, filenameLayout, 0, fileMenuType, imagesPerScreen, true, includeCallback);
-  }
-
-  if (userPath)
-  {
-    int numFiles = AddFiles(gameSettings, userPath, extension, mFilenameArea, filenameLayout, "User files:", fileMenuType, imagesPerScreen, false, includeCallback);
-    if (!numFiles && mMode == DELETE)
-    {
-      CreateLabel(gameSettings, mFilenameArea, filenameLayout, "No files found", LABEL_TYPE_CENTERED_TITLE);
-    }
-  }
-
-  mSelectedTab = -1;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void RemoveExtension(char* filename, const char* extension)
-{
-  if (!extension || !filename)
-    return;
-  size_t extensionLen = strlen(extension);
-  size_t filenameLen = strlen(filename);
-
-  if (extensionLen > filenameLen)
-    return;
-
-  for (size_t i = extensionLen ; i-- != 0 ; )
-  {
-    char ext = extension[i];
-    if (filename[filenameLen - extensionLen + i] != ext)
-    {
-      return;
-    }
-  }
-  filename[(filenameLen - extensionLen)] = 0;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-void RemovePath(char* filename)
-{
-  int origLen = strlen(filename);
-  for (int i = origLen-1 ; i != -1 ; --i)
-  {
-    if (filename[i] == '/' || filename[i] == '\\')
-    {
-      if (i == 0)
-        return;
-      int j = 0;
-      for (++i ; i != origLen + 1 ; ++i, ++j) // pick up the nul
-      {
-        filename[j] = filename[i];
-      }
-      return;
-    }
-  }
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-int FileMenu::AddFiles(
-  const GameSettings& gameSettings,
-  const char* path, 
-  const char* extension, 
-  CIwUIElement* pContainer, 
-  CIwUILayoutVertical* layout, 
-  const char* labelText,
-  FileMenuType fileMenuType,
-  float imagesPerScreen,
-  bool useTitleFromFile,
-  IncludeCallback* includeCallback)
-{
-  s3eFileList* fileList = s3eFileListDirectory(path);
-  if (!fileList)
-    return 0;
-
-  const int filenameLen = 512;
-  char filename[filenameLen];
-
-  bool drawLabel = true && labelText;
-  CIwUILabel* label = 0;
-  int numFiles = 0;
-  while (true)
-  {
-    s3eResult result = s3eFileListNext(fileList, filename, filenameLen);
-    if (result == S3E_RESULT_SUCCESS)
-    {
-      if (drawLabel)
-      {
-        label = CreateLabel(gameSettings, pContainer, layout, labelText, LABEL_TYPE_LEFT);
-        drawLabel = false;
-      }
-      std::string fullPath(path);
-      fullPath += "/";
-      fullPath += filename;
-      if (
-        !includeCallback ||
-        includeCallback->GetInclude(fullPath.c_str())
-        )
-      {
-        RemoveExtension(filename, extension);
-        Button button = CreateButton(gameSettings, pContainer, layout, fullPath, filename, fileMenuType, imagesPerScreen, useTitleFromFile);
-        if (button.mUse)
+        // Alt button for LOAD mode (e.g., "Use default/previous")
+        ImGui::SetCursorPosY((float)height - buttonH - padding);
+        if (ImGui::Button(mAltText.c_str(), ImVec2(-1, buttonH)))
         {
-          mButtons.push_back(button);        
-          mFilenames.push_back(fullPath);
-          ++mNumLines;
-          ++numFiles;
+            mResult = FILEMENURESULT_ALT;
+            mFinished = true;
         }
-      }
     }
-    else
-    {
-      if (numFiles == 0 && label)
-      {
-        label->SetVisible(false);
-      }
-      s3eFileListClose(fileList);
-      return numFiles;
-    }
-  }
+
+    ImGui::End();
+    ImGui::PopStyleColor(10);
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-void FileMenu::AddNewFile(const GameSettings& gameSettings, CIwUIElement* pContainer, CIwUILayoutGrid* layout)
-{
-  const Language language = gameSettings.mOptions.mLanguage;
-  CIwUIElement* textArea = new CIwUIElement;
-  textArea->SetSizeToContent(true);
-
-  pContainer->AddChild(textArea);
-  layout->AddElement(textArea, 0, 1);
-
-  CIwUILayoutVertical* textLayout = new CIwUILayoutVertical;
-  textArea->SetLayout(textLayout);
-
-  CreateLabel(gameSettings, textArea, textLayout, TXT(PS_FILENAME), LABEL_TYPE_LEFT);
-
-  mTextField = new CIwUITextField;
-  mTextField->SetStyle("<textField_inline>");
-
-  textArea->AddChild(mTextField);
-  textLayout->AddElement(mTextField);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 FileMenuResult FileMenuLoad(
-  std::string& result, 
-  const GameSettings& gameSettings, 
-  const char* systemPath, 
-  const char* userPath, 
-  const char* extension, 
-  const char* title,
-  const char* tabTitles[],
-  const size_t numTabs,
-  const char* cancelButtonText,
-  const char* altButtonText, 
-  FileMenuType fileMenuType,
-  float imagesPerScreen,
-  IncludeCallback* includeCallback)
+    std::string& result,
+    const GameSettings& gameSettings,
+    const char* systemPath,
+    const char* userPath,
+    const char* extension,
+    const char* title,
+    const char* tabTitles[],
+    const size_t numTabs,
+    const char* cancelButtonText,
+    const char* altButtonText,
+    FileMenuType fileMenuType,
+    float imagesPerScreen,
+    IncludeCallback* includeCallback)
 {
-  const Language language = gameSettings.mOptions.mLanguage;
-  PrepareForIwGx(false);
-  if (imagesPerScreen < 0.0f)
-    imagesPerScreen = GetImagesPerLoadScreen(gameSettings);
-  int tab = 0;
-  while (true)
-  {
-    FileMenu* fileMenu = new FileMenu(gameSettings, systemPath, userPath, extension, FileMenu::LOAD, title, tabTitles, numTabs, tab, cancelButtonText, altButtonText, fileMenuType, imagesPerScreen, includeCallback);
-    while (!fileMenu->GetFinished())
-    {
-      if (s3eDeviceCheckQuitRequest() || (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED))
-        return FILEMENURESULT_CANCEL;
-      bool resourcesHaveChanged;
-      fileMenu->Update(gameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_ANDROID, true, resourcesHaveChanged, gameSettings);
-    }
-    tab = fileMenu->GetSelectedTab();
-    FileMenuResult ret = fileMenu->GetResult(result);
+    PrepareForIwGx(false);
 
-    if (ret == FILEMENURESULT_PURCHASE)
-    {
-      if (gameSettings.mStatistics.mIsInTrialMode)
-      {
-        int button = ShowDialog("PicaSim", TXT(PS_FULLVERSION), TXT(PS_NOTNOW), "Try", TXT(PS_PURCHASE));
-        if (button == 2)
-        {
-          BuyFullVersion(gameSettings);
-          return FILEMENURESULT_CANCEL;
-        }
-        else if (button == 1)
-        {
-          return FILEMENURESULT_SELECTED;
-        }
-      }
-      else
-      {
-        int button = ShowDialog("PicaSim", TXT(PS_FULLVERSION), TXT(PS_NOTNOW), TXT(PS_PURCHASE));
-        if (button == 1)
-        {
-          BuyFullVersion(gameSettings);
-          return FILEMENURESULT_CANCEL;
-        }
-      }
-    }
-    else
-    {
-      IwGetUIView()->DestroyElements(); // delete fileMenu
+    if (imagesPerScreen < 0.0f)
+        imagesPerScreen = GetImagesPerLoadScreen(gameSettings);
 
-      if (tab < 0)
+    // With ImGui we filter tabs in-place, but keeping the loop structure
+    // for compatibility with original behavior (menu recreation on tab change)
+    int tab = 0;
+    while (true)
+    {
+        FileMenu menu(gameSettings, systemPath, userPath, extension,
+                                    FileMenu::LOAD, title, tabTitles, numTabs, tab,
+                                    cancelButtonText, altButtonText, fileMenuType,
+                                    imagesPerScreen, includeCallback);
+
+        while (!menu.Update())
+        {
+            if (s3eDeviceCheckQuitRequest() ||
+                    (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
+                    (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+            {
+                RecoverFromIwGx(false);
+                return FILEMENURESULT_CANCEL;
+            }
+        }
+
+        tab = menu.GetSelectedTab();
+        FileMenuResult ret = menu.GetResult(result);
+
+        // In original code, tab >= 0 means tab was changed (recreate menu)
+        // With ImGui filtering in-place, we can just return directly
+        RecoverFromIwGx(false);
         return ret;
     }
-  }
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 FileMenuResult FileMenuSave(
-  std::string& selectedString, 
-  const GameSettings& gameSettings, 
-  const char* userPath, 
-  const char* extension, 
-  const char* title, 
-  FileMenuType fileMenuType)
+    std::string& selectedString,
+    const GameSettings& gameSettings,
+    const char* userPath,
+    const char* extension,
+    const char* title,
+    FileMenuType fileMenuType)
 {
-  const Language language = gameSettings.mOptions.mLanguage;
-  FileMenu* fileMenu = new FileMenu(gameSettings, 0, userPath, extension, FileMenu::SAVE, title, 0, 0, 0, TXT(PS_BACK), NULL, fileMenuType, 3.0f);
-  while (!fileMenu->GetFinished())
-  {
-    if (s3eDeviceCheckQuitRequest() || (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED))
-      return FILEMENURESULT_CANCEL;
-    bool resourcesHaveChanged;
-    fileMenu->Update(gameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_ANDROID, true, resourcesHaveChanged, gameSettings);
-  }
+    PrepareForIwGx(false);
+    Language language = gameSettings.mOptions.mLanguage;
 
-  FileMenuResult result = fileMenu->GetResult(selectedString);
-  IwGetUIView()->DestroyElements(); // delete fileMenu
+    FileMenu menu(gameSettings, nullptr, userPath, extension,
+                                FileMenu::SAVE, title, nullptr, 0, 0,
+                                GetPS(PS_BACK, language), nullptr, fileMenuType, 3.0f, nullptr);
 
-  if (selectedString.empty())
-    return FILEMENURESULT_CANCEL;
+    while (!menu.Update())
+    {
+        if (s3eDeviceCheckQuitRequest() ||
+                (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
+                (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+        {
+            RecoverFromIwGx(false);
+            return FILEMENURESULT_CANCEL;
+        }
+    }
 
-  selectedString = std::string(userPath) + std::string("/") + selectedString + std::string(extension);
-  return FILEMENURESULT_SELECTED;
+    FileMenuResult ret = menu.GetResult(selectedString);
+    RecoverFromIwGx(false);
+
+    if (selectedString.empty())
+        return FILEMENURESULT_CANCEL;
+
+    // Build full path: userPath/filename.extension
+    selectedString = std::string(userPath) + "/" + selectedString + std::string(extension);
+    return FILEMENURESULT_SELECTED;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void FileMenuDelete(
-  const GameSettings& gameSettings, 
-  const char* userPath, 
-  const char* extension, 
-  const char* title, 
-  FileMenuType fileMenuType)
+    const GameSettings& gameSettings,
+    const char* userPath,
+    const char* extension,
+    const char* title,
+    FileMenuType fileMenuType)
 {
-  const Language language = gameSettings.mOptions.mLanguage;
-  FileMenu* fileMenu = new FileMenu(gameSettings, 0, userPath, extension, FileMenu::DELETE, title, 0, 0, 0, TXT(PS_BACK), NULL, fileMenuType, 3.0f);
-  while (!fileMenu->GetFinished())
-  {
-    if (s3eDeviceCheckQuitRequest() || (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED))
-      return;
-    bool resourcesHaveChanged;
-    fileMenu->Update(gameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_ANDROID, true, resourcesHaveChanged, gameSettings);
-  }
-  std::string selectedString;
-  fileMenu->GetResult(selectedString);
-  IwGetUIView()->DestroyElements(); // delete fileMenu
+    PrepareForIwGx(false);
+    Language language = gameSettings.mOptions.mLanguage;
 
-  if (selectedString.empty())
-    return;
+    FileMenu menu(gameSettings, nullptr, userPath, extension,
+                                FileMenu::DELETE_MODE, title, nullptr, 0, 0,
+                                GetPS(PS_BACK, language), nullptr, fileMenuType, 3.0f, nullptr);
 
-  TRACE_FILE_IF(1) TRACE("Deleting %s", selectedString.c_str());
-  s3eFileDelete(selectedString.c_str());
+    while (!menu.Update())
+    {
+        if (s3eDeviceCheckQuitRequest() ||
+                (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
+                (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+        {
+            RecoverFromIwGx(false);
+            return;
+        }
+    }
+
+    std::string selectedPath;
+    menu.GetResult(selectedPath);
+    RecoverFromIwGx(false);
+
+    if (!selectedPath.empty())
+    {
+        TRACE_FILE_IF(1) TRACE("Deleting %s", selectedPath.c_str());
+        s3eFileDelete(selectedPath.c_str());
+    }
 }
 
+//======================================================================================================================
+// Higher-level selection functions (moved from SettingsMenu)
+//======================================================================================================================
+
+//======================================================================================================================
+ScenarioResult SelectScenario(GameSettings& gameSettings, const char* title, const char* cancelButtonText, const char* altButtonText)
+{
+    TRACE_FUNCTION_ONLY(1);
+    std::string file;
+    FileMenuResult result = FileMenuLoad(file, gameSettings, "SystemSettings/Scenario", NULL, ".xml", title, 0, 0,
+        cancelButtonText, altButtonText, FILEMENUTYPE_AEROPLANE, 3.7f);
+    if (!file.empty() && result == FILEMENURESULT_SELECTED)
+    {
+        TRACE_FILE_IF(1) TRACE("Selected scenario settings %s", file.c_str());
+
+        if (file.find("lider.xml") != std::string::npos)
+            return SCENARIO_TRAINERGLIDER;
+        else if (file.find("owered.xml") != std::string::npos)
+            return SCENARIO_TRAINERPOWERED;
+        else if (file.find("hoose.xml") != std::string::npos)
+            return SCENARIO_CHOOSE;
+    }
+    else if (result == FILEMENURESULT_ALT)
+    {
+        return SCENARIO_DEFAULT;
+    }
+    return SCENARIO_CANCELLED;
+}
+
+//======================================================================================================================
+SelectResult SelectAeroplane(std::string& file, GameSettings& gameSettings, const char* title,
+    const char* cancelButtonText, const char* altButtonText, IncludeCallback* includeCallback)
+{
+    TRACE_FUNCTION_ONLY(1);
+    Language language = gameSettings.mOptions.mLanguage;
+    const char* aeroplaneTabTitles[] = {TXT(PS_ALL), TXT(PS_GLIDERS), TXT(PS_POWERED), TXT(PS_USER)};
+    FileMenuResult result = FileMenuLoad(
+        file, gameSettings,
+        "SystemSettings/Aeroplane", "UserSettings/Aeroplane", ".xml",
+        title, aeroplaneTabTitles, 4,
+        cancelButtonText, altButtonText,
+        FILEMENUTYPE_AEROPLANE, -1.0f, includeCallback);
+    if (!file.empty() && result == FILEMENURESULT_SELECTED)
+    {
+        return SELECTRESULT_SELECTED;
+    }
+    else if (result == FILEMENURESULT_ALT)
+    {
+        return SELECTRESULT_SELECTED;
+    }
+    else
+    {
+        return SELECTRESULT_CANCELLED;
+    }
+}
+
+//======================================================================================================================
+SelectResult SelectAndLoadAeroplane(GameSettings& gameSettings, const char* title, const char* cancelButtonText, const char* altButtonText)
+{
+    TRACE_FUNCTION_ONLY(1);
+    std::string file;
+    Language language = gameSettings.mOptions.mLanguage;
+    const char* aeroplaneTabTitles[] = {TXT(PS_ALL), TXT(PS_GLIDERS), TXT(PS_POWERED), TXT(PS_USER)};
+    FileMenuResult result = FileMenuLoad(
+        file, gameSettings,
+        "SystemSettings/Aeroplane", "UserSettings/Aeroplane", ".xml",
+        title, aeroplaneTabTitles, 4,
+        cancelButtonText, altButtonText, FILEMENUTYPE_AEROPLANE);
+    if (!file.empty() && result == FILEMENURESULT_SELECTED)
+    {
+        TRACE_FILE_IF(1) TRACE("Loading Aeroplane settings %s", file.c_str());
+        bool loadResult = gameSettings.mAeroplaneSettings.LoadFromFile(file);
+        IwAssert(ROWLHOUSE, loadResult);
+        TRACE_FILE_IF(1) TRACE(" %s\n", loadResult ? "success" : "failed");
+        gameSettings.mStatistics.mLoadedAeroplane = true;
+
+        if (
+            loadResult &&
+            gameSettings.mOptions.mUseAeroplanePreferredController &&
+            !gameSettings.mAeroplaneSettings.mPreferredController.empty()
+            )
+        {
+            TRACE_FILE_IF(1) TRACE("Loading Controller %s", gameSettings.mAeroplaneSettings.mPreferredController.c_str());
+            bool controllerResult = gameSettings.mControllerSettings.LoadFromFile(gameSettings.mAeroplaneSettings.mPreferredController);
+            TRACE_FILE_IF(1) TRACE(" %s\n", controllerResult ? "success" : "failed");
+        }
+        return SELECTRESULT_SELECTED;
+    }
+    else if (result == FILEMENURESULT_ALT)
+    {
+        return SELECTRESULT_SELECTED;
+    }
+    else
+    {
+        return SELECTRESULT_CANCELLED;
+    }
+}
+
+//======================================================================================================================
+SelectResult SelectAndLoadEnvironment(GameSettings& gameSettings, const char* title, const char* cancelButtonText, const char* altButtonText)
+{
+    TRACE_FUNCTION_ONLY(1);
+    std::string file;
+    Language language = gameSettings.mOptions.mLanguage;
+    const char* environmentTabTitles[] = {TXT(PS_ALL), TXT(PS_SLOPE), TXT(PS_FLAT), TXT(PS_PANORAMIC), TXT(PS_3D), TXT(PS_USER)};
+    FileMenuResult result = FileMenuLoad(
+        file, gameSettings,
+        "SystemSettings/Environment", "UserSettings/Environment", ".xml",
+        title, environmentTabTitles, 6, cancelButtonText, altButtonText, FILEMENUTYPE_SCENERY);
+    if (!file.empty() && result == FILEMENURESULT_SELECTED)
+    {
+        TRACE_FILE_IF(1) TRACE("Loading Environment %s - ", file.c_str());
+        bool loadResult = gameSettings.mEnvironmentSettings.LoadFromFile(file);
+        IwAssert(ROWLHOUSE, loadResult);
+        TRACE_FILE_IF(1) TRACE(" %s\n", loadResult ? "success" : "failed");
+        bool objectsResult = gameSettings.mObjectsSettings.LoadFromFile(gameSettings.mEnvironmentSettings.mObjectsSettingsFile);
+        IwAssert(ROWLHOUSE, objectsResult);
+        gameSettings.mStatistics.mLoadedTerrain = true;
+        return SELECTRESULT_SELECTED;
+    }
+    else if (result == FILEMENURESULT_ALT)
+    {
+        return SELECTRESULT_SELECTED;
+    }
+    else
+    {
+        return SELECTRESULT_CANCELLED;
+    }
+}

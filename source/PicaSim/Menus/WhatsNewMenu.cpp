@@ -1,194 +1,142 @@
 #include "WhatsNewMenu.h"
 #include "Menu.h"
-#include "Helpers.h"
-#include "SettingsWidgets.h"
+#include "UIHelpers.h"
 #include "../GameSettings.h"
 #include "../PicaStrings.h"
+#include "Platform.h"
+#include "../../Platform/S3ECompat.h"
 
-#include <s3eOSExec.h>
-  
-//---------------------------------------------------------------------------------------------------------------------
-class WhatsNewMenu : public Menu
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
+
+// Forward declarations from Graphics.cpp
+void IwGxClear();
+void IwGxSwapBuffers();
+void PrepareForIwGx(bool fullscreen);
+void RecoverFromIwGx(bool clear);
+
+//======================================================================================================================
+class WhatsNewMenu
 {
 public:
-  WhatsNewMenu(const GameSettings& gameSettings);
-  ~WhatsNewMenu();
+    WhatsNewMenu(GameSettings& gameSettings);
+    ~WhatsNewMenu();
 
-  bool GetFinished() const {return mFinished;}
+    bool Update();  // Returns true when finished
 
 private:
-  CIwUIScrollableView* CreateText(const char* text, bool centre, int space);
+    void Render();
 
-  virtual bool HandleEvent(CIwEvent* pEvent) OVERRIDE;
-
-  bool mFinished;
-
-  CIwUILayoutGrid* mGridLayout;
-  CIwUIImage* mGridArea;
-  CIwUIScrollableView* mScrollArea;
-
-  CIwUITabBar* mTabBar;
-  CIwUIButton* mOKButton;
-
-  const GameSettings& mGameSettings;
+    GameSettings& mGameSettings;
+    bool mFinished;
 };
 
-//---------------------------------------------------------------------------------------------------------------------
-CIwUIScrollableView* WhatsNewMenu::CreateText(const char* text, bool centre, int space)
+//======================================================================================================================
+WhatsNewMenu::WhatsNewMenu(GameSettings& gameSettings)
+    : mGameSettings(gameSettings)
+    , mFinished(false)
 {
-  int width = mGameSettings.mOptions.mFrameworkSettings.mScreenWidth;
-  int height = mGameSettings.mOptions.mFrameworkSettings.mScreenHeight;
-
-  CIwUILabel* label = new CIwUILabel;
-  label->SetStyle("<label_setting_background>");
-  label->SetCaption(text);
-  if (centre)
-    label->SetProperty("alignH", IW_UI_ALIGN_CENTRE);
-  else
-    label->SetProperty("alignH", IW_UI_ALIGN_LEFT);
-  label->SetProperty("alignV", IW_UI_ALIGN_TOP);
-  label->SetSizeMin(CIwVec2(width*15/16, -1));
-  label->SetSizeMax(CIwVec2(width*15/16, -1));
-  label->SetSizeToContent(true);
-
-  CIwUILayoutVertical* layout = new CIwUILayoutVertical;
-  layout->AddElement(label);
-
-  CIwUIScrollableView* scrollArea = new CIwUIScrollableView;
-  scrollArea->SetSizeToContent(true);
-  scrollArea->SetSizeMin(CIwVec2(-1, height - space));
-  scrollArea->AddChild(label);
-
-  scrollArea->SetLayout(layout);
-
-  return scrollArea;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-WhatsNewMenu::WhatsNewMenu(const GameSettings& gameSettings)
-  : mFinished(false), mGameSettings(gameSettings)
-{
-  Language language = gameSettings.mOptions.mLanguage;
-
-  mGridLayout = new CIwUILayoutGrid;
-  mGridLayout->SetSizeToSpace(true); // Without this then large settings tabs push the tabs etc off screen
-  mGridLayout->AddRow();
-  mGridLayout->AddRow();
-  mGridLayout->AddRow();
-  mGridLayout->AddColumn();
-
-  mGridArea = new CIwUIImage;
-  mGridArea->SetSizeToContent(false); // If true the the whole screen is vertically centred. False places it at the top
-  mGridArea->SetLayout(mGridLayout);
-  CIwTexture* texture = (CIwTexture*)IwGetResManager()->GetResNamed("MenuBackground", "CIwTexture");
-  mGridArea->SetTexture(texture);
-
-  // Picks up all the events
-  mGridArea->AddEventHandler(this); 
-  int space = 0;
-
-  // Tab area and buttons
-  {
-    // Navigation bar area
-    CIwUILabel* navigationArea = new CIwUILabel;
-    navigationArea->SetStyle("<label_bar_background>");
-    navigationArea->SetSizeToContent(false);
-    mGridArea->AddChild(navigationArea);
-    mGridLayout->AddElement(navigationArea, 0, 0);
-
-    space += 2 * navigationArea->GetSizeMin().y;
-
-    // Layout
-    CIwUILayoutHorizontal* navigationLayout = new CIwUILayoutHorizontal;
-    navigationLayout->SetSizeToSpace(true);
-    navigationArea->SetLayout(navigationLayout);
-
-    CIwUILabel* titleLabel = CreateLabel(gameSettings, navigationArea, navigationLayout, GetPS(PS_WHATSNEW, language), LABEL_TYPE_CENTERED_TITLE);
-    int width = mGameSettings.mOptions.mFrameworkSettings.mScreenWidth;
-    titleLabel->SetSizeHint(CIwVec2(width, -1));
-  }
-
-  // The main text area
-  {
-    mScrollArea = CreateText(GetPS(PS_WHATSNEWTEXT, language), false, space);
-    mGridArea->AddChild(mScrollArea);
-    mGridLayout->AddElement(mScrollArea, 0, 1);
-  }
-
-  // OK button
-  {
-    CIwUILayoutGrid* websiteLayout = new CIwUILayoutGrid;
-    websiteLayout->SetSizeToSpace(true);
-    websiteLayout->AddRow();
-    websiteLayout->AddColumn();
-
-    CIwUILabel* websiteBackground = new CIwUILabel;
-    websiteBackground->SetStyle("<label_bar_background>");
-    websiteBackground->SetSizeToContent(false);
-    websiteBackground->SetLayout(websiteLayout);
-
-    mGridArea->AddChild(websiteBackground);
-    mGridLayout->AddElement(websiteBackground, 0, 2);
-
-    mOKButton = new CIwUIButton;
-    mOKButton->SetStyle("<button_wide>");
-    mOKButton->SetCaption(GetPS(PS_OK, language));
-    mOKButton->SetSizeToContent(false);
-    websiteBackground->AddChild(mOKButton);
-    websiteLayout->AddElement(mOKButton, 0, 0);
-  }
-
-  IwGetUIView()->AddElement(mGridArea);
-  IwGetUIView()->AddElementToLayout(mGridArea);
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 WhatsNewMenu::~WhatsNewMenu()
 {
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-bool WhatsNewMenu::HandleEvent(CIwEvent* pEvent)
+//======================================================================================================================
+bool WhatsNewMenu::Update()
 {
-  CIwManaged* sender = pEvent->GetSender();
-  if (pEvent->GetID() == IWUI_EVENT_BUTTON)
-  {
-    if (sender == mOKButton)
-    {
-      mFinished = true;
-      return true;
-    }
-  }
-  return false;
+    IwGxClear();
+    Render();
+    IwGxSwapBuffers();
+    s3eDeviceYield();
+
+    return mFinished;
 }
 
+//======================================================================================================================
+void WhatsNewMenu::Render()
+{
+    int width = Platform::GetScreenWidth();
+    int height = Platform::GetScreenHeight();
+    float scale = UIHelpers::GetFontScale();
+    Language language = mGameSettings.mOptions.mLanguage;
 
-//---------------------------------------------------------------------------------------------------------------------
+    // Begin ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+    UIHelpers::ApplyFontScale();
+
+    // Light theme styling (same as HelpMenu)
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.70f, 0.75f, 0.82f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.85f, 0.88f, 0.92f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Tab, ImVec4(0.75f, 0.78f, 0.85f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(0.85f, 0.88f, 0.95f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_TabActive, ImVec4(0.90f, 0.92f, 0.98f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.75f, 0.78f, 0.85f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.85f, 0.88f, 0.95f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.65f, 0.68f, 0.75f, 1.0f));
+
+    // Full-screen window
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2((float)width, (float)height));
+    ImGui::Begin("WhatsNewMenu", nullptr,
+        ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+
+    float buttonH = 32.0f * scale;
+    float padding = ImGui::GetStyle().WindowPadding.y;
+
+    // === TITLE: Centered "Welcome to PicaSim!" ===
+    const char* title = GetPS(PS_WHATSNEW, language);
+    float titleWidth = ImGui::CalcTextSize(title).x;
+    ImGui::SetCursorPosX((width - titleWidth) * 0.5f);
+    ImGui::Text("%s", title);
+
+    // === MAIN CONTENT AREA (scrollable) ===
+    float topY = ImGui::GetCursorPosY();
+    float bottomButtonY = height - buttonH - padding;
+    float contentHeight = bottomButtonY - topY - padding;
+
+    ImGui::BeginChild("Content", ImVec2(-1, contentHeight), true);
+    ImGui::TextWrapped("%s", GetPS(PS_WHATSNEWTEXT, language));
+    ImGui::EndChild();
+
+    // === BOTTOM: OK button (full width) ===
+    ImGui::SetCursorPosY(bottomButtonY);
+    if (ImGui::Button(GetPS(PS_OK, language), ImVec2(-1, buttonH)))
+    {
+        mFinished = true;
+    }
+
+    ImGui::End();
+    ImGui::PopStyleColor(9);
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+//======================================================================================================================
 void DisplayWhatsNewMenu(GameSettings& gameSettings)
 {
-  AudioManager::GetInstance().SetAllChannelsToZeroVolume();
-  FixStateForMenus fixStateForMenus(true, true);
-  WhatsNewMenu* settingsMenu = new WhatsNewMenu(gameSettings); // Gets deleted on IwGetUIView()->DestroyElements()
+    AudioManager::GetInstance().SetAllChannelsToZeroVolume();
+    PrepareForIwGx(false);
 
-  while (!settingsMenu->GetFinished())
-  {
-    bool resourcesHaveChanged;
-    settingsMenu->Update(gameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_ANDROID, true, resourcesHaveChanged, gameSettings);
+    WhatsNewMenu menu(gameSettings);
 
-    if (
-      s3eDeviceCheckQuitRequest() ||
-      (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED)
-      )
+    while (!menu.Update())
     {
-      break;
+        if (s3eDeviceCheckQuitRequest() ||
+                (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
+                (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+        {
+            break;
+        }
+
+        AudioManager::GetInstance().Update(1.0f / 30.0f);
     }
 
-    if (resourcesHaveChanged)
-    {
-      IwGetUIView()->DestroyElements();
-      settingsMenu = new WhatsNewMenu(gameSettings); // Gets deleted on IwGetUIView()->DestroyElements()
-    }
-  }
-  IwGetUIView()->DestroyElements();
+    RecoverFromIwGx(false);
 }

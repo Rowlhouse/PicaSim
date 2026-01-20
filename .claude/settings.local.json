@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(wc:*)",
+      "Bash(done)",
+      "Bash(grep:*)",
+      "Bash(du:*)",
+      "Bash(cmake --preset windows-debug:*)",
+      "Bash(cmake:*)",
+      "Bash(vcpkg search:*)",
+      "Bash(cd:*)",
+      "Bash(cmd /c \"cd /d D:\\\\GitHubRepos\\\\PicaSim2\\\\build && cmake --build . --target PicaSim 2>&1\")",
+      "Bash(./PicaSim.exe)",
+      "Bash(dir:*)",
+      "Bash(curl:*)",
+      "Bash(timeout:*)",
+      "Bash(../build/Debug/PicaSim.exe)",
+      "Bash(taskkill:*)",
+      "Bash(python:*)",
+      "Bash(start \"\" \"../build/Debug/PicaSim.exe\")",
+      "Bash(C:/vcpkg/vcpkg search:*)",
+      "Bash(cat:*)",
+      "Bash(git -C \"D:\\\\GitHubRepos\\\\PicaSim2\" show:*)",
+      "Bash(for f in /d/GitHubRepos/PicaSim2/source/PicaSim/*.cpp /d/GitHubRepos/PicaSim2/source/Framework/*.cpp /d/GitHubRepos/PicaSim2/source/Platform/*.cpp)",
+      "Bash(do if [ -f \"$f\" ])",
+      "Bash(printf:*)",
+      "Bash(python3:*)",
+      "Bash(for:*)",
+      "Bash(then sed -i 's|^//[-]\\\\{50,\\\\}$|//======================================================================================================================|g' \"$f\")",
+      "Bash(fi)",
+      "Bash(do:*)",
+      "Bash([ -s \"$f\" ])",
+      "Bash(then sed -i 's/m_HWID/mHWID/g' \"$f\")",
+      "Bash(xargs -I{} sh -c 'awk \"\"length > 180 {print length\\\\\"\":\\\\\"\"FILENAME\\\\\"\":\\\\\"\"NR}\"\" \"\"{}\"\"')",
+      "Bash(sort:*)"
+    ]
+  }
+}

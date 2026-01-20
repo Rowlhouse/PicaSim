@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "picasim",
+  "version": "1.0.0",
+  "description": "PicaSim R/C Flight Simulator",
+  "homepage": "https://github.com/example/picasim",
+  "license": "MIT",
+  "dependencies": [
+    "sdl2",
+    "sdl2-net",
+    "glm",
+    "openal-soft",
+    "stb",
+    "glad",
+    {
+      "name": "imgui",
+      "features": ["opengl3-binding", "docking-experimental"]
+    }
+  ],
+  "builtin-baseline": "8271066c9bdbb0d284dca5a41a5b00b31351ebc3",
+  "overrides": []
+}

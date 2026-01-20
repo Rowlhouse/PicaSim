@@ -254,13 +254,13 @@ void HeightfieldRuntime::setClipping(
 //----------------------------------------------------------------------------------------------------------------------
 void HeightfieldRuntime::clearSaved()
 {
-  mSavedPoints.resize_quick(0);
+  mSavedPoints.clear();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 void HeightfieldRuntime::ReservePoints(size_t num)
 {
-  mSavedPoints.reserve_optimised(num);
+  mSavedPoints.reserve(num);
 }
 
 }

@@ -85,17 +85,17 @@ inline void AddTraceString(const char * traceString);
 
 enum tTraceLevels
 {
-  ONCE_1 = 1, // v. significant, once-off trace
-  ONCE_2 = 2,
-  ONCE_3 = 3, // low significance
+    ONCE_1 = 1, // v. significant, once-off trace
+    ONCE_2 = 2,
+    ONCE_3 = 3, // low significance
 
-  FRAME_1 = 4, // v. significant once-per-frame trace
-  FRAME_2 = 5,
-  FRAME_3 = 6, // low significance
+    FRAME_1 = 4, // v. significant once-per-frame trace
+    FRAME_2 = 5,
+    FRAME_3 = 6, // low significance
 
-  MULTI_FRAME_1 = 7, // v. significant multiple-times-per-frame trace
-  MULTI_FRAME_2 = 8,
-  MULTI_FRAME_3 = 9
+    MULTI_FRAME_1 = 7, // v. significant multiple-times-per-frame trace
+    MULTI_FRAME_2 = 8,
+    MULTI_FRAME_3 = 9
 };
 
 /// for now just printf (in the future may make a copy to file)
@@ -109,26 +109,26 @@ enum tTraceLevels
 
 #ifdef USE_FUNCTION
 #define TRACE_FUNCTION() \
-  TRACE("%s():%d: ", __FUNCTION__, __LINE__)
+    TRACE("%s():%d: ", __FUNCTION__, __LINE__)
 #else
 #define TRACE_FUNCTION() \
-  TRACE("%s:%d: ", __FILE__, __LINE__)
+    TRACE("%s:%d: ", __FILE__, __LINE__)
 #endif
 
 #ifdef USE_FUNCTION
 #define TRACE_METHOD() \
-  TRACE("%s:%s():%d [%p]: ", __FILE__, __FUNCTION__, __LINE__, this)
+    TRACE("%s:%s():%d [%p]: ", __FILE__, __FUNCTION__, __LINE__, this)
 #else
 #define TRACE_METHOD() \
-  TRACE("%s:%d: [%p]: ", __FILE__, __LINE__, this)
+    TRACE("%s:%d: [%p]: ", __FILE__, __LINE__, this)
 #endif
 
 #ifdef USE_FUNCTION
 #define TRACE_METHOD_STATIC() \
-  TRACE("%s:%s():%d [static]: ", __FILE__, __FUNCTION__, __LINE__)
+    TRACE("%s:%s():%d [static]: ", __FILE__, __FUNCTION__, __LINE__)
 #else
 #define TRACE_METHOD_STATIC() \
-  TRACE("%s:%d: [static]: ", __FILE__, __LINE__)
+    TRACE("%s:%d: [static]: ", __FILE__, __LINE__)
 #endif
 
 #ifdef COMPILE_WITHOUT_TRACE
@@ -150,23 +150,23 @@ enum tTraceLevels
 //=======================================================
 // with trace
 #define TRACE_IF(level, traceString) \
-  if ( (traceEnabled) && \
-  ((level) <= traceLevel) && \
-  ( (traceAllStrings == true) || \
-  (CheckTraceString(traceString)) ) )
+    if ( (traceEnabled) && \
+    ((level) <= traceLevel) && \
+    ( (traceAllStrings == true) || \
+    (CheckTraceString(traceString)) ) )
 
 #define TRACE_FILE_IF(level) \
-  TRACE_IF(level, __FILE__)
+    TRACE_IF(level, __FILE__)
 
 // just display the function
 #define TRACE_FUNCTION_ONLY(level) \
-  TRACE_FILE_IF(level) {TRACE_FUNCTION();}
+    TRACE_FILE_IF(level) {TRACE_FUNCTION();}
 
 #define TRACE_METHOD_ONLY(level) \
-  TRACE_FILE_IF(level) {TRACE_METHOD();}
+    TRACE_FILE_IF(level) {TRACE_METHOD();}
 
 #define TRACE_METHOD_STATIC_ONLY(level) \
-  TRACE_FILE_IF(level) {TRACE_METHOD_STATIC();}
+    TRACE_FILE_IF(level) {TRACE_METHOD_STATIC();}
 
 //=======================================================
 #endif
@@ -196,35 +196,35 @@ void TracePrintf(const char *format, ...);
 inline void EnableTrace(bool enable) {traceEnabled = enable;}
 
 inline void EnableTraceAllStrings(bool enable) {
-  traceAllStrings = enable;}
+    traceAllStrings = enable;}
 
 inline void SetTraceLevel(int level) {traceLevel = level;}
 
 inline void AddTraceString(const std::string &traceString)
 {
-  traceStrings.push_back(traceString); 
-  std::sort(traceStrings.begin(), traceStrings.end());
+    traceStrings.push_back(traceString); 
+    std::sort(traceStrings.begin(), traceStrings.end());
 }
 
 inline void AddTraceString(const char * traceString)
 {
-  AddTraceString(std::string(traceString));
+    AddTraceString(std::string(traceString));
 }
 
 inline void AddTraceStrings(std::vector<std::string> newTraceStrings)
 {
-  for (unsigned i = 0 ; i < newTraceStrings.size() ; ++i)
-  {
-    traceStrings.push_back(newTraceStrings[i]); 
-    std::sort(traceStrings.begin(), traceStrings.end());
-  }
+    for (unsigned i = 0 ; i < newTraceStrings.size() ; ++i)
+    {
+        traceStrings.push_back(newTraceStrings[i]); 
+        std::sort(traceStrings.begin(), traceStrings.end());
+    }
 }
 
 inline bool CheckTraceString(const char * traceString)
 {
-  return (std::binary_search(traceStrings.begin(), 
-    traceStrings.end(),
-    std::string(traceString)));
+    return (std::binary_search(traceStrings.begin(), 
+        traceStrings.end(),
+        std::string(traceString)));
 }
 
 

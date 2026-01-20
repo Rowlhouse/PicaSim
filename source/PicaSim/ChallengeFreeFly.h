@@ -8,29 +8,25 @@
 class ChallengeFreeFly : public Challenge, public RenderGxObject
 {
 public:
-  void Init(class Aeroplane* aeroplane, LoadingScreenHelper* loadingScreen) OVERRIDE;
-  void Terminate() OVERRIDE;
-  void Reset() OVERRIDE;
+    void Init(class Aeroplane* aeroplane, LoadingScreenHelper* loadingScreen) OVERRIDE;
+    void Terminate() OVERRIDE;
+    void Reset() OVERRIDE;
 
-  void GxRender(int renderLevel, DisplayConfig& displayConfig) OVERRIDE;
+    void GxRender(int renderLevel, DisplayConfig& displayConfig) OVERRIDE;
 
-  ChallengeResult UpdateChallenge(float deltaTime) OVERRIDE;
+    ChallengeResult UpdateChallenge(float deltaTime) OVERRIDE;
 
-  void Relaunched() OVERRIDE;
+    void Relaunched() OVERRIDE;
 
-  void Validate() OVERRIDE {}
+    void Validate() OVERRIDE {}
 
 private:
-  float mOnGroundTime;
-  float mMaxSpeed;
-  float mSmoothedAscentRate;
+    float mOnGroundTime;
+    float mMaxSpeed;
+    float mSmoothedAscentRate;
 
-  bool mNeedToCacheText;
-
-  CIwSVec2 mTextBackgroundXY, mTextBackgroundWH;
-  CIwMaterial* mTextBackgroundMaterial;
-
-  AIControllers mAIControllers;
+    bool mNeedToCacheText;
+    AIControllers mAIControllers;
 };
 
 #endif

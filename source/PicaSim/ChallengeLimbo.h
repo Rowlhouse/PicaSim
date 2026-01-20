@@ -3,74 +3,53 @@
 
 #include "Challenge.h"
 #include "Gate.h"
-#include "Scoreloop.h"
-#include "Menus/ScoreloopMenu.h"
 #include "GameSettings.h"
 
 #include "Framework.h"
 
-class ButtonOverlay;
-
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 class ChallengeLimbo : public Challenge, public RenderGxObject
 {
 public:
-  /// This will ensure that the limbo is set up according to the challenge settings - 
-  /// overriding any aeroplane/scenery settings etc
-  ChallengeLimbo(struct GameSettings& gameSettings);
-  ~ChallengeLimbo();
+    /// This will ensure that the limbo is set up according to the challenge settings -
+    /// overriding any aeroplane/scenery settings etc
+    ChallengeLimbo(struct GameSettings& gameSettings);
+    ~ChallengeLimbo();
 
-  void Init(class Aeroplane* aeroplane, LoadingScreenHelper* loadingScreen) OVERRIDE;
-  void Terminate() OVERRIDE;
-  void Relaunched() OVERRIDE;
-  void ReinitOverlays() OVERRIDE;
+    void Init(class Aeroplane* aeroplane, LoadingScreenHelper* loadingScreen) OVERRIDE;
+    void Terminate() OVERRIDE;
+    void Relaunched() OVERRIDE;
+    void ReinitOverlays() OVERRIDE;
 
-  void GxRender(int renderLevel, DisplayConfig& displayConfig) OVERRIDE;
+    void GxRender(int renderLevel, DisplayConfig& displayConfig) OVERRIDE;
 
-  ChallengeResult UpdateChallenge(float deltaTime) OVERRIDE;
+    ChallengeResult UpdateChallenge(float deltaTime) OVERRIDE;
 
-  void OnScoreSubmitted(SC_Error_t completionStatus);
 private:
-  void UploadScore();
+    float CalculateScore(float challengeDuration, float difficultyMultiplier, float* timeBonus = 0) const;
 
-  float CalculateScore(float challengeDuration, float difficultyMultiplier, float* timeBonus = 0) const;
+    PhysicalGate mGate;
 
-  ButtonOverlay* mLeaderboardOverlay;
+    bool mNeedToCacheText;
 
-  PhysicalGate mGate;
+    Vector3 mOldPos;
+    float mLimboTime;
+    size_t mLimboCount;
+    float mLastGateTime;
+    float mMaxAltitudeSinceLastGate;
 
-  bool mNeedToCacheText;
+    float mHeightScale;
+    float mOriginalDifficulty;
 
-  Vector3 mOldPos;
-  float mLimboTime;
-  size_t mLimboCount;
-  float mLastGateTime;
-  float mMaxAltitudeSinceLastGate;
+    float mGateColourAmount;
 
-  float mHeightScale;
-  float mOriginalDifficulty;
+    float mOnGroundTime;
 
-  float mGateColourAmount;
-  
-  float mOnGroundTime;
+    Statistics::Score mHighScore;
+    bool mGotHighScore;
 
-  bool mHaveDisplayedNetworkFailure;
-
-  Statistics::Score mHighScore;
-  bool mGotHighScore;
-
-  SC_ScoreController_h mScoreController;
-  SC_Score_h mScoreloopScore;
-  enum ScoreSubmissionStatus
-  {
-    SCORESUBMISSIONSTATUS_RACING,
-    SCORESUBMISSIONSTATUS_SUBMITTED,
-    SCORESUBMISSIONSTATUS_UPLOADED
-  };
-  ScoreSubmissionStatus mScoreSubmissionStatus;
-
-  AudioManager::Sound* mSound;
-  AudioManager::SoundChannel mSoundChannel;
+    AudioManager::Sound* mSound;
+    AudioManager::SoundChannel mSoundChannel;
 };
 
 #endif

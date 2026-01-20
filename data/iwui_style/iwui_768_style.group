@@ -1,7 +1,0 @@
-CIwResGroup
-{
-	name	iwui_style
-	
-	.\iwui_768_resources.group  { inline true }
-	.\iwui_768_stylesheet.itx
-}

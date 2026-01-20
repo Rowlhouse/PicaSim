@@ -4,9 +4,9 @@
 class LoadingScreenHelper
 {
 public:
-  virtual ~LoadingScreenHelper() {}
+    virtual ~LoadingScreenHelper() {}
 
-  virtual void Update(const char* moduleName = 0) = 0;
+    virtual void Update(const char* moduleName = 0) = 0;
 };
 
 #endif

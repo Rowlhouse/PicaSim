@@ -9,10 +9,9 @@
 
 #include "Plane.h"
 
-// Change this to a std::vector like array type. However CIwArray has got a fast 
-// resize_quick(0) that doesn't call destructors
-#include <IwUtil.h>
-#define ARRAY_TYPE CIwArray
+// Changed from CIwArray to std::vector during SDL2 migration
+#include <vector>
+#define ARRAY_TYPE std::vector
 
 namespace Heightfield
 {

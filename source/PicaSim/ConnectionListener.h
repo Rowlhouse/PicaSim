@@ -2,29 +2,28 @@
 #define CONNECTION_LISTENER_H
 
 #include "IncomingConnection.h"
-
-#include <s3eSocket.h>
+#include <SDL_net.h>
 #include <vector>
 
-//---------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 /// Main interface for handling incoming connections that can control the simulation
 class ConnectionListener
 {
 public:
-  ConnectionListener();
-  void Init();
-  void Terminate();
+    ConnectionListener();
+    void Init();
+    void Terminate();
 
-  void Update();
+    void Update();
 
 private:
-  void HandleIncomingConnection(s3eSocket* newSocket, const s3eInetAddress& address);
+    void HandleIncomingConnection(TCPsocket newSocket);
 
-  s3eSocket* mSocketListener;
-  s3eInetAddress mListenerAddr;
+    TCPsocket mSocketListener;
+    SDLNet_SocketSet mSocketSet;
 
-  typedef std::vector<IncomingConnection> IncomingConnections;
-  IncomingConnections mIncomingConnections;
+    typedef std::vector<IncomingConnection> IncomingConnections;
+    IncomingConnections mIncomingConnections;
 };
 
 #endif

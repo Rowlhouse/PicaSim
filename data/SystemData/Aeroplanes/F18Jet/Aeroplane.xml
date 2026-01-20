@@ -186,8 +186,7 @@ F18 1.5m span EDF/Jet
       controlPerChannel3="1"
       controlRate="0.3"
 
-      audioFile="SystemData/Audio/Glider22050Stereo.raw"
-      audioStereo="1"
+      audioFile="SystemData/Audio/Glider22050Mono.raw"
       audioSampleRate="22050"
       audioRadius="1"
       audioMinVolume="0"
@@ -447,7 +446,7 @@ s</Graphics>
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".125"
@@ -459,7 +458,7 @@ s</Graphics>
   />
 
   <AirFlow
-    file="SystemData/Audio/GliderWhistle22050Stereo.raw"
+    file="SystemData/Audio/GliderWhistle22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="30"
     mFreqScalePerSpeed=".1"

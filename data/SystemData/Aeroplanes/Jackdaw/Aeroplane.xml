@@ -221,7 +221,6 @@ Jackdaw - 4 channel powered plane
       controlPerChannel3="1"
 
       audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioStereo="0"
       audioSampleRate="22050"
       audioRadius="0.2"
       audioMinVolume="0"
@@ -449,7 +448,7 @@ Jackdaw - 4 channel powered plane
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".125"

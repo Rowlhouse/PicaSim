@@ -205,7 +205,6 @@ MaxBee - Aerobatic C/L plane designed by Igor Burger
 
       
       audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioStereo="0"
       audioSampleRate="22050"
       audioRadius="0.6"
       audioMinVolume="0"
@@ -463,7 +462,7 @@ MaxBee - Aerobatic C/L plane designed by Igor Burger
 
 <Audio>
   <AirFlow
-    file="SystemData/Audio/Glider22050Stereo.raw"
+    file="SystemData/Audio/Glider22050Mono.raw"
     sampleRate="22050"
     mMinSpeedRelAir ="15"
     mFreqScalePerSpeed=".125"

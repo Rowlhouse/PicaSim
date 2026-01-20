@@ -30,7 +30,7 @@ void InitStringsEN(const char** txt)
   txt[PS_OK] = "OK";
   txt[PS_ENABLE] = "Enable";
   txt[PS_REMOVE] = "Remove";
-  txt[PS_COPY] = "Copy";
+  txt[PS_DUPLICATE] = "Duplicate";
   txt[PS_CRASHED] = "Damaged";
   txt[PS_NO] = "No";
   txt[PS_YES] = "Yes";
@@ -253,20 +253,22 @@ void InitStringsEN(const char** txt)
 "[r] - Relaunch\n"
 "[p] - Toggle pause\n"
 "[c] - Cycles through the camera views\n"
+"[z] - Toggles the zoom view\n"
 "[Right shift] - Press the \"rates\" button, if available\n"
 "[s] - Write screenshot into the user data area\n"
 "[t] - Toggle slow motion\n"
 "[m] - Enter walkabout mode (if enabled)\n"
 "[Arrow keys] - These can be mapped to control the plane\n"
 "[Num-pad] - Move the plane (when paused). Use Ctrl to rotate\n"
-"[Alt+Enter] - Toggle full-screen (Windows only)\n"
+"[F11]/[Alt+Enter]/[F] - Toggle full-screen\n"
 "[=] and [-] - Zoom in and out\n"
 "[1] and [2] - Toggle the buttons (typically used for smoke)\n"
 "\n"
 "There are some additional shortcuts for developers:\n"
 "\n"
 "[l] - Force the plane to reload\n"
-"[k] - Switch display between normal and physics\n"
+"[u] - Toggle UI\n"
+"[k] - Cycle display between normal and physics\n"
 "[g] - Display the CG position and equivalent box (for moments of inertia)\n"
 "[7] and [8] - Decrease/increase number of wind streamers\n"
 "[0] and [9] - Cycle through the aerofoils and plot data\n"
@@ -578,6 +580,11 @@ void InitStringsEN(const char** txt)
   txt[PS_DIFFUSELIGHTINGSCALE] = "Diffuse lighting scale";
   txt[PS_TERRAINTEXTUREDETAIL] = "Terrain texture detail";
   txt[PS_MAXSKYBOXDETAIL] = "Max skybox/panorama detail";
+  txt[PS_ANTIALIASING] = "Anti-aliasing (MSAA)";
+  txt[PS_ANTIALIASING_2X] = "2x";
+  txt[PS_ANTIALIASING_4X] = "4x";
+  txt[PS_ANTIALIASING_8X] = "8x";
+  txt[PS_REQUIRESRESTART] = "Requires restart";
   txt[PS_NEARCLIPDISTANCE] = "Near clip distance";
   txt[PS_FARCLIPDISTANCE] = "Far clip distance";
   txt[PS_SHADINGMETHOD] = "Shading method";
@@ -818,6 +825,7 @@ void InitStringsEN(const char** txt)
   txt[PS_EDGEHEIGHT] = "Edge height";
   txt[PS_UPWARDSBIAS] = "Upwards bias";
   txt[PS_FILTERITERATIONS] = "Filter iterations";
+  txt[PS_PLAINSETTINGS] = "Plain/water settings";
   txt[PS_DRAWPLAIN] = "Draw plain/water";
   txt[PS_COLLIDEWITHPLAIN] = "Collide with plain/water";
   txt[PS_PLAININNERRADIUS] = "Plain inner radius";
@@ -948,9 +956,9 @@ void InitStringsEN(const char** txt)
   txt[PS_JOYSTICKLABEL] = "Joystick %d: Input = %5.2f Output = %5.2f";
   txt[PS_JOYSTICKABUTTONLABEL] = "Joystick %d: Input = %5.2f Output = %d";
   txt[PS_JOYSTICKBUTTONLABEL] = "Joystick button %d: Input = %5.2f Output = %d";
-  txt[PS_SCALEPOSITIVE] = "Scale (+ve)";
-  txt[PS_SCALENEGATIVE] = "Scale (-ve)";
-  txt[PS_OFFSET] = "Offset";
+  txt[PS_SCALEPOSITIVE] = "Input +ve scale";
+  txt[PS_SCALENEGATIVE] = "Input -ve scale";
+  txt[PS_OFFSET] = "Input Offset";
   txt[PS_MAPTO] = "Map to";
   txt[PS_PRESSWHENCENTRED] = "Press when centred";
   txt[PS_PRESSWHENLEFTORDOWN] = "Press when left or down";

@@ -1,7 +1,7 @@
-#ifndef HELPMENU_H
-#define HELPMENU_H
+#ifndef WHATSNEWMENU_H
+#define WHATSNEWMENU_H
 
-/// Displays the help menu
+/// Displays the what's new menu
 void DisplayWhatsNewMenu(struct GameSettings& gameSettings);
 
 #endif

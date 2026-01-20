@@ -1,6 +1,0 @@
-include:
-#include <s3eTypes.h>
-
-functions:
-int dpiExtGetDeviceDPI() -1 run_on_os_thread
-    

@@ -7,6 +7,10 @@
 bool readFromXML(TiXmlElement* elem, const char* name, bool& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, unsigned int& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, long unsigned int& value, size_t* index = 0);
+// size_t overload for 64-bit Windows compatibility
+#if defined(_WIN64) || defined(__x86_64__) || defined(__ppc64__)
+bool readFromXML(TiXmlElement* elem, const char* name, size_t& value, size_t* index = 0);
+#endif
 bool readFromXML(TiXmlElement* elem, const char* name, unsigned char& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, int& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, float& value, size_t* index = 0);
@@ -47,16 +51,16 @@ void writeTransformToXML(const Transform& t, TiXmlElement* element, const char* 
 template<typename T>
 void writeToXML(const T& v, TiXmlElement* element, const char* name, size_t* index)
 {
-  if (index)
-  {
-    char txt[256];
-    sprintf(txt, "%s_%lu", name, (long unsigned) *index);
-    element->SetAttribute(txt, v);
-  }
-  else
-  {
-    element->SetAttribute(name, v);
-  }
+    if (index)
+    {
+        char txt[256];
+        sprintf(txt, "%s_%lu", name, (long unsigned) *index);
+        element->SetAttribute(txt, v);
+    }
+    else
+    {
+        element->SetAttribute(name, v);
+    }
 }
 
 

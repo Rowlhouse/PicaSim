@@ -231,7 +231,6 @@ Yak 54 - 4 channel indoor plane
       controlPerChannel3="1"
 
       audioFile="SystemData/Audio/NewMotor44100Mono.raw"
-      audioStereo="0"
       audioSampleRate="44100"
       audioRadius="0.2"
       audioMinVolume="0.0"

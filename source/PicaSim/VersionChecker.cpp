@@ -1,7 +1,6 @@
 #include "VersionChecker.h"
 #include "Framework.h"
-
-#include <IwHTTP.h>
+#include "../Platform/S3ECompat.h"
 
 enum HTTPsStatus
 {
@@ -20,18 +19,18 @@ static char* sResult = NULL;
 static uint32 len = 0;
 static HTTPsStatus sStatus = kNone;
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 int GetBuildNumber()
 {
   return PICASIM_BUILD_NUMBER;
 }
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 bool IsNewVersionAvailable()
 {
   return sIsNewVersionAvailable;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 static int32 GotData(void*, void*)
 {
   // This is the callback indicating that a ReadContent call has
@@ -59,7 +58,7 @@ static int32 GotData(void*, void*)
       len += 1024;
 
     // Allocate some more space and fetch the data.
-    sResult = (char*)s3eRealloc(sResult, len);
+    sResult = (char*)realloc(sResult, len);
     sHttpObject->ReadContent(&sResult[oldLen], len - oldLen, GotData);
   }
   else
@@ -83,7 +82,7 @@ static int32 GotData(void*, void*)
 }
 
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 static int32 GotHeaders(void*, void*)
 {
   if (sHttpObject->GetStatus() == S3E_RESULT_ERROR)
@@ -106,15 +105,15 @@ static int32 GotHeaders(void*, void*)
       len = 1024;
     }
 
-    s3eFree(sResult);
-    sResult = (char*)s3eMalloc(len + 1);
+    free(sResult);
+    sResult = (char*)malloc(len + 1);
     sResult[len] = 0;
     sHttpObject->ReadContent(sResult, len, GotData, NULL);
   }
   return 0;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void InitVersionChecker()
 {
   TerminateVersionChecker();
@@ -124,10 +123,10 @@ void InitVersionChecker()
     sStatus = kDownloading;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================
 void TerminateVersionChecker()
 {
   delete sHttpObject;
-  s3eFree(sResult);
+  free(sResult);
 }
 

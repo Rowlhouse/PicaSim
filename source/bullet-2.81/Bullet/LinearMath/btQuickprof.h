@@ -193,10 +193,8 @@ public:
 
 #else
 
-#include <IwRuntime.h>
-#define BT_PROFILE( name) IW_PROFILE( name )
-
-//#define	BT_PROFILE( name )
+// Profiling disabled - empty macro
+#define	BT_PROFILE( name )
 
 #endif //#ifndef BT_NO_PROFILE
 

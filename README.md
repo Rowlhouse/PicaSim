@@ -1,14 +1,159 @@
 # PicaSim
 
-This contains the complete source, including dependencies, for PicaSim flight simulator: https://rowlhouse.co.uk/PicaSim/ It also contains a few tools and pieces of infrastructure needed to build and deploy to Windows, Android and iOS. Sorry these aren't organised more neatly!
+This contains the complete source, including (custom) dependencies, for PicaSim flight simulator: https://rowlhouse.co.uk/PicaSim/ 
 
-Note that in order to build it, you will need Marmalade SDK (and a functional licence), which you won't have!
-
-If you want/are able to port PicaSim to a different framework, then feel free to branch the project, but I suggest contacting me in case there are others wanting to do ths same.
+It also contains a few tools and pieces of infrastructure that will be needed to build and deploy to Windows, Android and iOS etc (not all platforms supported yet)
 
 I have tried to make sure that credit/licences etc are indicated correctly - please let me know of any errors so that I can correct them.
 
 Danny Chapman - picasimulator@gmail.com
+
+## Build System
+
+The project now uses CMake with vcpkg for dependency management.
+
+### Prerequisites (Windows)
+
+- **Visual Studio 2022** (Community edition is free) - provides MSVC compiler and MSBuild
+- **CMake 3.20+** - install standalone or use the one bundled with Visual Studio
+- **Git** - for cloning the repo and vcpkg bootstrap
+- **vcpkg** - dependency manager (see setup below)
+
+#### vcpkg Setup (one-time)
+
+```bash
+# Clone vcpkg
+git clone https://github.com/microsoft/vcpkg.git C:/vcpkg
+C:/vcpkg/bootstrap-vcpkg.bat
+
+# Set environment variable (restart terminal after this)
+setx VCPKG_ROOT C:/vcpkg
+```
+
+### Dependencies (auto-downloaded by vcpkg)
+
+- SDL2
+- SDL2_net
+- OpenAL-Soft
+- GLM
+- glad
+- imgui
+
+These are defined in `vcpkg.json`. When CMake configures the project, vcpkg automatically downloads, builds, and installs all dependencies into `build/<preset>/vcpkg_installed/`.
+
+### Compiling
+
+The project uses CMake presets for building. Use VS Code's F7 to build, or from the command line:
+
+```bash
+# Configure (once per platform)
+cmake --preset windows-x64
+
+# Build Debug
+cmake --build --preset windows-x64-debug
+
+# Build Release
+cmake --build --preset windows-x64-release
+
+# Clean
+cmake --build --preset windows-x64-debug --target clean
+
+# Or delete the build directory for a full clean
+rm -rf build
+```
+
+### Running
+
+The application must be run from the `data/` directory so it can find game assets:
+
+```bash
+# From project root
+cd data && ../build/windows-x64/Debug/PicaSim.exe
+```
+
+### Release Packaging
+
+Build release first
+
+```bash
+cmake --install build/windows-x64 --config Release --prefix dist
+```
+
+This creates a standalone distribution with executables and data files.
+
+**VS Code**: F7 to build. Use F5 to debug - the `.vscode/launch.json` is configured with the correct working directory.
+
+### Directory Structure
+
+```
+PicaSim2/
+├── build/                    # Build output (gitignored, can be cleaned)
+│   └── windows-x64/          # One dir per platform (contains .sln)
+│       ├── Debug/
+│       │   └── PicaSim.exe
+│       └── Release/
+│           └── PicaSim.exe
+├── data/                     # Working directory for running
+│   ├── SystemData/           # Read-only game assets (committed)
+│   ├── SystemSettings/       # Read-only presets (committed)
+│   └── Menus/                # Menu assets (committed)
+└── source/                   # Source code
+```
+
+### User Data Location
+
+User settings and custom content are stored in platform-specific locations (not in the application directory):
+
+| Platform | Location |
+|----------|----------|
+| Windows | `%APPDATA%\Rowlhouse\PicaSim\` |
+| Linux | `~/.local/share/Rowlhouse/PicaSim/` |
+| macOS | `~/Library/Application Support/Rowlhouse/PicaSim/` |
+
+Within this directory:
+- `UserSettings/` - User preferences and saved configurations (settings.xml, custom controllers, etc.)
+- `UserData/` - User-created content (custom aeroplanes, panoramas, etc.)
+
+### Compilation Defines
+
+- `BT_NO_PROFILE` - Disables Bullet physics profiling
+
+## Keyboard Shortcuts
+
+### Flight Controls
+| Key | Action |
+|-----|--------|
+| F11 / F / Alt+Enter | Toggle fullscreen |
+| Escape | Back/exit menus and dialogs |
+| R | Reset/relaunch the plane |
+| C | Cycle camera view |
+| M | Walkabout mode |
+| P | Pause/unpause |
+| T | Toggle slow motion (freefly mode only) |
+| Right Shift | Cycle controller rates |
+| +/= | Zoom in |
+| - | Zoom out |
+| Z | Toggle zoom view |
+| S | Save screenshot |
+| L | Reload aeroplane (re-reads settings) |
+| Back | Return to menu (or relaunch, depending on settings) |
+
+### Debug Keys
+| Key | Action |
+|-----|--------|
+| U | Toggle UI visibility |
+| K | Cycle render preference |
+| G | Cycle centre of mass display |
+| W | Toggle terrain wireframe |
+| 9/0 | Decrease/increase aerofoil debug info |
+| 7/8 | Decrease/increase wind streamers |
+
+### Paused Mode (freefly only)
+| Key | Action |
+|-----|--------|
+| NumPad 4/6 | Move plane left/right (or rotate with Ctrl) |
+| NumPad 2/8 | Move plane back/forward (or pitch with Ctrl) |
+| NumPad 7/9 | Move plane down/up (or roll with Ctrl) |
 
 # Notes on the licence 
 
@@ -27,7 +172,7 @@ Under Source
 - ProcessUI: Stand-alone helper application for processing the UI bitmaps
 
 Under Data
-- Menus and iwui_style contain UI resources
+- Menus and Fonts contain UI resources
 - SystemSettings contains the "front end" for data - so typically things that are presented to the user, and perhaps modifyable
 - SystemData contains the "back end" for data - typically the low-level representations.
 -- All text and XML files here (but not .ac and .png etc) can be used under PicaSim's licence.
