@@ -156,6 +156,8 @@ private:
     bool mFinished;
     FileMenuResult mResult;
     std::string mSelectedPath;
+    std::vector<bool> mResetScroll;  // Reset scroll position per tab when menu opens
+    bool mForceFirstTab;  // Force first tab selection on first render
 
     // For SAVE mode
     char mFilenameBuffer[MAX_FILENAME_LEN + 1];
@@ -183,6 +185,7 @@ FileMenu::FileMenu(const GameSettings& gameSettings,
     , mSelectedTab(initialTab)
     , mFinished(false)
     , mResult(FILEMENURESULT_CANCEL)
+    , mForceFirstTab(true)
 {
     memset(mFilenameBuffer, 0, sizeof(mFilenameBuffer));
 
@@ -194,6 +197,10 @@ FileMenu::FileMenu(const GameSettings& gameSettings,
             mTabTitles.push_back(tabTitles[i] ? tabTitles[i] : "");
         }
     }
+
+    // Initialize reset scroll flags for all tabs
+    size_t numScrollTabs = numTabs > 0 ? numTabs : 1;
+    mResetScroll.resize(numScrollTabs, true);
 
     // Load files based on mode
     if (mMode == LOAD)
@@ -375,11 +382,24 @@ void FileMenu::Render()
         mResult = FILEMENURESULT_CANCEL;
         mFinished = true;
     }
-    ImGui::SameLine();
+    float backButtonRight = ImGui::GetItemRectMax().x;
 
-    // Centered title
+    // Calculate tab strip position (right side, LOAD mode only if tabs provided)
+    float tabsStartX = (float)width - padding;  // Default to right edge if no tabs
+    float tabsWidth = 0;
+    if (mMode == LOAD && !mTabTitles.empty())
+    {
+        // Account for text width + frame padding (10*2) + tab spacing/borders (~15 extra)
+        for (const auto& tab : mTabTitles)
+            tabsWidth += ImGui::CalcTextSize(tab.c_str()).x + 25.0f * scale;
+        tabsStartX = (float)width - tabsWidth - padding;
+    }
+
+    // Title - centered between back button and tab strip
     float titleWidth = ImGui::CalcTextSize(mTitle.c_str()).x;
-    float titleX = (width - titleWidth) * 0.5f;
+    float centerX = (backButtonRight + tabsStartX) * 0.5f;
+    float titleX = centerX - titleWidth * 0.5f;
+    ImGui::SameLine();
     ImGui::SetCursorPosX(titleX);
     ImGui::AlignTextToFramePadding();
     ImGui::Text("%s", mTitle.c_str());
@@ -388,13 +408,7 @@ void FileMenu::Render()
     if (mMode == LOAD && !mTabTitles.empty())
     {
         ImGui::SameLine();
-
-        // Position tabs at right edge
-        float tabsWidth = 0;
-        for (const auto& tab : mTabTitles)
-            tabsWidth += ImGui::CalcTextSize(tab.c_str()).x + 20.0f * scale;
-
-        ImGui::SetCursorPosX((float)width - tabsWidth - padding);
+        ImGui::SetCursorPosX(tabsStartX);
 
         float fontSize = ImGui::GetFontSize();
         float tabPaddingY = (buttonH - fontSize) * 0.5f;
@@ -403,13 +417,19 @@ void FileMenu::Render()
         {
             for (size_t i = 0; i < mTabTitles.size(); ++i)
             {
-                if (ImGui::BeginTabItem(mTabTitles[i].c_str()))
+                // Force first tab to be selected when menu opens
+                ImGuiTabItemFlags flags = 0;
+                if (i == 0 && mForceFirstTab)
+                    flags |= ImGuiTabItemFlags_SetSelected;
+
+                if (ImGui::BeginTabItem(mTabTitles[i].c_str(), nullptr, flags))
                 {
                     mSelectedTab = (int)i;
                     ImGui::EndTabItem();
                 }
             }
             ImGui::EndTabBar();
+            mForceFirstTab = false;  // Only force on first frame
         }
         ImGui::PopStyleVar();
     }
@@ -439,7 +459,17 @@ void FileMenu::Render()
 
     float contentHeight = height - topY - bottomAreaHeight - padding;
 
-    ImGui::BeginChild("FileList", ImVec2(-1, contentHeight), true);
+    // Use per-tab child window IDs so each tab maintains its own scroll position
+    char childId[32];
+    snprintf(childId, sizeof(childId), "FileList##Tab%d", mSelectedTab);
+    ImGui::BeginChild(childId, ImVec2(-1, contentHeight), true);
+
+    // Reset scroll position for this tab if menu was just opened
+    if (mSelectedTab < (int)mResetScroll.size() && mResetScroll[mSelectedTab])
+    {
+        ImGui::SetScrollY(0.0f);
+        mResetScroll[mSelectedTab] = false;
+    }
 
     float rowHeight = (float)height / mImagesPerScreen;
     bool hasUserFiles = false;

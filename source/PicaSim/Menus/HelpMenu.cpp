@@ -49,6 +49,7 @@ private:
     GameSettings& mGameSettings;
     int mSelectedTab;
     bool mFinished;
+    bool mResetScroll[TAB_NUM_TABS];  // Reset scroll position per tab when menu opens
 };
 
 //======================================================================================================================
@@ -57,6 +58,9 @@ HelpMenu::HelpMenu(GameSettings& gameSettings, int initialTab)
     , mSelectedTab(initialTab)
     , mFinished(false)
 {
+    // Reset scroll positions for all tabs when menu opens
+    for (int i = 0; i < TAB_NUM_TABS; ++i)
+        mResetScroll[i] = true;
 }
 
 //======================================================================================================================
@@ -185,7 +189,20 @@ void HelpMenu::Render()
     float bottomButtonY = height - buttonH - padding;
     float contentHeight = bottomButtonY - topY - padding;
 
-    ImGui::BeginChild("Content", ImVec2(-1, contentHeight), true);
+    // Use per-tab child window IDs so each tab maintains its own scroll position
+    static const char* tabContentIds[TAB_NUM_TABS] = {
+        "Content_About", "Content_HowToFly", "Content_HowToConfigure", "Content_HowToRace",
+        "Content_Tips", "Content_ObjectEditing", "Content_Keyboard", "Content_Joysticks",
+        "Content_Credits", "Content_Licence", "Content_Versions"
+    };
+    ImGui::BeginChild(tabContentIds[mSelectedTab], ImVec2(-1, contentHeight), true);
+
+    // Reset scroll position for this tab if menu was just opened
+    if (mResetScroll[mSelectedTab])
+    {
+        ImGui::SetScrollY(0.0f);
+        mResetScroll[mSelectedTab] = false;
+    }
 
     const char* content = GetTabContent(mSelectedTab);
 
