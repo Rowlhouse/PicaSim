@@ -635,7 +635,6 @@ enum PicaString
     PS_JOYSTICKSETUPTEXT,
     PS_CREDITSTEXT,
     PS_LICENCETEXT,
-    PS_VERSIONSTEXT,
 
 // Loading
     PS_TIPS1,

@@ -3,6 +3,7 @@
 #include "UIHelpers.h"
 #include "../GameSettings.h"
 #include "../PicaStrings.h"
+#include "../VersionInfo.h"
 #include "Platform.h"
 #include "../../Platform/S3ECompat.h"
 
@@ -93,7 +94,7 @@ void WhatsNewMenu::Render()
     float contentHeight = bottomButtonY - topY - padding;
 
     ImGui::BeginChild("Content", ImVec2(-1, contentHeight), true);
-    ImGui::TextWrapped("%s", GetPS(PS_WHATSNEWTEXT, language));
+    ImGui::TextWrapped("%s", VersionInfo::GetLatestVersionText());
     ImGui::EndChild();
 
     // === BOTTOM: OK button (full width) ===

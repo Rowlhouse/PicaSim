@@ -9,6 +9,7 @@
 #include "Menus/WhatsNewMenu.h"
 #include "PicaStrings.h"
 #include "VersionChecker.h"
+#include "VersionInfo.h"
 #include "PicaJoystick.h"
 #include "Menus/PicaDialog.h"
 
@@ -286,6 +287,7 @@ int main()
     TRACE_FILE_IF(1) TRACE("AudioManager::Init() has been called");
 
     InitPicaStrings();
+    VersionInfo::Init();
 
     srand(time(0));
 

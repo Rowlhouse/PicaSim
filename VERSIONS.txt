@@ -1,0 +1,55 @@
+Version 1.0.0
+- Complete port to SDL2 and OpenGL for Windows
+- New ImGui-based menu system replacing IwUI
+- OpenAL-Soft audio with 3D positional sound
+- SDL2 input handling (keyboard, mouse, gamepad)
+- CMake build system with vcpkg dependency management
+
+Version 0.1085
+- Add the Quark glider.
+- Update various links etc in plane descriptions.
+- Various tweaks/bug fixes.
+
+Version 0.1074
+- Add Litermonthalle Nalbach scenery by Detlef Jacobi.
+- Improve object editing.
+- Improve plane scaling.
+- Graphical improvements. If upgrading on a low-end device, you may need to disable \Separate Specular\ in the options if this causes too much slowdown.
+- Reduce the wind strength in front of slopes slightly.
+
+Version 0.1055
+- Turbulence improvements.
+- Add dual rates to Acrobat, and minor changes to a few other planes.
+
+Version 0.1053
+- Add variable-pitch propeller (VPP) version of the RT Eraser Five.
+- Bug fixes and minor improvements.
+
+Version 0.1039
+- Aerotow - enable in settings for all (pure) gliders.
+- AI support for aerotow (as glider or tug).
+- Button for release of the tow/launch rope.
+- Turbulence modelling improvements.
+- Added a User tab when loading planes and sceneries.
+- Fixes, including for bogus terrain collisions.
+- Support for higher resolution devices.
+
+Version 0.1000
+- AI controllers for all the powered R/C planes.
+- Adjust the Max Bee to have its proper span of 1.5m.
+- Changing ballast no longer adjusts the engine power.
+- Allow setting the control-line colour.
+
+Version 0.994
+- New control-line plane - the Max Bee.
+- Much more detailed/extensive crash detection.
+- Improved control-line simulation.
+- Sky grids and options to make a C/L circle/runway.
+- Option for cycling the smoke colours.
+- Various improvements and fixes.
+
+Version 0.963
+- Smoke - available for all planes.
+- New indoor plane - Yak 54.
+- Objects for flying control line in the Flatland sceneries.
+- Improvements/fixes to various planes.

@@ -3,6 +3,7 @@
 #include "UIHelpers.h"
 #include "../GameSettings.h"
 #include "../PicaStrings.h"
+#include "../VersionInfo.h"
 #include "Platform.h"
 #include "../../Platform/S3ECompat.h"
 
@@ -84,7 +85,7 @@ const char* HelpMenu::GetTabContent(int tab)
         case TAB_JOYSTICKS:        return GetPS(PS_JOYSTICKSETUPTEXT, lang);
         case TAB_CREDITS:          return GetPS(PS_CREDITSTEXT, lang);
         case TAB_LICENCE:          return GetPS(PS_LICENCETEXT, lang);
-        case TAB_VERSIONS:         return GetPS(PS_VERSIONSTEXT, lang);
+        case TAB_VERSIONS:         return VersionInfo::GetAllVersionsText();
         default:                   return "";
     }
 }

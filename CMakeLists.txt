@@ -3,6 +3,22 @@
 cmake_minimum_required(VERSION 3.20)
 project(PicaSim VERSION 1.0.0 LANGUAGES CXX C)
 
+# Read version from VERSIONS.txt (single source of truth for version number)
+if(EXISTS ${CMAKE_SOURCE_DIR}/VERSIONS.txt)
+    file(STRINGS ${CMAKE_SOURCE_DIR}/VERSIONS.txt VERSION_LINE LIMIT_COUNT 1)
+    string(REGEX MATCH "Version ([0-9]+\\.[0-9]+\\.[0-9]+)" _ ${VERSION_LINE})
+    if(CMAKE_MATCH_1)
+        set(PICASIM_VERSION ${CMAKE_MATCH_1})
+    else()
+        set(PICASIM_VERSION "1.0.0")
+    endif()
+else()
+    set(PICASIM_VERSION "1.0.0")
+endif()
+# Create directory-safe version (1.0.0 -> 1_0_0)
+string(REPLACE "." "_" PICASIM_VERSION_DIR "PicaSim-${PICASIM_VERSION}")
+message(STATUS "PicaSim version: ${PICASIM_VERSION} (install dir: ${PICASIM_VERSION_DIR})")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -276,6 +292,7 @@ set(PICASIM_SOURCES
     source/PicaSim/Terrain.cpp
     source/PicaSim/ThermalManager.cpp
     source/PicaSim/VersionChecker.cpp
+    source/PicaSim/VersionInfo.cpp
     source/PicaSim/Wheel.cpp
     source/PicaSim/WindsockOverlay.cpp
     source/PicaSim/Wing.cpp
@@ -380,6 +397,14 @@ if(WIN32)
     )
 endif()
 
+# Copy VERSIONS.txt to data directory for runtime access
+add_custom_command(TARGET PicaSim POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/VERSIONS.txt
+        ${CMAKE_SOURCE_DIR}/data/VERSIONS.txt
+    COMMENT "Copying VERSIONS.txt to data directory"
+)
+
 # --------------------------------------------------------------------------
 # Run target (convenience for running from data directory)
 # --------------------------------------------------------------------------
@@ -394,6 +419,11 @@ add_custom_target(run
 # --------------------------------------------------------------------------
 # Install rules (for release packaging)
 # --------------------------------------------------------------------------
+# Set default install prefix to dist/<version_dir> if not specified
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist/${PICASIM_VERSION_DIR}" CACHE PATH "" FORCE)
+endif()
+
 install(TARGETS PicaSim
     RUNTIME DESTINATION .
 )
@@ -425,8 +455,10 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Fonts
 # install(DIRECTORY DESTINATION UserData)
 # install(DIRECTORY DESTINATION UserSettings)
 
-# Install LICENSE file
-install(FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt
+# Install LICENSE and VERSIONS files
+install(FILES
+    ${CMAKE_SOURCE_DIR}/LICENSE.txt
+    ${CMAKE_SOURCE_DIR}/VERSIONS.txt
     DESTINATION .
 )
 

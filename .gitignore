@@ -39,3 +39,4 @@ vcpkg_installed/
 imgui.ini
 nul
 CodingStyleQueries.md
+data/VERSIONS.txt
