@@ -73,13 +73,43 @@ cd data && ../build/windows-x64/Debug/PicaSim.exe
 
 ### Release Packaging
 
-Build release first
+Build release first, then install:
 
 ```bash
-cmake --install build/windows-x64 --config Release --prefix dist
+cmake --build --preset windows-x64-release
+cmake --install build/windows-x64 --config Release
 ```
 
-This creates a standalone distribution with executables and data files.
+This creates a standalone distribution in `dist/PicaSim-X_Y_Z/` (version extracted from VERSIONS.txt).
+
+### Building the Installer (Windows)
+
+To create a Windows installer (.exe), you need Inno Setup:
+
+#### Prerequisites
+
+- **Inno Setup 6** - Download from https://jrsoftware.org/isinfo.php
+- Complete the Release Packaging step above first
+
+#### Building
+
+Option 1: Via CMake target (if Inno Setup is in PATH or standard location):
+```bash
+cmake --build build/windows-x64 --target installer
+```
+
+Option 2: Run Inno Setup directly:
+```bash
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion=1.0.0 installer\PicaSim.iss
+```
+
+#### Output
+
+The installer is created at `dist/PicaSim-X.Y.Z-Setup.exe`. Running it will:
+- Install PicaSim to the chosen location (default: `C:\Program Files\PicaSim`)
+- Create Start Menu shortcuts
+- Optionally create a Desktop shortcut
+- Register an uninstaller
 
 **VS Code**: F7 to build. Use F5 to debug - the `.vscode/launch.json` is configured with the correct working directory.
 

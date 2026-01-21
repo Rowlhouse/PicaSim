@@ -429,6 +429,7 @@ install(TARGETS PicaSim
 # Install data directories
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData
     DESTINATION .
+    REGEX "Aeroplanes/Ahi" EXCLUDE
     REGEX "Aeroplanes/TestWing" EXCLUDE
     REGEX "Aerofoils" EXCLUDE
 )
@@ -441,6 +442,7 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemSettings
     DESTINATION .
     REGEX "Environment/Flat\\.xml$" EXCLUDE
     REGEX "Aeroplane/TestWing" EXCLUDE
+    REGEX "Aeroplane/Ahi" EXCLUDE
 )
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Menus
     DESTINATION .
@@ -448,10 +450,6 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Menus
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Fonts
     DESTINATION .
 )
-
-# Create empty user directories
-# install(DIRECTORY DESTINATION UserData)
-# install(DIRECTORY DESTINATION UserSettings)
 
 # Install LICENSE and VERSIONS files
 install(FILES
@@ -466,6 +464,29 @@ if(WIN32)
     install(FILES ${VCPKG_DLLS}
         DESTINATION .
     )
+endif()
+
+# --------------------------------------------------------------------------
+# Installer target (Windows only, requires Inno Setup)
+# --------------------------------------------------------------------------
+if(WIN32)
+    find_program(ISCC_EXECUTABLE NAMES iscc ISCC
+        PATHS "C:/Program Files (x86)/Inno Setup 6"
+              "C:/Program Files/Inno Setup 6"
+    )
+    if(ISCC_EXECUTABLE)
+        add_custom_target(installer
+            COMMAND ${ISCC_EXECUTABLE}
+                /DMyAppVersion=${PICASIM_VERSION}
+                ${CMAKE_SOURCE_DIR}/installer/PicaSim.iss
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/installer
+            COMMENT "Building installer with Inno Setup"
+        )
+        add_dependencies(installer PicaSim)
+        message(STATUS "Inno Setup found: ${ISCC_EXECUTABLE}")
+    else()
+        message(STATUS "Inno Setup not found - installer target disabled")
+    endif()
 endif()
 
 # --------------------------------------------------------------------------
