@@ -82,10 +82,10 @@ void PushSettingsStyle()
     // Text
     ImGui::PushStyleColor(ImGuiCol_Text, Common::TextBlack);
 
-    // Buttons (Settings has slightly different button colors)
-    ImGui::PushStyleColor(ImGuiCol_Button, Settings::Button);
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Settings::ButtonHovered);
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, Settings::ButtonActive);
+    // Buttons (shared with Menu)
+    ImGui::PushStyleColor(ImGuiCol_Button, Menu::Button);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Menu::ButtonHovered);
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, Menu::ButtonActive);
 
     // Frame backgrounds (for inputs)
     ImGui::PushStyleColor(ImGuiCol_FrameBg, Common::FrameBgWhite);

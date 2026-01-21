@@ -39,9 +39,9 @@ namespace PicaStyle {
     namespace Menu {
         const ImVec4 WindowBg = ImVec4(0.70f, 0.75f, 0.82f, 1.0f);
         const ImVec4 ChildBg = ImVec4(0.85f, 0.88f, 0.92f, 1.0f);
-        const ImVec4 Button = ImVec4(0.75f, 0.78f, 0.85f, 1.0f);
+        const ImVec4 Button = ImVec4(0.78f, 0.80f, 0.85f, 1.0f);
         const ImVec4 ButtonHovered = ImVec4(0.85f, 0.88f, 0.95f, 1.0f);
-        const ImVec4 ButtonActive = ImVec4(0.65f, 0.68f, 0.75f, 1.0f);
+        const ImVec4 ButtonActive = ImVec4(0.68f, 0.71f, 0.78f, 1.0f);
         const ImVec4 Tab = ImVec4(0.75f, 0.78f, 0.85f, 1.0f);
         const ImVec4 TabHovered = ImVec4(0.85f, 0.88f, 0.95f, 1.0f);
         const ImVec4 TabActive = ImVec4(0.90f, 0.92f, 0.98f, 1.0f);
@@ -51,9 +51,7 @@ namespace PicaStyle {
     namespace Settings {
         const ImVec4 WindowBg = ImVec4(0.70f, 0.75f, 0.82f, 1.0f);  // Same as Menu
         const ImVec4 BlockBg = ImVec4(0.91f, 0.91f, 0.93f, 1.0f);   // Settings blocks (lighter)
-        const ImVec4 Button = ImVec4(0.78f, 0.80f, 0.85f, 1.0f);    // Slightly different from Menu
-        const ImVec4 ButtonHovered = ImVec4(0.85f, 0.88f, 0.95f, 1.0f);
-        const ImVec4 ButtonActive = ImVec4(0.68f, 0.71f, 0.78f, 1.0f);
+        // Button colors: use Menu::Button, Menu::ButtonHovered, Menu::ButtonActive
 
         // Section headers
         const ImVec4 SectionHeaderBg = ImVec4(0.35f, 0.42f, 0.48f, 1.0f);      // #5A6A7A
