@@ -297,6 +297,7 @@ set(PICASIM_MENU_SOURCES
     source/PicaSim/Menus/LoadingScreen.cpp
     source/PicaSim/Menus/Menu.cpp
     source/PicaSim/Menus/PicaDialog.cpp
+    source/PicaSim/Menus/PicaStyle.cpp
     source/PicaSim/Menus/SettingsMenu.cpp
     source/PicaSim/Menus/SettingsWidgets.cpp
     source/PicaSim/Menus/StartMenu.cpp

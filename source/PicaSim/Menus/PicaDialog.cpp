@@ -54,14 +54,8 @@ static int RenderDialogFrame(
 {
     int buttonClicked = -1;
 
-    // Light theme styling for dialog (semi-transparent)
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.90f, 0.92f, 0.95f, 0.94f));
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.85f, 0.88f, 0.92f, 0.90f));
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.75f, 0.78f, 0.85f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.85f, 0.88f, 0.95f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.65f, 0.68f, 0.75f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.5f, 0.5f, 0.6f, 0.5f));
+    // Apply dialog style (semi-transparent overlay)
+    PicaStyle::PushDialogStyle();
 
     ImGui::SetNextWindowPos(ImVec2(dialogX, dialogY));
     ImGui::SetNextWindowSize(ImVec2(dialogW, dialogH));
@@ -131,7 +125,7 @@ static int RenderDialogFrame(
     }
 
     ImGui::End();
-    ImGui::PopStyleColor(7);
+    PicaStyle::PopDialogStyle();
 
     return buttonClicked;
 }

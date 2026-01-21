@@ -1,5 +1,6 @@
 #include "SettingsWidgets.h"
 #include "UIHelpers.h"
+#include "PicaStyle.h"
 #include "../Platform/Texture.h"
 
 #include "imgui.h"
@@ -13,67 +14,64 @@ template<typename T>
 static T Clamp(T v, T lo, T hi) { return (v < lo) ? lo : (v > hi) ? hi : v; }
 
 //=====================================================================================================================
-// Configurable constants
+// Use centralized style definitions from PicaStyle.h
+// Local aliases for convenience
 //=====================================================================================================================
 
-// Layout
-static const float kControlWidthFraction = 0.45f;   // How much of row width the control takes (vs label)
-static const float kLabelRightPadding = 16.0f;      // Padding between label text and value
-static const float kLabelValueButtonValueWidth = 60.0f;  // Width of value column in LabelValueButton
+// Layout (from PicaStyle::Layout)
+static const float kControlWidthFraction = PicaStyle::Layout::ControlWidthFraction;
+static const float kLabelRightPadding = PicaStyle::Layout::LabelRightPadding;
+static const float kLabelValueButtonValueWidth = PicaStyle::Layout::LabelValueButtonWidth;
+static const float kRowExtraSpacing = PicaStyle::Layout::RowExtraSpacing;
 
-// Color palette (modernized)
-static const ImU32 kAccentColor = IM_COL32(74, 144, 184, 255);           // #4A90B8 - professional blue
-static const ImU32 kAccentColorHovered = IM_COL32(64, 134, 174, 255);    // Slightly darker
-static const ImU32 kAccentColorActive = IM_COL32(54, 124, 164, 255);     // Even darker
-static const ImU32 kTextPrimary = IM_COL32(44, 62, 80, 255);             // #2C3E50 - dark blue-gray
-static const ImU32 kTextSecondary = IM_COL32(108, 122, 138, 255);        // #6C7A8A - medium gray
+// Accent colors (from PicaStyle::Common)
+static const ImU32 kAccentColor = PicaStyle::Common::AccentU32;
+static const ImU32 kAccentColorHovered = PicaStyle::Common::AccentHoveredU32;
+static const ImU32 kAccentColorActive = PicaStyle::Common::AccentActiveU32;
+static const ImU32 kTextPrimary = PicaStyle::Common::TextPrimaryU32;
+static const ImU32 kTextSecondary = PicaStyle::Common::TextSecondaryU32;
 
-// Settings block styling
-static const ImVec4 kSettingsBlockBgColor = ImVec4(0.91f, 0.91f, 0.93f, 1.0f);  // #E8E8EC warm light gray
-static const float kSettingsBlockRounding = 4.0f;
-static const ImVec2 kSettingsBlockPadding = ImVec2(8.0f, 6.0f);
+// Settings block styling (from PicaStyle::Settings)
+static const ImVec4 kSettingsBlockBgColor = PicaStyle::Settings::BlockBg;
+static const float kSettingsBlockRounding = PicaStyle::Settings::BlockRounding;
+static const ImVec2 kSettingsBlockPadding = PicaStyle::Settings::BlockPadding;
 
-// Section header styling
-static const ImVec4 kSectionHeaderBgColor = ImVec4(0.35f, 0.42f, 0.48f, 1.0f);  // #5A6A7A softer blue-gray
-static const ImVec4 kSectionHeaderTextColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-static const float kSectionHeaderRounding = 3.0f;
+// Section header styling (from PicaStyle::Settings)
+static const ImVec4 kSectionHeaderBgColor = PicaStyle::Settings::SectionHeaderBg;
+static const ImVec4 kSectionHeaderTextColor = PicaStyle::Common::TextWhite;
+static const float kSectionHeaderRounding = PicaStyle::Settings::SectionHeaderRounding;
 
-// Uber section header (for parent sections containing sub-sections)
-static const float kUberSectionHeaderColorR = 0.24f;  // #3D6B8A teal/dark cyan
-static const float kUberSectionHeaderColorG = 0.42f;
-static const float kUberSectionHeaderColorB = 0.54f;
+// Uber section header (from PicaStyle::Settings)
+static const ImVec4 kUberSectionHeaderBgColor = PicaStyle::Settings::UberSectionHeaderBg;
 
-// Text colors
-static const ImVec4 kInfoValueTextColor = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);      // Dimmed info values
-static const ImVec4 kThumbnailTitleColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);     // Black title text
-static const ImVec4 kThumbnailInfoColor = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);      // Dimmed info text
+// Text colors (from PicaStyle::Common)
+static const ImVec4 kInfoValueTextColor = PicaStyle::Common::TextDimmed;
+static const ImVec4 kThumbnailTitleColor = PicaStyle::Common::TextBlack;
+static const ImVec4 kThumbnailInfoColor = PicaStyle::Common::TextSecondary;
 
-// Combo/dropdown styling
-static const ImVec4 kComboPopupBgColor = ImVec4(0.95f, 0.95f, 0.97f, 1.0f);    // Light popup background
+// Combo/dropdown styling (from PicaStyle::Settings)
+static const ImVec4 kComboPopupBgColor = PicaStyle::Settings::ComboPopupBg;
 
-// Slider styling (modernized)
-static const float kSliderTrackHeight = 6.0f;                                   // Track height in pixels
-static const float kSliderGrabRadius = 8.0f;                                    // Grab handle radius
-static const ImU32 kSliderTrackBgColor = IM_COL32(200, 203, 210, 255);         // Light gray unfilled
-static const ImU32 kSliderTrackFillColor = IM_COL32(74, 144, 184, 255);        // Accent color filled
-static const ImU32 kSliderGrabColor = IM_COL32(74, 144, 184, 255);             // Accent color grab
-static const ImU32 kSliderGrabHoveredColor = IM_COL32(64, 134, 174, 255);      // Darker on hover
-static const ImU32 kSliderGrabActiveColor = IM_COL32(54, 124, 164, 255);       // Even darker when dragging
+// Slider styling (from PicaStyle::Settings)
+static const float kSliderTrackHeight = PicaStyle::Settings::SliderTrackHeight;
+static const float kSliderGrabRadius = PicaStyle::Settings::SliderGrabRadius;
+static const ImU32 kSliderTrackBgColor = PicaStyle::Settings::SliderTrackBg;
+static const ImU32 kSliderTrackFillColor = PicaStyle::Settings::SliderTrackFill;
+static const ImU32 kSliderGrabColor = PicaStyle::Settings::SliderGrab;
+static const ImU32 kSliderGrabHoveredColor = PicaStyle::Settings::SliderGrabHovered;
+static const ImU32 kSliderGrabActiveColor = PicaStyle::Settings::SliderGrabActive;
 
-// Checkbox styling (modernized)
-static const float kCheckboxSize = 18.0f;                                       // Checkbox size in pixels
-static const ImU32 kCheckboxBorderColor = IM_COL32(150, 155, 165, 255);        // Border when unchecked
-static const ImU32 kCheckboxFillColor = IM_COL32(74, 144, 184, 255);           // Fill when checked
-static const ImU32 kCheckboxCheckColor = IM_COL32(255, 255, 255, 255);         // Checkmark color
+// Checkbox styling (from PicaStyle::Settings)
+static const float kCheckboxSize = PicaStyle::Settings::CheckboxSize;
+static const ImU32 kCheckboxBorderColor = PicaStyle::Settings::CheckboxBorder;
+static const ImU32 kCheckboxFillColor = PicaStyle::Settings::CheckboxFill;
+static const ImU32 kCheckboxCheckColor = PicaStyle::Settings::CheckboxCheck;
 
-// Thumbnail button styling
-static const ImVec4 kThumbnailButtonBgColor = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);        // Transparent
-static const ImVec4 kThumbnailButtonHoverColor = ImVec4(0.3f, 0.3f, 0.3f, 0.3f);     // Slight highlight
-static const ImVec4 kThumbnailButtonActiveColor = ImVec4(0.2f, 0.2f, 0.2f, 0.3f);    // Darker when pressed
-static const ImVec4 kThumbnailPlaceholderColor = ImVec4(0.5f, 0.5f, 0.5f, 0.5f);     // Gray placeholder
-
-// Row spacing
-static const float kRowExtraSpacing = 2.0f;  // Extra vertical spacing between rows
+// Thumbnail button styling (from PicaStyle::ImageButton)
+static const ImVec4 kThumbnailButtonBgColor = PicaStyle::ImageButton::Transparent;
+static const ImVec4 kThumbnailButtonHoverColor = PicaStyle::ImageButton::HoverDark;
+static const ImVec4 kThumbnailButtonActiveColor = PicaStyle::ImageButton::ActiveDark;
+static const ImVec4 kThumbnailPlaceholderColor = PicaStyle::ImageButton::Placeholder;
 
 //=====================================================================================================================
 // State counters (reset each frame)
@@ -172,7 +170,7 @@ void SectionHeaderColored(const char* title, float r, float g, float b)
 //======================================================================================================================
 void UberSectionHeader(const char* title)
 {
-    SectionHeaderColored(title, kUberSectionHeaderColorR, kUberSectionHeaderColorG, kUberSectionHeaderColorB);
+    SectionHeaderColored(title, kUberSectionHeaderBgColor.x, kUberSectionHeaderBgColor.y, kUberSectionHeaderBgColor.z);
 }
 
 //======================================================================================================================

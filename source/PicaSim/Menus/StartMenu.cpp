@@ -178,7 +178,7 @@ void StartMenu::Render()
 #endif
 
     // Style for main buttons (using unified style system)
-    UIHelpers::PushStartMenuButtonStyle(scale);
+    PicaStyle::PushStartMenuButtonStyle(scale);
 
     // Free-Fly button (left side, ~20% from top)
     ImGui::SetCursorPos(ImVec2(width * 0.1f, height * 0.18f));
@@ -194,7 +194,7 @@ void StartMenu::Render()
         mResult = STARTMENU_CHALLENGE;
     }
 
-    UIHelpers::PopStartMenuButtonStyle();
+    PicaStyle::PopStartMenuButtonStyle();
 
     // Info label (gamepad detected) - Windows only
 #if defined(PICASIM_WINDOWS)

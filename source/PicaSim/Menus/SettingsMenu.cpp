@@ -213,7 +213,7 @@ void SettingsMenu::RenderContent()
     SettingsWidgets::ResetFrameState();
 
     // Unified settings style
-    UIHelpers::PushSettingsStyle();
+    PicaStyle::PushSettingsStyle();
 
     // Full-screen window
     ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -390,7 +390,7 @@ void SettingsMenu::RenderContent()
     RenderBottomButtons(loadStatus, saveStatus, deleteStatus);
 
     ImGui::End();
-    UIHelpers::PopSettingsStyle();
+    PicaStyle::PopSettingsStyle();
 }
 
 //======================================================================================================================

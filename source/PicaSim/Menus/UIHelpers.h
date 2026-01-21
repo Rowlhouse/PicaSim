@@ -3,6 +3,7 @@
 
 #include "Helpers.h"
 #include "imgui.h"
+#include "PicaStyle.h"
 
 class Texture;
 
@@ -53,49 +54,8 @@ namespace UIHelpers
         const ImU32 Yellow = IM_COL32(255, 255, 0, 255);
     }
 
-    //=========================================================================
-    // Unified Style System
-    //=========================================================================
-    namespace Style
-    {
-        // Color palette
-        const ImVec4 Accent = ImVec4(0.29f, 0.56f, 0.72f, 1.0f);           // #4A90B8 professional blue
-        const ImVec4 AccentHovered = ImVec4(0.25f, 0.52f, 0.68f, 1.0f);    // Darker
-        const ImVec4 AccentActive = ImVec4(0.21f, 0.49f, 0.64f, 1.0f);     // Even darker
-
-        const ImVec4 WindowBg = ImVec4(0.70f, 0.75f, 0.82f, 1.0f);         // Settings window bg
-        const ImVec4 ChildBg = ImVec4(0.91f, 0.91f, 0.93f, 1.0f);          // #E8E8EC warm light gray
-        const ImVec4 SectionHeader = ImVec4(0.35f, 0.42f, 0.48f, 1.0f);    // #5A6A7A softer blue-gray
-
-        const ImVec4 TextPrimary = ImVec4(0.17f, 0.24f, 0.31f, 1.0f);      // #2C3E50 dark blue-gray
-        const ImVec4 TextLight = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);           // Black (for menus)
-
-        // Standard button (for settings menu - subtle gray)
-        const ImVec4 Button = ImVec4(0.78f, 0.80f, 0.85f, 1.0f);
-        const ImVec4 ButtonHovered = ImVec4(0.85f, 0.88f, 0.95f, 1.0f);
-        const ImVec4 ButtonActive = ImVec4(0.68f, 0.71f, 0.78f, 1.0f);
-
-        // Light button (for start menu - on panorama background)
-        const ImVec4 ButtonLight = ImVec4(0.95f, 0.95f, 0.95f, 0.9f);
-        const ImVec4 ButtonLightHovered = ImVec4(1.0f, 1.0f, 1.0f, 0.95f);
-        const ImVec4 ButtonLightActive = ImVec4(0.88f, 0.88f, 0.88f, 1.0f);
-
-        // Tab styling
-        const ImVec4 Tab = ImVec4(0.75f, 0.78f, 0.85f, 1.0f);
-        const ImVec4 TabHovered = ImVec4(0.85f, 0.88f, 0.95f, 1.0f);
-        const ImVec4 TabActive = ImVec4(0.90f, 0.92f, 0.98f, 1.0f);
-
-        // Standard corner radius
-        const float CornerRadius = 4.0f;
-    }
-
-    // Push settings menu style colors (call PopSettingsStyle when done)
-    void PushSettingsStyle();
-    void PopSettingsStyle();
-
-    // Push start menu button style (call PopStartMenuButtonStyle when done)
-    void PushStartMenuButtonStyle(float scale);
-    void PopStartMenuButtonStyle();
+    // NOTE: Style colors and Push/Pop functions have moved to PicaStyle.h
+    // Use PicaStyle::PushSettingsStyle(), PicaStyle::PushMenuStyle(), etc.
 }
 
 #endif // UIHELPERS_H

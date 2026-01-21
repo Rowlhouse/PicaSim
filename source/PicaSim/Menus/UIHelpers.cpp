@@ -182,10 +182,10 @@ bool DrawImageButton(const char* id, Texture* texture, float x, float y, float s
         buttonSize = ImVec2(size * aspect, size);
     }
 
-    // Draw the image button with transparent background
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 1, 1, 0.2f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 1, 1, 0.4f));
+    // Draw the image button with transparent background (light hover for dark backgrounds)
+    ImGui::PushStyleColor(ImGuiCol_Button, PicaStyle::ImageButton::Transparent);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, PicaStyle::ImageButton::HoverLight);
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, PicaStyle::ImageButton::ActiveLight);
 
     bool clicked = ImGui::ImageButton(id,
         (ImTextureID)(intptr_t)texID,
@@ -196,56 +196,7 @@ bool DrawImageButton(const char* id, Texture* texture, float x, float y, float s
     return clicked;
 }
 
-//======================================================================================================================
-void PushSettingsStyle()
-{
-    // Window and child backgrounds
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, Style::WindowBg);
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, Style::ChildBg);
-
-    // Tab styling
-    ImGui::PushStyleColor(ImGuiCol_Tab, Style::Tab);
-    ImGui::PushStyleColor(ImGuiCol_TabHovered, Style::TabHovered);
-    ImGui::PushStyleColor(ImGuiCol_TabActive, Style::TabActive);
-
-    // Text
-    ImGui::PushStyleColor(ImGuiCol_Text, Style::TextLight);
-
-    // Buttons
-    ImGui::PushStyleColor(ImGuiCol_Button, Style::Button);
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Style::ButtonHovered);
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, Style::ButtonActive);
-
-    // Frame backgrounds (for inputs)
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-    // Rounding
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, Style::CornerRadius);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, Style::CornerRadius);
-}
-
-//======================================================================================================================
-void PopSettingsStyle()
-{
-    ImGui::PopStyleVar(2);   // FrameRounding, WindowRounding
-    ImGui::PopStyleColor(10); // All colors pushed in PushSettingsStyle
-}
-
-//======================================================================================================================
-void PushStartMenuButtonStyle(float scale)
-{
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, Style::CornerRadius * scale);
-    ImGui::PushStyleColor(ImGuiCol_Button, Style::ButtonLight);
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Style::ButtonLightHovered);
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, Style::ButtonLightActive);
-    ImGui::PushStyleColor(ImGuiCol_Text, Style::TextLight);
-}
-
-//======================================================================================================================
-void PopStartMenuButtonStyle()
-{
-    ImGui::PopStyleColor(4);
-    ImGui::PopStyleVar(1);
-}
+// NOTE: PushSettingsStyle, PopSettingsStyle, PushStartMenuButtonStyle, PopStartMenuButtonStyle
+// have been moved to PicaStyle.cpp
 
 } // namespace UIHelpers

@@ -355,17 +355,8 @@ void FileMenu::Render()
     ImGui::NewFrame();
     UIHelpers::ApplyFontScale();
 
-    // Light theme styling (consistent with HelpMenu)
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.70f, 0.75f, 0.82f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.85f, 0.88f, 0.92f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_Tab, ImVec4(0.75f, 0.78f, 0.85f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(0.85f, 0.88f, 0.95f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TabActive, ImVec4(0.90f, 0.92f, 0.98f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.75f, 0.78f, 0.85f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.85f, 0.88f, 0.95f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.65f, 0.68f, 0.75f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));  // For InputText
+    // Apply menu style (light theme)
+    PicaStyle::PushMenuStyle();
 
     // Full-screen window
     ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -520,9 +511,9 @@ void FileMenu::Render()
                 float displayH = imgSize;
                 float displayW = imgSize * ar;
 
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.3f));
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 0.3f));
+                ImGui::PushStyleColor(ImGuiCol_Button, PicaStyle::ImageButton::Transparent);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, PicaStyle::ImageButton::HoverDark);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, PicaStyle::ImageButton::ActiveDark);
 
                 if (ImGui::ImageButton("thumb", (ImTextureID)(intptr_t)texID,
                         ImVec2(displayW, displayH)))
@@ -603,7 +594,7 @@ void FileMenu::Render()
     }
 
     ImGui::End();
-    ImGui::PopStyleColor(10);
+    PicaStyle::PopMenuStyle();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
