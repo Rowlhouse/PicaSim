@@ -8,6 +8,57 @@ I have tried to make sure that credit/licences etc are indicated correctly - ple
 
 Danny Chapman - picasimulator@gmail.com
 
+### User Data Location
+
+User settings and custom content are stored in platform-specific locations (not in the application directory):
+
+| Platform | Location |
+|----------|----------|
+| Windows | `%APPDATA%\Rowlhouse\PicaSim\` |
+| Linux | `~/.local/share/Rowlhouse/PicaSim/` |
+| macOS | `~/Library/Application Support/Rowlhouse/PicaSim/` |
+
+Within this directory:
+- `UserSettings/` - User preferences and saved configurations (settings.xml, custom controllers, etc.)
+- `UserData/` - User-created content (custom aeroplanes, panoramas, etc.)
+
+## Keyboard Shortcuts
+
+### Flight Controls
+| Key | Action |
+|-----|--------|
+| F11 / F / Alt+Enter | Toggle fullscreen |
+| Escape | Back/exit menus and dialogs |
+| R | Reset/relaunch the plane |
+| C | Cycle camera view |
+| M | Walkabout mode |
+| P | Pause/unpause |
+| T | Toggle slow motion (freefly mode only) |
+| Right Shift | Cycle controller rates |
+| +/= | Zoom in |
+| - | Zoom out |
+| Z | Toggle zoom view |
+| S | Save screenshot |
+| L | Reload aeroplane (re-reads settings) |
+| Back | Return to menu (or relaunch, depending on settings) |
+
+### Debug Keys
+| Key | Action |
+|-----|--------|
+| U | Toggle UI visibility |
+| K | Cycle render preference |
+| G | Cycle centre of mass display |
+| W | Toggle terrain wireframe |
+| 9/0 | Decrease/increase aerofoil debug info |
+| 7/8 | Decrease/increase wind streamers |
+
+### Paused Mode (freefly only)
+| Key | Action |
+|-----|--------|
+| NumPad 4/6 | Move plane left/right (or rotate with Ctrl) |
+| NumPad 2/8 | Move plane back/forward (or pitch with Ctrl) |
+| NumPad 7/9 | Move plane down/up (or roll with Ctrl) |
+
 ## Build System
 
 The project now uses CMake with vcpkg for dependency management.
@@ -130,60 +181,9 @@ PicaSim2/
 └── source/                   # Source code
 ```
 
-### User Data Location
-
-User settings and custom content are stored in platform-specific locations (not in the application directory):
-
-| Platform | Location |
-|----------|----------|
-| Windows | `%APPDATA%\Rowlhouse\PicaSim\` |
-| Linux | `~/.local/share/Rowlhouse/PicaSim/` |
-| macOS | `~/Library/Application Support/Rowlhouse/PicaSim/` |
-
-Within this directory:
-- `UserSettings/` - User preferences and saved configurations (settings.xml, custom controllers, etc.)
-- `UserData/` - User-created content (custom aeroplanes, panoramas, etc.)
-
 ### Compilation Defines
 
 - `BT_NO_PROFILE` - Disables Bullet physics profiling
-
-## Keyboard Shortcuts
-
-### Flight Controls
-| Key | Action |
-|-----|--------|
-| F11 / F / Alt+Enter | Toggle fullscreen |
-| Escape | Back/exit menus and dialogs |
-| R | Reset/relaunch the plane |
-| C | Cycle camera view |
-| M | Walkabout mode |
-| P | Pause/unpause |
-| T | Toggle slow motion (freefly mode only) |
-| Right Shift | Cycle controller rates |
-| +/= | Zoom in |
-| - | Zoom out |
-| Z | Toggle zoom view |
-| S | Save screenshot |
-| L | Reload aeroplane (re-reads settings) |
-| Back | Return to menu (or relaunch, depending on settings) |
-
-### Debug Keys
-| Key | Action |
-|-----|--------|
-| U | Toggle UI visibility |
-| K | Cycle render preference |
-| G | Cycle centre of mass display |
-| W | Toggle terrain wireframe |
-| 9/0 | Decrease/increase aerofoil debug info |
-| 7/8 | Decrease/increase wind streamers |
-
-### Paused Mode (freefly only)
-| Key | Action |
-|-----|--------|
-| NumPad 4/6 | Move plane left/right (or rotate with Ctrl) |
-| NumPad 2/8 | Move plane back/forward (or pitch with Ctrl) |
-| NumPad 7/9 | Move plane down/up (or roll with Ctrl) |
 
 # Notes on the licence 
 
