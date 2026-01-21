@@ -1263,6 +1263,15 @@ void SettingsMenu::RenderSceneryTab()
         mStatus = SETTINGS_LOAD_ENVIRONMENT;
     }
 
+    // Website button (optional - only shown if URL is set)
+    if (!es.mWWW.empty())
+    {
+        if (SettingsWidgets::Button(es.mWWW.c_str()))
+        {
+            Platform::OpenURL(es.mWWW.c_str());
+        }
+    }
+
     // Wind settings
     SettingsWidgets::SectionHeader(TXT(PS_WINDSETTINGS));
     SettingsWidgets::BeginSettingsBlock();

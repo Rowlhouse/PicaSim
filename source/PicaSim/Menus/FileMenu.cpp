@@ -205,11 +205,11 @@ FileMenu::FileMenu(const GameSettings& gameSettings,
     // Load files based on mode
     if (mMode == LOAD)
     {
-        // System files first (with title from file), then user files (filename only)
+        // System files first, then user files (both load metadata from file)
         if (!mSystemPath.empty())
             LoadFilesFromDirectory(mSystemPath.c_str(), false, true);
         if (!mUserPath.empty())
-            LoadFilesFromDirectory(mUserPath.c_str(), true, false);
+            LoadFilesFromDirectory(mUserPath.c_str(), true, true);
     }
     else
     {
@@ -534,8 +534,8 @@ void FileMenu::Render()
             }
         }
 
-        // Text button
-        std::string buttonText = item.title;
+        // Text button - user files show filename, system files show title from XML
+        std::string buttonText = item.isFromUserPath ? item.displayName : item.title;
         if (!item.info.empty())
             buttonText += ": " + item.info;
 
