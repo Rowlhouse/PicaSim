@@ -419,10 +419,8 @@ add_custom_target(run
 # --------------------------------------------------------------------------
 # Install rules (for release packaging)
 # --------------------------------------------------------------------------
-# Set default install prefix to dist/<version_dir> if not specified
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist/${PICASIM_VERSION_DIR}" CACHE PATH "" FORCE)
-endif()
+# Always install to dist/<version_dir> (e.g., dist/PicaSim-1_0_0)
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist/${PICASIM_VERSION_DIR}" CACHE PATH "" FORCE)
 
 install(TARGETS PicaSim
     RUNTIME DESTINATION .
