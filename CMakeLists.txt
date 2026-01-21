@@ -22,10 +22,6 @@ message(STATUS "PicaSim version: ${PICASIM_VERSION} (install dir: ${PICASIM_VERS
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Build options
-option(PICASIM_BUILD_TESTS "Build unit tests" OFF)
-option(PICASIM_USE_OPENAL "Use OpenAL for audio (vs SDL_mixer)" ON)
-
 # Platform detection
 if(WIN32)
     set(PICASIM_PLATFORM "WINDOWS")
@@ -64,10 +60,7 @@ find_package(SDL2_net CONFIG QUIET)
 find_package(glm CONFIG REQUIRED)
 
 # OpenAL for audio
-if(PICASIM_USE_OPENAL)
-    find_package(OpenAL CONFIG REQUIRED)
-    add_compile_definitions(PICASIM_USE_OPENAL=1)
-endif()
+find_package(OpenAL CONFIG REQUIRED)
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -191,9 +184,7 @@ if(WIN32)
 endif()
 
 # Link OpenAL for AudioManager
-if(PICASIM_USE_OPENAL)
-    target_link_libraries(Framework PUBLIC OpenAL::OpenAL)
-endif()
+target_link_libraries(Framework PUBLIC OpenAL::OpenAL)
 
 # --------------------------------------------------------------------------
 # Heightfield library
@@ -377,9 +368,7 @@ if(TARGET SDL2_net::SDL2_net)
 endif()
 
 # Link OpenAL
-if(PICASIM_USE_OPENAL)
-    target_link_libraries(PicaSim PRIVATE OpenAL::OpenAL)
-endif()
+target_link_libraries(PicaSim PRIVATE OpenAL::OpenAL)
 
 # Windows-specific settings
 if(WIN32)
@@ -497,5 +486,5 @@ message(STATUS "PicaSim Configuration Summary:")
 message(STATUS "  Platform: ${PICASIM_PLATFORM}")
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "  C++ Standard: ${CMAKE_CXX_STANDARD}")
-message(STATUS "  OpenAL Audio: ${PICASIM_USE_OPENAL}")
+message(STATUS "  OpenAL Audio: ON")
 message(STATUS "")

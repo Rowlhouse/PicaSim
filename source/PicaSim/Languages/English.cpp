@@ -470,7 +470,7 @@ void InitStringsEN(const char** txt)
   txt[PS_STICKCROSS] = "Stick cross";
   txt[PS_JOYSTICKID] = "Joystick ID";
   txt[PS_NOJOYSTICK] = "No Joystick detected or available.";
-  txt[PS_JOYSTICKINFO] = "Note: You need to restart PicaSim after connecting or disconnecting a joystick/controller.";
+  txt[PS_JOYSTICKINFO] = "Note: You may need to restart PicaSim after connecting or disconnecting a joystick/controller.";
   txt[PS_AUDIOSETTINGS] = "Audio settings";
   txt[PS_OVERALLVOLUME] = "Overall volume";
   txt[PS_VARIOMETERVOLUME] = "Variometer volume";
