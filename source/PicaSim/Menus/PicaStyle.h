@@ -40,7 +40,7 @@ namespace PicaStyle {
         const ImVec4 WindowBg = ImVec4(0.70f, 0.75f, 0.82f, 1.0f);
         const ImVec4 ChildBg = ImVec4(0.85f, 0.88f, 0.92f, 1.0f);
         const ImVec4 Button = ImVec4(0.78f, 0.80f, 0.85f, 1.0f);
-        const ImVec4 ButtonHovered = ImVec4(0.85f, 0.88f, 0.95f, 1.0f);
+        const ImVec4 ButtonHovered = ImVec4(0.82f, 0.85f, 0.92f, 1.0f);
         const ImVec4 ButtonActive = ImVec4(0.68f, 0.71f, 0.78f, 1.0f);
         const ImVec4 Tab = ImVec4(0.75f, 0.78f, 0.85f, 1.0f);
         const ImVec4 TabHovered = ImVec4(0.85f, 0.88f, 0.95f, 1.0f);
