@@ -227,9 +227,13 @@ FileMenu::~FileMenu()
 //======================================================================================================================
 void FileMenu::LoadFilesFromDirectory(const char* path, bool isUserPath, bool useTitleFromFile)
 {
+    TRACE_FILE_IF(1) TRACE("FileMenu::LoadFilesFromDirectory: path='%s' isUserPath=%d", path, isUserPath);
     s3eFileList* fileList = s3eFileListDirectory(path);
     if (!fileList)
+    {
+        TRACE_FILE_IF(1) TRACE("FileMenu::LoadFilesFromDirectory: failed to open directory '%s'", path);
         return;
+    }
 
     const int filenameLen = 512;
     char filename[filenameLen];
@@ -320,6 +324,9 @@ bool FileMenu::PassesTabFilter(const FileMenuItem& item) const
 {
     if (mSelectedTab == 0 || mTabTitles.empty())
         return true;  // Tab 0 = "All" or no tabs
+
+    // Tab filtering uses bitmask: typeMask bits correspond to tabs (bit 0 = tab 1, bit 1 = tab 2, etc.)
+    // Note: (1 << -1) produces 0xFFFFFFFF, so tab 0 ("All") matches everything
     return (item.typeMask & (1 << (mSelectedTab - 1))) != 0;
 }
 
@@ -763,9 +770,10 @@ SelectResult SelectAeroplane(std::string& file, GameSettings& gameSettings, cons
     TRACE_FUNCTION_ONLY(1);
     Language language = gameSettings.mOptions.mLanguage;
     const char* aeroplaneTabTitles[] = {TXT(PS_ALL), TXT(PS_GLIDERS), TXT(PS_POWERED), TXT(PS_USER)};
+    std::string userPath = Platform::GetUserSettingsPath() + "Aeroplane";
     FileMenuResult result = FileMenuLoad(
         file, gameSettings,
-        "SystemSettings/Aeroplane", "UserSettings/Aeroplane", ".xml",
+        "SystemSettings/Aeroplane", userPath.c_str(), ".xml",
         title, aeroplaneTabTitles, 4,
         cancelButtonText, altButtonText,
         FILEMENUTYPE_AEROPLANE, -1.0f, includeCallback);
@@ -790,9 +798,10 @@ SelectResult SelectAndLoadAeroplane(GameSettings& gameSettings, const char* titl
     std::string file;
     Language language = gameSettings.mOptions.mLanguage;
     const char* aeroplaneTabTitles[] = {TXT(PS_ALL), TXT(PS_GLIDERS), TXT(PS_POWERED), TXT(PS_USER)};
+    std::string userPath = Platform::GetUserSettingsPath() + "Aeroplane";
     FileMenuResult result = FileMenuLoad(
         file, gameSettings,
-        "SystemSettings/Aeroplane", "UserSettings/Aeroplane", ".xml",
+        "SystemSettings/Aeroplane", userPath.c_str(), ".xml",
         title, aeroplaneTabTitles, 4,
         cancelButtonText, altButtonText, FILEMENUTYPE_AEROPLANE);
     if (!file.empty() && result == FILEMENURESULT_SELECTED)
@@ -832,9 +841,10 @@ SelectResult SelectAndLoadEnvironment(GameSettings& gameSettings, const char* ti
     std::string file;
     Language language = gameSettings.mOptions.mLanguage;
     const char* environmentTabTitles[] = {TXT(PS_ALL), TXT(PS_SLOPE), TXT(PS_FLAT), TXT(PS_PANORAMIC), TXT(PS_3D), TXT(PS_USER)};
+    std::string userPath = Platform::GetUserSettingsPath() + "Environment";
     FileMenuResult result = FileMenuLoad(
         file, gameSettings,
-        "SystemSettings/Environment", "UserSettings/Environment", ".xml",
+        "SystemSettings/Environment", userPath.c_str(), ".xml",
         title, environmentTabTitles, 6, cancelButtonText, altButtonText, FILEMENUTYPE_SCENERY);
     if (!file.empty() && result == FILEMENURESULT_SELECTED)
     {
