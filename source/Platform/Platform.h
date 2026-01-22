@@ -159,6 +159,9 @@ std::string GetUserSettingsPath();
 // Returns platform-specific user data path (e.g. %APPDATA%/Rowlhouse/PicaSim/UserData/)
 std::string GetUserDataPath();
 
+// Returns platform-specific logs path (e.g. %APPDATA%/Rowlhouse/PicaSim/Logs/)
+std::string GetLogsPath();
+
 } // namespace Platform
 
 // --------------------------------------------------------------------------

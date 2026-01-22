@@ -3,6 +3,7 @@
 // \file trace.cpp
 
 #include "Trace.h"
+#include "Platform.h"
 
 #include <stdio.h>
 
@@ -31,32 +32,21 @@ void TracePrintf(const char *fmt, ...)
     if (init == false)
     {
         init = true;
-        logFile = fopen("trace.txt", "w");
+
+        // Use platform-specific writable logs directory
+        std::string logsPath = Platform::GetLogsPath();
+        FileSystem::MakeDirectory(logsPath);
+        std::string logFilePath = logsPath + "trace.txt";
+
+        logFile = fopen(logFilePath.c_str(), "w");
 
         if (logFile == NULL)
         {
-            fprintf(stderr, "Unable to open trace.txt\n");
-            // We have a backup plan!! Assume that non-win32 is unix based.
-#ifdef _WIN32
-            fprintf(stderr, "Trying C:\\trace.txt\n");
-            char logFileName[] = "C:\\trace.txt";
-#else
-            fprintf(stderr, "Trying /tmp/trace.txt\n");
-            char logFileName[] = "/tmp/trace.txt";
-#endif
-            logFile = fopen(logFileName, "w");
-            if (logFile == NULL)
-            {
-                fprintf(stderr, "Unable to open backup logfile %s\n", logFileName);
-            }
-            else
-            {
-                printf("Opened log file: %s\n", logFileName);
-            }
+            fprintf(stderr, "Unable to open %s\n", logFilePath.c_str());
         }
         else
         {
-            printf("Opened log file: trace.txt\n");
+            printf("Opened log file: %s\n", logFilePath.c_str());
         }
     }
 

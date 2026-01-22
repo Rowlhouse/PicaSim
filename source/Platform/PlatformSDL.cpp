@@ -204,6 +204,11 @@ std::string GetUserDataPath()
     return FileSystem::GetPrefPath() + "UserData/";
 }
 
+std::string GetLogsPath()
+{
+    return FileSystem::GetPrefPath() + "Logs/";
+}
+
 } // namespace Platform
 
 // --------------------------------------------------------------------------
