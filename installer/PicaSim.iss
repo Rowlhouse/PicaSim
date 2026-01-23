@@ -9,8 +9,8 @@
 #define MyAppURL "http://www.rowlhouse.co.uk/PicaSim/"
 #define MyAppExeName "PicaSim.exe"
 
-; Convert version dots to underscores for directory name
-#define MyAppVersionDir StringChange(MyAppVersion, ".", "_")
+; Version directory name (matches CMake install dir)
+#define MyAppVersionDir MyAppVersion
 
 [Setup]
 ; NOTE: The AppId uniquely identifies this application.

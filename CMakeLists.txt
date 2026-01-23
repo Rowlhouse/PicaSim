@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.20)
 project(PicaSim VERSION 1.0.0 LANGUAGES CXX C)
 
 # Read version from VERSIONS.txt (single source of truth for version number)
+# Mark as configure dependency so CMake reconfigures when version changes
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/VERSIONS.txt)
 if(EXISTS ${CMAKE_SOURCE_DIR}/VERSIONS.txt)
     file(STRINGS ${CMAKE_SOURCE_DIR}/VERSIONS.txt VERSION_LINE LIMIT_COUNT 1)
     string(REGEX MATCH "Version ([0-9]+\\.[0-9]+\\.[0-9]+)" _ ${VERSION_LINE})
@@ -15,8 +17,8 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/VERSIONS.txt)
 else()
     set(PICASIM_VERSION "1.0.0")
 endif()
-# Create directory-safe version (1.0.0 -> 1_0_0)
-string(REPLACE "." "_" PICASIM_VERSION_DIR "PicaSim-${PICASIM_VERSION}")
+# Create versioned directory name
+set(PICASIM_VERSION_DIR "PicaSim-${PICASIM_VERSION}")
 message(STATUS "PicaSim version: ${PICASIM_VERSION} (install dir: ${PICASIM_VERSION_DIR})")
 
 set(CMAKE_CXX_STANDARD 17)
