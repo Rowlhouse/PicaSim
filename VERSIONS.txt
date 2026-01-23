@@ -5,6 +5,7 @@ Version 1.0.1
 - Fix opening joystick calibration
 - Support "copy" in PropellerEngine definitions. Tweak quads.
 - Fix toggling of fullscreen when pressing F during text input (saving)
+- Hopefully fixUI/ OpenGL errors
 
 Version 1.0.0
 - Complete port to SDL2 and OpenGL for Windows

@@ -2,12 +2,12 @@
 #include "Trace.h"
 
 // Use appropriate GLSL version for platform
-// Desktop GL 2.1 uses GLSL 120, OpenGL ES 2.0 uses GLSL 100
+// Desktop GL 3.0 uses GLSL 130, OpenGL ES 2.0 uses GLSL 100
 #if defined(PS_PLATFORM_ANDROID) || defined(PS_PLATFORM_IOS)
 #define GLSL(src) "#version 100\n" #src
 #else
-// Desktop GL - use version 120 which supports precision qualifiers as no-ops
-#define GLSL(src) "#version 120\n" #src
+// Desktop GL - use version 130 which supports precision qualifiers as no-ops
+#define GLSL(src) "#version 130\n" #src
 #endif
 
 const char simpleVertexShaderStr[] = GLSL(
