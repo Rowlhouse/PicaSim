@@ -9,15 +9,15 @@
 #include <cmath>
 
 //======================================================================================================================
-BoxObject::BoxObject(const Vector3& extents, 
-                                          const Transform& tm, 
-                                          const Vector3& colour, 
-                                          const char* textureFile, 
-                                          float mass, 
-                                          bool enableRender, 
-                                          bool enableShadows, 
-                                          bool visible,
-                                          bool shadowVisible)
+BoxObject::BoxObject(const Vector3& extents,
+                     const Transform& tm,
+                     const Vector3& colour,
+                     const char* textureFile,
+                     float mass,
+                     bool enableRender,
+                     bool enableShadows,
+                     bool visible,
+                     bool shadowVisible)
     : 
     mExtents(extents), mTM(tm), mInitialTM(tm), mColour(colour), mWireframe(false), mTextureFile(textureFile ? textureFile : ""), 
     mMass(mass), mRenderEnabled(enableRender), mShadowsEnabled(enableShadows), mVisible(visible), mShadowVisible(shadowVisible)

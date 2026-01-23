@@ -165,12 +165,12 @@ private:
 
 //======================================================================================================================
 FileMenu::FileMenu(const GameSettings& gameSettings,
-                                      const char* systemPath, const char* userPath,
-                                      const char* extension, Mode mode, const char* title,
-                                      const char* tabTitles[], size_t numTabs, int initialTab,
-                                      const char* cancelButtonText, const char* altButtonText,
-                                      FileMenuType fileMenuType, float imagesPerScreen,
-                                      IncludeCallback* includeCallback)
+                   const char* systemPath, const char* userPath,
+                   const char* extension, Mode mode, const char* title,
+                   const char* tabTitles[], size_t numTabs, int initialTab,
+                   const char* cancelButtonText, const char* altButtonText,
+                   FileMenuType fileMenuType, float imagesPerScreen,
+                   IncludeCallback* includeCallback)
     : mGameSettings(gameSettings)
     , mSystemPath(systemPath ? systemPath : "")
     , mUserPath(userPath ? userPath : "")
@@ -634,9 +634,9 @@ FileMenuResult FileMenuLoad(
     while (true)
     {
         FileMenu menu(gameSettings, systemPath, userPath, extension,
-                                    FileMenu::LOAD, title, tabTitles, numTabs, tab,
-                                    cancelButtonText, altButtonText, fileMenuType,
-                                    imagesPerScreen, includeCallback);
+                      FileMenu::LOAD, title, tabTitles, numTabs, tab,
+                      cancelButtonText, altButtonText, fileMenuType,
+                      imagesPerScreen, includeCallback);
 
         while (!menu.Update())
         {
@@ -672,8 +672,8 @@ FileMenuResult FileMenuSave(
     Language language = gameSettings.mOptions.mLanguage;
 
     FileMenu menu(gameSettings, nullptr, userPath, extension,
-                                FileMenu::SAVE, title, nullptr, 0, 0,
-                                GetPS(PS_BACK, language), nullptr, fileMenuType, 3.0f, nullptr);
+                  FileMenu::SAVE, title, nullptr, 0, 0,
+                  GetPS(PS_BACK, language), nullptr, fileMenuType, 3.0f, nullptr);
 
     while (!menu.Update())
     {
@@ -709,8 +709,8 @@ void FileMenuDelete(
     Language language = gameSettings.mOptions.mLanguage;
 
     FileMenu menu(gameSettings, nullptr, userPath, extension,
-                                FileMenu::DELETE_MODE, title, nullptr, 0, 0,
-                                GetPS(PS_BACK, language), nullptr, fileMenuType, 3.0f, nullptr);
+                  FileMenu::DELETE_MODE, title, nullptr, 0, 0,
+                  GetPS(PS_BACK, language), nullptr, fileMenuType, 3.0f, nullptr);
 
     while (!menu.Update())
     {

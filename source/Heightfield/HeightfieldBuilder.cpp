@@ -33,7 +33,7 @@ inline bool HeightfieldBuilder::onSeaShore(int i, int j) const
     if (isValid(i+i_offsets[c],j+j_offsets[c])) 
     {
       bool this_one = (mVertexIn[calcIndex(i+i_offsets[c],
-                                            j+j_offsets[c])].z > mPlainAltitude);
+                                          j+j_offsets[c])].z > mPlainAltitude);
       if (this_one != orig)
       {
         return true;

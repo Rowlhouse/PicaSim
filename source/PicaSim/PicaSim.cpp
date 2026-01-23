@@ -480,7 +480,7 @@ void PicaSim::ReinitOverlays()
 
 //======================================================================================================================
 void PicaSim::HandleJoystickToggle(const JoystickSettings::JoystickButtonOverride& j, float buttonDown,
-                                                                      bool& joystickRelaunch, bool& joystickChangeView, bool& joystickPausePlay)
+                                   bool& joystickRelaunch, bool& joystickChangeView, bool& joystickPausePlay)
 {
     bool buttonDownBool = buttonDown != 0.0f;
     if (j.mControl == JoystickSettings::JoystickButtonOverride::CONTROL_BUTTON_RATES)

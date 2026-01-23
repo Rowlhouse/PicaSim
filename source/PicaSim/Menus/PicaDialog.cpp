@@ -167,8 +167,8 @@ void InGameDialog::ResetAnimation(bool slideFromRight)
 }
 
 int InGameDialog::Update(float dt, const char* title, const char* text,
-                                                  const char* button0, const char* button1, const char* button2,
-                                                  bool* shouldExit)
+                         const char* button0, const char* button1, const char* button2,
+                         bool* shouldExit)
 {
     mTotalTime += dt;
 
@@ -243,9 +243,9 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
 //======================================================================================================================
 
 int ShowInGameDialog(float widthFrac, float heightFrac,
-                                          const char* title, const char* text,
-                                          const char* button0, const char* button1, const char* button2,
-                                          DialogBackgroundCallback backgroundCallback)
+                     const char* title, const char* text,
+                     const char* button0, const char* button1, const char* button2,
+                     DialogBackgroundCallback backgroundCallback)
 {
     TRACE("ShowInGameDialog: %s", text);
 
@@ -387,8 +387,8 @@ void ShowHelpOverlays(const GameSettings& gameSettings)
 
 //======================================================================================================================
 int ShowDialog(const char* title, const char* text,
-                              const char* button0, const char* button1, const char* button2,
-                              DialogBackgroundCallback backgroundCallback)
+               const char* button0, const char* button1, const char* button2,
+               DialogBackgroundCallback backgroundCallback)
 {
     return ShowInGameDialog(0.5f, 0.5f, title, text, button0, button1, button2, backgroundCallback);
 }

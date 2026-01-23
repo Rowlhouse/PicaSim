@@ -574,8 +574,8 @@ int CLoad3DS::GetString(char *pBuffer)
 /////
 ///////////////////////////////// READ COLOR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 
-void CLoad3DS::ReadColorChunk(GLubyte  color[4], 
-                                                            tChunk *pChunk)
+void CLoad3DS::ReadColorChunk(GLubyte  color[4],
+                              tChunk *pChunk)
 {
     TRACE_FILE_IF(2) TRACE("color = %p, chunk = %p", color, pChunk);
     unsigned int num_to_read;

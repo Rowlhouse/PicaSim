@@ -159,7 +159,7 @@ void StartMenu::Render()
     // Exit button (top-left) - not on iPhone/Win10
 #if !defined(PICASIM_IOS) && !defined(PICASIM_WIN10)
     if (UIHelpers::DrawImageButton("exit", mExitTexture.get(),
-                                                                    width * 0.02f, height * 0.02f, smallIconSize))
+                                   width * 0.02f, height * 0.02f, smallIconSize))
     {
         mResult = STARTMENU_QUIT;
     }
@@ -170,7 +170,7 @@ void StartMenu::Render()
     if (mNewVersionTexture && IsNewVersionAvailable())
     {
         if (UIHelpers::DrawImageButton("newversion", mNewVersionTexture.get(),
-                                                                        width - smallIconSize - width * 0.02f, height * 0.02f, smallIconSize))
+                                       width - smallIconSize - width * 0.02f, height * 0.02f, smallIconSize))
         {
             NewVersion();
         }
@@ -201,7 +201,7 @@ void StartMenu::Render()
     if (!mGameSettings.mJoystickSettings.mEnableJoystick && JoystickAvailable())
     {
         UIHelpers::DrawCenteredText("Gamepad detected. Enable in settings to use it.",
-                                                                  0.5f, UIHelpers::Colors::Yellow);
+                                     0.5f, UIHelpers::Colors::Yellow);
     }
 #endif
 
@@ -212,7 +212,7 @@ void StartMenu::Render()
     // Facebook (left side)
     float iconX = width * 0.05f;
     if (UIHelpers::DrawImageButton("facebook", mFacebookTexture.get(),
-                                                                    iconX, bottomY, iconSize))
+                                   iconX, bottomY, iconSize))
     {
         Platform::OpenURL("http://www.facebook.com/233467446753191");
     }
@@ -220,14 +220,14 @@ void StartMenu::Render()
     // Help and Settings (right side)
     iconX = width - iconSpacing * 2 - width * 0.02f;
     if (UIHelpers::DrawImageButton("help", mHelpTexture.get(),
-                                                                    iconX, bottomY, iconSize))
+                                   iconX, bottomY, iconSize))
     {
         mResult = STARTMENU_HELP;
     }
 
     iconX += iconSpacing;
     if (UIHelpers::DrawImageButton("settings", mSettingsTexture.get(),
-                                                                    iconX, bottomY, iconSize))
+                                   iconX, bottomY, iconSize))
     {
         mResult = STARTMENU_SETTINGS;
     }

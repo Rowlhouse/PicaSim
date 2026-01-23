@@ -132,10 +132,10 @@ ParticleEmitter::~ParticleEmitter()
 
 //======================================================================================================================
 void ParticleEmitter::Update(float          dt,
-                                                          const Vector3& emitterPos,
-                                                          const Vector3& particleVel,
-                                                          const Vector3& targetVel,
-                                                          float          jitterVelMagnitude)
+                             const Vector3& emitterPos,
+                             const Vector3& particleVel,
+                             const Vector3& targetVel,
+                             float          jitterVelMagnitude)
 {
     if (mDead || mSuicidal)
         return;

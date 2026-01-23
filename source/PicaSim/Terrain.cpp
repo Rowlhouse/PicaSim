@@ -155,9 +155,9 @@ float interpolateForZ(
 
 //======================================================================================================================
 void Terrain::GetLocalTerrain(const Vector3 & pos,
-                                                                        Vector3 & terrain_pos,
-                                                                        Vector3 & normal, 
-                                                                        bool clampToPlain) const
+                              Vector3 & terrain_pos,
+                              Vector3 & normal,
+                              bool clampToPlain) const
 {
     unsigned i11, j11, i22, j22;
     unsigned i12, j12, i21, j21;
@@ -203,12 +203,12 @@ void Terrain::GetLocalTerrain(const Vector3 & pos,
     }
 
     int downwardSlope = (i11 + j11) % 2;  
-    float interpolatedHeight = interpolateForZ(pos, 
-                                                                          pos11,
-                                                                          pos12, 
-                                                                          pos21,
-                                                                          pos22,
-                                                                          downwardSlope);
+    float interpolatedHeight = interpolateForZ(pos,
+                                              pos11,
+                                              pos12,
+                                              pos21,
+                                              pos22,
+                                              downwardSlope);
     
     // We've calculated the terrain point, at least for now. We could do
     // better by recalculating this using the surface normal.
@@ -319,12 +319,12 @@ float Terrain::GetTerrainHeight(float x0, float y0, bool clampToPlain) const
     }
 
     int downwardSlope = (i11 + j11) % 2;
-    return interpolateForZ(Vector3(x0, y0, 0), 
-                                                      pos11,
-                                                      pos12, 
-                                                      pos21,
-                                                      pos22,
-                                                      downwardSlope);
+    return interpolateForZ(Vector3(x0, y0, 0),
+                           pos11,
+                           pos12,
+                           pos21,
+                           pos22,
+                           downwardSlope);
 }
 
 //======================================================================================================================

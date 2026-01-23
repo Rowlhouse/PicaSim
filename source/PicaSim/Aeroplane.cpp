@@ -40,8 +40,8 @@ Aeroplane::~Aeroplane()
 
 //======================================================================================================================
 void Aeroplane::Init(const AeroplaneSettings& as,
-                                          const Vector3* basicLaunchPos, 
-                                          LoadingScreenHelper* loadingScreen)
+                     const Vector3* basicLaunchPos,
+                     LoadingScreenHelper* loadingScreen)
 {
     TRACE_METHOD_ONLY(1);
     mAeroplaneSettings = as;
