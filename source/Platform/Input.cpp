@@ -1049,10 +1049,11 @@ void s3eDeviceYield(int32 ms)
             g_quitRequested = true;
             break;
         case SDL_KEYDOWN:
-            // F11, F, or Alt+Enter toggles fullscreen globally
+            // F11 or Alt+Enter toggles fullscreen globally
+            // F key also toggles fullscreen, but only when not typing in a text input field
             if (event.key.keysym.sym == SDLK_F11 ||
-                event.key.keysym.sym == SDLK_f ||
-                (event.key.keysym.sym == SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)))
+                (event.key.keysym.sym == SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)) ||
+                (event.key.keysym.sym == SDLK_f && !ImGui::GetIO().WantTextInput))
             {
                 if (gWindow)
                     gWindow->SetFullscreen(!gWindow->IsFullscreen());
