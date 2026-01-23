@@ -64,6 +64,15 @@ bool Input::Init()
         }
     }
 
+    // Initialize joystick subsystem for R/C transmitters and other non-gamepad devices
+    if (SDL_WasInit(SDL_INIT_JOYSTICK) == 0)
+    {
+        if (SDL_InitSubSystem(SDL_INIT_JOYSTICK) < 0)
+        {
+            fprintf(stderr, "SDL_InitSubSystem(JOYSTICK) failed: %s\n", SDL_GetError());
+        }
+    }
+
     // Check for touch support
     mTouchAvailable = SDL_GetNumTouchDevices() > 0;
 
@@ -90,8 +99,9 @@ bool Input::Init()
     }
 #endif
 
-    // Open any connected gamepads
+    // Open any connected gamepads and joysticks
     OpenGamepads();
+    OpenJoysticks();
 
     gInput = this;
     return true;
@@ -100,6 +110,7 @@ bool Input::Init()
 void Input::Shutdown()
 {
     CloseGamepads();
+    CloseJoysticks();
 
     if (mAccelerometer)
     {
@@ -363,6 +374,42 @@ void Input::ProcessEvent(const SDL_Event& event)
             }
         }
         break;
+
+    case SDL_JOYDEVICEADDED:
+        {
+            int deviceIndex = event.jdevice.which;
+            // Only handle if NOT a game controller (those are handled above)
+            if (!SDL_IsGameController(deviceIndex))
+            {
+                SDL_Joystick* joystick = SDL_JoystickOpen(deviceIndex);
+                if (joystick)
+                {
+                    mJoysticks.push_back(joystick);
+                    printf("Joystick connected: %s (axes=%d, buttons=%d, hats=%d)\n",
+                        SDL_JoystickName(joystick),
+                        SDL_JoystickNumAxes(joystick),
+                        SDL_JoystickNumButtons(joystick),
+                        SDL_JoystickNumHats(joystick));
+                }
+            }
+        }
+        break;
+
+    case SDL_JOYDEVICEREMOVED:
+        {
+            SDL_JoystickID instanceId = event.jdevice.which;
+            for (auto it = mJoysticks.begin(); it != mJoysticks.end(); ++it)
+            {
+                if (SDL_JoystickInstanceID(*it) == instanceId)
+                {
+                    printf("Joystick disconnected: %s\n", SDL_JoystickName(*it));
+                    SDL_JoystickClose(*it);
+                    mJoysticks.erase(it);
+                    break;
+                }
+            }
+        }
+        break;
     }
 }
 
@@ -563,6 +610,8 @@ bool Input::IsGamepadButtonDown(int gamepadIndex, int button) const
 void Input::OpenGamepads()
 {
     int numJoysticks = SDL_NumJoysticks();
+    printf("OpenGamepads: SDL_NumJoysticks() = %d\n", numJoysticks);
+
     for (int i = 0; i < numJoysticks; ++i)
     {
         if (SDL_IsGameController(i))
@@ -585,6 +634,118 @@ void Input::CloseGamepads()
             SDL_GameControllerClose(controller);
     }
     mGamepads.clear();
+}
+
+void Input::OpenJoysticks()
+{
+    // Open joysticks that are NOT recognized as game controllers
+    // (e.g. R/C transmitters, flight sticks, etc.)
+    int numJoysticks = SDL_NumJoysticks();
+    printf("SDL_NumJoysticks() = %d\n", numJoysticks);
+
+    for (int i = 0; i < numJoysticks; ++i)
+    {
+        const char* name = SDL_JoystickNameForIndex(i);
+        bool isGameController = SDL_IsGameController(i);
+        printf("  Device %d: '%s' - IsGameController=%s\n",
+            i, name ? name : "(null)", isGameController ? "YES" : "NO");
+
+        // Skip devices already opened as game controllers
+        if (isGameController)
+            continue;
+
+        SDL_Joystick* joystick = SDL_JoystickOpen(i);
+        if (joystick)
+        {
+            mJoysticks.push_back(joystick);
+            printf("Joystick found: %s (axes=%d, buttons=%d, hats=%d)\n",
+                SDL_JoystickName(joystick),
+                SDL_JoystickNumAxes(joystick),
+                SDL_JoystickNumButtons(joystick),
+                SDL_JoystickNumHats(joystick));
+        }
+        else
+        {
+            printf("  Failed to open joystick %d: %s\n", i, SDL_GetError());
+        }
+    }
+}
+
+void Input::CloseJoysticks()
+{
+    for (SDL_Joystick* joystick : mJoysticks)
+    {
+        if (joystick)
+            SDL_JoystickClose(joystick);
+    }
+    mJoysticks.clear();
+}
+
+int Input::GetJoystickCount() const
+{
+    return static_cast<int>(mJoysticks.size());
+}
+
+int Input::GetJoystickAxisCount(int index) const
+{
+    if (index >= 0 && index < static_cast<int>(mJoysticks.size()) && mJoysticks[index])
+        return SDL_JoystickNumAxes(mJoysticks[index]);
+    return 0;
+}
+
+int Input::GetJoystickButtonCount(int index) const
+{
+    if (index >= 0 && index < static_cast<int>(mJoysticks.size()) && mJoysticks[index])
+        return SDL_JoystickNumButtons(mJoysticks[index]);
+    return 0;
+}
+
+int Input::GetJoystickHatCount(int index) const
+{
+    if (index >= 0 && index < static_cast<int>(mJoysticks.size()) && mJoysticks[index])
+        return SDL_JoystickNumHats(mJoysticks[index]);
+    return 0;
+}
+
+float Input::GetJoystickAxis(int index, int axis) const
+{
+    if (index >= 0 && index < static_cast<int>(mJoysticks.size()) && mJoysticks[index])
+    {
+        int16_t value = SDL_JoystickGetAxis(mJoysticks[index], axis);
+        return value / 32767.0f;
+    }
+    return 0.0f;
+}
+
+bool Input::IsJoystickButtonDown(int index, int button) const
+{
+    if (index >= 0 && index < static_cast<int>(mJoysticks.size()) && mJoysticks[index])
+    {
+        return SDL_JoystickGetButton(mJoysticks[index], button) != 0;
+    }
+    return false;
+}
+
+int Input::GetJoystickHat(int index, int hat) const
+{
+    if (index >= 0 && index < static_cast<int>(mJoysticks.size()) && mJoysticks[index])
+    {
+        Uint8 hatState = SDL_JoystickGetHat(mJoysticks[index], hat);
+        // Convert SDL hat state to angle in hundredths of degrees
+        switch (hatState)
+        {
+            case SDL_HAT_UP:        return 0;
+            case SDL_HAT_RIGHTUP:   return 4500;
+            case SDL_HAT_RIGHT:     return 9000;
+            case SDL_HAT_RIGHTDOWN: return 13500;
+            case SDL_HAT_DOWN:      return 18000;
+            case SDL_HAT_LEFTDOWN:  return 22500;
+            case SDL_HAT_LEFT:      return 27000;
+            case SDL_HAT_LEFTUP:    return 31500;
+            default:                return -1;  // Centered
+        }
+    }
+    return -1;
 }
 
 int Input::FindTouchIndex(int touchId) const
@@ -933,102 +1094,192 @@ void s3eDeviceYield(int32 ms)
 
 s3eBool gamepadAvailable()
 {
-    return Input::GetInstance().GetGamepadCount() > 0 ? S3E_TRUE : S3E_FALSE;
+    Input& input = Input::GetInstance();
+    return (input.GetGamepadCount() > 0 || input.GetJoystickCount() > 0) ? S3E_TRUE : S3E_FALSE;
 }
 
 uint32 gamepadGetNumDevices()
 {
-    return static_cast<uint32>(Input::GetInstance().GetGamepadCount());
+    Input& input = Input::GetInstance();
+    return static_cast<uint32>(input.GetGamepadCount() + input.GetJoystickCount());
 }
 
 uint32 gamepadGetDeviceId(uint32 index)
 {
     // Return index as device ID for simplicity
-    return Input::GetInstance().IsGamepadConnected(static_cast<int>(index)) ? index : 0;
+    // Gamepads are indices 0 to gamepadCount-1, joysticks are gamepadCount onwards
+    Input& input = Input::GetInstance();
+    int gamepadCount = input.GetGamepadCount();
+    int joystickCount = input.GetJoystickCount();
+
+    if (index < static_cast<uint32>(gamepadCount + joystickCount))
+        return index;
+    return 0;
 }
 
 uint32 gamepadGetNumAxes(uint32 index)
 {
-    // SDL game controllers have 6 axes: 2 for each stick + 2 triggers
-    return Input::GetInstance().IsGamepadConnected(static_cast<int>(index)) ? 6 : 0;
+    Input& input = Input::GetInstance();
+    int gamepadCount = input.GetGamepadCount();
+
+    if (index < static_cast<uint32>(gamepadCount))
+    {
+        // It's a gamepad - 6 axes (standard layout: 2 sticks + 2 triggers)
+        return input.IsGamepadConnected(static_cast<int>(index)) ? 6 : 0;
+    }
+    else
+    {
+        // It's a raw joystick
+        int joystickIndex = static_cast<int>(index) - gamepadCount;
+        return static_cast<uint32>(input.GetJoystickAxisCount(joystickIndex));
+    }
 }
 
 uint32 gamepadGetNumButtons(uint32 index)
 {
-    // SDL game controllers have up to 15 buttons
-    return Input::GetInstance().IsGamepadConnected(static_cast<int>(index)) ? 15 : 0;
+    Input& input = Input::GetInstance();
+    int gamepadCount = input.GetGamepadCount();
+
+    if (index < static_cast<uint32>(gamepadCount))
+    {
+        // It's a gamepad - up to 15 buttons (standard layout)
+        return input.IsGamepadConnected(static_cast<int>(index)) ? 15 : 0;
+    }
+    else
+    {
+        // It's a raw joystick
+        int joystickIndex = static_cast<int>(index) - gamepadCount;
+        return static_cast<uint32>(input.GetJoystickButtonCount(joystickIndex));
+    }
 }
 
 uint32 gamepadGetButtons(uint32 index)
 {
     Input& input = Input::GetInstance();
-    int idx = static_cast<int>(index);
-    if (!input.IsGamepadConnected(idx))
-        return 0;
+    int gamepadCount = input.GetGamepadCount();
 
-    uint32 buttons = 0;
-    // Map SDL_GameControllerButton to a bitmask
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_A)) buttons |= (1 << 0);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_B)) buttons |= (1 << 1);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_X)) buttons |= (1 << 2);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_Y)) buttons |= (1 << 3);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_BACK)) buttons |= (1 << 4);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_GUIDE)) buttons |= (1 << 5);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_START)) buttons |= (1 << 6);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_LEFTSTICK)) buttons |= (1 << 7);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) buttons |= (1 << 8);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) buttons |= (1 << 9);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) buttons |= (1 << 10);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_UP)) buttons |= (1 << 11);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_DOWN)) buttons |= (1 << 12);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_LEFT)) buttons |= (1 << 13);
-    if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)) buttons |= (1 << 14);
+    if (index < static_cast<uint32>(gamepadCount))
+    {
+        // It's a gamepad
+        int idx = static_cast<int>(index);
+        if (!input.IsGamepadConnected(idx))
+            return 0;
 
-    return buttons;
+        uint32 buttons = 0;
+        // Map SDL_GameControllerButton to a bitmask
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_A)) buttons |= (1 << 0);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_B)) buttons |= (1 << 1);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_X)) buttons |= (1 << 2);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_Y)) buttons |= (1 << 3);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_BACK)) buttons |= (1 << 4);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_GUIDE)) buttons |= (1 << 5);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_START)) buttons |= (1 << 6);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_LEFTSTICK)) buttons |= (1 << 7);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) buttons |= (1 << 8);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) buttons |= (1 << 9);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) buttons |= (1 << 10);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_UP)) buttons |= (1 << 11);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_DOWN)) buttons |= (1 << 12);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_LEFT)) buttons |= (1 << 13);
+        if (input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)) buttons |= (1 << 14);
+
+        return buttons;
+    }
+    else
+    {
+        // It's a raw joystick
+        int joystickIndex = static_cast<int>(index) - gamepadCount;
+        int buttonCount = input.GetJoystickButtonCount(joystickIndex);
+
+        uint32 buttons = 0;
+        for (int i = 0; i < buttonCount && i < 32; ++i)
+        {
+            if (input.IsJoystickButtonDown(joystickIndex, i))
+                buttons |= (1 << i);
+        }
+
+        return buttons;
+    }
 }
 
 int32 gamepadGetAxis(uint32 index, uint32 axisIndex)
 {
     Input& input = Input::GetInstance();
-    int idx = static_cast<int>(index);
-    if (!input.IsGamepadConnected(idx))
-        return 0;
+    int gamepadCount = input.GetGamepadCount();
 
-    // Get axis value and convert from [-1,1] to [-4096,4096]
-    float value = input.GetGamepadAxis(idx, static_cast<int>(axisIndex));
-    return static_cast<int32>(value * 4096.0f);
+    if (index < static_cast<uint32>(gamepadCount))
+    {
+        // It's a gamepad
+        int idx = static_cast<int>(index);
+        if (!input.IsGamepadConnected(idx))
+            return 0;
+
+        // Get axis value and convert from [-1,1] to [-4096,4096]
+        float value = input.GetGamepadAxis(idx, static_cast<int>(axisIndex));
+        return static_cast<int32>(value * 4096.0f);
+    }
+    else
+    {
+        // It's a raw joystick
+        int joystickIndex = static_cast<int>(index) - gamepadCount;
+        float value = input.GetJoystickAxis(joystickIndex, static_cast<int>(axisIndex));
+        return static_cast<int32>(value * 4096.0f);
+    }
 }
 
 uint32 gamepadIsPointOfViewAvailable(uint32 index)
 {
-    // SDL game controllers use D-pad buttons instead of a POV hat
-    // We can emulate POV using the D-pad buttons
-    return Input::GetInstance().IsGamepadConnected(static_cast<int>(index)) ? 1 : 0;
+    Input& input = Input::GetInstance();
+    int gamepadCount = input.GetGamepadCount();
+
+    if (index < static_cast<uint32>(gamepadCount))
+    {
+        // Gamepads emulate POV from D-pad buttons
+        return input.IsGamepadConnected(static_cast<int>(index)) ? 1 : 0;
+    }
+    else
+    {
+        // Raw joysticks may have actual POV hats
+        int joystickIndex = static_cast<int>(index) - gamepadCount;
+        return input.GetJoystickHatCount(joystickIndex) > 0 ? 1 : 0;
+    }
 }
 
 int32 gamepadGetPointOfViewAngle(uint32 index)
 {
     Input& input = Input::GetInstance();
-    int idx = static_cast<int>(index);
-    if (!input.IsGamepadConnected(idx))
-        return -1; // -1 means centered/no direction
+    int gamepadCount = input.GetGamepadCount();
 
-    // Calculate POV angle from D-pad buttons (in hundredths of degrees)
-    bool up = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_UP);
-    bool down = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
-    bool left = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
-    bool right = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+    if (index < static_cast<uint32>(gamepadCount))
+    {
+        // It's a gamepad - emulate POV from D-pad buttons
+        int idx = static_cast<int>(index);
+        if (!input.IsGamepadConnected(idx))
+            return -1; // -1 means centered/no direction
 
-    if (up && !down && !left && !right) return 0;        // North
-    if (up && !down && !left && right)  return 4500;     // NE
-    if (!up && !down && !left && right) return 9000;     // East
-    if (!up && down && !left && right)  return 13500;    // SE
-    if (!up && down && !left && !right) return 18000;    // South
-    if (!up && down && left && !right)  return 22500;    // SW
-    if (!up && !down && left && !right) return 27000;    // West
-    if (up && !down && left && !right)  return 31500;    // NW
+        // Calculate POV angle from D-pad buttons (in hundredths of degrees)
+        bool up = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_UP);
+        bool down = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+        bool left = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+        bool right = input.IsGamepadButtonDown(idx, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
 
-    return -1; // Centered
+        if (up && !down && !left && !right) return 0;        // North
+        if (up && !down && !left && right)  return 4500;     // NE
+        if (!up && !down && !left && right) return 9000;     // East
+        if (!up && down && !left && right)  return 13500;    // SE
+        if (!up && down && !left && !right) return 18000;    // South
+        if (!up && down && left && !right)  return 22500;    // SW
+        if (!up && !down && left && !right) return 27000;    // West
+        if (up && !down && left && !right)  return 31500;    // NW
+
+        return -1; // Centered
+    }
+    else
+    {
+        // It's a raw joystick - use actual POV hat
+        int joystickIndex = static_cast<int>(index) - gamepadCount;
+        return input.GetJoystickHat(joystickIndex, 0);
+    }
 }
 
 void gamepadUpdate()

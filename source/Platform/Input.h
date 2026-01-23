@@ -189,6 +189,23 @@ public:
         };
 
         //--------------------------------------------------------------------------
+        // Raw Joystick (for devices not recognized as gamepads, e.g. R/C transmitters)
+        //--------------------------------------------------------------------------
+
+        // Get number of connected raw joysticks
+        int GetJoystickCount() const;
+
+        // Get joystick capabilities
+        int GetJoystickAxisCount(int index) const;
+        int GetJoystickButtonCount(int index) const;
+        int GetJoystickHatCount(int index) const;
+
+        // Get joystick input values
+        float GetJoystickAxis(int joystickIndex, int axis) const;
+        bool IsJoystickButtonDown(int joystickIndex, int button) const;
+        int GetJoystickHat(int joystickIndex, int hat) const;  // Returns POV angle or -1
+
+        //--------------------------------------------------------------------------
         // Accelerometer (mobile)
         //--------------------------------------------------------------------------
 
@@ -244,6 +261,9 @@ private:
         // Gamepad state
         std::vector<SDL_GameController*> mGamepads;
 
+        // Raw joystick state (for devices not recognized as gamepads, e.g. R/C transmitters)
+        std::vector<SDL_Joystick*> mJoysticks;
+
         // Accelerometer state
         SDL_Sensor* mAccelerometer;
         bool mAccelerometerAvailable;
@@ -267,6 +287,8 @@ private:
         void UpdateTouchStates();
         void OpenGamepads();
         void CloseGamepads();
+        void OpenJoysticks();
+        void CloseJoysticks();
         int FindTouchIndex(int touchId) const;
         int FindFreeTouchIndex() const;
 };

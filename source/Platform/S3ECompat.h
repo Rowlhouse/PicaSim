@@ -725,9 +725,21 @@ inline void s3eVibraVibrate(int32 amount, uint32 ms) {
 //==============================================================================
 // OS Execution
 //==============================================================================
-inline void s3eOSExecExecute(const char* url, bool async) {
+inline void s3eOSExecExecute(const char* command, bool async) {
 #ifdef _WIN32
-        ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+        // Parse command to separate executable from arguments
+        // e.g., "control joy.cpl" -> exe="control", args="joy.cpl"
+        std::string cmd(command);
+        std::string exe, args;
+
+        size_t spacePos = cmd.find(' ');
+        if (spacePos != std::string::npos) {
+                exe = cmd.substr(0, spacePos);
+                args = cmd.substr(spacePos + 1);
+                ShellExecuteA(NULL, "open", exe.c_str(), args.c_str(), NULL, SW_SHOWNORMAL);
+        } else {
+                ShellExecuteA(NULL, "open", command, NULL, NULL, SW_SHOWNORMAL);
+        }
 #else
         // Stub - implement for other platforms
 #endif

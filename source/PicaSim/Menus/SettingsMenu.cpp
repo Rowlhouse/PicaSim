@@ -1,4 +1,4 @@
-#include "SettingsMenu.h"
+﻿#include "SettingsMenu.h"
 #include "SettingsWidgets.h"
 #include "FileMenu.h"
 #include "UIHelpers.h"

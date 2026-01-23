@@ -1,3 +1,9 @@
+Version 1.0.1
+- Fix logging location - will be %APPDATA%/Rowlhouse/PicaSim/Logs/
+- Add a PlayStation controller mapping (thanks 8vD!)
+- Support for joysticks (i.e. R/C transmitter interfaces) as well as gamepads
+- Fix opening joystick calibration
+
 Version 1.0.0
 - Complete port to SDL2 and OpenGL for Windows
 - New ImGui-based menu system replacing IwUI
