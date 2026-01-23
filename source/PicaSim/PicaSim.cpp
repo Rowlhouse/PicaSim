@@ -1103,9 +1103,6 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         mPlayerAeroplane->Launch(mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans());
     }
 
-    // To reduce audio pops
-    s3eDeviceYield(0);
-
     RenderManager::GetInstance().EnableStereoscopy(mGameSettings.mOptions.mEnableStereoscopy);
     RenderManager::GetInstance().SetStereoSeparation(mGameSettings.mOptions.mStereoSeparation);
 
@@ -1122,11 +1119,37 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     float nearClipScale = ClampToRange(cameraHeight - 0.3f, 0.01f, maxClipDist);
     mGameSettings.mOptions.mFrameworkSettings.mNearClipPlaneDistance = nearClipScale * mGameSettings.mOptions.mMaxNearClipDistance;
 
-    // To reduce audio pops
-    s3eDeviceYield(0);
-
     // Draw everything
     RenderManager::GetInstance().RenderUpdate();
+
+    if (!mShowUI)
+    {
+        mPauseOverlay->SetAlpha(0);
+        mHelpOverlay->SetAlpha(0);
+        mStartMenuOverlay->SetAlpha(0);
+        mResumeOverlay->SetAlpha(0);
+        mSettingsMenuOverlay->SetAlpha(0);
+        mRelaunchOverlay->SetAlpha(0);
+        mChangeViewOverlay->SetAlpha(0);
+        mWalkaboutOverlay->SetAlpha(0);
+        mControllerOverlay->SetAlpha(0);
+        mControllerOverlay->SetText("", ButtonOverlay::ANCHOR_H_LEFT, ButtonOverlay::ANCHOR_V_TOP, 0.0f, 0.0f);
+        mWindsockOverlay->SetAlpha(0);
+    }
+    else
+    {
+        // Restore overlay visibility
+        mPauseOverlay->SetAlpha(mGameSettings.mOptions.mPauseButtonOpacity);
+        mHelpOverlay->SetAlpha(255);
+        mStartMenuOverlay->SetAlpha(255);
+        mResumeOverlay->SetAlpha(255);
+        mSettingsMenuOverlay->SetAlpha(255);
+        mRelaunchOverlay->SetAlpha(255);
+        mChangeViewOverlay->SetAlpha(255);
+        mWalkaboutOverlay->SetAlpha(255);
+        mControllerOverlay->SetAlpha(255);
+        mWindsockOverlay->SetAlpha(255);
+    }
 
     // Audio
     AudioManager::GetInstance().SetVolume(mGameSettings.mOptions.mVolumeScale);
@@ -1155,8 +1178,6 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     AudioManager::GetInstance().SetChannelPositionAndVelocity(mSoundChannel, pos, Vector3(0,0,0));
     AudioManager::GetInstance().SetChannelFrequencyScale(mSoundChannel, freqScale);
     AudioManager::GetInstance().SetChannelTargetVolumeScale(mSoundChannel, GetSettings().mOptions.mWindVolume * volumeScale);
-
-    s3eDeviceYield(0);
 
     // Windsock
     if (windStrength > 0.02f)
@@ -1198,35 +1219,6 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             ShowInGameDialog(0.65f, 0.55f, TXT(PS_FLYING), TXT(PS_TRAINERPOWEREDTIP), TXT(PS_OK));
         }
         mShowHelpAfterLoading = false;
-    }
-
-    if (!mShowUI)
-    {
-        mPauseOverlay->SetAlpha(0);
-        mHelpOverlay->SetAlpha(0);
-        mStartMenuOverlay->SetAlpha(0);
-        mResumeOverlay->SetAlpha(0);
-        mSettingsMenuOverlay->SetAlpha(0);
-        mRelaunchOverlay->SetAlpha(0);
-        mChangeViewOverlay->SetAlpha(0);
-        mWalkaboutOverlay->SetAlpha(0);
-        mControllerOverlay->SetAlpha(0);
-        mControllerOverlay->SetText("", ButtonOverlay::ANCHOR_H_LEFT, ButtonOverlay::ANCHOR_V_TOP, 0.0f, 0.0f);
-        mWindsockOverlay->SetAlpha(0);
-    }
-    else
-    {
-        // Restore overlay visibility
-        mPauseOverlay->SetAlpha(mGameSettings.mOptions.mPauseButtonOpacity);
-        mHelpOverlay->SetAlpha(255);
-        mStartMenuOverlay->SetAlpha(255);
-        mResumeOverlay->SetAlpha(255);
-        mSettingsMenuOverlay->SetAlpha(255);
-        mRelaunchOverlay->SetAlpha(255);
-        mChangeViewOverlay->SetAlpha(255);
-        mWalkaboutOverlay->SetAlpha(255);
-        mControllerOverlay->SetAlpha(255);
-        mWindsockOverlay->SetAlpha(255);
     }
 
     UpdateResourceGroupForScreen(mGameSettings);
