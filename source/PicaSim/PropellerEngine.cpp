@@ -15,60 +15,8 @@ PropellerEngine::PropellerEngine()
 }
 
 //======================================================================================================================
-void PropellerEngine::Init(class TiXmlElement* engineElement, class Aeroplane* aeroplane)
+void PropellerEngine::ReadFromXML(TiXmlElement* engineElement, EngineData& engineData)
 {
-    TRACE_METHOD_ONLY(1);
-    Engine::Init(engineElement, aeroplane);
-
-    mAeroplane = aeroplane;
-    const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
-    // If true, then we would adapt with the natural flight speed of the plane.
-    // If false, then we seem to achieve the same flight speedirrespective of the 
-    /// mass - but that makes us massively over powered (e.g. fly the quad) - but we can scale that back
-    DimensionalScaling ds(as.mSizeScale, as.mMassScale, false);
-
-    for (size_t i = 0 ; i != Controller::MAX_CHANNELS ; ++i)
-    {
-        mControlPerChannel[i] = 0.0f;
-        mPitchAnglePerChannel[i] = 0.0f;
-        mYawAnglePerChannel[i] = 0.0f;
-    }
-    for (size_t i = 0 ; i != MAX_GYROS ; ++i)
-        mGyroControls[i] = GyroControl();
-    for (size_t i = 0 ; i != MAX_ACCELEROMETERS ; ++i)
-        mAccelerometerControls[i] = AccelerometerControl();
-
-    mNumBlades = 2;
-    mNumRings = 4;
-    mRadius = 0.1905f;
-    mPitch = 0.18f;
-    mBladeChord = 0.015f;
-    mCL0 = 0.5f;
-    mCLPerRadian = RadiansToDegrees(0.1f);
-    mCD0 = 0.05f;
-    mCDInducedMultiplier = 2.0f;
-    mStallAngle = 10.0f;
-    mInertia = 0.001f;
-    mMaxTorque = 10.0f;
-    mMaxW = 0.0f;
-    mMinW = 0.0f;
-    mFrictionTorque = 0.0f;
-    mWashRotationFraction = 0.0f;
-    mAeroTorqueScale = 1.0f;
-    mPropDiskAreaScale = 0.4f;
-    mDirectionMultiplier = 1.0f;
-    mTransitionalLiftSpeed = 5.0f;
-    mTransitionalLiftAmount = 0.15f;
-    mPropPredictionTime = 0.0f;
-    mPropPredictionMaxAngSpeed = 3.0f;
-    mIsVariable = false;
-
-    mControlExp = 1.0f;
-    // Assume a very high control rate, since this would normally be electronic, or only a small load even if using a real throttle.
-    mControlRate = 1.0f / 0.05f;
-    mChannelForMode = -1;
-
-    // Read data for this engine
     mName = readStringFromXML(engineElement, "name");
     readFromXML(engineElement, "controlPerChannel0", mControlPerChannel[0]);
     readFromXML(engineElement, "controlPerChannel1", mControlPerChannel[1]);
@@ -123,19 +71,118 @@ void PropellerEngine::Init(class TiXmlElement* engineElement, class Aeroplane* a
     {
         char txt[128];
         sprintf(txt, "gyroName%d", iGyro);
-        mGyroControls[iGyro].mName = readStringFromXML(engineElement, txt);
+        readFromXML(engineElement, txt, mGyroControls[iGyro].mName);
         sprintf(txt, "controlPerGyro%d", iGyro);
-        mGyroControls[iGyro].mControl = readFloatFromXML(engineElement, txt);
+        readFromXML(engineElement, txt, mGyroControls[iGyro].mControl);
     }
     for (int iAccelerometer = 0 ; iAccelerometer != MAX_ACCELEROMETERS ; ++iAccelerometer)
     {
         char txt[128];
         sprintf(txt, "accelerometerName%d", iAccelerometer);
-        mAccelerometerControls[iAccelerometer].mName = readStringFromXML(engineElement, txt);
+        readFromXML(engineElement, txt, mAccelerometerControls[iAccelerometer].mName);
         sprintf(txt, "controlPerAccelerometer%d", iAccelerometer);
-        mAccelerometerControls[iAccelerometer].mControl = readFloatFromXML(engineElement, txt);
+        readFromXML(engineElement, txt, mAccelerometerControls[iAccelerometer].mControl);
     }
 
+    // Read data used to set up position/rotation/audio (stored in EngineData for post-processing)
+    readFromXML(engineElement, "position", engineData.position);
+    readFromXML(engineElement, "rotation", engineData.rotation);
+    readFromXML(engineElement, "roll", engineData.roll);
+    readFromXML(engineElement, "pitch", engineData.pitch);
+    readFromXML(engineElement, "yaw", engineData.yaw);
+
+    readFromXML(engineElement, "audioFile", engineData.audioFile);
+    readFromXML(engineElement, "audioSampleRate", engineData.audioSampleRate);
+    readFromXML(engineElement, "audioRadius", engineData.audioRadius);
+    readFromXML(engineElement, "audioMinVolume", engineData.audioMinVolume);
+    readFromXML(engineElement, "audioMaxVolume", engineData.audioMaxVolume);
+    readFromXML(engineElement, "audioMinFreqScale", engineData.audioMinFreqScale);
+    readFromXML(engineElement, "audioMaxFreqScale", engineData.audioMaxFreqScale);
+
+    readFromXML(engineElement, "colour", engineData.colour);
+}
+
+//======================================================================================================================
+void PropellerEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane)
+{
+    TRACE_METHOD_ONLY(1);
+    Engine::Init(engineElement, aerodynamicsHandle, aeroplane);
+
+    mAeroplane = aeroplane;
+    const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
+    // If true, then we would adapt with the natural flight speed of the plane.
+    // If false, then we seem to achieve the same flight speedirrespective of the
+    /// mass - but that makes us massively over powered (e.g. fly the quad) - but we can scale that back
+    DimensionalScaling ds(as.mSizeScale, as.mMassScale, false);
+
+    // Initialize arrays to defaults
+    for (size_t i = 0 ; i != Controller::MAX_CHANNELS ; ++i)
+    {
+        mControlPerChannel[i] = 0.0f;
+        mPitchAnglePerChannel[i] = 0.0f;
+        mYawAnglePerChannel[i] = 0.0f;
+    }
+    for (size_t i = 0 ; i != MAX_GYROS ; ++i)
+        mGyroControls[i] = GyroControl();
+    for (size_t i = 0 ; i != MAX_ACCELEROMETERS ; ++i)
+        mAccelerometerControls[i] = AccelerometerControl();
+
+    // Set default values for member variables
+    mNumBlades = 2;
+    mNumRings = 4;
+    mRadius = 0.1905f;
+    mPitch = 0.18f;
+    mBladeChord = 0.015f;
+    mCL0 = 0.5f;
+    mCLPerRadian = RadiansToDegrees(0.1f);
+    mCD0 = 0.05f;
+    mCDInducedMultiplier = 2.0f;
+    mStallAngle = 10.0f;
+    mInertia = 0.001f;
+    mMaxTorque = 10.0f;
+    mMaxW = 0.0f;
+    mMinW = 0.0f;
+    mFrictionTorque = 0.0f;
+    mWashRotationFraction = 0.0f;
+    mAeroTorqueScale = 1.0f;
+    mPropDiskAreaScale = 0.4f;
+    mDirectionMultiplier = 1.0f;
+    mTransitionalLiftSpeed = 5.0f;
+    mTransitionalLiftAmount = 0.15f;
+    mPropPredictionTime = 0.0f;
+    mPropPredictionMaxAngSpeed = 3.0f;
+    mIsVariable = false;
+
+    mControlExp = 1.0f;
+    // Assume a very high control rate, since this would normally be electronic, or only a small load even if using a real throttle.
+    mControlRate = 1.0f / 0.05f;
+    mChannelForMode = -1;
+
+    EngineData engineData;
+
+    // Copy if required
+    std::string copy = readStringFromXML(engineElement, "copy");
+    if (!copy.empty())
+    {
+        for (int iEngine = 0 ; ; ++iEngine)
+        {
+            TiXmlElement* engineElementToCopy = aerodynamicsHandle.Child("PropellerEngine", iEngine).ToElement();
+            if (!engineElementToCopy)
+                break;
+            const std::string name = readStringFromXML(engineElementToCopy, "name");
+
+            if (name == copy)
+            {
+                ReadFromXML(engineElementToCopy, engineData);
+                break;
+            }
+        }
+    }
+
+    // Read data for this engine (overrides copied values)
+    ReadFromXML(engineElement, engineData);
+
+    // Post-processing: convert units
     mCLPerRadian = RadiansToDegrees(mCLPerRadian);
     mMaxW *= 2.0f * PI / 60.0f;
     mMinW *= 2.0f * PI / 60.0f;
@@ -164,13 +211,11 @@ void PropellerEngine::Init(class TiXmlElement* engineElement, class Aeroplane* a
     mMaxW *= sqrtf(as.mMassScale);
     mMinW *= sqrtf(as.mMassScale);
 
-    Vector3 enginePosition = ds.GetScaledLength(readVector3FromXML(engineElement, "position"));
-    Vector3 engineRotation = readVector3FromXML(engineElement, "rotation");
+    // Process position and rotation from EngineData
+    Vector3 enginePosition = ds.GetScaledLength(engineData.position);
+    Vector3 engineRotation = engineData.rotation;
 
-    float roll = readFloatFromXML(engineElement, "roll");
-    float pitch = readFloatFromXML(engineElement, "pitch");
-    float yaw = readFloatFromXML(engineElement, "yaw");
-    ApplyRollPitchYawToRotationDegrees(roll, pitch, yaw, engineRotation);
+    ApplyRollPitchYawToRotationDegrees(engineData.roll, engineData.pitch, engineData.yaw, engineRotation);
 
     float angle = DegreesToRadians(engineRotation.GetLength());
     if (angle > 0.0f)
@@ -188,24 +233,22 @@ void PropellerEngine::Init(class TiXmlElement* engineElement, class Aeroplane* a
     // Initial values
     Launched();
 
-    std::string audioFile = readStringFromXML(engineElement, "audioFile");
-    if (!audioFile.empty())
+    // Load audio from EngineData
+    if (!engineData.audioFile.empty())
     {
         SoundSetting soundSetting;
 
-        int sampleRate = readIntFromXML(engineElement, "audioSampleRate");
-        float radius = readFloatFromXML(engineElement, "audioRadius");
-        soundSetting.mSound = AudioManager::GetInstance().LoadSound(audioFile.c_str(), sampleRate, false, true, true);
+        soundSetting.mSound = AudioManager::GetInstance().LoadSound(engineData.audioFile.c_str(), engineData.audioSampleRate, false, true, true);
         if (soundSetting.mSound)
         {
-            soundSetting.mSoundChannel = AudioManager::GetInstance().AllocateSoundChannel(radius, true);
+            soundSetting.mSoundChannel = AudioManager::GetInstance().AllocateSoundChannel(engineData.audioRadius, true);
             if (soundSetting.mSoundChannel != -1)
             {
                 AudioManager::GetInstance().StartSoundOnChannel(soundSetting.mSoundChannel, soundSetting.mSound, true);
-                soundSetting.mMinVolume = readFloatFromXML(engineElement, "audioMinVolume");
-                soundSetting.mMaxVolume = readFloatFromXML(engineElement, "audioMaxVolume");
-                soundSetting.mMinFreqScale = readFloatFromXML(engineElement, "audioMinFreqScale");
-                soundSetting.mMaxFreqScale = readFloatFromXML(engineElement, "audioMaxFreqScale");
+                soundSetting.mMinVolume = engineData.audioMinVolume;
+                soundSetting.mMaxVolume = engineData.audioMaxVolume;
+                soundSetting.mMinFreqScale = engineData.audioMinFreqScale;
+                soundSetting.mMaxFreqScale = engineData.audioMaxFreqScale;
                 ds.ScaleFreq(soundSetting.mMinFreqScale);
                 ds.ScaleFreq(soundSetting.mMaxFreqScale);
                 mSoundSettings.push_back(soundSetting);
@@ -325,7 +368,7 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
             float maxDeltaControl = mControlRate * deltaTime;
             if (control > mControl)
                 mControl += Minimum(control - mControl, maxDeltaControl);
-            else 
+            else
                 mControl -= Minimum(mControl - control, maxDeltaControl);
 
             throttleControl = mControl;
@@ -333,14 +376,14 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
         }
         else
         {
-            pitchControl = ClampToRange(control * 2.0f - 1.0f, -1.0f, 1.0f); 
+            pitchControl = ClampToRange(control * 2.0f - 1.0f, -1.0f, 1.0f);
             control = fabsf(pitchControl);
             control = powf(control, mControlExp);
 
             float maxDeltaControl = mControlRate * deltaTime;
             if (control > mControl)
                 mControl += Minimum(control - mControl, maxDeltaControl);
-            else 
+            else
                 mControl -= Minimum(mControl - control, maxDeltaControl);
 
             throttleControl = mControl;
@@ -389,8 +432,8 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
         const float r = (0.5f + iRing) * mRadius / numRings;
 
         // Angle of the blade
-        float bladeAngle = 
-            mIsVariable ? 
+        float bladeAngle =
+            mIsVariable ?
             atan2f(mPitch, 2.0f * PI * mRadius) :
             atan2f(mPitch, 2.0f * PI * r);
         if (mIsVariable && mMode == MODE_VPP)
@@ -399,7 +442,7 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
         const float bladeSpeed = mW * r;
         const float airSpeedSq = Square(bladeSpeed) + Square(v0);
 
-        // Angle of the air flow so 0 means the lift will be straight forwards relative to the plane. 
+        // Angle of the air flow so 0 means the lift will be straight forwards relative to the plane.
         // If the blades were stationary but the plane going forwards, angle would be -ve.
         const float airflowAngle = -atan2f(v0, bladeSpeed);
 
@@ -465,7 +508,7 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
     // w = 0.5 * (-v0 +/- sqrt(v0^2 + 2 * T / (density * A)))
     if (propAeroForce != 0.0f)
     {
-        // Note that v0 has the opposite sign to propAeroForce here - i.e. is +ve when the wind 
+        // Note that v0 has the opposite sign to propAeroForce here - i.e. is +ve when the wind
         // is blowing back through the propeller.
         float propArea = PI * Square(mRadius);
         bool reverseFlow = propAeroForce < 0.0f;
@@ -519,7 +562,7 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
         }
     }
 
-    // speedFrac can be -ve 
+    // speedFrac can be -ve
     engineTorque += speedFrac > 0.0f ? -frictionTorque : frictionTorque;
 
     float propTorque = engineTorque - propAeroTorque;
@@ -536,7 +579,7 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
 
     Vector3 force = thrustDir * propAeroForce;
 
-    // Use a predicted direction for the thrust. I have no idea why, but this results 
+    // Use a predicted direction for the thrust. I have no idea why, but this results
     // in the desired instability when pushing...
     Vector3 angVel = mAeroplane->GetPhysics()->GetAngularVelocity();
     float angSpeed = angVel.GetLength();

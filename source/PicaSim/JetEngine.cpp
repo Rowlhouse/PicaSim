@@ -10,10 +10,10 @@
 #include "PicaSim.h"
 
 //======================================================================================================================
-void JetEngine::Init(class TiXmlElement* engineElement, class Aeroplane* aeroplane)
+void JetEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane)
 {
     TRACE_METHOD_ONLY(1);
-    Engine::Init(engineElement, aeroplane);
+    Engine::Init(engineElement, aerodynamicsHandle, aeroplane);
 
     mAeroplane = aeroplane;
     const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();

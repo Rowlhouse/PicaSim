@@ -9,7 +9,7 @@
 class JetEngine : public Engine
 {
 public:
-    void Init(class TiXmlElement* engineElement, class Aeroplane* aeroplane);
+    void Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane) OVERRIDE;
     void Terminate();
 
     void EntityUpdate(float deltaTime, int entityLevel) OVERRIDE;

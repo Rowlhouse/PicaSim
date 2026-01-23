@@ -196,7 +196,7 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
         if (!engineElement)
             break;
         Engine* engine = new JetEngine;
-        engine->Init(engineElement, mAeroplane);
+        engine->Init(engineElement, aerodynamicsHandle, mAeroplane);
         mEngines.push_back(engine);
     }
 
@@ -206,7 +206,7 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
         if (!engineElement)
             break;
         Engine* engine = new PropellerEngine;
-        engine->Init(engineElement, mAeroplane);
+        engine->Init(engineElement, aerodynamicsHandle, mAeroplane);
         mEngines.push_back(engine);
     }
 

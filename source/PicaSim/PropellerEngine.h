@@ -11,7 +11,7 @@ class PropellerEngine : public Engine
 public:
     PropellerEngine();
 
-    void Init(class TiXmlElement* engineElement, class Aeroplane* aeroplane) OVERRIDE;
+    void Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane) OVERRIDE;
     void Terminate() OVERRIDE;
     void Launched() OVERRIDE;
 
@@ -32,6 +32,28 @@ public:
     float GetPropSpeed() const OVERRIDE {return mW;}
 
 private:
+    // Data struct for XML values that need post-processing (position, rotation, audio)
+    struct EngineData
+    {
+        EngineData() : position(0,0,0), rotation(0,0,0), roll(0), pitch(0), yaw(0),
+            audioSampleRate(0), audioRadius(0), audioMinVolume(0), audioMaxVolume(0),
+            audioMinFreqScale(1), audioMaxFreqScale(1), colour(1,1,1,0.1f) {}
+        Vector3 position;
+        Vector3 rotation;
+        float roll, pitch, yaw;
+        // Audio settings
+        std::string audioFile;
+        int audioSampleRate;
+        float audioRadius;
+        float audioMinVolume, audioMaxVolume;
+        float audioMinFreqScale, audioMaxFreqScale;
+        // Visual
+        Vector4 colour;
+    };
+
+    // For reading engine properties from XML, used for copy functionality
+    void ReadFromXML(class TiXmlElement* engineElement, EngineData& engineData);
+
     class Aeroplane* mAeroplane;
 
     // The position/orientation of the middle of the engine

@@ -8,7 +8,7 @@
 class Engine : public Entity
 {
 public:
-    virtual void Init(class TiXmlElement* engineElement, class Aeroplane* aeroplane) {mLastWash = mLastWashAngVel = Vector3(0,0,0);}
+    virtual void Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane) {mLastWash = mLastWashAngVel = Vector3(0,0,0);}
     virtual void Terminate() = 0;
     virtual void Launched() {}
 

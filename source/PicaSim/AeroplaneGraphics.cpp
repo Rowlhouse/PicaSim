@@ -216,16 +216,51 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
 
         mPropDisks.push_back(PropDisk());
         PropDisk& propDisk = mPropDisks.back();
+
+        // Default values
+        propDisk.mRadius = 0.0f;
+        propDisk.mColour = Vector4(1,1,1,0.1f);
+        Vector3 enginePosition(0,0,0);
+        Vector3 engineRotation(0,0,0);
+        float roll = 0, pitch = 0, yaw = 0;
+
+        // Copy if required
+        std::string copy = readStringFromXML(propDiskElement, "copy");
+        if (!copy.empty())
+        {
+            for (int iEngine = 0 ; ; ++iEngine)
+            {
+                TiXmlElement* engineElementToCopy = aerodynamicsHandle.Child("PropellerEngine", iEngine).ToElement();
+                if (!engineElementToCopy)
+                    break;
+                const std::string name = readStringFromXML(engineElementToCopy, "name");
+                if (name == copy)
+                {
+                    readFromXML(engineElementToCopy, "radius", propDisk.mRadius);
+                    readFromXML(engineElementToCopy, "colour", propDisk.mColour);
+                    readFromXML(engineElementToCopy, "position", enginePosition);
+                    readFromXML(engineElementToCopy, "rotation", engineRotation);
+                    readFromXML(engineElementToCopy, "roll", roll);
+                    readFromXML(engineElementToCopy, "pitch", pitch);
+                    readFromXML(engineElementToCopy, "yaw", yaw);
+                    break;
+                }
+            }
+        }
+
+        // Read from current element (overrides copied values)
         propDisk.mName = readStringFromXML(propDiskElement, "name");
-        propDisk.mRadius = readFloatFromXML(propDiskElement, "radius") * as.mSizeScale;
-        propDisk.mColour = readVector4FromXML(propDiskElement, "colour");
+        readFromXML(propDiskElement, "radius", propDisk.mRadius);
+        readFromXML(propDiskElement, "colour", propDisk.mColour);
+        readFromXML(propDiskElement, "position", enginePosition);
+        readFromXML(propDiskElement, "rotation", engineRotation);
+        readFromXML(propDiskElement, "roll", roll);
+        readFromXML(propDiskElement, "pitch", pitch);
+        readFromXML(propDiskElement, "yaw", yaw);
 
-        Vector3 enginePosition = readVector3FromXML(propDiskElement, "position") * as.mSizeScale;
-        Vector3 engineRotation = readVector3FromXML(propDiskElement, "rotation");
-
-        float roll = readFloatFromXML(propDiskElement, "roll");
-        float pitch = readFloatFromXML(propDiskElement, "pitch");
-        float yaw = readFloatFromXML(propDiskElement, "yaw");
+        // Apply scaling and compute transform
+        propDisk.mRadius *= as.mSizeScale;
+        enginePosition *= as.mSizeScale;
         ApplyRollPitchYawToRotationDegrees(roll, pitch, yaw, engineRotation);
 
         float angle = DegreesToRadians(engineRotation.GetLength());

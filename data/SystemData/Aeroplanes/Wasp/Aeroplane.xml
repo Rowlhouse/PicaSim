@@ -20,13 +20,14 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
     <!-- Positions are in the centre of the chord and height, but at one end of the span (so extents.y may be negative). 
     Note that X is forward, Y is left and Z is up-->
 
+    <!-- Front Left motor - CCW rotation (negative maxRPM), green -->
     <PropellerEngine
       name="FL"
       positionX="0.159"
       positionY="0.159"
       positionZ="0.04"
       rotationY="-90.0"
-      
+
       numBlades = "2"
       numRings = "4"
       radius = "0.127"
@@ -41,16 +42,16 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
       maxTorque = "0.75"
       maxRPM = "-7000"
       minRPM = "0"
-      frictionTorque ="0.02"
+      frictionTorque ="0.2"
       transitionalLiftAmount="0.05"
       transitionalLiftSpeed="3.0"
 
-      controlExp="0.655"
+      controlExp="0.545"
       controlRate="50"
-      
+
       gyroName0="Pitch"
       controlPerGyro0="1"
-      
+
       gyroName1="Roll"
       controlPerGyro1="-1"
 
@@ -59,7 +60,7 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
 
       gyroName3="Throttle"
       controlPerGyro3="1"
-      
+
       audioFile="SystemData/Audio/Motor22050Mono.raw"
       audioSampleRate="22050"
       audioRadius="0.2"
@@ -74,166 +75,38 @@ Wasp - Quadcopter - motors separated by 45cm along the diagonal
       colourW="0.1"
     />
 
+    <!-- Front Right motor - CW rotation, green -->
     <PropellerEngine
       name="FR"
-      positionX="0.159"
+      copy="FL"
       positionY="-0.159"
-      positionZ="0.04"
-      rotationY="-90.0"
-      
-      numBlades = "2"
-      numRings = "4"
-      radius = "0.127"
-      pitch = "0.114"
-      bladeChord = "0.01"
-      CL0 = "0.5"
-      CLPerDegree = "0.1"
-      CD0="0.1"
-      CDInducedMultiplier="2.0"
-      stallAngle="15"
-      inertia = "0.0001"
-      maxTorque = "0.75"
-      maxRPM = "7000"
-      minRPM = "0"
-      frictionTorque ="0.02"
-      transitionalLiftAmount="0.05"
-      transitionalLiftSpeed="3.0"
-
-      controlExp="0.655"
-      controlRate="50"
-
-      gyroName0="Pitch"
-      controlPerGyro0="1"
-
-      gyroName1="Roll"
+      maxRPM="7000"
       controlPerGyro1="1"
-
-      gyroName2="Yaw"
       controlPerGyro2="1"
-
-      gyroName3="Throttle"
-      controlPerGyro3="1"
-
-      audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioSampleRate="22050"
-      audioRadius="0.2"
-      audioMinVolume="0"
-      audioMaxVolume="1"
-      audioMinFreqScale="0.2"
-      audioMaxFreqScale="2"
-
-      colourX="0.0"
-      colourY="1.0"
-      colourZ="0.0"
-      colourW="0.1"
     />
 
+    <!-- Back Left motor - CW rotation, red -->
     <PropellerEngine
       name="BL"
+      copy="FL"
       positionX="-0.159"
-      positionY="0.159"
-      positionZ="0.04"
-      rotationY="-90.0"
-      
-      numBlades = "2"
-      numRings = "4"
-      radius = "0.127"
-      pitch = "0.114"
-      bladeChord = "0.01"
-      CL0 = "0.5"
-      CLPerDegree = "0.1"
-      CD0="0.1"
-      CDInducedMultiplier="2.0"
-      stallAngle="15"
-      inertia = "0.0001"
-      maxTorque = "0.75"
-      maxRPM = "7000"
-      minRPM = "0"
-      frictionTorque ="0.02"
-      transitionalLiftAmount="0.05"
-      transitionalLiftSpeed="3.0"
-
-      controlExp="0.655"
-      controlRate="50"
-
-      gyroName0="Pitch"
+      maxRPM="7000"
       controlPerGyro0="-1"
-
-      gyroName1="Roll"
-      controlPerGyro1="-1"
-
-      gyroName2="Yaw"
       controlPerGyro2="1"
-
-      gyroName3="Throttle"
-      controlPerGyro3="1"
-
-      audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioSampleRate="22050"
-      audioRadius="0.2"
-      audioMinVolume="0"
-      audioMaxVolume="1"
-      audioMinFreqScale="0.2"
-      audioMaxFreqScale="2"
-
       colourX="1.0"
       colourY="0.0"
-      colourZ="0.0"
-      colourW="0.1"
     />
 
+    <!-- Back Right motor - CCW rotation, red -->
     <PropellerEngine
       name="BR"
+      copy="FL"
       positionX="-0.159"
       positionY="-0.159"
-      positionZ="0.04"
-      rotationY="-90.0"
-      
-      numBlades = "2"
-      numRings = "4"
-      radius = "0.127"
-      pitch = "0.114"
-      bladeChord = "0.01"
-      CL0 = "0.5"
-      CLPerDegree = "0.1"
-      CD0="0.1"
-      CDInducedMultiplier="2.0"
-      stallAngle="15"
-      inertia = "0.0001"
-      maxTorque = "0.75"
-      maxRPM = "-7000"
-      minRPM = "0"
-      frictionTorque ="0.02"
-      transitionalLiftAmount="0.05"
-      transitionalLiftSpeed="3.0"
-
-      controlExp="0.655"
-      controlRate="50"
-
-      gyroName0="Pitch"
       controlPerGyro0="-1"
-
-      gyroName1="Roll"
       controlPerGyro1="1"
-
-      gyroName2="Yaw"
-      controlPerGyro2="-1"
-
-      gyroName3="Throttle"
-      controlPerGyro3="1"
-
-      audioFile="SystemData/Audio/Motor22050Mono.raw"
-      audioSampleRate="22050"
-      audioRadius="0.2"
-      audioMinVolume="0"
-      audioMaxVolume="1"
-      audioMinFreqScale="0.2"
-      audioMaxFreqScale="2"
-
       colourX="1.0"
       colourY="0.0"
-      colourZ="0.0"
-      colourW="0.1"
     />
 
     <Fuselage

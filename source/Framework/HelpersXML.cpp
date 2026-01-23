@@ -258,7 +258,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, Vector4& value, size_t* i
     if (!readFromXML(elem, txtZ, value.z))
         result = false;
     if (!readFromXML(elem, txtW, value.w))
-        value.w = 1.0f;
+        result = false;
 
     return result;
 }
