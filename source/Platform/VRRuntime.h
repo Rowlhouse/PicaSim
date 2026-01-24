@@ -109,6 +109,12 @@ public:
     // Get the current session state.
     virtual VRSessionState GetSessionState() const = 0;
 
+    // Check if the session is running (xrBeginSession was called successfully).
+    virtual bool IsSessionRunning() const = 0;
+
+    // Poll for VR events (to keep session state updated).
+    virtual void PollEvents() = 0;
+
     // Begin the VR session (start rendering to headset).
     virtual bool BeginSession() = 0;
 

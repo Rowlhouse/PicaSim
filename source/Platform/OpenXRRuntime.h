@@ -43,6 +43,8 @@ public:
     bool CreateSession() override;
     void DestroySession() override;
     VRSessionState GetSessionState() const override;
+    bool IsSessionRunning() const override;
+    void PollEvents() override;
     bool BeginSession() override;
     void EndSession() override;
 
@@ -93,7 +95,6 @@ private:
     bool CreateSwapchainsInternal();
     void DestroySwapchainsInternal();
 
-    void PollEvents();
     void HandleSessionStateChange(XrSessionState newState);
 
     bool LocateViews(XrTime displayTime);

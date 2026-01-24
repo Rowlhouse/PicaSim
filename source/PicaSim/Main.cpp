@@ -566,7 +566,14 @@ SelectPlane:
                     VRFrameInfo vrFrameInfo;
                     if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
                     {
-                        inVRFrame = VRManager::GetInstance().BeginVRFrame(vrFrameInfo);
+                        // Always poll events to detect headset reconnection
+                        VRManager::GetInstance().PollEvents();
+
+                        // Only start VR frames when headset is actually active
+                        if (VRManager::GetInstance().IsVRReady())
+                        {
+                            inVRFrame = VRManager::GetInstance().BeginVRFrame(vrFrameInfo);
+                        }
                     }
 #endif
 

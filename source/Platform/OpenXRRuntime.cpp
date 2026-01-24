@@ -436,6 +436,12 @@ VRSessionState OpenXRRuntime::GetSessionState() const
     }
 }
 
+//------------------------------------------------------------------------------
+bool OpenXRRuntime::IsSessionRunning() const
+{
+    return mIsRunning;
+}
+
 // Forward declaration (defined later in this file)
 static const char* GetSessionStateName(XrSessionState state);
 
@@ -454,7 +460,14 @@ bool OpenXRRuntime::BeginSession()
     }
 
     // Poll events to check for state changes
+    // Note: This may trigger HandleSessionStateChange which can start the session
     PollEvents();
+
+    // Check again if session was started by HandleSessionStateChange
+    if (mIsRunning)
+    {
+        return true;
+    }
 
     // If not in READY state yet, that's OK - frame loop will retry later
     // This allows VR to be enabled before the headset is worn
@@ -465,6 +478,7 @@ bool OpenXRRuntime::BeginSession()
         return true;  // Not an error, just not ready yet
     }
 
+    // Start the session (this case handles when READY was already set before PollEvents)
     XrSessionBeginInfo beginInfo = {};
     beginInfo.type = XR_TYPE_SESSION_BEGIN_INFO;
     beginInfo.next = nullptr;
@@ -565,7 +579,25 @@ void OpenXRRuntime::HandleSessionStateChange(XrSessionState newState)
     switch (newState)
     {
         case XR_SESSION_STATE_READY:
-            // Could auto-begin here, but we let the caller do it
+            // Auto-begin session when ready (needed because PollEvents is called
+            // separately from the frame loop)
+            if (!mIsRunning)
+            {
+                // Call xrBeginSession directly here to avoid recursion through BeginSession()
+                XrSessionBeginInfo beginInfo = {};
+                beginInfo.type = XR_TYPE_SESSION_BEGIN_INFO;
+                beginInfo.primaryViewConfigurationType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
+                XrResult result = xrBeginSession(mSession, &beginInfo);
+                if (XR_SUCCEEDED(result))
+                {
+                    mIsRunning = true;
+                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - Session started");
+                }
+                else
+                {
+                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - xrBeginSession failed: %d", (int)result);
+                }
+            }
             break;
         case XR_SESSION_STATE_STOPPING:
             mIsRunning = false;

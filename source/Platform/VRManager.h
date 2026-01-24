@@ -45,8 +45,12 @@ public:
     // Check if VR mode is currently enabled and active.
     bool IsVREnabled() const { return mVREnabled && mRuntime != nullptr; }
 
-    // Check if VR is ready for rendering (session is focused).
+    // Check if VR is ready for rendering (session is focused or visible).
     bool IsVRReady() const;
+
+    // Poll for VR events (call each frame to keep session state updated).
+    // This should be called even when headset is not active to detect reconnection.
+    void PollEvents();
 
     //--------------------------------------------------------------------------
     // Frame management

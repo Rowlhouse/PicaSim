@@ -1156,10 +1156,11 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 
     // Draw everything
 #ifdef PICASIM_VR_SUPPORT
-    if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
+    // Use IsVRReady() to check if headset is active, not just IsVREnabled()
+    // This allows falling back to desktop rendering when headset is removed
+    if (VRManager::IsAvailable() && VRManager::GetInstance().IsVRReady())
     {
-        // Get VR frame info from the current frame (passed via thread-local or global)
-        // For now, we create a dummy frame info - the actual frame is managed in main.cpp
+        // VR headset is active - render to VR and mirror to desktop
         VRFrameInfo vrFrameInfo;
         if (VRManager::GetInstance().GetRuntime())
         {
@@ -1174,6 +1175,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     else
 #endif
     {
+        // No VR or headset not active - render normally to desktop
         RenderManager::GetInstance().RenderUpdate();
     }
 

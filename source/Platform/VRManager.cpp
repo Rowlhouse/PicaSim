@@ -227,8 +227,30 @@ bool VRManager::IsVRReady() const
         return false;
     }
 
-    VRSessionState state = mRuntime->GetSessionState();
-    return state == VR_SESSION_FOCUSED || state == VR_SESSION_VISIBLE;
+    // Check if session is running (xrBeginSession was called successfully).
+    // This is the primary check - once running, we must submit frames to advance
+    // the session state from READY to SYNCHRONIZED.
+    return mRuntime->IsSessionRunning();
+}
+
+//------------------------------------------------------------------------------
+void VRManager::PollEvents()
+{
+    if (!mVREnabled || !mRuntime)
+    {
+        return;
+    }
+    mRuntime->PollEvents();
+
+    // Debug: log current state
+    static VRSessionState lastLoggedState = VR_SESSION_UNKNOWN;
+    VRSessionState currentState = mRuntime->GetSessionState();
+    if (currentState != lastLoggedState)
+    {
+        TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Session state: %d, IsVRReady: %s",
+            (int)currentState, IsVRReady() ? "true" : "false");
+        lastLoggedState = currentState;
+    }
 }
 
 //==============================================================================
