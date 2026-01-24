@@ -13,6 +13,10 @@
 #include "HelpersXML.h"
 #include "tinyxml.h"
 
+#ifdef PICASIM_VR_SUPPORT
+#include "../../Platform/VRManager.h"
+#endif
+
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
@@ -501,6 +505,56 @@ void SettingsMenu::RenderOptions1Tab()
         }
         SettingsWidgets::EndSettingsBlock();
     }
+
+#ifdef PICASIM_VR_SUPPORT
+    // VR Headset settings
+    {
+        SettingsWidgets::SectionHeader("VR Headset");
+        SettingsWidgets::BeginSettingsBlock();
+        {
+            if (VRManager::IsAvailable())
+            {
+                // VR enable checkbox
+                bool wasEnabled = options.mEnableVR;
+                SettingsWidgets::Checkbox("Enable VR Mode", options.mEnableVR);
+
+                // Handle enable/disable
+                if (options.mEnableVR != wasEnabled)
+                {
+                    if (options.mEnableVR)
+                    {
+                        if (!VRManager::GetInstance().EnableVR())
+                        {
+                            options.mEnableVR = false;
+                        }
+                    }
+                    else
+                    {
+                        VRManager::GetInstance().DisableVR();
+                    }
+                }
+
+                if (VRManager::GetInstance().IsVREnabled())
+                {
+                    // Show runtime info
+                    char infoStr[256];
+                    snprintf(infoStr, sizeof(infoStr), "%s - %s",
+                        VRManager::GetInstance().GetRuntimeName(),
+                        VRManager::GetInstance().GetSystemName());
+                    SettingsWidgets::InfoLabel("Headset", infoStr);
+
+                    SettingsWidgets::SliderFloat("World Scale", options.mVRWorldScale, 0.5f, 2.0f, "%.2f");
+                    SettingsWidgets::Checkbox("Show Mirror Window", options.mVRShowMirrorWindow);
+                }
+            }
+            else
+            {
+                SettingsWidgets::InfoLabel("Status", "VR not available - no headset detected");
+            }
+        }
+        SettingsWidgets::EndSettingsBlock();
+    }
+#endif
 
     // Simulation settings (if freefly or advanced)
     if (mGameSettings.mChallengeSettings.mChallengeMode == ChallengeSettings::CHALLENGE_FREEFLY || advanced)

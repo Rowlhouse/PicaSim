@@ -16,6 +16,11 @@
 #include "../Platform/S3ECompat.h"
 #include "Platform.h"
 
+#ifdef PICASIM_VR_SUPPORT
+#include "../Platform/VRManager.h"
+#include "../Platform/VRRuntime.h"
+#endif
+
 #define EXPLICIT_EGL_INITx
 
 //======================================================================================================================
@@ -260,6 +265,19 @@ int main()
     TRACE_FILE_IF(1) TRACE("Calling IwUIInit with MSAA=%d", msaaSamples);
     IwUIInit(msaaSamples);
     TRACE_FILE_IF(1) TRACE("IwUIInit has been called");
+
+#ifdef PICASIM_VR_SUPPORT
+    // Initialize VR manager (requires OpenGL context to be created)
+    TRACE_FILE_IF(1) TRACE("Initializing VRManager");
+    if (VRManager::Init())
+    {
+        TRACE_FILE_IF(1) TRACE("VRManager initialized successfully");
+    }
+    else
+    {
+        TRACE_FILE_IF(1) TRACE("VRManager initialization failed or no headset connected");
+    }
+#endif
 
     TRACE_FILE_IF(1) TRACE("Calling Iw2DInit");
     Iw2DInit();
@@ -542,17 +560,41 @@ SelectPlane:
                     s3eDeviceYield(0);
                     int64 currentTimeMs = Timer::GetMilliseconds();
 
-                    updateResult = PicaSim::GetInstance().Update(currentTimeMs - lastTimeMs);
-#ifdef CAP_FRAME_RATE
-                    // Attempt constant frame rate
-                    while ((Timer::GetMilliseconds() - currentTimeMs) < MS_PER_FRAME)
+#ifdef PICASIM_VR_SUPPORT
+                    // VR frame handling
+                    bool inVRFrame = false;
+                    VRFrameInfo vrFrameInfo;
+                    if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
                     {
-                        int32 yield = (int32) (MS_PER_FRAME - (Timer::GetMilliseconds() - currentTimeMs));
-                        if (yield<0)
-                            break;
-                        else if (yield < 2)
-                            yield = 2; // always yield by at least 1ms for audio
-                        s3eDeviceYield(yield-1);
+                        inVRFrame = VRManager::GetInstance().BeginVRFrame(vrFrameInfo);
+                    }
+#endif
+
+                    updateResult = PicaSim::GetInstance().Update(currentTimeMs - lastTimeMs);
+
+#ifdef PICASIM_VR_SUPPORT
+                    if (inVRFrame)
+                    {
+                        VRManager::GetInstance().EndVRFrame(vrFrameInfo);
+                    }
+#endif
+
+#ifdef CAP_FRAME_RATE
+#ifdef PICASIM_VR_SUPPORT
+                    // Skip frame rate capping when in VR (VR runtime handles timing)
+                    if (!inVRFrame)
+#endif
+                    {
+                        // Attempt constant frame rate
+                        while ((Timer::GetMilliseconds() - currentTimeMs) < MS_PER_FRAME)
+                        {
+                            int32 yield = (int32) (MS_PER_FRAME - (Timer::GetMilliseconds() - currentTimeMs));
+                            if (yield<0)
+                                break;
+                            else if (yield < 2)
+                                yield = 2; // always yield by at least 1ms for audio
+                            s3eDeviceYield(yield-1);
+                        }
                     }
 #endif
                     lastTimeMs = currentTimeMs;
@@ -591,6 +633,11 @@ SelectPlane:
 
     TRACE_FILE_IF(1) TRACE("Iw2DTerminate");
     Iw2DTerminate();
+
+#ifdef PICASIM_VR_SUPPORT
+    TRACE_FILE_IF(1) TRACE("VRManager::Terminate()");
+    VRManager::Terminate();
+#endif
 
     TRACE_FILE_IF(1) TRACE("IwUITerminate");
     IwUITerminate();

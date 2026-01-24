@@ -22,6 +22,11 @@
 #include "../Platform/S3ECompat.h"
 #include "Platform.h"
 
+#ifdef PICASIM_VR_SUPPORT
+#include "../Platform/VRManager.h"
+#include "../Platform/VRRuntime.h"
+#endif
+
 float numButtonSlots = 8.0f;
 
 PicaSim* PicaSim::mInstance = 0;
@@ -1120,7 +1125,27 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     mGameSettings.mOptions.mFrameworkSettings.mNearClipPlaneDistance = nearClipScale * mGameSettings.mOptions.mMaxNearClipDistance;
 
     // Draw everything
-    RenderManager::GetInstance().RenderUpdate();
+#ifdef PICASIM_VR_SUPPORT
+    if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
+    {
+        // Get VR frame info from the current frame (passed via thread-local or global)
+        // For now, we create a dummy frame info - the actual frame is managed in main.cpp
+        VRFrameInfo vrFrameInfo;
+        if (VRManager::GetInstance().GetRuntime())
+        {
+            RenderManager::GetInstance().RenderUpdateVR(vrFrameInfo);
+            RenderManager::GetInstance().RenderMirrorWindow();
+        }
+        else
+        {
+            RenderManager::GetInstance().RenderUpdate();
+        }
+    }
+    else
+#endif
+    {
+        RenderManager::GetInstance().RenderUpdate();
+    }
 
     if (!mShowUI)
     {

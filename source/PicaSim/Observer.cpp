@@ -4,6 +4,10 @@
 #include "Controller.h"
 #include "AeroplanePhysics.h"
 
+#ifdef PICASIM_VR_SUPPORT
+#include "../Platform/VRManager.h"
+#endif
+
 const float observerHeight = 1.65f;
 
 static const float maxLookPitchAngle = PI * 0.5f;
@@ -65,6 +69,15 @@ Transform Observer::GetCameraTransform(void* cameraUserData) const
     if (es.mTerrainSettings.mType != TerrainSettings::TYPE_PANORAMA)
         tm.t += mTM.RotateVec(mCameraOffset);
 
+#ifdef PICASIM_VR_SUPPORT
+    // In VR mode, return base position only - VR headset provides orientation
+    if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
+    {
+        return tm;
+    }
+#endif
+
+    // Non-VR: apply manual lookaround
     float yaw = mLookYaw * maxLookYawAngle + DegreesToRadians(gs.mOptions.mGroundViewYawOffset);
     float pitch = mLookPitch * maxLookPitchAngle + DegreesToRadians(gs.mOptions.mGroundViewPitchOffset);
     Transform yawTM;

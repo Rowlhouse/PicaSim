@@ -9,6 +9,10 @@
 #include <vector>
 #include <map>
 
+#ifdef PICASIM_VR_SUPPORT
+struct VRFrameInfo;
+#endif
+
 class RenderObject;
 class RenderOverlayObject;
 class DebugRenderer;
@@ -133,6 +137,14 @@ public:
 
     void EnableStereoscopy(bool enable) {mEnableStereoscopy = enable;}
     void SetStereoSeparation(float separation) {mStereoSeparation = separation;}
+
+#ifdef PICASIM_VR_SUPPORT
+    // VR rendering - renders to VR headset swapchains
+    void RenderUpdateVR(VRFrameInfo& frameInfo);
+
+    // Render to mirror window after VR frame
+    void RenderMirrorWindow();
+#endif
 
     const struct FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
 

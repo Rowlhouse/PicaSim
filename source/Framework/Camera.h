@@ -83,8 +83,10 @@ public:
     bool isSphereFullyInFrustum(const Vector3& pt, float radius) const;
     bool isSpherePartlyInFrustum(const Vector3& pt, float radius) const;
 
-private:
+    // Update frustum planes from current GL matrices (for VR rendering)
     void UpdateFrustumPlanes();
+
+private:
 
     const FrameworkSettings& mFrameworkSettings;
 

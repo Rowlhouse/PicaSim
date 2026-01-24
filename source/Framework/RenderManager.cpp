@@ -10,6 +10,11 @@
 #include "../Platform/S3ECompat.h"
 #include "../Platform/Window.h"
 
+#ifdef PICASIM_VR_SUPPORT
+#include "../Platform/VRManager.h"
+#include "../Platform/VRRuntime.h"
+#endif
+
 RenderManager* RenderManager::mInstance = 0;
 
 
@@ -685,3 +690,185 @@ void RenderManager::DestroyCamera(Camera* camera)
     }
     IwAssertMsg(ROWLHOUSE, false, ("Failed to find camera to delete"));
 }
+
+#ifdef PICASIM_VR_SUPPORT
+//======================================================================================================================
+void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
+{
+    TRACE_METHOD_ONLY(2);
+
+    if (!VRManager::IsAvailable() || !VRManager::GetInstance().IsVREnabled())
+    {
+        // Fall back to normal rendering
+        RenderUpdate();
+        return;
+    }
+
+    VRManager& vrManager = VRManager::GetInstance();
+
+    // Must be in a valid VR frame (between BeginVRFrame and EndVRFrame)
+    if (!vrManager.IsInVRFrame())
+    {
+        // No VR frame active - fall back to normal rendering
+        RenderUpdate();
+        return;
+    }
+
+    // Get the actual frame info from VRManager (the parameter may be empty/dummy)
+    const VRFrameInfo& actualFrameInfo = vrManager.GetCurrentFrameInfo();
+
+    // Check if we should actually render this frame
+    if (!actualFrameInfo.shouldRender)
+    {
+        // VR runtime says don't render (e.g., headset not in view)
+        return;
+    }
+
+    VRRuntime* runtime = vrManager.GetRuntime();
+    if (!runtime)
+    {
+        RenderUpdate();
+        return;
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glFrontFace(GL_CCW);
+    glDisable(GL_CULL_FACE);
+
+    if (gGLVersion == 1)
+    {
+        glShadeModel(GL_SMOOTH);
+        glDisable(GL_FOG);
+    }
+
+    // Render each eye
+    for (int eye = 0; eye < VR_EYE_COUNT; ++eye)
+    {
+        const VRViewInfo& viewInfo = actualFrameInfo.views[eye];
+
+        // Acquire VR swapchain image
+        uint32_t imageIndex;
+        if (!runtime->AcquireSwapchainImage((VREye)eye, imageIndex))
+        {
+            continue;
+        }
+        runtime->WaitSwapchainImage((VREye)eye);
+
+        // Bind to VR swapchain texture via FBO
+        int eyeWidth = runtime->GetSwapchainWidth((VREye)eye);
+        int eyeHeight = runtime->GetSwapchainHeight((VREye)eye);
+
+        // Create a temporary FBO to render to the swapchain texture
+        GLuint eyeFBO;
+        glGenFramebuffers(1, &eyeFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, eyeFBO);
+
+        GLuint swapchainTex = runtime->GetSwapchainTexture((VREye)eye, imageIndex);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, swapchainTex, 0);
+
+        // Create depth buffer for this eye
+        GLuint depthRB;
+        glGenRenderbuffers(1, &depthRB);
+        glBindRenderbuffer(GL_RENDERBUFFER, depthRB);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, eyeWidth, eyeHeight);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRB);
+
+        glViewport(0, 0, eyeWidth, eyeHeight);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Create display config for this eye
+        DisplayConfig displayConfig;
+        displayConfig.mLeft = 0;
+        displayConfig.mBottom = 0;
+        displayConfig.mWidth = eyeWidth;
+        displayConfig.mHeight = eyeHeight;
+        displayConfig.mViewpointIndex = eye;
+
+        for (Viewports::iterator iViewport = mViewports.begin(); iViewport != mViewports.end(); ++iViewport)
+        {
+            Viewport* viewport = *iViewport;
+            if (!viewport->GetEnabled())
+                continue;
+
+            esMatrixMode(GL_TEXTURE);
+            esLoadIdentity();
+
+            // Use VR projection matrix
+            esMatrixMode(GL_PROJECTION);
+            esLoadIdentity();
+
+            glm::mat4 projMatrix = runtime->GetProjectionMatrix((VREye)eye,
+                mFrameworkSettings.mNearClipPlaneDistance,
+                mFrameworkSettings.mFarClipPlaneDistance);
+            esMultMatrixf(&projMatrix[0][0]);
+
+            // Combine VR head pose with game camera position
+            esMatrixMode(GL_MODELVIEW);
+            esLoadIdentity();
+
+            // Get the base camera transform (pilot position in world)
+            Camera& camera = *viewport->GetCamera();
+            Transform baseTM = camera.GetTransform();
+
+            // Get VR view matrix and combine with base transform
+            glm::mat4 vrViewMatrix = runtime->GetViewMatrix((VREye)eye);
+
+            // The VR view matrix needs to be combined with the game world position
+            // First, convert base transform to a matrix
+            glm::mat4 baseMatrix = glm::mat4(1.0f);
+            baseMatrix[0] = glm::vec4(baseTM.m[0][0], baseTM.m[1][0], baseTM.m[2][0], 0.0f);
+            baseMatrix[1] = glm::vec4(baseTM.m[0][1], baseTM.m[1][1], baseTM.m[2][1], 0.0f);
+            baseMatrix[2] = glm::vec4(baseTM.m[0][2], baseTM.m[1][2], baseTM.m[2][2], 0.0f);
+            baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
+
+            // Combine: VR view * base world position
+            glm::mat4 combinedView = vrViewMatrix * glm::inverse(baseMatrix);
+            esMultMatrixf(&combinedView[0][0]);
+
+            // Update frustum planes for culling (shadows use this)
+            camera.UpdateFrustumPlanes();
+
+            SetupLighting();
+
+            // Render all objects (skip frustum culling for VR as it needs recalculation)
+            for (RenderObjects::iterator it = mRenderObjects.begin(); it != mRenderObjects.end(); ++it)
+            {
+                RenderObject* renderObject = it->second;
+                if (!viewport->GetShouldRenderObject(renderObject))
+                    continue;
+
+                int renderLevel = it->first;
+                renderObject->RenderUpdate(viewport, renderLevel);
+            }
+        }
+
+        // Cleanup eye FBO resources
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDeleteRenderbuffers(1, &depthRB);
+        glDeleteFramebuffers(1, &eyeFBO);
+
+        // Release swapchain image
+        runtime->ReleaseSwapchainImage((VREye)eye);
+    }
+}
+
+//======================================================================================================================
+void RenderManager::RenderMirrorWindow()
+{
+    if (!VRManager::IsAvailable() || !VRManager::GetInstance().IsVREnabled())
+    {
+        return;
+    }
+
+    // For now, just clear the screen with a dark color
+    // A full implementation would blit one of the VR eye textures to the screen
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, mFrameworkSettings.mScreenWidth, mFrameworkSettings.mScreenHeight);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Swap buffers for mirror window
+    IwGLSwapBuffers();
+}
+#endif // PICASIM_VR_SUPPORT

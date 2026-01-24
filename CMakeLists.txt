@@ -58,6 +58,16 @@ add_compile_definitions(
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_net CONFIG QUIET)
 
+# VR Support (optional, requires OpenXR)
+option(PICASIM_ENABLE_VR "Enable VR headset support (requires OpenXR)" OFF)
+if(PICASIM_ENABLE_VR)
+    find_package(OpenXR CONFIG REQUIRED)
+    add_compile_definitions(PICASIM_VR_SUPPORT=1)
+    message(STATUS "VR support: ENABLED")
+else()
+    message(STATUS "VR support: DISABLED (use -DPICASIM_ENABLE_VR=ON to enable)")
+endif()
+
 # GLM for math types
 find_package(glm CONFIG REQUIRED)
 
@@ -165,6 +175,11 @@ target_link_libraries(Platform PUBLIC
 if(WIN32)
     target_link_libraries(Platform PUBLIC glad::glad)
     target_link_libraries(Platform PRIVATE shlwapi)
+endif()
+
+# VR support (OpenXR)
+if(PICASIM_ENABLE_VR)
+    target_link_libraries(Platform PUBLIC OpenXR::openxr_loader)
 endif()
 
 # --------------------------------------------------------------------------
@@ -356,4 +371,9 @@ message(STATUS "  Platform: ${PICASIM_PLATFORM}")
 message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "  C++ Standard: ${CMAKE_CXX_STANDARD}")
 message(STATUS "  OpenAL Audio: ON")
+if(PICASIM_ENABLE_VR)
+    message(STATUS "  VR Support: ON (OpenXR)")
+else()
+    message(STATUS "  VR Support: OFF")
+endif()
 message(STATUS "")

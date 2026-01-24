@@ -228,6 +228,11 @@ Options::Options() :
     mZoomViewSize(0.2f),
     mEnableStereoscopy(false),
     mStereoSeparation(0.1f),
+#ifdef PICASIM_VR_SUPPORT
+    mEnableVR(false),
+    mVRWorldScale(1.0f),
+    mVRShowMirrorWindow(true),
+#endif
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
     mWindArrowSize(0.12f),
@@ -368,6 +373,11 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_DOUBLE_ATTRIBUTE(mZoomViewSize);
     WRITE_ATTRIBUTE(mEnableStereoscopy);
     WRITE_DOUBLE_ATTRIBUTE(mStereoSeparation);
+#ifdef PICASIM_VR_SUPPORT
+    WRITE_ATTRIBUTE(mEnableVR);
+    WRITE_DOUBLE_ATTRIBUTE(mVRWorldScale);
+    WRITE_ATTRIBUTE(mVRShowMirrorWindow);
+#endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
     WRITE_ATTRIBUTE(mFreeFlightDisplaySpeed);
@@ -588,6 +598,11 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     if (readAll)
     {
         READ_ATTRIBUTE(mEnableStereoscopy);
+#ifdef PICASIM_VR_SUPPORT
+        READ_ATTRIBUTE(mEnableVR);
+        READ_ATTRIBUTE(mVRWorldScale);
+        READ_ATTRIBUTE(mVRShowMirrorWindow);
+#endif
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);
         READ_ATTRIBUTE(mTerrainWireframe);

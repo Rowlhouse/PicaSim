@@ -269,6 +269,13 @@ struct Options : public Settings
     bool mEnableStereoscopy;
     float mStereoSeparation;
 
+#ifdef PICASIM_VR_SUPPORT
+    // VR headset settings
+    bool  mEnableVR;              // Enable VR headset rendering
+    float mVRWorldScale;          // World scale factor (1.0 = normal)
+    bool  mVRShowMirrorWindow;    // Show VR mirror on desktop
+#endif
+
     float mMaxNearClipDistance;
     bool  mSeparateSpecular;
 
