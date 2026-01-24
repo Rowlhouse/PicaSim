@@ -79,6 +79,27 @@ public:
     void GetEyeRenderTargetSize(VREye eye, int& width, int& height) const;
 
     //--------------------------------------------------------------------------
+    // VR View Calibration
+    //--------------------------------------------------------------------------
+
+    // Reset VR view calibration. Call when entering VR or pressing reset key.
+    // cameraMode: CAMERA_GROUND, CAMERA_CHASE, etc.
+    // facingAzimuth: direction to look at (for ground view alignment)
+    void ResetVRView(int cameraMode, float facingAzimuth);
+
+    // Adjust the manual azimuth offset (for B/N key rotation)
+    void AdjustAzimuthOffset(float deltaDegrees);
+
+    // Check if VR view has been calibrated
+    bool IsCalibrated() const { return mCalibrated; }
+
+    // Get the total yaw offset to apply (reference + wind + manual)
+    float GetTotalYawOffset() const;
+
+    // Get the calibrated reference position
+    glm::vec3 GetReferencePosition() const { return mReferencePosition; }
+
+    //--------------------------------------------------------------------------
     // Head tracking
     //--------------------------------------------------------------------------
 
@@ -143,6 +164,13 @@ private:
 
     // Current frame info (valid during VR frame)
     VRFrameInfo mCurrentFrameInfo;
+
+    // VR view calibration state
+    glm::vec3 mReferencePosition;      // Headset position at calibration
+    float mReferenceYaw;               // Headset yaw (azimuth) at calibration
+    float mManualAzimuthOffset;        // User-adjustable offset via B/N keys
+    float mTargetAzimuth;              // Target azimuth (wind direction for ground, 0 for chase)
+    bool mCalibrated;                  // Whether calibration has been done
 };
 
 #endif // PICASIM_VR_SUPPORT

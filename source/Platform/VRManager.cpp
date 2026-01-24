@@ -72,6 +72,11 @@ VRManager::VRManager()
     , mInVRFrame(false)
     , mHeadPosition(0.0f)
     , mHeadOrientation(1.0f, 0.0f, 0.0f, 0.0f)  // Identity quaternion
+    , mReferencePosition(0.0f)
+    , mReferenceYaw(0.0f)
+    , mManualAzimuthOffset(0.0f)
+    , mTargetAzimuth(0.0f)
+    , mCalibrated(false)
 {
     for (int i = 0; i < VR_EYE_COUNT; ++i)
     {
@@ -465,6 +470,65 @@ glm::mat4 VRManager::GetEyeProjectionMatrix(VREye eye, float nearClip, float far
         return glm::mat4(1.0f);
     }
     return mRuntime->GetProjectionMatrix(eye, nearClip, farClip);
+}
+
+//==============================================================================
+// VR View Calibration
+//==============================================================================
+void VRManager::ResetVRView(int cameraMode, float facingAzimuth)
+{
+    // Capture current headset pose as reference
+    mReferencePosition = mHeadPosition;
+
+    // Extract yaw from current headset orientation
+    // mHeadOrientation is in OpenXR's coordinate system (X=right, Y=up, Z=back)
+    // Apply the same coordinate transformation as GetViewMatrix to convert to PicaSim (X=forward, Y=left, Z=up)
+    // This is: first -90° around Y, then +90° around X = quaternion (0.5, 0.5, -0.5, -0.5)
+    glm::quat coordTransform(0.5f, 0.5f, -0.5f, -0.5f);
+    glm::quat transformedRot = coordTransform * mHeadOrientation;
+
+    // Now extract yaw (rotation around Z in the transformed Z-up system)
+    glm::vec3 euler = glm::eulerAngles(transformedRot);
+    mReferenceYaw = euler.z;  // Yaw component in radians (Z-up system)
+
+    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Eulers: %f %f %f",
+        glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
+
+    // Reset manual offset
+    mManualAzimuthOffset = 0.0f;
+
+    // Set target azimuth based on camera mode
+    // CAMERA_GROUND = 1 (from PicaSim.h)
+    // With correct coordinate transform, VR forward maps directly to PicaSim +X (forward)
+    if (cameraMode == 1)  // CAMERA_GROUND
+    {
+        mTargetAzimuth = facingAzimuth;
+    }
+    else
+    {
+        // For chase/cockpit, target is camera forward (azimuth 0)
+        mTargetAzimuth = 0.0f;
+    }
+
+    mCalibrated = true;
+    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Calibrated (mode=%d, refYaw=%.1f, targetAz=%.1f)",
+        cameraMode, glm::degrees(mReferenceYaw), glm::degrees(mTargetAzimuth));
+}
+
+//------------------------------------------------------------------------------
+void VRManager::AdjustAzimuthOffset(float deltaDegrees)
+{
+    mManualAzimuthOffset += glm::radians(deltaDegrees);
+    TRACE_FILE_IF(2) TRACE("VRManager::AdjustAzimuthOffset - Manual offset now %.1f degrees",
+        glm::degrees(mManualAzimuthOffset));
+}
+
+//------------------------------------------------------------------------------
+float VRManager::GetTotalYawOffset() const
+{
+    // Total offset = target azimuth + manual adjustment - reference yaw
+    // This makes "headset forward at calibration" point toward the target azimuth
+    return mTargetAzimuth + mManualAzimuthOffset - mReferenceYaw;
 }
 
 //==============================================================================

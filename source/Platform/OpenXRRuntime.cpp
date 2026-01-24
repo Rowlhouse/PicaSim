@@ -1008,10 +1008,15 @@ glm::mat4 OpenXRRuntime::GetViewMatrix(VREye eye) const
     glm::vec3 pos = XrVec3ToGlm(mEyePoses[eye].position);
     glm::quat rot = XrQuatToGlm(mEyePoses[eye].orientation);
 
-    // OpenXR uses Y-up coordinate system, PicaSim uses Z-up
-    // Apply coordinate transformation: rotate -90 degrees around X axis
-    // This maps: OpenXR Y -> PicaSim Z (up), OpenXR Z -> PicaSim -Y
-    glm::quat coordTransform = glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    // OpenXR coordinate system: X=right, Y=up, Z=back (forward is -Z)
+    // PicaSim coordinate system: X=forward, Y=left, Z=up
+    // Required mapping:
+    //   OpenXR X (right)   -> PicaSim -Y (right)
+    //   OpenXR Y (up)      -> PicaSim Z (up)
+    //   OpenXR -Z (forward)-> PicaSim X (forward)
+    // This is achieved by: first rotate -90° around Y, then +90° around X
+    // Resulting quaternion: (w=0.5, x=0.5, y=-0.5, z=-0.5)
+    glm::quat coordTransform(0.5f, 0.5f, -0.5f, -0.5f);
 
     // Transform position and orientation to PicaSim's coordinate system
     glm::vec3 transformedPos = coordTransform * pos;

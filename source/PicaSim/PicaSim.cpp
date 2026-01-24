@@ -961,10 +961,40 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     {
         mGameSettings.mOptions.mNumWindStreamers = Maximum(mGameSettings.mOptions.mNumWindStreamers-1, 0);
     }
-    if (s3eKeyboardGetState(s3eKey8) & S3E_KEY_STATE_PRESSED) 
+    if (s3eKeyboardGetState(s3eKey8) & S3E_KEY_STATE_PRESSED)
     {
         mGameSettings.mOptions.mNumWindStreamers = Minimum(mGameSettings.mOptions.mNumWindStreamers+1, 64);
     }
+
+#ifdef PICASIM_VR_SUPPORT
+    // VR view calibration keys
+    if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
+    {
+        // V key - Reset VR view (calibrate headset position/orientation)
+        if (s3eKeyboardGetState(s3eKeyV) & S3E_KEY_STATE_PRESSED)
+        {
+            int cameraMode = (intptr_t)mViewport->GetCamera()->GetUserData();
+            float facingAzimuth = 0.0f;
+            if (cameraMode == CAMERA_GROUND)
+            {
+                // Get wind direction for ground view alignment
+                Vector3 windDir = Environment::GetInstance().GetWindDirection(Environment::WIND_TYPE_SMOOTH);
+                facingAzimuth = atan2f(windDir.y, windDir.x) + PI;
+            }
+            VRManager::GetInstance().ResetVRView(cameraMode, facingAzimuth);
+        }
+
+        // B/N keys - Adjust azimuth offset (rotate view left/right)
+        if (s3eKeyboardGetState(s3eKeyB) & S3E_KEY_STATE_PRESSED)
+        {
+            VRManager::GetInstance().AdjustAzimuthOffset(15.0f);  // Rotate left
+        }
+        if (s3eKeyboardGetState(s3eKeyN) & S3E_KEY_STATE_PRESSED)
+        {
+            VRManager::GetInstance().AdjustAzimuthOffset(-15.0f);   // Rotate right
+        }
+    }
+#endif
 
     // Rotate the main plane with keys when paused
     if (GetStatus() == STATUS_PAUSED && mGameSettings.mChallengeSettings.mChallengeMode == ChallengeSettings::CHALLENGE_FREEFLY)
