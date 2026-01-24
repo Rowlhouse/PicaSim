@@ -11,7 +11,7 @@
 struct SDL_Window;
 class Transform;
 
-//==============================================================================
+//======================================================================================================================
 // VRManager - Singleton that coordinates VR state with the application
 //
 // Responsibilities:
@@ -19,22 +19,22 @@ class Transform;
 // - Provides easy access to VR state and head tracking
 // - Coordinates VR frame timing with the render loop
 // - Manages eye framebuffers for VR rendering
-//==============================================================================
+//======================================================================================================================
 class VRManager
 {
 public:
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // Singleton access
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 
     static bool Init();
     static void Terminate();
     static bool IsAvailable();
     static VRManager& GetInstance();
 
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // VR mode control
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 
     // Enable VR mode. Returns true if VR was successfully enabled.
     bool EnableVR();
@@ -52,9 +52,9 @@ public:
     // This should be called even when headset is not active to detect reconnection.
     void PollEvents();
 
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // Frame management
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 
     // Begin a VR frame. Returns true if rendering should proceed.
     // Populates frameInfo with timing and view data.
@@ -69,9 +69,9 @@ public:
     // Get the current frame info (only valid when IsInVRFrame is true).
     const VRFrameInfo& GetCurrentFrameInfo() const { return mCurrentFrameInfo; }
 
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // Rendering helpers
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 
     // Bind the framebuffer for rendering to a specific eye.
     void BindEyeFramebuffer(VREye eye);
@@ -85,30 +85,28 @@ public:
     // Get the color texture for an eye (for mirror window rendering).
     uint32_t GetEyeColorTexture(VREye eye) const;
 
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // VR View Calibration
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 
     // Reset VR view calibration. Call when entering VR or pressing reset key.
-    // cameraMode: CAMERA_GROUND, CAMERA_CHASE, etc.
-    // facingAzimuth: direction to look at (for ground view alignment)
-    void ResetVRView(int cameraMode, float facingAzimuth);
+    // facingYaw: direction to look at (for ground view alignment)
+    void ResetVRView(float facingYaw);
 
-    // Adjust the manual azimuth offset (for B/N key rotation)
-    void AdjustAzimuthOffset(float deltaDegrees);
+    // Adjust the manual Yaw offset (for B/N key rotation)
+    void AdjustYawOffset(float deltaDegrees);
 
-    // Check if VR view has been calibrated
-    bool IsCalibrated() const { return mCalibrated; }
-
-    // Get the total yaw offset to apply (reference + wind + manual)
+    // Get the total yaw offset to apply
     float GetTotalYawOffset() const;
 
     // Get the calibrated reference position
     glm::vec3 GetReferencePosition() const { return mReferencePosition; }
 
-    //--------------------------------------------------------------------------
+    void UseAutoYawOffset(bool use) {mUseAutoYawOffset = use;}
+
+    //----------------------------------------------------------------------------------------------------------------------
     // Head tracking
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 
     // Get the current head position in local space.
     glm::vec3 GetHeadPosition() const;
@@ -126,9 +124,9 @@ public:
     // Get the projection matrix for a specific eye.
     glm::mat4 GetEyeProjectionMatrix(VREye eye, float nearClip, float farClip) const;
 
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // Runtime access
-    //--------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 
     VRRuntime* GetRuntime() { return mRuntime; }
     const VRRuntime* GetRuntime() const { return mRuntime; }
@@ -174,10 +172,9 @@ private:
 
     // VR view calibration state
     glm::vec3 mReferencePosition;      // Headset position at calibration
-    float mReferenceYaw;               // Headset yaw (azimuth) at calibration
-    float mManualAzimuthOffset;        // User-adjustable offset via B/N keys
-    float mTargetAzimuth;              // Target azimuth (wind direction for ground, 0 for chase)
-    bool mCalibrated;                  // Whether calibration has been done
+    float mAutomaticYawOffset;     // offset from calibration (e.g. in ground view)
+    float mManualYawOffset;        // User-adjustable offset via B/N keys
+    bool mUseAutoYawOffset = true;
 };
 
 #endif // PICASIM_VR_SUPPORT

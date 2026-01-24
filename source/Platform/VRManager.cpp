@@ -9,14 +9,14 @@
 
 #include <glad/glad.h>
 
-//==============================================================================
+//======================================================================================================================
 // Static member initialization
-//==============================================================================
+//======================================================================================================================
 VRManager* VRManager::mInstance = nullptr;
 
-//==============================================================================
+//======================================================================================================================
 // Singleton access
-//==============================================================================
+//======================================================================================================================
 bool VRManager::Init()
 {
     if (mInstance)
@@ -38,7 +38,7 @@ bool VRManager::Init()
     return true;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::Terminate()
 {
     if (mInstance)
@@ -50,22 +50,22 @@ void VRManager::Terminate()
     }
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 bool VRManager::IsAvailable()
 {
     return mInstance != nullptr && mInstance->mRuntime != nullptr;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 VRManager& VRManager::GetInstance()
 {
     IwAssert(ROWLHOUSE, mInstance != nullptr);
     return *mInstance;
 }
 
-//==============================================================================
+//======================================================================================================================
 // Constructor/Destructor
-//==============================================================================
+//======================================================================================================================
 VRManager::VRManager()
     : mRuntime(nullptr)
     , mVREnabled(false)
@@ -73,10 +73,8 @@ VRManager::VRManager()
     , mHeadPosition(0.0f)
     , mHeadOrientation(1.0f, 0.0f, 0.0f, 0.0f)  // Identity quaternion
     , mReferencePosition(0.0f)
-    , mReferenceYaw(0.0f)
-    , mManualAzimuthOffset(0.0f)
-    , mTargetAzimuth(0.0f)
-    , mCalibrated(false)
+    , mAutomaticYawOffset(0.0f)
+    , mManualYawOffset(0.0f)
 {
     for (int i = 0; i < VR_EYE_COUNT; ++i)
     {
@@ -88,15 +86,15 @@ VRManager::VRManager()
     }
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 VRManager::~VRManager()
 {
     DestroyEyeFramebuffers();
 }
 
-//==============================================================================
+//======================================================================================================================
 // Runtime initialization
-//==============================================================================
+//======================================================================================================================
 bool VRManager::InitializeRuntime()
 {
     mRuntime = CreateVRRuntime();
@@ -120,7 +118,7 @@ bool VRManager::InitializeRuntime()
     return true;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::ShutdownRuntime()
 {
     if (mVREnabled)
@@ -136,9 +134,9 @@ void VRManager::ShutdownRuntime()
     }
 }
 
-//==============================================================================
+//======================================================================================================================
 // VR mode control
-//==============================================================================
+//======================================================================================================================
 bool VRManager::EnableVR()
 {
     if (mVREnabled)
@@ -191,7 +189,7 @@ bool VRManager::EnableVR()
     return true;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::DisableVR()
 {
     if (!mVREnabled)
@@ -219,7 +217,7 @@ void VRManager::DisableVR()
     TRACE_FILE_IF(1) TRACE("VRManager::DisableVR - VR mode disabled");
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 bool VRManager::IsVRReady() const
 {
     if (!mVREnabled || !mRuntime)
@@ -233,7 +231,7 @@ bool VRManager::IsVRReady() const
     return mRuntime->IsSessionRunning();
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::PollEvents()
 {
     if (!mVREnabled || !mRuntime)
@@ -253,9 +251,9 @@ void VRManager::PollEvents()
     }
 }
 
-//==============================================================================
+//======================================================================================================================
 // Frame management
-//==============================================================================
+//======================================================================================================================
 bool VRManager::BeginVRFrame(VRFrameInfo& frameInfo)
 {
     if (!mVREnabled || !mRuntime)
@@ -291,7 +289,7 @@ bool VRManager::BeginVRFrame(VRFrameInfo& frameInfo)
     return true;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::EndVRFrame(const VRFrameInfo& frameInfo)
 {
     if (!mInVRFrame || !mRuntime)
@@ -303,9 +301,9 @@ void VRManager::EndVRFrame(const VRFrameInfo& frameInfo)
     mInVRFrame = false;
 }
 
-//==============================================================================
+//======================================================================================================================
 // Eye framebuffer management
-//==============================================================================
+//======================================================================================================================
 bool VRManager::CreateEyeFramebuffers()
 {
     if (!mRuntime)
@@ -360,7 +358,7 @@ bool VRManager::CreateEyeFramebuffers()
     return true;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::DestroyEyeFramebuffers()
 {
     for (int eye = 0; eye < VR_EYE_COUNT; ++eye)
@@ -385,9 +383,9 @@ void VRManager::DestroyEyeFramebuffers()
     }
 }
 
-//==============================================================================
+//======================================================================================================================
 // Rendering helpers
-//==============================================================================
+//======================================================================================================================
 void VRManager::BindEyeFramebuffer(VREye eye)
 {
     if (eye < 0 || eye >= VR_EYE_COUNT)
@@ -399,13 +397,13 @@ void VRManager::BindEyeFramebuffer(VREye eye)
     glViewport(0, 0, mEyeWidth[eye], mEyeHeight[eye]);
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::UnbindEyeFramebuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 void VRManager::GetEyeRenderTargetSize(VREye eye, int& width, int& height) const
 {
     if (eye >= 0 && eye < VR_EYE_COUNT)
@@ -420,7 +418,7 @@ void VRManager::GetEyeRenderTargetSize(VREye eye, int& width, int& height) const
     }
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 uint32_t VRManager::GetEyeColorTexture(VREye eye) const
 {
     if (eye >= 0 && eye < VR_EYE_COUNT)
@@ -430,21 +428,21 @@ uint32_t VRManager::GetEyeColorTexture(VREye eye) const
     return 0;
 }
 
-//==============================================================================
+//======================================================================================================================
 // Head tracking
-//==============================================================================
+//======================================================================================================================
 glm::vec3 VRManager::GetHeadPosition() const
 {
     return mHeadPosition;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 glm::quat VRManager::GetHeadOrientation() const
 {
     return mHeadOrientation;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 bool VRManager::GetHeadTransform(Transform& transform) const
 {
     if (!mVREnabled || !mRuntime)
@@ -484,7 +482,7 @@ bool VRManager::GetHeadTransform(Transform& transform) const
     return true;
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 glm::mat4 VRManager::GetEyeViewMatrix(VREye eye) const
 {
     if (!mRuntime)
@@ -494,7 +492,7 @@ glm::mat4 VRManager::GetEyeViewMatrix(VREye eye) const
     return mRuntime->GetViewMatrix(eye);
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 glm::mat4 VRManager::GetEyeProjectionMatrix(VREye eye, float nearClip, float farClip) const
 {
     if (!mRuntime)
@@ -504,11 +502,13 @@ glm::mat4 VRManager::GetEyeProjectionMatrix(VREye eye, float nearClip, float far
     return mRuntime->GetProjectionMatrix(eye, nearClip, farClip);
 }
 
-//==============================================================================
+//======================================================================================================================
 // VR View Calibration
-//==============================================================================
-void VRManager::ResetVRView(int cameraMode, float facingAzimuth)
+//======================================================================================================================
+void VRManager::ResetVRView(float facingYaw)
 {
+    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Facing yaw: %.1f", glm::degrees(facingYaw));
+
     // Capture current headset pose as reference
     mReferencePosition = mHeadPosition;
 
@@ -521,51 +521,40 @@ void VRManager::ResetVRView(int cameraMode, float facingAzimuth)
 
     // Now extract yaw (rotation around Z in the transformed Z-up system)
     glm::vec3 euler = glm::eulerAngles(transformedRot);
-    mReferenceYaw = euler.z;  // Yaw component in radians (Z-up system)
+    euler.z += HALF_PI;
+    mAutomaticYawOffset = (facingYaw - euler.z);  // Yaw component in radians (Z-up system)
+
+    // mReferenceYaw += HALF_PI;
 
     TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Eulers: %f %f %f",
         glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
 
     // Reset manual offset
-    mManualAzimuthOffset = 0.0f;
+    mManualYawOffset = 0.0f;
 
-    // Set target azimuth based on camera mode
-    // CAMERA_GROUND = 1 (from PicaSim.h)
-    // With correct coordinate transform, VR forward maps directly to PicaSim +X (forward)
-    if (cameraMode == 1)  // CAMERA_GROUND
-    {
-        mTargetAzimuth = facingAzimuth;
-    }
-    else
-    {
-        // For chase/cockpit, target is camera forward (azimuth 0)
-        mTargetAzimuth = 0.0f;
-    }
-
-    mCalibrated = true;
-    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Calibrated (mode=%d, refYaw=%.1f, targetAz=%.1f)",
-        cameraMode, glm::degrees(mReferenceYaw), glm::degrees(mTargetAzimuth));
+    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - automatic offset = %.1f", glm::degrees(mAutomaticYawOffset));
 }
 
-//------------------------------------------------------------------------------
-void VRManager::AdjustAzimuthOffset(float deltaDegrees)
+//======================================================================================================================
+void VRManager::AdjustYawOffset(float deltaDegrees)
 {
-    mManualAzimuthOffset += glm::radians(deltaDegrees);
-    TRACE_FILE_IF(2) TRACE("VRManager::AdjustAzimuthOffset - Manual offset now %.1f degrees",
-        glm::degrees(mManualAzimuthOffset));
+    mManualYawOffset += glm::radians(deltaDegrees);
+    TRACE_FILE_IF(1) TRACE("VRManager::AdjustYawOffset - Manual offset now %.1f degrees",
+        glm::degrees(mManualYawOffset));
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 float VRManager::GetTotalYawOffset() const
 {
-    // Total offset = target azimuth + manual adjustment - reference yaw
-    // This makes "headset forward at calibration" point toward the target azimuth
-    return mTargetAzimuth + mManualAzimuthOffset - mReferenceYaw;
+    if (mUseAutoYawOffset)
+        return mManualYawOffset + mAutomaticYawOffset;
+    else
+        return mManualYawOffset;
 }
 
-//==============================================================================
+//======================================================================================================================
 // Runtime info
-//==============================================================================
+//======================================================================================================================
 const char* VRManager::GetRuntimeName() const
 {
     if (!mRuntime)
@@ -575,7 +564,7 @@ const char* VRManager::GetRuntimeName() const
     return mRuntime->GetRuntimeName();
 }
 
-//------------------------------------------------------------------------------
+//======================================================================================================================
 const char* VRManager::GetSystemName() const
 {
     if (!mRuntime)

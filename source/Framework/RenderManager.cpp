@@ -788,6 +788,8 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         displayConfig.mHeight = eyeHeight;
         displayConfig.mViewpointIndex = eye;
 
+
+        
         for (Viewports::iterator iViewport = mViewports.begin(); iViewport != mViewports.end(); ++iViewport)
         {
             Viewport* viewport = *iViewport;
@@ -817,22 +819,18 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             // Get VR view matrix and combine with base transform
             glm::mat4 vrViewMatrix = runtime->GetViewMatrix((VREye)eye);
 
-            // Apply VR view calibration if available
-            if (vrManager.IsCalibrated())
-            {
-                // Apply yaw offset to align headset forward with target direction
-                float yawOffset = vrManager.GetTotalYawOffset();
-                glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), yawOffset, glm::vec3(0.0f, 0.0f, 1.0f));
+            // Apply yaw offset to align headset forward with target direction
+            float yawOffset = vrManager.GetTotalYawOffset();
+            glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), yawOffset, glm::vec3(0.0f, 0.0f, 1.0f));
 
-                // Apply position offset relative to reference position
-                glm::vec3 posOffset = vrManager.GetHeadPosition() - vrManager.GetReferencePosition();
-                // Rotate the position offset by the yaw to keep it consistent
-                glm::vec3 rotatedPosOffset = glm::vec3(yawRotation * glm::vec4(posOffset, 0.0f));
-                glm::mat4 posTranslation = glm::translate(glm::mat4(1.0f), -rotatedPosOffset);
+            // Apply position offset relative to reference position
+            glm::vec3 posOffset = vrManager.GetHeadPosition() - vrManager.GetReferencePosition();
+            // Rotate the position offset by the yaw to keep it consistent
+            glm::vec3 rotatedPosOffset = glm::vec3(yawRotation * glm::vec4(posOffset, 0.0f));
+            glm::mat4 posTranslation = glm::translate(glm::mat4(1.0f), -rotatedPosOffset);
 
-                // Combine: yaw rotation * view matrix (applied to view space)
-                vrViewMatrix = vrViewMatrix * glm::inverse(yawRotation);
-            }
+            // Combine: yaw rotation * view matrix (applied to view space)
+            vrViewMatrix = vrViewMatrix * glm::inverse(yawRotation);
 
             // The VR view matrix needs to be combined with the game world position
             // First, convert base transform to a matrix

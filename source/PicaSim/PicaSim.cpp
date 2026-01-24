@@ -970,28 +970,25 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // VR view calibration keys
     if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
     {
+        VRManager::GetInstance().UseAutoYawOffset(mMode == MODE_GROUND);
+
         // V key - Reset VR view (calibrate headset position/orientation)
         if (s3eKeyboardGetState(s3eKeyV) & S3E_KEY_STATE_PRESSED)
         {
-            int cameraMode = (intptr_t)mViewport->GetCamera()->GetUserData();
-            float facingAzimuth = 0.0f;
-            if (cameraMode == CAMERA_GROUND)
-            {
-                // Get wind direction for ground view alignment
-                Vector3 windDir = Environment::GetInstance().GetWindDirection(Environment::WIND_TYPE_SMOOTH);
-                facingAzimuth = atan2f(windDir.y, windDir.x) + PI;
-            }
-            VRManager::GetInstance().ResetVRView(cameraMode, facingAzimuth);
+            // Get wind direction for ground view alignment
+            Vector3 upWindDir = -Environment::GetInstance().GetWindDirection(Environment::WIND_TYPE_SMOOTH);
+            float facingYaw = atan2f(upWindDir.y, upWindDir.x);
+            VRManager::GetInstance().ResetVRView(facingYaw);
         }
 
-        // B/N keys - Adjust azimuth offset (rotate view left/right)
+        // B/N keys - Adjust yaw offset (rotate view left/right)
         if (s3eKeyboardGetState(s3eKeyB) & S3E_KEY_STATE_PRESSED)
         {
-            VRManager::GetInstance().AdjustAzimuthOffset(15.0f);  // Rotate left
+            VRManager::GetInstance().AdjustYawOffset(15.0f);  // Rotate left
         }
         if (s3eKeyboardGetState(s3eKeyN) & S3E_KEY_STATE_PRESSED)
         {
-            VRManager::GetInstance().AdjustAzimuthOffset(-15.0f);   // Rotate right
+            VRManager::GetInstance().AdjustYawOffset(-15.0f);   // Rotate right
         }
     }
 #endif
