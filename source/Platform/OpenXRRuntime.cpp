@@ -600,7 +600,20 @@ void OpenXRRuntime::HandleSessionStateChange(XrSessionState newState)
             }
             break;
         case XR_SESSION_STATE_STOPPING:
-            mIsRunning = false;
+            // Must call xrEndSession when receiving STOPPING state
+            if (mIsRunning)
+            {
+                XrResult result = xrEndSession(mSession);
+                if (XR_SUCCEEDED(result))
+                {
+                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - Session ended");
+                }
+                else
+                {
+                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - xrEndSession failed: %d", (int)result);
+                }
+                mIsRunning = false;
+            }
             break;
         default:
             break;
