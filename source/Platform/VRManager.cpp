@@ -398,6 +398,16 @@ void VRManager::GetEyeRenderTargetSize(VREye eye, int& width, int& height) const
     }
 }
 
+//------------------------------------------------------------------------------
+uint32_t VRManager::GetEyeColorTexture(VREye eye) const
+{
+    if (eye >= 0 && eye < VR_EYE_COUNT)
+    {
+        return mEyeColorTextures[eye];
+    }
+    return 0;
+}
+
 //==============================================================================
 // Head tracking
 //==============================================================================

@@ -7,6 +7,8 @@
 #include "LoadingScreenHelper.h"
 #include "Viewport.h"
 #include "Graphics.h"
+#include "ShaderManager.h"
+#include "Shaders.h"
 #include "../Platform/S3ECompat.h"
 #include "../Platform/Window.h"
 
@@ -861,6 +863,30 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             }
         }
 
+        // Copy rendered content to VRManager's mirror texture (for desktop display)
+        // We do this while the swapchain texture is still bound
+        uint32_t mirrorTex = vrManager.GetEyeColorTexture((VREye)eye);
+        if (mirrorTex != 0)
+        {
+            int mirrorWidth, mirrorHeight;
+            vrManager.GetEyeRenderTargetSize((VREye)eye, mirrorWidth, mirrorHeight);
+
+            // Bind the swapchain FBO as read, mirror texture as draw
+            GLuint mirrorFBO;
+            glGenFramebuffers(1, &mirrorFBO);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, eyeFBO);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mirrorFBO);
+            glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mirrorTex, 0);
+
+            // Blit from swapchain to mirror texture
+            glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
+                              0, 0, mirrorWidth, mirrorHeight,
+                              GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glDeleteFramebuffers(1, &mirrorFBO);
+        }
+
         // Cleanup eye FBO resources
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDeleteRenderbuffers(1, &depthRB);
@@ -879,12 +905,112 @@ void RenderManager::RenderMirrorWindow()
         return;
     }
 
-    // For now, just clear the screen with a dark color
-    // A full implementation would blit one of the VR eye textures to the screen
+    VRManager& vrManager = VRManager::GetInstance();
+
+    // Get the left eye texture to display
+    uint32_t eyeTexture = vrManager.GetEyeColorTexture(VR_EYE_LEFT);
+    if (eyeTexture == 0)
+    {
+        return;
+    }
+
+    int eyeWidth, eyeHeight;
+    vrManager.GetEyeRenderTargetSize(VR_EYE_LEFT, eyeWidth, eyeHeight);
+
+    // Bind the default framebuffer (desktop window)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, mFrameworkSettings.mScreenWidth, mFrameworkSettings.mScreenHeight);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // Calculate letterboxed/pillarboxed rectangle to maintain aspect ratio
+    float eyeAspect = (float)eyeWidth / (float)eyeHeight;
+    float screenAspect = (float)mFrameworkSettings.mScreenWidth / (float)mFrameworkSettings.mScreenHeight;
+
+    float x0, y0, x1, y1;
+    if (eyeAspect > screenAspect)
+    {
+        // Eye is wider - letterbox (black bars top/bottom)
+        float height = mFrameworkSettings.mScreenWidth / eyeAspect;
+        float yOffset = (mFrameworkSettings.mScreenHeight - height) * 0.5f;
+        x0 = 0;
+        x1 = (float)mFrameworkSettings.mScreenWidth;
+        y0 = yOffset;
+        y1 = yOffset + height;
+    }
+    else
+    {
+        // Eye is taller - pillarbox (black bars left/right)
+        float width = mFrameworkSettings.mScreenHeight * eyeAspect;
+        float xOffset = (mFrameworkSettings.mScreenWidth - width) * 0.5f;
+        x0 = xOffset;
+        x1 = xOffset + width;
+        y0 = 0;
+        y1 = (float)mFrameworkSettings.mScreenHeight;
+    }
+
+    // Set up orthographic projection for 2D rendering
+    esMatrixMode(GL_PROJECTION);
+    esPushMatrix();
+    esLoadIdentity();
+    esOrthof(0, (float)mFrameworkSettings.mScreenWidth, 0, (float)mFrameworkSettings.mScreenHeight, -1, 1);
+
+    esMatrixMode(GL_MODELVIEW);
+    esPushMatrix();
+    esLoadIdentity();
+
+    // Vertex positions for fullscreen quad
+    GLfloat pts[] = {
+        x0, y0, 0,
+        x1, y0, 0,
+        x1, y1, 0,
+        x0, y1, 0,
+    };
+
+    // Texture coordinates (flip V since OpenGL textures are bottom-up)
+    GLfloat uvs[] = {
+        0, 0,
+        1, 0,
+        1, 1,
+        0, 1,
+    };
+
+    // Disable depth test and blending for simple blit
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+
+    // Use the overlay shader
+    const OverlayShader* overlayShader = (OverlayShader*)ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
+    overlayShader->Use();
+
+    glUniform1i(overlayShader->u_texture, 0);
+
+    glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glEnableVertexAttribArray(overlayShader->a_position);
+
+    glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
+    glEnableVertexAttribArray(overlayShader->a_texCoord);
+
+    glUniform4f(overlayShader->u_colour, 1.0f, 1.0f, 1.0f, 1.0f);
+    esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
+
+    // Bind the eye texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, eyeTexture);
+
+    // Draw the quad
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+    // Clean up
+    glDisableVertexAttribArray(overlayShader->a_position);
+    glDisableVertexAttribArray(overlayShader->a_texCoord);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Restore matrices
+    esMatrixMode(GL_PROJECTION);
+    esPopMatrix();
+    esMatrixMode(GL_MODELVIEW);
+    esPopMatrix();
 
     // Swap buffers for mirror window
     IwGLSwapBuffers();

@@ -78,6 +78,9 @@ public:
     // Get the dimensions of the eye render target.
     void GetEyeRenderTargetSize(VREye eye, int& width, int& height) const;
 
+    // Get the color texture for an eye (for mirror window rendering).
+    uint32_t GetEyeColorTexture(VREye eye) const;
+
     //--------------------------------------------------------------------------
     // VR View Calibration
     //--------------------------------------------------------------------------
