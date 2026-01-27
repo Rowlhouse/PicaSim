@@ -15,6 +15,7 @@
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
 #include "../Platform/VRRuntime.h"
+#include "../PicaSim/PicaSim.h"  // For CameraID enum
 #include <glm/gtc/matrix_transform.hpp>
 #endif
 
@@ -833,12 +834,26 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             vrViewMatrix = vrViewMatrix * glm::inverse(yawRotation);
 
             // The VR view matrix needs to be combined with the game world position
-            // First, convert base transform to a matrix
+            // Detect camera mode to determine how to build base matrix
+            CameraID cameraMode = (CameraID)(size_t)camera.GetUserData();
+            bool isGroundMode = (cameraMode == CAMERA_GROUND);
+
+            // Build base matrix - differs between ground mode and chase/cockpit modes
             glm::mat4 baseMatrix = glm::mat4(1.0f);
-            baseMatrix[0] = glm::vec4(baseTM.m[0][0], baseTM.m[1][0], baseTM.m[2][0], 0.0f);
-            baseMatrix[1] = glm::vec4(baseTM.m[0][1], baseTM.m[1][1], baseTM.m[2][1], 0.0f);
-            baseMatrix[2] = glm::vec4(baseTM.m[0][2], baseTM.m[1][2], baseTM.m[2][2], 0.0f);
-            baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
+            if (isGroundMode)
+            {
+                // Ground mode: Use only position, with identity orientation
+                // This lets VR headset + yaw offset fully control view direction
+                baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
+            }
+            else
+            {
+                // Chase/cockpit modes: Use full transform (orientation follows plane)
+                baseMatrix[0] = glm::vec4(baseTM.m[0][0], baseTM.m[1][0], baseTM.m[2][0], 0.0f);
+                baseMatrix[1] = glm::vec4(baseTM.m[0][1], baseTM.m[1][1], baseTM.m[2][1], 0.0f);
+                baseMatrix[2] = glm::vec4(baseTM.m[0][2], baseTM.m[1][2], baseTM.m[2][2], 0.0f);
+                baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
+            }
 
             // Combine: VR view * base world position
             glm::mat4 combinedView = vrViewMatrix * glm::inverse(baseMatrix);

@@ -521,13 +521,17 @@ void VRManager::ResetVRView(float facingYaw)
 
     // Now extract yaw (rotation around Z in the transformed Z-up system)
     glm::vec3 euler = glm::eulerAngles(transformedRot);
-    euler.z += HALF_PI;
-    mAutomaticYawOffset = (facingYaw - euler.z);  // Yaw component in radians (Z-up system)
 
-    // mReferenceYaw += HALF_PI;
+    euler.z += HALF_PI; // offset seems to be needed
 
-    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Eulers: %f %f %f",
-        glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
+    // euler.z is zero when facing forwards (so long as everything is calibrated). It is +ve when facing left
+    // We might want the user to be able to adjust this direction by looking forward as they apply this calibration
+
+    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - headset Eulers: %f %f %f",
+    glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
+
+    // The into-wind angle increases as it rotates anti-clockwise (i.e. to the left)
+    mAutomaticYawOffset = facingYaw - euler.z;
 
     // Reset manual offset
     mManualYawOffset = 0.0f;
