@@ -886,7 +886,31 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                 glm::mat3 baseRot(baseMatrix);
                 eyePos = glm::vec3(baseTM.t.x, baseTM.t.y, baseTM.t.z) + baseRot * rotatedPosOffset;
             }
-            camera.SetPosition(Vector3(eyePos.x, eyePos.y, eyePos.z));
+
+            // Compute camera world transform from combined view matrix (for terrain LOD/clipping)
+            // Camera transform = inverse(view matrix)
+            glm::mat4 cameraWorldMatrix = glm::inverse(combinedView);
+
+            // Convert from OpenGL to PicaSim coordinate system
+            // OpenGL: -Z forward, +X right, +Y up
+            // PicaSim: +X forward, -Y right (left=+Y), +Z up
+            Transform vrCameraTM;
+            // Row 0 (forward in PicaSim) = -Z in OpenGL (column 2, negated)
+            vrCameraTM.m[0][0] = -cameraWorldMatrix[2][0];
+            vrCameraTM.m[0][1] = -cameraWorldMatrix[2][1];
+            vrCameraTM.m[0][2] = -cameraWorldMatrix[2][2];
+            // Row 1 (left in PicaSim) = -X in OpenGL (column 0, negated)
+            vrCameraTM.m[1][0] = -cameraWorldMatrix[0][0];
+            vrCameraTM.m[1][1] = -cameraWorldMatrix[0][1];
+            vrCameraTM.m[1][2] = -cameraWorldMatrix[0][2];
+            // Row 2 (up in PicaSim) = +Y in OpenGL (column 1)
+            vrCameraTM.m[2][0] = cameraWorldMatrix[1][0];
+            vrCameraTM.m[2][1] = cameraWorldMatrix[1][1];
+            vrCameraTM.m[2][2] = cameraWorldMatrix[1][2];
+            // Translation
+            vrCameraTM.t = Vector3(eyePos.x, eyePos.y, eyePos.z);
+
+            camera.SetTransform(vrCameraTM);
 
             // Update frustum planes for culling (shadows use this)
             camera.UpdateFrustumPlanes();

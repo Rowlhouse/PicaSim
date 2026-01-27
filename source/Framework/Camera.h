@@ -47,6 +47,9 @@ public:
     /// Returns the camera transform. Note that this is only updated during the SetupCamera call.
     const Transform& GetTransform() const {return mTM;}
 
+    /// Set the camera transform directly (for VR mode where view is set externally)
+    void SetTransform(const Transform& tm) {mTM = tm; mPosition = tm.t;}
+
     void SetPosition(const Vector3& pos) {mPosition = pos;}
     const Vector3& GetPosition() const {return mPosition;}
 
