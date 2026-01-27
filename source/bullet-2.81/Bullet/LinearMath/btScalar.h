@@ -195,23 +195,22 @@ inline int	btGetVersion()
 	#endif
 
 	#if defined(DEBUG) || defined (_DEBUG)
-	 #if defined (__i386__) || defined (__x86_64__)
-	#include <stdio.h>
-	 #define btAssert(x)\
-	{\
-	if(!(x))\
-	{\
-		printf("Assert %s in line %d, file %s\n",#x, __LINE__, __FILE__);\
-		asm volatile ("int3");\
-	}\
-	}
-	#else//defined (__i386__) || defined (__x86_64__)
-		#define btAssert assert
-	#end//defined (__i386__) || defined (__x86_64__)
-	#endif
-	#else//defined(DEBUG) || defined (_DEBUG)
-		#define btAssert(x)
-	#endif//defined(DEBUG) || defined (_DEBUG)
+  #if defined (__i386__) || defined (__x86_64__)
+    #include <stdio.h>
+    #define btAssert(x) \
+    { \
+      if(!(x)) \
+      { \
+        printf("Assert %s in line %d, file %s\n",#x, __LINE__, __FILE__); \
+        asm volatile ("int3"); \
+      } \
+    }
+  #else
+    #define btAssert assert
+  #endif
+#else
+  #define btAssert(x)
+#endif
 
 	//btFullAssert is optional, slows down a lot
 	#define btFullAssert(x)
