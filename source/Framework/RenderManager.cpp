@@ -815,7 +815,18 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
 
             // Get the base camera transform (pilot position in world)
             Camera& camera = *viewport->GetCamera();
-            Transform baseTM = camera.GetTransform();
+
+            // Get fresh camera transform by calling the callback
+            // For chase/cockpit modes this updates position relative to plane
+            Transform baseTM;
+            if (camera.GetCameraTransform())
+            {
+                baseTM = camera.GetCameraTransform()->GetCameraTransform(camera.GetUserData());
+            }
+            else
+            {
+                baseTM = camera.GetTransform();
+            }
 
             // Get VR view matrix and combine with base transform
             glm::mat4 vrViewMatrix = runtime->GetViewMatrix((VREye)eye);
@@ -849,15 +860,33 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             else
             {
                 // Chase/cockpit modes: Use full transform (orientation follows plane)
-                baseMatrix[0] = glm::vec4(baseTM.m[0][0], baseTM.m[1][0], baseTM.m[2][0], 0.0f);
-                baseMatrix[1] = glm::vec4(baseTM.m[0][1], baseTM.m[1][1], baseTM.m[2][1], 0.0f);
-                baseMatrix[2] = glm::vec4(baseTM.m[0][2], baseTM.m[1][2], baseTM.m[2][2], 0.0f);
+                // Transform is row-major (m[row][col]), glm is column-major
+                // Each row of Transform becomes a column in glm (transpose)
+                baseMatrix[0] = glm::vec4(baseTM.m[0][0], baseTM.m[0][1], baseTM.m[0][2], 0.0f);
+                baseMatrix[1] = glm::vec4(baseTM.m[1][0], baseTM.m[1][1], baseTM.m[1][2], 0.0f);
+                baseMatrix[2] = glm::vec4(baseTM.m[2][0], baseTM.m[2][1], baseTM.m[2][2], 0.0f);
                 baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
             }
 
             // Combine: VR view * base world position
             glm::mat4 combinedView = vrViewMatrix * glm::inverse(baseMatrix);
             esMultMatrixf(&combinedView[0][0]);
+
+            // Update camera position to include VR head offset (needed for skybox rendering)
+            // The actual eye position is base position plus head offset rotated appropriately
+            glm::vec3 eyePos;
+            if (isGroundMode)
+            {
+                // Ground mode: head offset rotated by yaw only
+                eyePos = glm::vec3(baseTM.t.x, baseTM.t.y, baseTM.t.z) + rotatedPosOffset;
+            }
+            else
+            {
+                // Chase/cockpit: head offset rotated by base orientation and yaw
+                glm::mat3 baseRot(baseMatrix);
+                eyePos = glm::vec3(baseTM.t.x, baseTM.t.y, baseTM.t.z) + baseRot * rotatedPosOffset;
+            }
+            camera.SetPosition(Vector3(eyePos.x, eyePos.y, eyePos.z));
 
             // Update frustum planes for culling (shadows use this)
             camera.UpdateFrustumPlanes();
