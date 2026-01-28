@@ -28,10 +28,20 @@ jobs:
             build_preset: macos-x64-release
             runner: macos-15-intel
     
+    # Don't fail fast - allow Intel build to continue even if ARM fails
+    continue-on-error: true
     runs-on: ${{ matrix.runner }}
     
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Setup vcpkg cache
+        uses: actions/cache@v4
+        with:
+          path: build/vcpkg_installed
+          key: vcpkg-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'CMakeLists.txt') }}
+          restore-keys: |
+            vcpkg-${{ matrix.arch }}-
       
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
@@ -57,7 +67,7 @@ jobs:
       
       - name: Create DMG
         run: |
-          ./create_dmg.sh dist/PicaSim.app dist
+          ./macos-create_dmg.sh dist/PicaSim.app dist
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -115,7 +125,7 @@ jobs:
       
       - name: Create universal DMG
         run: |
-          ./create_dmg.sh dist-universal/PicaSim.app dist-universal
+          ./macos-create_dmg.sh dist-universal/PicaSim.app dist-universal
           
           # Verify DMG was created
           ls -lh dist-universal/PicaSim-*.dmg
@@ -126,5 +136,3 @@ jobs:
           name: picasim-universal
           path: dist-universal/
           retention-days: 30
-
-
