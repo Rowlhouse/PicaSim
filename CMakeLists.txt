@@ -329,6 +329,9 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Menus
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Fonts
     DESTINATION .
 )
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData/Icons
+    DESTINATION SystemData
+)
 
 # Install LICENSE and VERSIONS files
 install(FILES
@@ -343,6 +346,35 @@ if(WIN32)
     install(FILES ${VCPKG_DLLS}
         DESTINATION .
     )
+endif()
+
+# --------------------------------------------------------------------------
+# macOS App Bundle and DMG targets
+# --------------------------------------------------------------------------
+if(APPLE AND NOT IOS)
+    # Create macOS .app bundle from installed distribution
+    add_custom_target(macos-app-bundle
+        COMMAND bash ${CMAKE_SOURCE_DIR}/create_macos_app_bundle.sh
+            ${CMAKE_INSTALL_PREFIX}
+            dist
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Creating macOS .app bundle"
+    )
+    add_dependencies(macos-app-bundle PicaSim)
+    
+    # Create macOS .dmg (disk image) for distribution
+    add_custom_target(macos-dmg
+        COMMAND bash ${CMAKE_SOURCE_DIR}/create_dmg.sh
+            dist/PicaSim.app
+            dist
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Creating macOS .dmg for distribution"
+    )
+    add_dependencies(macos-dmg macos-app-bundle)
+    
+    message(STATUS "macOS targets available:")
+    message(STATUS "  cmake --build <preset> --target macos-app-bundle  (create .app)")
+    message(STATUS "  cmake --build <preset> --target macos-dmg         (create .dmg)")
 endif()
 
 # --------------------------------------------------------------------------
