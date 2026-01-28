@@ -70,8 +70,8 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #else
-    // Desktop platforms - OpenGL 3.3 Core Profile
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    // Desktop platforms - OpenGL 3.3 Compatibility Profile (supports legacy + modern GL)
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 #endif
@@ -118,9 +118,33 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     if (!mContext)
     {
         fprintf(stderr, "SDL_GL_CreateContext failed: %s\n", SDL_GetError());
-        SDL_DestroyWindow(mWindow);
-        mWindow = nullptr;
-        return false;
+        
+        // Try fallback: disable MSAA if it was requested
+        if (msaaSamples > 0)
+        {
+            fprintf(stderr, "Retrying without MSAA...\n");
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+            mContext = SDL_GL_CreateContext(mWindow);
+        }
+        
+        // If still failing, try OpenGL 2.1 compatibility mode
+        if (!mContext)
+        {
+            fprintf(stderr, "Retrying with OpenGL 2.1...\n");
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+            mContext = SDL_GL_CreateContext(mWindow);
+        }
+        
+        if (!mContext)
+        {
+            fprintf(stderr, "Failed to create any OpenGL context\n");
+            SDL_DestroyWindow(mWindow);
+            mWindow = nullptr;
+            return false;
+        }
     }
 
     // Make context current

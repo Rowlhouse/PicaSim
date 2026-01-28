@@ -79,8 +79,27 @@ int eglInit(bool createSurface, int msaaSamples)
 
         // Setup Platform/Renderer backends
         ImGui_ImplSDL2_InitForOpenGL(gWindow->GetSDLWindow(), gWindow->GetGLContext());
-        // Use GLSL 150 for OpenGL 3.3 (macOS), GLSL 130 for OpenGL 3.0-3.2
-        ImGui_ImplOpenGL3_Init("#version 150");
+        
+        // Select appropriate GLSL version based on actual OpenGL version
+        int glMajor = gWindow->GetGLMajorVersion();
+        int glMinor = gWindow->GetGLMinorVersion();
+        const char* glslVersion = nullptr;
+        
+        if (glMajor >= 3 && glMinor >= 3)
+        {
+            glslVersion = "#version 150"; // OpenGL 3.3+
+        }
+        else if (glMajor >= 3)
+        {
+            glslVersion = "#version 130"; // OpenGL 3.0-3.2
+        }
+        else
+        {
+            glslVersion = "#version 120"; // OpenGL 2.1
+        }
+        
+        printf("Using GLSL version: %s for OpenGL %d.%d\n", glslVersion, glMajor, glMinor);
+        ImGui_ImplOpenGL3_Init(glslVersion);
 
         // Setup style
         ImGui::StyleColorsDark();
