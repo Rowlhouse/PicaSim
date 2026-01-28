@@ -35,14 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup vcpkg cache
-        uses: actions/cache@v4
-        with:
-          path: build/vcpkg_installed
-          key: vcpkg-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'CMakeLists.txt') }}
-          restore-keys: |
-            vcpkg-${{ matrix.arch }}-
-      
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
