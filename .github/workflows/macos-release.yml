@@ -20,11 +20,13 @@ jobs:
       matrix:
         include:
           - arch: arm64
-            preset: macos-arm64-debug
+            configure_preset: macos-arm64
+            build_preset: macos-arm64-release
             runner: macos-latest
           - arch: x86_64
-            preset: macos-x64-debug
-            runner: macos-13
+            configure_preset: macos-x64
+            build_preset: macos-x64-release
+            runner: macos-15-intel
     
     runs-on: ${{ matrix.runner }}
     
@@ -39,11 +41,11 @@ jobs:
       
       - name: Configure CMake
         run: |
-          cmake --preset ${{ matrix.preset }}
+          cmake --preset ${{ matrix.configure_preset }}
       
       - name: Build
         run: |
-          cmake --build --preset ${{ matrix.preset }}-release
+          cmake --build --preset ${{ matrix.build_preset }}
       
       - name: Install
         run: |
@@ -51,7 +53,7 @@ jobs:
       
       - name: Create app bundle
         run: |
-          ./create_macos_app_bundle.sh dist/PicaSim-*/ dist
+          ./macos-create_app_bundle.sh dist/PicaSim-*/ dist
       
       - name: Create DMG
         run: |
@@ -124,4 +126,5 @@ jobs:
           name: picasim-universal
           path: dist-universal/
           retention-days: 30
+
 
