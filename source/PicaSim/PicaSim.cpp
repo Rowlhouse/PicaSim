@@ -25,6 +25,7 @@
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
 #include "../Platform/VRRuntime.h"
+#include <glad/glad.h>
 #endif
 
 float numButtonSlots = 8.0f;
@@ -1157,12 +1158,30 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // This allows falling back to desktop rendering when headset is removed
     if (VRManager::IsAvailable() && VRManager::GetInstance().IsVRReady())
     {
-        // VR headset is active - render to VR and mirror to desktop
+        // VR headset is active - render to VR
         VRFrameInfo vrFrameInfo;
         if (VRManager::GetInstance().GetRuntime())
         {
             RenderManager::GetInstance().RenderUpdateVR(vrFrameInfo);
-            RenderManager::GetInstance().RenderMirrorWindow();
+
+            // Handle desktop window display based on VR desktop mode
+            switch (mGameSettings.mOptions.mVRDesktopMode)
+            {
+            case Options::VR_DESKTOP_NOTHING:
+                // Just clear the desktop window to black
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                break;
+            case Options::VR_DESKTOP_VR_VIEW:
+                // Show VR view in desktop window
+                RenderManager::GetInstance().RenderMirrorWindow();
+                break;
+            case Options::VR_DESKTOP_NORMAL_VIEW:
+                // Render normal non-VR view to desktop window
+                RenderManager::GetInstance().RenderUpdate();
+                break;
+            }
         }
         else
         {

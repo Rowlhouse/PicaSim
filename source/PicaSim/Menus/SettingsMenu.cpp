@@ -545,7 +545,12 @@ void SettingsMenu::RenderOptions1Tab()
                     SettingsWidgets::InfoLabel("Headset", infoStr);
 
                     SettingsWidgets::SliderFloat("World Scale", options.mVRWorldScale, 0.5f, 2.0f, "%.2f");
-                    SettingsWidgets::Checkbox("Show Mirror Window", options.mVRShowMirrorWindow);
+
+                    // VR Desktop window display mode
+                    static const char* vrDesktopDescs[] = { "Nothing", "VR View", "Normal View" };
+                    int vrDesktopIndex = (int)options.mVRDesktopMode;
+                    if (SettingsWidgets::Combo("VR Desktop", vrDesktopIndex, vrDesktopDescs, 3))
+                        options.mVRDesktopMode = (Options::VRDesktopMode)vrDesktopIndex;
 
                     // VR Anti-aliasing
                     static const char* vrMsaaDescs[] = { TXT(PS_NONE), TXT(PS_ANTIALIASING_2X), TXT(PS_ANTIALIASING_4X), TXT(PS_ANTIALIASING_8X) };
@@ -560,8 +565,13 @@ void SettingsMenu::RenderOptions1Tab()
                         }
                     }
                     if (SettingsWidgets::Combo("VR Anti-Aliasing", vrMsaaIndex, vrMsaaDescs, 4))
+                    {
                         options.mVRMSAASamples = vrMsaaValues[vrMsaaIndex];
-                    SettingsWidgets::InfoText(TXT(PS_REQUIRESVRRESTART));
+                        // Restart VR to apply new MSAA setting
+                        VRManager::GetInstance().DisableVR();
+                        VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
+                        VRManager::GetInstance().EnableVR();
+                    }
                 }
             }
             else

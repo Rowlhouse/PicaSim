@@ -270,10 +270,18 @@ struct Options : public Settings
     float mStereoSeparation;
 
 #ifdef PICASIM_VR_SUPPORT
+    // VR desktop window display mode
+    enum VRDesktopMode
+    {
+        VR_DESKTOP_NOTHING = 0,     // Black/blank window
+        VR_DESKTOP_VR_VIEW = 1,     // Show VR view
+        VR_DESKTOP_NORMAL_VIEW = 2  // Show normal non-VR view
+    };
+
     // VR headset settings
     bool  mEnableVR;              // Enable VR headset rendering
     float mVRWorldScale;          // World scale factor (1.0 = normal)
-    bool  mVRShowMirrorWindow;    // Show VR mirror on desktop
+    VRDesktopMode mVRDesktopMode; // Desktop window display mode
     int   mVRMSAASamples;         // VR anti-aliasing: 0=off, 2=2x, 4=4x, 8=8x
 #endif
 

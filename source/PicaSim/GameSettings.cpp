@@ -231,7 +231,7 @@ Options::Options() :
 #ifdef PICASIM_VR_SUPPORT
     mEnableVR(false),
     mVRWorldScale(1.0f),
-    mVRShowMirrorWindow(true),
+    mVRDesktopMode(VR_DESKTOP_VR_VIEW),
     mVRMSAASamples(8),
 #endif
     mMaxNearClipDistance(1.0f),
@@ -377,7 +377,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
 #ifdef PICASIM_VR_SUPPORT
     WRITE_ATTRIBUTE(mEnableVR);
     WRITE_DOUBLE_ATTRIBUTE(mVRWorldScale);
-    WRITE_ATTRIBUTE(mVRShowMirrorWindow);
+    WRITE_ATTRIBUTE(mVRDesktopMode);
     WRITE_ATTRIBUTE(mVRMSAASamples);
 #endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
@@ -603,7 +603,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 #ifdef PICASIM_VR_SUPPORT
         READ_ATTRIBUTE(mEnableVR);
         READ_ATTRIBUTE(mVRWorldScale);
-        READ_ATTRIBUTE(mVRShowMirrorWindow);
+        READ_ENUM_ATTRIBUTE(mVRDesktopMode);
         READ_ATTRIBUTE(mVRMSAASamples);
 #endif
         READ_ATTRIBUTE(mStallMarkers);
