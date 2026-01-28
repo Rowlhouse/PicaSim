@@ -17,6 +17,7 @@ on:
 jobs:
   build-macos:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - arch: arm64
@@ -28,18 +29,14 @@ jobs:
             build_preset: macos-x64-release
             runner: macos-15-intel
     
-    # Don't fail fast - allow Intel build to continue even if ARM fails
-    continue-on-error: true
     runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.arch == 'x86_64' }}
     
     steps:
       - uses: actions/checkout@v4
       
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgDirectory: ${{ github.workspace }}/build/vcpkg
-          appendedCacheKey: ${{ matrix.arch }}
       
       - name: Configure CMake
         run: |
