@@ -14,8 +14,14 @@
 
 #define GLuint unsigned int
 #define GLint int
-#define GL_FALSE (0)
-#define GL_TRUE (!GL_FALSE)
+
+#ifndef GL_FALSE
+#define GL_FALSE 0
+#endif
+
+#ifndef GL_TRUE
+#define GL_TRUE 1
+#endif
 
 #define ALPHA_NONE   (0x0000)       /* no alpha info */
 #define ALPHA_OPAQUE (0x0001<<0)    /* alpha = 1 */

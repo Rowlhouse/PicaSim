@@ -11,9 +11,15 @@
 #include "Platform.h"
 
 #ifdef _WIN32
-#include <glad/glad.h>
+#if !defined(PICASIM_MACOS)
+  #include <glad/glad.h>
+#endif
 #else
-#include <GL/gl.h>
+#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  #include "GLCompat.h"
+#endif
 #endif
 
 #include <string>

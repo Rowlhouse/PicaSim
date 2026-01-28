@@ -44,6 +44,23 @@ endif()
 
 message(STATUS "Building PicaSim for platform: ${PICASIM_PLATFORM}")
 
+# --------------------------------------------------------------------------
+# mod
+# --------------------------------------------------------------------------
+if(APPLE)
+  add_compile_options(-include "${CMAKE_SOURCE_DIR}/source/Platform/GLCompat.h")
+  add_compile_definitions(GL_SILENCE_DEPRECATION)
+  add_compile_options(-Wno-deprecated-declarations)
+endif()
+
+list(REMOVE_ITEM PICASIM_SOURCES
+${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.cpp
+${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.cpp
+${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.h
+${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.h
+)
+
+
 # Compile definitions matching original Marmalade build
 add_compile_definitions(
     BT_NO_PROFILE          # Disable Bullet physics profiling
@@ -223,9 +240,15 @@ endif()
 
 target_include_directories(PicaSim PRIVATE ${BULLET_SOURCE_DIR})
 
-# Link SDL2_net if available
+# Link SDL2_net if available TODO: fix
+find_package(SDL2_net CONFIG QUIET)
+
 if(TARGET SDL2_net::SDL2_net)
-    target_link_libraries(PicaSim PRIVATE SDL2_net::SDL2_net)
+  target_link_libraries(PicaSim PRIVATE SDL2_net::SDL2_net)
+elseif(TARGET SDL2_net::SDL2_net-static)
+  target_link_libraries(PicaSim PRIVATE SDL2_net::SDL2_net-static)
+else()
+  message(WARNING "SDL2_net not found: network features will not link")
 endif()
 
 # Link OpenAL

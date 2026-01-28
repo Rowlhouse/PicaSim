@@ -2,10 +2,21 @@
 #include "Platform.h"
 #include <stdio.h>
 
+// TODO: fixare
 #ifdef _WIN32
-#include <glad/glad.h>
+#if !defined(PICASIM_MACOS)
+  #include <glad/glad.h>
+#endif
 #else
-#include <GL/gl.h>
+#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  #ifdef __APPLE__
+    #include <OpenGL/gl.h>
+#else
+    #include "GLCompat.h"
+    #endif
+#endif
 #endif
 
 // Global window instance
@@ -59,10 +70,10 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #else
-    // Desktop platforms - GL 2.1 compatibility mode
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    // Desktop platforms - OpenGL 3.3 Core Profile
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 #endif
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);

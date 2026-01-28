@@ -365,7 +365,16 @@ int main()
         LoadingScreen* initialLoadingScreen = new LoadingScreen(GetPS(PS_LOADING, gameSettings.mOptions.mLanguage), gameSettings, true, false, true);
 
         GLint depthBits = 0;
+        // Query depth buffer size - use Core Profile method if available
+        #if defined(PICASIM_MACOS) || defined(PICASIM_LINUX)
+        // OpenGL 3.3+ Core Profile: query framebuffer attachment
+        glBindFramebuffer(GL_FRAMEBUFFER, 0); // Ensure default framebuffer is bound
+        glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH, 
+                                              GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE, &depthBits);
+        #else
+        // Legacy/compatibility mode
         glGetIntegerv(GL_DEPTH_BITS, &depthBits);
+        #endif
         TRACE_FILE_IF(1) TRACE("Depth buffer = %d bits", depthBits);
         if (depthBits == 0)
         {

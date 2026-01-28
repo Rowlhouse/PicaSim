@@ -55,7 +55,11 @@
 #ifdef WIN32
 	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
-	#include <GL/gl.h>
+	#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  
+#endif
 #elif defined(__APPLE__) || defined(__APPLE_CC__)
     #define GL_GLEXT_LEGACY
 	#include <OpenGL/gl.h>
@@ -63,7 +67,11 @@
 	#define __glext_h_  /* prevent glext.h from being included  */
 	#define __glxext_h_ /* prevent glxext.h from being included */
 	#define GLX_GLXEXT_PROTOTYPES
-	#include <GL/gl.h>
+	#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  
+#endif
 	#include <GL/glx.h>
 #endif
 
