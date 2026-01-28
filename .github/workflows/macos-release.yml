@@ -1,0 +1,182 @@
+name: macOS Multi-Architecture Release
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create GitHub Release'
+        required: false
+        default: 'false'
+
+jobs:
+  build-macos:
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            preset: macos-arm64-debug
+            runner: macos-latest
+          - arch: x86_64
+            preset: macos-x64-debug
+            runner: macos-13
+    
+    runs-on: ${{ matrix.runner }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: ${{ github.workspace }}/build/vcpkg
+          appendedCacheKey: ${{ matrix.arch }}
+      
+      - name: Configure CMake
+        run: |
+          cmake --preset ${{ matrix.preset }}
+      
+      - name: Build
+        run: |
+          cmake --build --preset ${{ matrix.preset }}-release
+      
+      - name: Install
+        run: |
+          cmake --install build/${{ matrix.arch == 'arm64' && 'macos-arm64' || 'macos-x64' }} --config Release
+      
+      - name: Create app bundle
+        run: |
+          ./create_macos_app_bundle.sh dist/PicaSim-*/ dist
+      
+      - name: Create DMG
+        run: |
+          ./create_dmg.sh dist/PicaSim.app dist
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: picasim-${{ matrix.arch }}
+          path: dist/
+          retention-days: 1
+
+  merge-universal:
+    needs: build-macos
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download ARM64 build
+        uses: actions/download-artifact@v4
+        with:
+          name: picasim-arm64
+          path: dist-arm64
+      
+      - name: Download x86_64 build
+        uses: actions/download-artifact@v4
+        with:
+          name: picasim-x86_64
+          path: dist-x86_64
+      
+      - name: Create universal binary
+        run: |
+          # Create output directory
+          mkdir -p dist-universal
+          
+          # Copy arm64 app as base
+          cp -r dist-arm64/PicaSim.app dist-universal/PicaSim.app
+          
+          # Get the executable paths
+          ARM_EXEC="dist-arm64/PicaSim.app/Contents/MacOS/PicaSim"
+          X86_EXEC="dist-x86_64/PicaSim.app/Contents/MacOS/PicaSim"
+          LAUNCHER_ARM="dist-arm64/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          LAUNCHER_X86="dist-x86_64/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          
+          # Create universal executables
+          echo "Creating universal binary for PicaSim..."
+          lipo -create "$ARM_EXEC" "$X86_EXEC" \
+               -output "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+          
+          echo "Creating universal binary for launcher..."
+          lipo -create "$LAUNCHER_ARM" "$LAUNCHER_X86" \
+               -output "dist-universal/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          
+          # Verify
+          echo "Verifying universal binary..."
+          file "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+          lipo -info "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+      
+      - name: Create universal DMG
+        run: |
+          ./create_dmg.sh dist-universal/PicaSim.app dist-universal
+          
+          # Verify DMG was created
+          ls -lh dist-universal/PicaSim-*.dmg
+      
+      - name: Upload universal build
+        uses: actions/upload-artifact@v4
+        with:
+          name: picasim-universal
+          path: dist-universal/
+          retention-days: 30
+      
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist-universal/PicaSim.app
+            dist-universal/PicaSim-*.dmg
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sign-and-notarize:
+    needs: merge-universal
+    runs-on: macos-latest
+    if: secrets.APPLE_ID != ''
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download universal build
+        uses: actions/download-artifact@v4
+        with:
+          name: picasim-universal
+          path: dist
+      
+      - name: Install Fastlane
+        run: |
+          brew install fastlane
+      
+      - name: Sign and Notarize
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+        run: |
+          fastlane macos release
+      
+      - name: Upload signed build
+        uses: actions/upload-artifact@v4
+        with:
+          name: picasim-signed
+          path: dist/
+          retention-days: 30
+      
+      - name: Create GitHub Release (signed)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/PicaSim.app
+            dist/PicaSim-*.dmg
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
