@@ -232,6 +232,7 @@ Options::Options() :
     mEnableVR(false),
     mVRWorldScale(1.0f),
     mVRShowMirrorWindow(true),
+    mVRMSAASamples(8),
 #endif
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
@@ -377,6 +378,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_ATTRIBUTE(mEnableVR);
     WRITE_DOUBLE_ATTRIBUTE(mVRWorldScale);
     WRITE_ATTRIBUTE(mVRShowMirrorWindow);
+    WRITE_ATTRIBUTE(mVRMSAASamples);
 #endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
@@ -602,6 +604,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
         READ_ATTRIBUTE(mEnableVR);
         READ_ATTRIBUTE(mVRWorldScale);
         READ_ATTRIBUTE(mVRShowMirrorWindow);
+        READ_ATTRIBUTE(mVRMSAASamples);
 #endif
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);

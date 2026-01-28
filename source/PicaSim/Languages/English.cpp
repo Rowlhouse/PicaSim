@@ -532,6 +532,7 @@ void InitStringsEN(const char** txt)
   txt[PS_ANTIALIASING_4X] = "4x";
   txt[PS_ANTIALIASING_8X] = "8x";
   txt[PS_REQUIRESRESTART] = "Requires restart";
+  txt[PS_REQUIRESVRRESTART] = "Requires VR restart";
   txt[PS_NEARCLIPDISTANCE] = "Near clip distance";
   txt[PS_FARCLIPDISTANCE] = "Far clip distance";
   txt[PS_SHADINGMETHOD] = "Shading method";

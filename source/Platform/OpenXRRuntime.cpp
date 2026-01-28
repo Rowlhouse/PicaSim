@@ -53,6 +53,7 @@ OpenXRRuntime::OpenXRRuntime()
     , mIsInitialized(false)
     , mIsRunning(false)
     , mShouldRender(false)
+    , mMSAASamples(1)
     , mPosesValid(false)
 {
     memset(&mFrameState, 0, sizeof(mFrameState));
@@ -809,6 +810,13 @@ bool OpenXRRuntime::LocateViews(XrTime displayTime)
 //======================================================================================================================
 // Swapchain management
 //======================================================================================================================
+void OpenXRRuntime::SetMSAASamples(int samples)
+{
+    mMSAASamples = (samples > 0) ? samples : 1;
+    TRACE_FILE_IF(2) TRACE("OpenXRRuntime::SetMSAASamples - %d", mMSAASamples);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 bool OpenXRRuntime::CreateSwapchains()
 {
     return CreateSwapchainsInternal();
@@ -857,7 +865,7 @@ bool OpenXRRuntime::CreateSwapchainsInternal()
         createInfo.createFlags = 0;
         createInfo.usageFlags = XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT | XR_SWAPCHAIN_USAGE_SAMPLED_BIT;
         createInfo.format = selectedFormat;
-        createInfo.sampleCount = 1;
+        createInfo.sampleCount = 1;  // Always use non-MSAA swapchain; we do MSAA ourselves and resolve
         createInfo.width = mConfigViews[eye].recommendedImageRectWidth;
         createInfo.height = mConfigViews[eye].recommendedImageRectHeight;
         createInfo.faceCount = 1;

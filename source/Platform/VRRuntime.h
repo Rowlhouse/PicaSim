@@ -139,6 +139,9 @@ public:
     // Swapchain management
     //----------------------------------------------------------------------------------------------------------------------
 
+    // Set MSAA sample count for swapchain creation (call before CreateSwapchains)
+    virtual void SetMSAASamples(int samples) = 0;
+
     // Create swapchains for rendering. Called after CreateSession.
     virtual bool CreateSwapchains() = 0;
 

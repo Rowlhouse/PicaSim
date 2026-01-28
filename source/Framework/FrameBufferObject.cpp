@@ -7,6 +7,7 @@ FrameBufferObject::FrameBufferObject(int width, int height, GLenum format, GLenu
 {
     m_Width = width;
     m_Height = height;
+    mPreviousFBO = 0;
 
     // Generate a texture for the frame buffer
     glGenTextures(1, &m_Tex);
@@ -88,6 +89,9 @@ FrameBufferObject::~FrameBufferObject()
 //======================================================================================================================
 void FrameBufferObject::Bind()
 {
+    // Save currently bound FBO so we can restore it in Release()
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &mPreviousFBO);
+
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
 
     // Must set viewport to framebuffer dimensions
@@ -98,6 +102,7 @@ void FrameBufferObject::Bind()
 //======================================================================================================================
 void FrameBufferObject::Release()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // Restore previously bound FBO (allows nested FBO usage, e.g. shadows in VR)
+    glBindFramebuffer(GL_FRAMEBUFFER, mPreviousFBO);
     glViewport(mOrigViewport[0], mOrigViewport[1], mOrigViewport[2], mOrigViewport[3]);
 }

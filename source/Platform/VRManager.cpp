@@ -70,6 +70,7 @@ VRManager::VRManager()
     : mRuntime(nullptr)
     , mVREnabled(false)
     , mInVRFrame(false)
+    , mMSAASamples(1)
     , mHeadPosition(0.0f)
     , mHeadOrientation(1.0f, 0.0f, 0.0f, 0.0f)  // Identity quaternion
     , mReferencePosition(0.0f)
@@ -156,6 +157,9 @@ bool VRManager::EnableVR()
         TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - Failed to create session");
         return false;
     }
+
+    // Set VR MSAA samples before creating swapchains
+    mRuntime->SetMSAASamples(mMSAASamples);
 
     // Create swapchains
     if (!mRuntime->CreateSwapchains())

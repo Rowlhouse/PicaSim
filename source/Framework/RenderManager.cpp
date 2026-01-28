@@ -761,22 +761,53 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         // Bind to VR swapchain texture via FBO
         int eyeWidth = runtime->GetSwapchainWidth((VREye)eye);
         int eyeHeight = runtime->GetSwapchainHeight((VREye)eye);
+        int msaaSamples = vrManager.GetMSAASamples();
 
-        // Create a temporary FBO to render to the swapchain texture
-        GLuint eyeFBO;
-        glGenFramebuffers(1, &eyeFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, eyeFBO);
+        // Create FBO for the swapchain texture (non-MSAA, for final output)
+        GLuint swapchainFBO;
+        glGenFramebuffers(1, &swapchainFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, swapchainFBO);
 
         GLuint swapchainTex = runtime->GetSwapchainTexture((VREye)eye, imageIndex);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, swapchainTex, 0);
 
-        // Create depth buffer for this eye
+        // Create depth buffer for swapchain FBO
         GLuint depthRB;
         glGenRenderbuffers(1, &depthRB);
         glBindRenderbuffer(GL_RENDERBUFFER, depthRB);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, eyeWidth, eyeHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRB);
 
+        // If MSAA is enabled, create MSAA renderbuffers and FBO for rendering
+        GLuint msaaFBO = 0;
+        GLuint msaaColorRB = 0;
+        GLuint msaaDepthRB = 0;
+        GLuint renderFBO = swapchainFBO;  // Default to swapchain FBO
+
+        if (msaaSamples > 1)
+        {
+            // Create MSAA color renderbuffer
+            glGenRenderbuffers(1, &msaaColorRB);
+            glBindRenderbuffer(GL_RENDERBUFFER, msaaColorRB);
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_RGBA8, eyeWidth, eyeHeight);
+
+            // Create MSAA depth renderbuffer
+            glGenRenderbuffers(1, &msaaDepthRB);
+            glBindRenderbuffer(GL_RENDERBUFFER, msaaDepthRB);
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT24, eyeWidth, eyeHeight);
+            glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+            // Create MSAA FBO
+            glGenFramebuffers(1, &msaaFBO);
+            glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, msaaColorRB);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, msaaDepthRB);
+
+            renderFBO = msaaFBO;  // Render to MSAA FBO
+        }
+
+        // Bind the render FBO (either MSAA or swapchain)
+        glBindFramebuffer(GL_FRAMEBUFFER, renderFBO);
         glViewport(0, 0, eyeWidth, eyeHeight);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -929,6 +960,16 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             }
         }
 
+        // If MSAA was used, resolve from MSAA FBO to swapchain FBO
+        if (msaaSamples > 1)
+        {
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFBO);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, swapchainFBO);
+            glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
+                              0, 0, eyeWidth, eyeHeight,
+                              GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        }
+
         // Copy rendered content to VRManager's mirror texture (for desktop display)
         // We do this while the swapchain texture is still bound
         uint32_t mirrorTex = vrManager.GetEyeColorTexture((VREye)eye);
@@ -940,7 +981,7 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             // Bind the swapchain FBO as read, mirror texture as draw
             GLuint mirrorFBO;
             glGenFramebuffers(1, &mirrorFBO);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, eyeFBO);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, swapchainFBO);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mirrorFBO);
             glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mirrorTex, 0);
 
@@ -953,10 +994,18 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             glDeleteFramebuffers(1, &mirrorFBO);
         }
 
-        // Cleanup eye FBO resources
+        // Cleanup MSAA resources if used
+        if (msaaSamples > 1)
+        {
+            glDeleteRenderbuffers(1, &msaaColorRB);
+            glDeleteRenderbuffers(1, &msaaDepthRB);
+            glDeleteFramebuffers(1, &msaaFBO);
+        }
+
+        // Cleanup swapchain FBO resources
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDeleteRenderbuffers(1, &depthRB);
-        glDeleteFramebuffers(1, &eyeFBO);
+        glDeleteFramebuffers(1, &swapchainFBO);
 
         // Release swapchain image
         runtime->ReleaseSwapchainImage((VREye)eye);

@@ -76,6 +76,9 @@ public:
     const char* GetSystemName() const override;
     void GetRecommendedRenderTargetSize(VREye eye, int& width, int& height) const override;
 
+    // MSAA
+    void SetMSAASamples(int samples) override;
+
 private:
     //----------------------------------------------------------------------------------------------------------------------
     // Internal helper methods
@@ -144,6 +147,7 @@ private:
     bool mIsInitialized;
     bool mIsRunning;
     bool mShouldRender;
+    int mMSAASamples;  // MSAA sample count for swapchains
 
     // Runtime info
     std::string mRuntimeName;

@@ -21,6 +21,7 @@ private:
     GLuint m_Depth;
 
     GLint mOrigViewport[4];
+    GLint mPreviousFBO;  // Previously bound FBO to restore on Release
 };
 
 

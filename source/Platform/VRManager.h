@@ -36,6 +36,10 @@ public:
     // VR mode control
     //----------------------------------------------------------------------------------------------------------------------
 
+    // Set/get MSAA samples for VR rendering (call SetMSAASamples before EnableVR)
+    void SetMSAASamples(int samples) { mMSAASamples = samples; }
+    int GetMSAASamples() const { return mMSAASamples; }
+
     // Enable VR mode. Returns true if VR was successfully enabled.
     bool EnableVR();
 
@@ -155,6 +159,7 @@ private:
     VRRuntime* mRuntime;
     bool mVREnabled;
     bool mInVRFrame;
+    int mMSAASamples;  // MSAA samples for VR swapchains
 
     // Eye framebuffers (for rendering before copying to VR swapchain)
     uint32_t mEyeFramebuffers[VR_EYE_COUNT];

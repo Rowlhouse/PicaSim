@@ -523,6 +523,7 @@ void SettingsMenu::RenderOptions1Tab()
                 {
                     if (options.mEnableVR)
                     {
+                        VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
                         if (!VRManager::GetInstance().EnableVR())
                         {
                             options.mEnableVR = false;
@@ -545,6 +546,22 @@ void SettingsMenu::RenderOptions1Tab()
 
                     SettingsWidgets::SliderFloat("World Scale", options.mVRWorldScale, 0.5f, 2.0f, "%.2f");
                     SettingsWidgets::Checkbox("Show Mirror Window", options.mVRShowMirrorWindow);
+
+                    // VR Anti-aliasing
+                    static const char* vrMsaaDescs[] = { TXT(PS_NONE), TXT(PS_ANTIALIASING_2X), TXT(PS_ANTIALIASING_4X), TXT(PS_ANTIALIASING_8X) };
+                    static const int vrMsaaValues[] = { 0, 2, 4, 8 };
+                    int vrMsaaIndex = 0;
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        if (vrMsaaValues[i] == options.mVRMSAASamples)
+                        {
+                            vrMsaaIndex = i;
+                            break;
+                        }
+                    }
+                    if (SettingsWidgets::Combo("VR Anti-Aliasing", vrMsaaIndex, vrMsaaDescs, 4))
+                        options.mVRMSAASamples = vrMsaaValues[vrMsaaIndex];
+                    SettingsWidgets::InfoText(TXT(PS_REQUIRESVRRESTART));
                 }
             }
             else
@@ -1450,7 +1467,7 @@ void SettingsMenu::RenderSceneryTab()
 
                 SettingsWidgets::SliderFloat(TXT(PS_TERRAINSIZE), ts.mTerrainSize, 1000.0f, 10000.0f, "%.0f m");
                 SettingsWidgets::SliderFloat(TXT(PS_COASTENHANCEMENT), ts.mCoastEnhancement, 0.0f, 10.0f);
-                SettingsWidgets::SliderInt(TXT(PS_TERRAINDETAIL), ts.mHeightmapDetail, 6, 9);
+                SettingsWidgets::SliderInt(TXT(PS_TERRAINDETAIL), ts.mHeightmapDetail, 6, 12);
             }
             SettingsWidgets::EndSettingsBlock();
         }
@@ -1475,7 +1492,7 @@ void SettingsMenu::RenderSceneryTab()
 
                 SettingsWidgets::SliderFloat(TXT(PS_TERRAINSIZE), ts.mTerrainSize, 1000.0f, 10000.0f, "%.0f m");
                 SettingsWidgets::SliderFloat(TXT(PS_COASTENHANCEMENT), ts.mCoastEnhancement, 0.0f, 10.0f);
-                SettingsWidgets::SliderInt(TXT(PS_TERRAINDETAIL), ts.mHeightmapDetail, 6, 9);
+                SettingsWidgets::SliderInt(TXT(PS_TERRAINDETAIL), ts.mHeightmapDetail, 6, 12);
             }
             SettingsWidgets::EndSettingsBlock();
         }
