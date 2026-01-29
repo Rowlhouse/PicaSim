@@ -60,20 +60,11 @@ typedef char IwChar;
 #define S3E_FALSE 0
 #endif
 
-typedef int32 s3eBool;
-
 // Result type
 typedef int32 s3eResult;
 #define S3E_RESULT_SUCCESS 0
 #define S3E_RESULT_ERROR  -1
 
-// Utility macros
-#ifndef MIN
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
-#ifndef MAX
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
 
 /**
   * Poll and process SDL events, update input state.
@@ -83,9 +74,9 @@ void PollEvents();
 
 /**
   * Check if application should quit.
-  * Returns S3E_TRUE if quit was requested (e.g., window close button pressed).
+  * Returns true if quit was requested (e.g., window close button pressed).
   */
-s3eBool CheckForQuitRequest();
+bool CheckForQuitRequest();
 
 //==============================================================================
 // Pointer/Touch functions (from s3ePointer.h)
@@ -239,130 +230,6 @@ void PrepareForIwGx(bool fullscreen);
 void RecoverFromIwGx(bool fullscreen);
 
 //==============================================================================
-// File I/O stubs (from s3eFile.h) - to be replaced with C++ filesystem
-//==============================================================================
-
-// s3eFile is an opaque handle type (actually just FILE*)
-typedef FILE s3eFile;
-typedef int s3eFileError;
-
-inline s3eFile* s3eFileOpen(const char* filename, const char* mode)
-{
-        return fopen(filename, mode);
-}
-
-inline void s3eFileClose(s3eFile* file)
-{
-        if (file) fclose(file);
-}
-
-inline int32 s3eFileRead(void* buffer, int32 size, int32 count, s3eFile* file)
-{
-        return file ? (int32)fread(buffer, size, count, file) : 0;
-}
-
-inline int32 s3eFileGetSize(s3eFile* file)
-{
-        if (!file) return 0;
-        long pos = ftell(file);
-        fseek(file, 0, SEEK_END);
-        long size = ftell(file);
-        fseek(file, pos, SEEK_SET);
-        return (int32)size;
-}
-
-inline s3eFileError s3eFileGetError() { return 0; }
-
-inline bool s3eFileCheckExists(const char* filename)
-{
-        FILE* f = fopen(filename, "rb");
-        if (f) {
-                fclose(f);
-                return true;
-        }
-        return false;
-}
-
-// Directory creation
-#ifdef _WIN32
-#include <direct.h>
-inline s3eResult s3eFileMakeDirectory(const char* path) {
-        return _mkdir(path) == 0 ? S3E_RESULT_SUCCESS : S3E_RESULT_ERROR;
-}
-inline s3eResult s3eFileDelete(const char* path) {
-        return remove(path) == 0 ? S3E_RESULT_SUCCESS : S3E_RESULT_ERROR;
-}
-#else
-#include <sys/stat.h>
-inline s3eResult s3eFileMakeDirectory(const char* path) {
-        return mkdir(path, 0755) == 0 ? S3E_RESULT_SUCCESS : S3E_RESULT_ERROR;
-}
-inline s3eResult s3eFileDelete(const char* path) {
-        return remove(path) == 0 ? S3E_RESULT_SUCCESS : S3E_RESULT_ERROR;
-}
-#endif
-
-// Directory listing using std::filesystem
-struct s3eFileList
-{
-        std::vector<std::string> entries;
-        size_t currentIndex;
-};
-
-inline s3eFileList* s3eFileListDirectory(const char* path)
-{
-        namespace fs = std::filesystem;
-
-        if (!path)
-                return nullptr;
-
-        fs::path dirPath(path);
-
-        // Check if directory exists
-        std::error_code ec;
-        if (!fs::exists(dirPath, ec) || !fs::is_directory(dirPath, ec))
-                return nullptr;
-
-        s3eFileList* fileList = new s3eFileList();
-        fileList->currentIndex = 0;
-
-        // Iterate through directory and collect filenames
-        for (const auto& entry : fs::directory_iterator(dirPath, ec))
-        {
-                if (entry.is_regular_file(ec))
-                {
-                        // Store just the filename, not the full path
-                        fileList->entries.push_back(entry.path().filename().string());
-                }
-        }
-
-        return fileList;
-}
-
-inline s3eResult s3eFileListNext(s3eFileList* fileList, char* filename, int filenameLen)
-{
-        if (!fileList || !filename || filenameLen <= 0)
-                return S3E_RESULT_ERROR;
-
-        if (fileList->currentIndex >= fileList->entries.size())
-                return S3E_RESULT_ERROR;
-
-        const std::string& entry = fileList->entries[fileList->currentIndex];
-        fileList->currentIndex++;
-
-        // Copy filename, ensuring null termination
-        strncpy(filename, entry.c_str(), filenameLen - 1);
-        filename[filenameLen - 1] = '\0';
-
-        return S3E_RESULT_SUCCESS;
-}
-
-inline void s3eFileListClose(s3eFileList* fileList)
-{
-        delete fileList;
-}
-
-//==============================================================================
 // Vibration (mobile)
 //==============================================================================
 inline void s3eVibraVibrate(int32 amount, uint32 ms) {
@@ -395,7 +262,7 @@ inline void s3eOSExecExecute(const char* command, bool async) {
 //==============================================================================
 // Gamepad functions (implemented in Input.cpp via SDL2)
 //==============================================================================
-s3eBool gamepadAvailable();
+bool gamepadAvailable();
 uint32 gamepadGetNumDevices();
 void gamepadCalibrate();
 void gamepadUpdate();

@@ -13,6 +13,7 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
 
+#include <algorithm>
 #include <cmath>
 
 // Forward declarations from Graphics.cpp
@@ -264,7 +265,7 @@ int ShowInGameDialog(float widthFrac, float heightFrac,
 
         uint64 currentTime = Timer::GetMilliseconds();
         int32 updateTime = currentTime > lastTime ?
-            MIN((int32)(currentTime - lastTime), 100) : 0;
+            std::min((int32)(currentTime - lastTime), (int32)100) : 0;
         lastTime = currentTime;
         float dt = updateTime * 0.001f;
 
@@ -345,7 +346,7 @@ void ShowHelpOverlays(const GameSettings& gameSettings)
 
             uint64 currentTime = Timer::GetMilliseconds();
             int32 updateTime = currentTime > lastTime ?
-                MIN((int32)(currentTime - lastTime), 100) : 0;
+                std::min((int32)(currentTime - lastTime), (int32)100) : 0;
             lastTime = currentTime;
             float dt = updateTime * 0.001f;
 

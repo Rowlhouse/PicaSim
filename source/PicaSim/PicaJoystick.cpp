@@ -13,12 +13,9 @@ JoystickData::JoystickData()
 }
 
 //======================================================================================================================
-s3eBool JoystickAvailable()
+bool JoystickAvailable()
 {
-    if (!gamepadAvailable() || gamepadGetNumDevices() == 0)
-        return S3E_FALSE;
-    else
-        return true;
+    return gamepadAvailable() && gamepadGetNumDevices() > 0;
 }
 
 //======================================================================================================================

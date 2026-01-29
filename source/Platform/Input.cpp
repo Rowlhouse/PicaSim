@@ -875,9 +875,9 @@ int32 s3ePointerGetTouchY(int32 touchIndex)
 
 static bool gQuitRequested = false;
 
-s3eBool CheckForQuitRequest()
+bool CheckForQuitRequest()
 {
-    return gQuitRequested ? S3E_TRUE : S3E_FALSE;
+    return gQuitRequested;
 }
 
 void PollEvents()
@@ -936,10 +936,10 @@ void PollEvents()
 // Marmalade gamepad compatibility functions (from gamepad.h extension)
 //==============================================================================
 
-s3eBool gamepadAvailable()
+bool gamepadAvailable()
 {
     Input& input = Input::GetInstance();
-    return (input.GetGamepadCount() > 0 || input.GetJoystickCount() > 0) ? S3E_TRUE : S3E_FALSE;
+    return input.GetGamepadCount() > 0 || input.GetJoystickCount() > 0;
 }
 
 uint32 gamepadGetNumDevices()

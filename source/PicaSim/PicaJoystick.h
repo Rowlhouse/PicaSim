@@ -10,7 +10,7 @@ struct JoystickData
     char mName[512];
 };
 
-s3eBool JoystickAvailable();
+bool JoystickAvailable();
 
 s3eResult GetJoystickStatus(JoystickData& joystick, int id);
 

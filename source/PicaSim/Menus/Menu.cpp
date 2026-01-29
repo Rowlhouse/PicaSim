@@ -5,6 +5,7 @@
 #include "../GameSettings.h"
 #include "../PicaJoystick.h"
 #include "../../Platform/S3ECompat.h"
+#include <filesystem>
 
 typedef std::map<std::string, Texture*> TextureMap;
 TextureMap* sTextureMap = 0;
@@ -12,39 +13,31 @@ TextureMap* sTextureMap = 0;
 //======================================================================================================================
 void CacheThumbnailsFromDir(const char* path, bool convertTo16Bit, LoadingScreen* loadingScreen, const char* txt)
 {
-    s3eFileList* fileList = s3eFileListDirectory(path);
+    namespace fs = std::filesystem;
+
     if (loadingScreen)
         loadingScreen->Update(txt);
-    if (fileList)
+
+    std::error_code ec;
+    if (!fs::exists(path, ec) || !fs::is_directory(path, ec))
+        return;
+
+    for (const auto& entry : fs::directory_iterator(path, ec))
     {
-        const int filenameLen = 512;
-        char filename[filenameLen];
-        std::string fullPath;
-        while (true)
+        if (loadingScreen) loadingScreen->Update(0);
+
+        if (!entry.is_regular_file(ec))
+            continue;
+
+        std::string filename = entry.path().filename().string();
+        size_t len = filename.length();
+        if (len > 4)
         {
-            if (loadingScreen) loadingScreen->Update(0);
-            s3eResult result = s3eFileListNext(fileList, filename, filenameLen);
-            if (result == S3E_RESULT_SUCCESS)
+            std::string ext = filename.substr(len - 4);
+            if (ext == ".jpg" || ext == ".png")
             {
-                size_t len = strnlen(filename, filenameLen);
-                if (len > 4)
-                {
-                    if (
-                        strcmp(&filename[len-4], ".jpg") == 0 ||
-                        strcmp(&filename[len-4], ".png") == 0
-                        )
-                    {
-                        fullPath = path;
-                        fullPath += "/";
-                        fullPath += filename;
-                        GetCachedTexture(fullPath, convertTo16Bit);
-                    }
-                }
-            }
-            else
-            {
-                s3eFileListClose(fileList);
-                return;
+                std::string fullPath = entry.path().string();
+                GetCachedTexture(fullPath, convertTo16Bit);
             }
         }
     }

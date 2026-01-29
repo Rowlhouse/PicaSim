@@ -7,6 +7,7 @@
 #include "Platform.h"
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
@@ -229,19 +230,22 @@ FileMenu::~FileMenu()
 void FileMenu::LoadFilesFromDirectory(const char* path, bool isUserPath, bool useTitleFromFile)
 {
     TRACE_FILE_IF(1) TRACE("FileMenu::LoadFilesFromDirectory: path='%s' isUserPath=%d", path, isUserPath);
-    s3eFileList* fileList = s3eFileListDirectory(path);
-    if (!fileList)
+    namespace fs = std::filesystem;
+
+    std::error_code ec;
+    if (!fs::exists(path, ec) || !fs::is_directory(path, ec))
     {
         TRACE_FILE_IF(1) TRACE("FileMenu::LoadFilesFromDirectory: failed to open directory '%s'", path);
         return;
     }
 
-    const int filenameLen = 512;
-    char filename[filenameLen];
-
-    while (s3eFileListNext(fileList, filename, filenameLen) == S3E_RESULT_SUCCESS)
+    for (const auto& entry : fs::directory_iterator(path, ec))
     {
-        std::string fullPath = std::string(path) + "/" + filename;
+        if (!entry.is_regular_file(ec))
+            continue;
+
+        std::string filename = entry.path().filename().string();
+        std::string fullPath = entry.path().string();
 
         // Apply include callback filter if provided
         if (mIncludeCallback && !mIncludeCallback->GetInclude(fullPath.c_str()))
@@ -254,8 +258,11 @@ void FileMenu::LoadFilesFromDirectory(const char* path, bool isUserPath, bool us
         item.thumbnail = nullptr;
 
         // Strip extension for display name
-        RemoveExtension(filename, mExtension.c_str());
-        item.displayName = filename;
+        char displayName[512];
+        strncpy(displayName, filename.c_str(), sizeof(displayName) - 1);
+        displayName[sizeof(displayName) - 1] = '\0';
+        RemoveExtension(displayName, mExtension.c_str());
+        item.displayName = displayName;
 
         // Load metadata based on file type
         if (mFileMenuType != FILEMENUTYPE_FILE && useTitleFromFile)
@@ -317,7 +324,6 @@ void FileMenu::LoadFilesFromDirectory(const char* path, bool isUserPath, bool us
 
         mItems.push_back(item);
     }
-    s3eFileListClose(fileList);
 }
 
 //======================================================================================================================
@@ -731,7 +737,7 @@ void FileMenuDelete(
     if (!selectedPath.empty())
     {
         TRACE_FILE_IF(1) TRACE("Deleting %s", selectedPath.c_str());
-        s3eFileDelete(selectedPath.c_str());
+        std::filesystem::remove(selectedPath);
     }
 }
 

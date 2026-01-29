@@ -1,5 +1,7 @@
 #include "Skybox.h"
 
+#include <filesystem>
+
 #include "RenderManager.h"
 #include "LoadingScreenHelper.h"
 #include "Graphics.h"
@@ -39,7 +41,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
     while (detail >= 1)
     {
         sprintf(filename, "%s/%d/front1.jpg", skyboxPath, detail);
-        if (s3eFileCheckExists(filename))
+        if (std::filesystem::exists(filename))
         {
             break;
         }
@@ -57,7 +59,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
         for (int iImage = 1 ; ; ++iImage)
         {
             sprintf(filename, "%s/%d/%s%d.jpg", skyboxPath, detail, sideNames[iSide], iImage);
-            if (!s3eFileCheckExists(filename))
+            if (!std::filesystem::exists(filename))
             {
                 break;
             }

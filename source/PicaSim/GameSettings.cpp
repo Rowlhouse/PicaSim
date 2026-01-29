@@ -1533,23 +1533,24 @@ bool GetFileChecksum(uint32& checksum, const char* file)
     if (!file)
         return false;
 
-    s3eFile *fileHandle = s3eFileOpen(file, "rb");
+    FILE* fileHandle = fopen(file, "rb");
     if (!fileHandle)
     {
         TRACE_FILE_IF(1) TRACE("Error opening %s", file);
         return false;
     }
-    int32 fileNumBytes = s3eFileGetSize(fileHandle);
+    fseek(fileHandle, 0, SEEK_END);
+    long fileNumBytes = ftell(fileHandle);
+    fseek(fileHandle, 0, SEEK_SET);
     std::vector<uint8> data(fileNumBytes);
-    int32 result = s3eFileRead(&data[0], fileNumBytes, 1, fileHandle);
+    size_t result = fread(&data[0], fileNumBytes, 1, fileHandle);
     if (result != 1)
     {
-        s3eFileError error = s3eFileGetError();
-        TRACE_FILE_IF(1) TRACE("Error loading %s error = %d", file, error);
-        s3eFileClose(fileHandle);
+        TRACE_FILE_IF(1) TRACE("Error loading %s", file);
+        fclose(fileHandle);
         return false;
     }
-    s3eFileClose(fileHandle);
+    fclose(fileHandle);
     uint32 crc = GetChecksum(&data[0], fileNumBytes);
     checksum += crc;
     return true;

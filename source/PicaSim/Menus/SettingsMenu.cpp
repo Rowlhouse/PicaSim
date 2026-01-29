@@ -2173,7 +2173,7 @@ void SettingsMenu::RenderJoystickTab()
     Language language = mGameSettings.mOptions.mLanguage;
     bool advanced = sAdvancedEnabled[TAB_JOYSTICK];
 
-    bool joystickAvailable = JoystickAvailable() == S3E_TRUE;
+    bool joystickAvailable = JoystickAvailable();
 
     if (!joystickAvailable)
     {
@@ -2362,7 +2362,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                     (int&)sImageButtonX, (int&)sImageButtonY,
                     (int&)sImageButtonW, (int&)sImageButtonH);
 
-                if (CheckForQuitRequest() != 0)
+                if (CheckForQuitRequest())
                 {
                     RecoverFromIwGx(false);
                     return;
