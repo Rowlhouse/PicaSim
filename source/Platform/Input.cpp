@@ -18,7 +18,6 @@ Input::Input()
     , mTouchCount(0)
     , mTouchAvailable(false)
     , mStatesDirty(true)
-    , mLastFrameTime(0)
     , mAccelerometer(nullptr)
     , mAccelerometerAvailable(false)
     , mAccelX(0), mAccelY(0), mAccelZ(1.0f)
@@ -145,20 +144,11 @@ void Input::ClearPressedStates()
 
 void Input::BeginFrame()
 {
-    // Use time-based frame boundaries to handle multiple s3eDeviceYield calls per game frame
-    // Only update previous state if enough time has passed (at least 5ms = ~200 FPS max)
-    // This prevents PRESSED from transitioning to DOWN too quickly during internal yields
-    Uint32 currentTime = SDL_GetTicks();
-    if (currentTime - mLastFrameTime >= 5)
-    {
-        // At the start of a new frame, save current state as previous for edge detection
-        // This must happen BEFORE processing events so that new key presses this frame
-        // are detected as transitions from the previous frame's state
-        memcpy(mKeyDownPrev, mKeyDown, sizeof(mKeyDown));
-        memcpy(mMouseButtonDownPrev, mMouseButtonDown, sizeof(mMouseButtonDown));
-
-        mLastFrameTime = currentTime;
-    }
+    // Save current state as previous for edge detection
+    // This must happen BEFORE processing events so that new key presses this frame
+    // are detected as transitions from the previous frame's state
+    memcpy(mKeyDownPrev, mKeyDown, sizeof(mKeyDown));
+    memcpy(mMouseButtonDownPrev, mMouseButtonDown, sizeof(mMouseButtonDown));
 
     // Mark states as dirty so they'll be recomputed after events are processed
     mStatesDirty = true;
@@ -294,8 +284,8 @@ void Input::ProcessEvent(const SDL_Event& event)
             if (index >= 0)
             {
                 mTouches[index].id = (int)event.tfinger.fingerId;
-                mTouches[index].x = event.tfinger.x * Platform::GetScreenWidth();
-                mTouches[index].y = event.tfinger.y * Platform::GetScreenHeight();
+                mTouches[index].x = event.tfinger.x * Platform::GetDisplayWidth();
+                mTouches[index].y = event.tfinger.y * Platform::GetDisplayHeight();
                 mTouches[index].pressure = event.tfinger.pressure;
                 mTouches[index].state = POINTER_STATE_PRESSED;
                 mTouches[index].active = true;
@@ -315,8 +305,8 @@ void Input::ProcessEvent(const SDL_Event& event)
             int index = FindTouchIndex((int)event.tfinger.fingerId);
             if (index >= 0)
             {
-                mTouches[index].x = event.tfinger.x * Platform::GetScreenWidth();
-                mTouches[index].y = event.tfinger.y * Platform::GetScreenHeight();
+                mTouches[index].x = event.tfinger.x * Platform::GetDisplayWidth();
+                mTouches[index].y = event.tfinger.y * Platform::GetDisplayHeight();
                 mTouches[index].state = POINTER_STATE_RELEASED;
 
                 if (mTouchCallback)
@@ -336,8 +326,8 @@ void Input::ProcessEvent(const SDL_Event& event)
             int index = FindTouchIndex((int)event.tfinger.fingerId);
             if (index >= 0)
             {
-                mTouches[index].x = event.tfinger.x * Platform::GetScreenWidth();
-                mTouches[index].y = event.tfinger.y * Platform::GetScreenHeight();
+                mTouches[index].x = event.tfinger.x * Platform::GetDisplayWidth();
+                mTouches[index].y = event.tfinger.y * Platform::GetDisplayHeight();
                 mTouches[index].pressure = event.tfinger.pressure;
 
                 if (mTouchMotionCallback)
@@ -1017,23 +1007,23 @@ s3eBool s3eKeyboardIsKeyDown(s3eKey key)
 
 void s3eKeyboardUpdate()
 {
-    // Input state is updated in s3eDeviceYield, nothing to do here
+    // Input state is updated in PollEvents(), nothing to do here
 }
 
 //==============================================================================
 // Marmalade s3eDevice compatibility functions
 //==============================================================================
 
-static bool g_quitRequested = false;
+static bool gQuitRequested = false;
 
-s3eBool s3eDeviceCheckQuitRequest()
+s3eBool CheckForQuitRequest()
 {
-    return g_quitRequested ? S3E_TRUE : S3E_FALSE;
+    return gQuitRequested ? S3E_TRUE : S3E_FALSE;
 }
 
-void s3eDeviceYield(int32 ms)
+void PollEvents()
 {
-    // Mark start of new input frame (uses time-based throttling internally)
+    // Mark start of new input frame
     Input::GetInstance().BeginFrame();
 
     // Process all pending SDL events
@@ -1046,7 +1036,7 @@ void s3eDeviceYield(int32 ms)
         switch (event.type)
         {
         case SDL_QUIT:
-            g_quitRequested = true;
+            gQuitRequested = true;
             break;
         case SDL_KEYDOWN:
             // F11 or Alt+Enter toggles fullscreen globally
@@ -1081,12 +1071,6 @@ void s3eDeviceYield(int32 ms)
 
     // Update input state
     Input::GetInstance().Update();
-
-    // Yield CPU time if requested
-    if (ms > 0)
-    {
-        SDL_Delay(static_cast<Uint32>(ms));
-    }
 }
 
 //==============================================================================
@@ -1285,7 +1269,7 @@ int32 gamepadGetPointOfViewAngle(uint32 index)
 
 void gamepadUpdate()
 {
-    // Input is updated in s3eDeviceYield, nothing extra needed here
+    // Input is updated in PollEvents(), nothing extra needed here
 }
 
 void gamepadReset()

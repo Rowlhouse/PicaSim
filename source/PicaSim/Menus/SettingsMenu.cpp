@@ -197,7 +197,7 @@ SettingsStatus SettingsMenu::Update()
     IwGxClear();
     Render();
     IwGxSwapBuffers();
-    s3eDeviceYield();
+    PollEvents();
 
     return mStatus;
 }
@@ -205,8 +205,8 @@ SettingsStatus SettingsMenu::Update()
 //======================================================================================================================
 void SettingsMenu::RenderContent()
 {
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
     Language language = mGameSettings.mOptions.mLanguage;
 
@@ -413,7 +413,7 @@ void SettingsMenu::RenderBottomButtons(SettingsStatus loadStatus, SettingsStatus
     Language language = mGameSettings.mOptions.mLanguage;
     float scale = UIHelpers::GetFontScale();
     float buttonH = 32.0f * scale;
-    int width = Platform::GetScreenWidth();
+    int width = Platform::GetDisplayWidth();
 
     bool advanced = sAdvancedEnabled[sSelectedTab];
     int numButtons = advanced ? 4 : 3;
@@ -659,7 +659,7 @@ void SettingsMenu::RenderOptions1Tab()
         SettingsWidgets::SliderFloat(TXT(PS_CONTROLLERSIZE), options.mControllerSize, 0.2f, 1.0f);
         SettingsWidgets::Checkbox(TXT(PS_BRAKESFORWARD), options.mControllerBrakesForward);
         SettingsWidgets::Checkbox(TXT(PS_USEABSOLUTECONTROLLERTOUCHPOSITION), options.mControllerUseAbsolutePosition);
-        if (mGameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_ANDROID)
+        if (mGameSettings.mOptions.mFrameworkSettings.isAndroid())
         {
             SettingsWidgets::Checkbox(TXT(PS_STAGGERCONTROLLER), options.mControllerStaggered);
         }
@@ -959,7 +959,7 @@ void SettingsMenu::RenderAeroplaneTab()
 
     // Thumbnail button
     Texture* thumbnail = GetCachedTexture(as.mThumbnail, mGameSettings.mOptions.m16BitTextures);
-    float thumbnailHeight = (float)Platform::GetScreenHeight() * 0.3f;
+    float thumbnailHeight = (float)Platform::GetDisplayHeight() * 0.3f;
 
     if (SettingsWidgets::ThumbnailButton(thumbnail, as.mTitle.c_str(), as.mInfo.c_str(),
         thumbnailHeight, &sImageButtonX, &sImageButtonY, &sImageButtonW, &sImageButtonH))
@@ -1382,7 +1382,7 @@ void SettingsMenu::RenderSceneryTab()
 
     // Thumbnail button
     Texture* thumbnail = GetCachedTexture(es.mThumbnail, mGameSettings.mOptions.m16BitTextures);
-    float thumbnailHeight = (float)Platform::GetScreenHeight() * 0.3f;
+    float thumbnailHeight = (float)Platform::GetDisplayHeight() * 0.3f;
 
     if (SettingsWidgets::ThumbnailButton(thumbnail, es.mTitle.c_str(), es.mInfo.c_str(),
         thumbnailHeight, &sImageButtonX, &sImageButtonY, &sImageButtonW, &sImageButtonH))
@@ -1756,7 +1756,7 @@ void SettingsMenu::RenderLightingTab()
 
     // Thumbnail button - only clickable if environment settings are allowed
     Texture* thumbnail = GetCachedTexture(ls.mThumbnail, mGameSettings.mOptions.m16BitTextures);
-    float thumbnailHeight = (float)Platform::GetScreenHeight() * 0.3f;
+    float thumbnailHeight = (float)Platform::GetDisplayHeight() * 0.3f;
 
     if (allowEnvironmentSettings)
     {
@@ -2209,7 +2209,7 @@ void SettingsMenu::RenderJoystickTab()
             mStatus = SETTINGS_CLEAR_JOYSTICK;
         }
 
-        if (mGameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_WINDOWS)
+        if (mGameSettings.mOptions.mFrameworkSettings.isWindows())
         {
             if (SettingsWidgets::Button(TXT(PS_CALIBRATEJOYSTICK)))
             {
@@ -2363,7 +2363,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                     (int&)sImageButtonX, (int&)sImageButtonY,
                     (int&)sImageButtonW, (int&)sImageButtonH);
 
-                if (s3eDeviceCheckQuitRequest() != 0)
+                if (CheckForQuitRequest() != 0)
                 {
                     RecoverFromIwGx(false);
                     return;

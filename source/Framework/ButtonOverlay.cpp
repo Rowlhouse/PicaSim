@@ -90,8 +90,8 @@ bool ButtonOverlay::IsPressed(uint32_t pressMask) const
     if (!mEnabled)
         return false;
 
-    uint32 displayWidth = IwGxGetScreenWidth(); 
-    uint32 displayHeight = IwGxGetScreenHeight(); 
+    uint32 displayWidth = IwGxGetDisplayWidth(); 
+    uint32 displayHeight = IwGxGetDisplayHeight(); 
 
     float paddingX = mPaddingFraction * (mX1 - mX0);
     float paddingY = mPaddingFraction * (mY1 - mY0);

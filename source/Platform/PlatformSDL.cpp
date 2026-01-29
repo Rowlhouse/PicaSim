@@ -96,7 +96,7 @@ std::string GetDeviceID()
 // Screen/Display
 // --------------------------------------------------------------------------
 
-int GetScreenWidth()
+int GetDisplayWidth()
 {
     // Return window width if window exists
     if (gWindow && gWindow->IsInitialized())
@@ -112,7 +112,7 @@ int GetScreenWidth()
     return 1920; // Default fallback
 }
 
-int GetScreenHeight()
+int GetDisplayHeight()
 {
     // Return window height if window exists
     if (gWindow && gWindow->IsInitialized())

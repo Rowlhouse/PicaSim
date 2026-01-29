@@ -17,9 +17,9 @@ FrameworkSettings::FrameworkSettings()
     mFarClipPlaneDistance(50000.0f),
     mUseMultiLights(true)
 {
-    // Get OS type from Platform abstraction
-    mOS = (s3eDeviceOSID)s3eDeviceGetInt(S3E_DEVICE_OS);
-    TRACE_FILE_IF(1) TRACE("OS = %d", mOS);
+    // Get platform type
+    mPlatform = Platform::GetPlatformID();
+    TRACE_FILE_IF(1) TRACE("Platform = %s", Platform::GetPlatformName());
 
     UpdateScreenDimensions();
 }
@@ -35,12 +35,12 @@ void FrameworkSettings::UpdateScreenDimensions() const
     }
     else
     {
-        mScreenWidth = Platform::GetScreenWidth();
-        mScreenHeight = Platform::GetScreenHeight();
+        mScreenWidth = Platform::GetDisplayWidth();
+        mScreenHeight = Platform::GetDisplayHeight();
     }
 
     // On iOS, ensure landscape orientation (width > height)
-    if (mOS == S3E_OS_ID_IPHONE && mScreenHeight > mScreenWidth)
+    if (mPlatform == Platform::PlatformID::iOS && mScreenHeight > mScreenWidth)
     {
         std::swap(mScreenWidth, mScreenHeight);
     }

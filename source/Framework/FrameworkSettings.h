@@ -2,7 +2,6 @@
 #define FRAMEWORKSETTINGS_H
 
 #include "../Platform/Platform.h"
-#include "../Platform/S3ECompat.h"
 
 struct FrameworkSettings
 {
@@ -11,18 +10,20 @@ struct FrameworkSettings
     // Obviously not really const, but sometimes this just needs to be updated before things can work with it
     void UpdateScreenDimensions() const;
 
-    bool isWin10() const { return mOS == S3E_OS_ID_WIN10; }
-    bool isWindowsDesktop() const { return mOS == S3E_OS_ID_WINDOWS; }
-    bool isWindows() const { return mOS == S3E_OS_ID_WINDOWS || mOS == S3E_OS_ID_WIN10; }
-    bool isAndroid() const { return mOS == S3E_OS_ID_ANDROID; }
-    bool isIOS() const { return mOS == S3E_OS_ID_IPHONE; }
+    bool isWindows() const { return mPlatform == Platform::PlatformID::Windows; }
+    bool isAndroid() const { return mPlatform == Platform::PlatformID::Android; }
+    bool isIOS() const { return mPlatform == Platform::PlatformID::iOS; }
+    bool isMacOS() const { return mPlatform == Platform::PlatformID::macOS; }
+    bool isLinux() const { return mPlatform == Platform::PlatformID::Linux; }
+    bool isDesktop() const { return Platform::IsDesktop(); }
+    bool isMobile() const { return Platform::IsMobile(); }
 
     int mPhysicsSubsteps;
     float mNearClipPlaneDistance;
     float mFarClipPlaneDistance;
     bool  mUseMultiLights;
 
-    s3eDeviceOSID mOS;
+    Platform::PlatformID mPlatform;
     mutable int mScreenWidth, mScreenHeight;
 };
 

@@ -51,7 +51,7 @@ bool WhatsNewMenu::Update()
     IwGxClear();
     Render();
     IwGxSwapBuffers();
-    s3eDeviceYield();
+    PollEvents();
 
     return mFinished;
 }
@@ -59,8 +59,8 @@ bool WhatsNewMenu::Update()
 //======================================================================================================================
 void WhatsNewMenu::Render()
 {
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
     Language language = mGameSettings.mOptions.mLanguage;
 
@@ -121,7 +121,7 @@ void DisplayWhatsNewMenu(GameSettings& gameSettings)
 
     while (!menu.Update())
     {
-        if (s3eDeviceCheckQuitRequest() ||
+        if (CheckForQuitRequest() ||
                 (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
                 (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
         {

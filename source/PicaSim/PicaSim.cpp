@@ -595,7 +595,7 @@ void PicaSim::HandleJoystickToggle(const JoystickSettings::JoystickButtonOverrid
 //======================================================================================================================
 void PicaSim::UpdateJoystickToggles(bool& joystickRelaunch, bool& joystickChangeView, bool& joystickPausePlay)
 {
-    if (mGameSettings.mJoystickSettings.mEnableJoystick && mGameSettings.mOptions.mFrameworkSettings.mOS != S3E_OS_ID_IPHONE)
+    if (mGameSettings.mJoystickSettings.mEnableJoystick && !mGameSettings.mOptions.mFrameworkSettings.isIOS())
     {
         JoystickData joystick;
         if (S3E_RESULT_SUCCESS == GetJoystickStatus(joystick, mGameSettings.mOptions.mJoystickID))
@@ -820,7 +820,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     if (
         mStartMenuOverlay->IsPressed() ||
         ((s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) && mGameSettings.mOptions.mUseBackButtonToExit)||
-        s3eDeviceCheckQuitRequest()
+        CheckForQuitRequest()
         )
     {
         TRACE_FILE_IF(1) TRACE("Returning to start screen");

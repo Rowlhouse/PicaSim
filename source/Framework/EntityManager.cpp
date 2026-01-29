@@ -162,7 +162,7 @@ void EntityManager::UpdateEntities(float deltaTime)
 #endif
     for (int i = 0 ; i != numLoops ; ++i)
     {
-        s3eDeviceYield(0);
+        PollEvents();
         it = mEntities.lower_bound(ENTITY_LEVEL_LOOP_PRE_PHYSICS);
         for (; it != itEnd ; ++it)
         {
@@ -189,11 +189,11 @@ void EntityManager::UpdateEntities(float deltaTime)
 void EntityManager::EntityUpdate(float deltaTime, int entityLevel)
 {
     IwAssert(ROWLHOUSE, entityLevel == ENTITY_LEVEL_LOOP_PHYSICS);
-    s3eDeviceYield(0);
+    PollEvents();
     TRACE_FILE_IF(2) TRACE("Physics Step start");
     mDynamicsWorld->stepSimulation(deltaTime, 0);
     TRACE_FILE_IF(2) TRACE("Physics Step end");
-    s3eDeviceYield(0);
+    PollEvents();
 }
 
 //======================================================================================================================

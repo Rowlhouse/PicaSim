@@ -1,4 +1,4 @@
-#include "HelpMenu.h"
+﻿#include "HelpMenu.h"
 #include "Menu.h"
 #include "UIHelpers.h"
 #include "../GameSettings.h"
@@ -96,7 +96,7 @@ bool HelpMenu::Update()
     IwGxClear();
     Render();
     IwGxSwapBuffers();
-    s3eDeviceYield();
+    PollEvents();
 
     return mFinished;
 }
@@ -104,8 +104,8 @@ bool HelpMenu::Update()
 //======================================================================================================================
 void HelpMenu::Render()
 {
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
     Language language = mGameSettings.mOptions.mLanguage;
 
@@ -208,27 +208,26 @@ void HelpMenu::Render()
         ImGui::Separator();
 
         char labelTxt[256];
-        sprintf(labelTxt, "Build info:\n%s\n%s", MARMALADE_VERSION_STRING_FULL, __TIMESTAMP__);
+        sprintf(labelTxt, "Build info:\n%s", __TIMESTAMP__);
         ImGui::TextWrapped("%s", labelTxt);
 
         ImGui::Separator();
 
         int32 dpi = DPI::dpiGetScreenDPI();
-        const char* deviceName = s3eDeviceGetString(S3E_DEVICE_ID);
-        int32 numCores = s3eDeviceGetInt(S3E_DEVICE_NUM_CPU_CORES);
+        int32 numCores = Platform::GetCPUCount();
 
         // Calculate screen diagonal
         float diagonal = 0.0f;
         if (dpi > 0)
         {
-            int w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
-            int h = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
+            int w = Platform::GetDisplayWidth();
+            int h = Platform::GetDisplayHeight();
             float d = hypotf((float)w, (float)h);
             diagonal = d / dpi;
         }
 
-        sprintf(labelTxt, "Device info:\nName: %s\nCores: %d\nSurface: %d dpi %.2f\"",
-            deviceName, numCores, dpi, diagonal);
+        sprintf(labelTxt, "Device info:\nCores: %d\nSurface: %d dpi %.2f\"",
+            numCores, dpi, diagonal);
         ImGui::TextWrapped("%s", labelTxt);
     }
 
@@ -258,7 +257,7 @@ void DisplayHelpMenu(GameSettings& gameSettings, bool showHowToFly)
 
     while (!helpMenu.Update())
     {
-        if (s3eDeviceCheckQuitRequest() ||
+        if (CheckForQuitRequest() ||
                 (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
                 (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
         {

@@ -14,7 +14,9 @@
 #include "Menus/PicaDialog.h"
 
 #include "../Platform/S3ECompat.h"
+#include "../Framework/Graphics.h"
 #include "Platform.h"
+#include <SDL.h>
 
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
@@ -33,8 +35,8 @@ static float GetSurfaceDiagonalInches()
     int32 dpi = DPI::dpiGetScreenDPI();
     if (dpi > 0)
     {
-        int w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
-        int h = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
+        int w = Platform::GetDisplayWidth();
+        int h = Platform::GetDisplayHeight();
         float d = hypotf((float) w, (float) h);
         return d / dpi;
     }
@@ -75,54 +77,7 @@ static bool SelectChallenge(GameSettings& gameSettings)
 static bool InitialiseOptions(GameSettings& gameSettings)
 {
     const Language language = gameSettings.mOptions.mLanguage;
-    if (gameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_IPHONE)
-    {
-        bool result = false;
-        const char* deviceName = s3eDeviceGetString(S3E_DEVICE_ID);
-        size_t deviceNameLen = deviceName ? strlen(deviceName) : 0;
-        TRACE_FILE_IF(1) TRACE("iOS Device ID = %s", deviceName ? deviceName : "(null)");
-        if (deviceName && strncmp(deviceName, "iPad", 4) == 0 && deviceNameLen > 4)
-        {
-            char version = deviceName[4];
-            if (version == '1' || version == '2')
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/LowQuality-LargeScreen.xml"); // ipad 1 & 2
-            else if (version == '3' || version == '4')
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/StandardQuality-LargeScreen.xml"); // ipad 3, 4 and air
-            else
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/HighQuality-LargeScreen.xml"); // ipad 5? and above
-        }
-        else if (deviceName && strncmp(deviceName, "iPod", 4) == 0 && deviceNameLen > 4)
-        {
-            char version = deviceName[4];
-            if (version == '1' || version == '2' || version == '3' || version == '4')
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/LowQuality-SmallScreen.xml"); // ipod touch gen 1-4
-            else if (version == '5')
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/StandardQuality-SmallScreen.xml"); // ipod touch 5
-            else
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/HighQuality-SmallScreen.xml"); // ipod touch 6
-        }
-        else if (deviceName && strncmp(deviceName, "iPhone", 6) == 0 && deviceNameLen > 6)
-        {
-            char version = deviceName[6];
-            if (version == '1' || version == '2' || version == '3' || version == '4')
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/LowQuality-SmallScreen.xml"); // iphone 1, 3G, 3GS, 4, 4s
-            else if (version == '5' || version == '6')
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/StandardQuality-SmallScreen.xml"); // 5, 5s
-            else
-                result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/HighQuality-SmallScreen.xml"); // iphone 6 and above
-        }
-        else
-        {
-            // New device or unknown format
-            result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/StandardQuality-LargeScreen.xml");
-        }
-        IwAssert(ROWLHOUSE, result);
-        TRACE_FILE_IF(1) TRACE(" %s\n", result ? "success" : "failed");
-        gameSettings.mStatistics.mLoadedOptions = true;
-
-        gameSettings.mOptions.mControlledPlaneShadows = Options::PROJECTED;
-    }
-    else if (gameSettings.mOptions.mFrameworkSettings.isWindows())
+    if (gameSettings.mOptions.mFrameworkSettings.isWindows())
     {
         bool result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/HighQuality-LargeScreen.xml");
         IwAssert(ROWLHOUSE, result);
@@ -133,7 +88,7 @@ static bool InitialiseOptions(GameSettings& gameSettings)
     {
         // Attempt to guess the screen size and CPU power
         float diagonalInches = GetSurfaceDiagonalInches();
-        int32 numCores = s3eDeviceGetInt(S3E_DEVICE_NUM_CPU_CORES);
+        int32 numCores = Platform::GetCPUCount();
         TRACE_FILE_IF(1) TRACE("diagonalInches = %5.2f numCores = %d ", diagonalInches, numCores);
 
         if (diagonalInches > 0.0f && numCores > 0)
@@ -186,9 +141,9 @@ static bool InitialiseOptions(GameSettings& gameSettings)
         }
     }
 
-    int32 memoryKB = s3eDeviceGetInt(S3E_DEVICE_MEM_TOTAL);
-    TRACE_FILE_IF(1) TRACE("InitialiseOptions: reported memory = %d KB", memoryKB);
-    if (memoryKB > 400*1024 || memoryKB <= 0) // -1 on Windows?!
+    int32 memoryMB = Platform::GetSystemRAM();
+    TRACE_FILE_IF(1) TRACE("InitialiseOptions: reported memory = %d MB", memoryMB);
+    if (memoryMB > 400 || memoryMB <= 0)
         gameSettings.mOptions.m16BitTextures = false;
     else
         gameSettings.mOptions.m16BitTextures = true;
@@ -232,23 +187,10 @@ int main()
     gGLVersion = ReadGLVersionFromSettings(settingsPath.c_str());
     TRACE_FILE_IF(1) TRACE("GL version from settings: %d", gGLVersion);
 
-    // Disable the PVRVFrame window
-    void (*PVRVFrameEnableControlWindow)(bool)  = (void(*)(bool))eglGetProcAddress("PVRVFrameEnableControlWindow");
-    if (PVRVFrameEnableControlWindow)
-    {
-        int enable = 0;
-        s3eConfigGetInt("PICASIM", "EnablePVRVFrame", &enable);
-        TRACE_FILE_IF(1) TRACE("Setting PVRVFrame window to %d", enable);
-        PVRVFrameEnableControlWindow(enable != 0); 
-    }
-
 #if 0
     s3eGLRegister(S3E_GL_SUSPEND, suspendCallback, 0);
     s3eGLRegister(S3E_GL_RESUME, resumeCallback, 0);
 #endif
-
-    s3eDeviceRegister(S3E_DEVICE_PAUSE, pauseCallback, 0);
-    s3eDeviceRegister(S3E_DEVICE_UNPAUSE, unpauseCallback, 0);
 
 #ifdef EXPLICIT_EGL_INIT
     // This is no good as Marmalade recreates the surface badly on suspend/resume
@@ -261,10 +203,10 @@ int main()
     int msaaSamples = ReadMSAASamplesFromSettings(settingsPath.c_str());
     TRACE_FILE_IF(1) TRACE("MSAA samples from settings: %d", msaaSamples);
 
-    // Since we request HW rasterisation this will initialise GL too
-    TRACE_FILE_IF(1) TRACE("Calling IwUIInit with MSAA=%d", msaaSamples);
-    IwUIInit(msaaSamples);
-    TRACE_FILE_IF(1) TRACE("IwUIInit has been called");
+    // Create window and initialise OpenGL
+    TRACE_FILE_IF(1) TRACE("Calling eglInit with MSAA=%d", msaaSamples);
+    eglInit(true, msaaSamples);
+    TRACE_FILE_IF(1) TRACE("eglInit has been called");
 
 #ifdef PICASIM_VR_SUPPORT
     // Initialize VR manager (requires OpenGL context to be created)
@@ -294,11 +236,6 @@ int main()
     s3eResult result = s3eWindowGetDisplayModes(modes, &numModes);
     result = s3eWindowSetFullscreen(&modes[numModes-1]);
 #endif
-
-    if (s3eIOSBackgroundAudioAvailable() == S3E_TRUE)
-    {
-        s3eIOSBackgroundAudioSetMix(S3E_TRUE);
-    }
 
     TRACE_FILE_IF(1) TRACE("Calling AudioManager::Init()");
     AudioManager::Init();
@@ -403,7 +340,7 @@ int main()
             gameSettings.mOptions.m16BitTextures, initialLoadingScreen, GetPS(PS_LOADING, gameSettings.mOptions.mLanguage));
 
         // Prompt version check if on windows
-        if (gameSettings.mOptions.mFrameworkSettings.isWindowsDesktop())
+        if (gameSettings.mOptions.mFrameworkSettings.isWindows())
             InitVersionChecker();
 
         delete initialLoadingScreen;
@@ -421,7 +358,7 @@ int main()
 
                 gameSettings.mOptions.mFrameworkSettings.UpdateScreenDimensions();
 
-                if (s3eDeviceCheckQuitRequest())
+                if (CheckForQuitRequest())
                     break;
 
                 StartMenuResult startMenuResult;
@@ -557,7 +494,7 @@ SelectPlane:
 
                     gameSettings.mOptions.mFrameworkSettings.UpdateScreenDimensions();
 
-                    s3eDeviceYield(0);
+                    PollEvents();
                     int64 currentTimeMs = Timer::GetMilliseconds();
 
 #ifdef PICASIM_VR_SUPPORT
@@ -600,7 +537,7 @@ SelectPlane:
                                 break;
                             else if (yield < 2)
                                 yield = 2; // always yield by at least 1ms for audio
-                            s3eDeviceYield(yield-1);
+                            SDL_Delay(yield-1);
                         }
                     }
 #endif
@@ -645,9 +582,6 @@ SelectPlane:
     TRACE_FILE_IF(1) TRACE("VRManager::Terminate()");
     VRManager::Terminate();
 #endif
-
-    TRACE_FILE_IF(1) TRACE("IwUITerminate");
-    IwUITerminate();
 
 #ifdef EXPLICIT_EGL_INIT
     TRACE_FILE_IF(1) TRACE("eglTerm");

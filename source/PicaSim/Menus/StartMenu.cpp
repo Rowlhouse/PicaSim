@@ -112,10 +112,10 @@ StartMenuResult StartMenu::Update()
     Render();
     IwGxSwapBuffers();
 
-    s3eDeviceYield();
+    PollEvents();
 
     // Check for quit request
-    if (s3eDeviceCheckQuitRequest())
+    if (CheckForQuitRequest())
     {
         mResult = STARTMENU_QUIT;
     }
@@ -126,8 +126,8 @@ StartMenuResult StartMenu::Update()
 //======================================================================================================================
 void StartMenu::Render()
 {
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
 
     // Begin ImGui frame
@@ -257,7 +257,7 @@ StartMenuResult DisplayStartMenu(GameSettings& gameSettings)
                 break;
 
             // Check for back button / quit
-            if (s3eDeviceCheckQuitRequest() ||
+            if (CheckForQuitRequest() ||
                     (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED))
             {
                 result = STARTMENU_QUIT;

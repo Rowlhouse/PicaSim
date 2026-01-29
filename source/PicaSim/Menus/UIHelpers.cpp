@@ -20,7 +20,7 @@ void Init()
     const char* fontPath = "Fonts/FontRegular.ttf";
 
     // Calculate initial font size based on current screen
-    int height = Platform::GetScreenHeight();
+    int height = Platform::GetDisplayHeight();
     float scale = height / 720.0f;
     if (scale < 1.0f) scale = 1.0f;
     float fontSize = sBaseFontSize * scale;
@@ -67,7 +67,7 @@ void Shutdown()
 //======================================================================================================================
 float GetFontScale()
 {
-    int height = Platform::GetScreenHeight();
+    int height = Platform::GetDisplayHeight();
     float scale = height / 720.0f;
     if (scale < 1.0f) scale = 1.0f;
     return scale;
@@ -91,8 +91,8 @@ ImDrawList* DrawBackground(Texture* texture)
     if (!texture)
         return ImGui::GetBackgroundDrawList();
 
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
 
     ImDrawList* drawList = ImGui::GetBackgroundDrawList();
 
@@ -137,8 +137,8 @@ void DrawCenteredText(const char* text, float verticalPosition, ImU32 color, flo
     if (!text || !*text)
         return;
 
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
 
     ImDrawList* drawList = ImGui::GetBackgroundDrawList();
 

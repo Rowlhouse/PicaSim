@@ -447,8 +447,8 @@ void SaveScreenshot()
     char file[32];
     snprintf(file, sizeof(file), "PicaSim-%05d.png", count++);
 
-    int w = gWindow ? gWindow->GetWidth() : Platform::GetScreenWidth();
-    int h = gWindow ? gWindow->GetHeight() : Platform::GetScreenHeight();
+    int w = gWindow ? gWindow->GetWidth() : Platform::GetDisplayWidth();
+    int h = gWindow ? gWindow->GetHeight() : Platform::GetDisplayHeight();
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -471,8 +471,8 @@ void SaveScreenshot()
 //======================================================================================================================
 void SaveScreenshotAsTexture(Texture* texture)
 {
-    int w = gWindow ? gWindow->GetWidth() : Platform::GetScreenWidth();
-    int h = gWindow ? gWindow->GetHeight() : Platform::GetScreenHeight();
+    int w = gWindow ? gWindow->GetWidth() : Platform::GetDisplayWidth();
+    int h = gWindow ? gWindow->GetHeight() : Platform::GetDisplayHeight();
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);

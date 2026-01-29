@@ -343,7 +343,7 @@ bool FileMenu::Update()
     IwGxClear();
     Render();
     IwGxSwapBuffers();
-    s3eDeviceYield();
+    PollEvents();
 
     return mFinished;
 }
@@ -351,8 +351,8 @@ bool FileMenu::Update()
 //======================================================================================================================
 void FileMenu::Render()
 {
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
     Language language = mGameSettings.mOptions.mLanguage;
 
@@ -640,7 +640,7 @@ FileMenuResult FileMenuLoad(
 
         while (!menu.Update())
         {
-            if (s3eDeviceCheckQuitRequest() ||
+            if (CheckForQuitRequest() ||
                     (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
                     (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
             {
@@ -677,7 +677,7 @@ FileMenuResult FileMenuSave(
 
     while (!menu.Update())
     {
-        if (s3eDeviceCheckQuitRequest() ||
+        if (CheckForQuitRequest() ||
                 (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
                 (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
         {
@@ -714,7 +714,7 @@ void FileMenuDelete(
 
     while (!menu.Update())
     {
-        if (s3eDeviceCheckQuitRequest() ||
+        if (CheckForQuitRequest() ||
                 (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
                 (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
         {

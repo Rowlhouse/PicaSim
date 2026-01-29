@@ -156,6 +156,6 @@ PicaSim source is MIT licensed. Third-party components have separate licenses:
 - 3D models and images: authorized for PicaSim derivatives only; other uses require permission
 
 ## Read
- - README.md
+ - README.md It tells you to build using presets
  - CODE_STYLE.md
 

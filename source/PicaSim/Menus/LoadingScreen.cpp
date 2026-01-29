@@ -190,15 +190,15 @@ void LoadingScreen::Update(const char* moduleName)
     Render();
 
     s3eDeviceBacklightOn();
-    s3eDeviceYield();
+    PollEvents();
 }
 
 //======================================================================================================================
 void LoadingScreen::Render()
 {
     // Get current window size (handles resizing)
-    int width = Platform::GetScreenWidth();
-    int height = Platform::GetScreenHeight();
+    int width = Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
 
     // Clear the screen
     IwGxClear();

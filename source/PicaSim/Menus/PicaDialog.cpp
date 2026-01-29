@@ -7,6 +7,7 @@
 
 #include "../../Platform/S3ECompat.h"
 
+#include <SDL.h>
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
@@ -176,8 +177,8 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
     SmoothSpringDamper(mOffsetFrac, mOffsetFracRate, dt, 0.0f, SMOOTH_TIME, DAMPING_RATIO);
 
     // Get screen dimensions
-    int screenWidth = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
-    int screenHeight = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
+    int screenWidth = Platform::GetDisplayWidth();
+    int screenHeight = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
 
     // Calculate dialog dimensions
@@ -230,7 +231,7 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
     // Check for exit conditions
     if (shouldExit)
     {
-        *shouldExit = s3eDeviceCheckQuitRequest() ||
+        *shouldExit = CheckForQuitRequest() ||
                                     (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
                                     (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED);
     }
@@ -258,9 +259,8 @@ int ShowInGameDialog(float widthFrac, float heightFrac,
     while (buttonClicked < 0)
     {
         s3eDeviceBacklightOn();
-        s3eKeyboardUpdate();
-        s3ePointerUpdate();
-        s3eDeviceYield(1);
+        PollEvents();
+        SDL_Delay(1);
 
         uint64 currentTime = Timer::GetMilliseconds();
         int32 updateTime = currentTime > lastTime ?
@@ -328,7 +328,7 @@ void ShowHelpOverlays(const GameSettings& gameSettings)
 
     InGameDialog dialog(0.65f, 0.55f);
 
-    while (helpIndex >= 0 && !s3eDeviceCheckQuitRequest())
+    while (helpIndex >= 0 && !CheckForQuitRequest())
     {
         // Set overlay for current page
         const OverlayPos& overlay = overlays[helpIndex];
@@ -341,9 +341,8 @@ void ShowHelpOverlays(const GameSettings& gameSettings)
         while (buttonClicked < 0)
         {
             s3eDeviceBacklightOn();
-            s3eKeyboardUpdate();
-            s3ePointerUpdate();
-            s3eDeviceYield(1);
+            PollEvents();
+            SDL_Delay(1);
 
             uint64 currentTime = Timer::GetMilliseconds();
             int32 updateTime = currentTime > lastTime ?

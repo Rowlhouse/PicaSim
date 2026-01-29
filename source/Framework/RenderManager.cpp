@@ -11,6 +11,7 @@
 #include "Shaders.h"
 #include "../Platform/S3ECompat.h"
 #include "../Platform/Window.h"
+#include "../Platform/Platform.h"
 
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
@@ -72,8 +73,8 @@ void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelp
     mInstance = new RenderManager(frameworkSettings);
 
     // Get dimensions from IwGL
-    int width =  s3eSurfaceGetInt(S3E_SURFACE_DEVICE_WIDTH);
-    int height = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
+    int width =  Platform::GetDisplayWidth();
+    int height = Platform::GetDisplayHeight();
     GLint depthBits = 0;
     glGetIntegerv( GL_DEPTH_BITS, &depthBits);
     TRACE_FILE_IF(1) TRACE("Screen BPP  : %d\n", s3eSurfaceGetInt(S3E_SURFACE_PIXEL_TYPE) & S3E_SURFACE_PIXEL_SIZE_MASK);

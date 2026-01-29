@@ -87,17 +87,11 @@ void ResetJoystick()
 //======================================================================================================================
 bool ShowJoystickInGame(const GameSettings& gameSettings)
 {
-    if (gameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_IPHONE)
+    if (gameSettings.mOptions.mFrameworkSettings.isIOS())
         return false;
 
-    // Don't display Joystick info on Android < 3 which is API level 11
-    if (gameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_ANDROID)
-    {
-        int32 osVersion = s3eDeviceGetInt(S3E_DEVICE_OS_VERSION);
-        int32 majorVersion = osVersion >> 16;
-        if (majorVersion < 11)
-            return false;
-    }
+    // Note: Previously checked for Android API level < 11, but that's ancient (Android 3.0)
+    // and no longer relevant - all supported Android devices are newer
 
     return true;
 }

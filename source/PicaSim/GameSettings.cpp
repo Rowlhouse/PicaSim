@@ -315,29 +315,22 @@ Options::Options() :
     mEnableSmoke(true),
     mSmokeQuality(1.0f)
 {
-    int32 memoryKB = s3eDeviceGetInt(S3E_DEVICE_MEM_TOTAL);
-    TRACE_FILE_IF(1) TRACE("Options: reported memory = %d KB", memoryKB);
-    if (memoryKB > 400*1024 || memoryKB <= 0) // -1 on Windows?!
+    int32 memoryMB = Platform::GetSystemRAM();
+    TRACE_FILE_IF(1) TRACE("Options: reported memory = %d MB", memoryMB);
+    if (memoryMB > 400 || memoryMB <= 0)
         m16BitTextures = false;
     else
         m16BitTextures = true;
     TRACE_FILE_IF(1) TRACE("Options: Using 16 bit textures = %d", m16BitTextures);
 
-    int32 language = s3eDeviceGetInt(S3E_DEVICE_LANGUAGE);
-    if (language == S3E_DEVICE_LANGUAGE_GERMAN)
-        mLanguage = LANG_DE;
-    else if (language == S3E_DEVICE_LANGUAGE_PORTUGUESE)
-        mLanguage = LANG_PT;
-    else if (language == S3E_DEVICE_LANGUAGE_FRENCH)
-        mLanguage = LANG_FR;
-    else
-        mLanguage = LANG_EN;
+    // Default to English - user can change in settings
+    mLanguage = LANG_EN;
 
-    int os = s3eDeviceGetInt(S3E_DEVICE_OS);
-    if (os == S3E_OS_ID_ANDROID)
+    Platform::PlatformID platform = Platform::GetPlatformID();
+    if (platform == Platform::PlatformID::Android)
         mJoystickID = 1;
 
-    if (os == S3E_OS_ID_WINDOWS || os == S3E_OS_ID_WIN10)
+    if (platform == Platform::PlatformID::Windows)
         mMaxSkyboxDetail = 2;
 }
 
@@ -2600,8 +2593,7 @@ JoystickSettings::JoystickSettings() :
     for (size_t i = 0 ; i != JOYSTICK_NUM_CONTROLS ; ++i)
         mJoystickAButtonOverrides[i] = JoystickButtonOverride(JoystickButtonOverride::CONTROL_BUTTON_NONE);
 
-    int os = s3eDeviceGetInt(S3E_DEVICE_OS);
-    if (os == S3E_OS_ID_WIN10)
+    if (Platform::GetPlatformID() == Platform::PlatformID::Windows)
     {
         LoadFromFile("SystemSettings/Joystick/Win10-XBox360.xml", true);
         UpdateJoystick(0);

@@ -193,8 +193,8 @@ void HumanController::UpdateScreenSticks(float deltaTime)
 
     bool usingStaggered = mGameSettings.mOptions.mControllerStaggered;
 
-    uint32 displayWidth = IwGxGetScreenWidth(); 
-    uint32 displayHeight = IwGxGetScreenHeight(); 
+    uint32 displayWidth = IwGxGetDisplayWidth(); 
+    uint32 displayHeight = IwGxGetDisplayHeight(); 
 
     float xSize = options.mControllerSize;
     float ySize = options.mControllerSize;
@@ -534,7 +534,7 @@ void HumanController::UpdateKeyboard(float deltaTime)
 //======================================================================================================================
 void HumanController::UpdateJoystick(float deltaTime)
 {
-    if (!mGameSettings.mJoystickSettings.mEnableJoystick || mGameSettings.mOptions.mFrameworkSettings.mOS == S3E_OS_ID_IPHONE)
+    if (!mGameSettings.mJoystickSettings.mEnableJoystick || mGameSettings.mOptions.mFrameworkSettings.isIOS())
         return;
 
     const JoystickSettings& js = mGameSettings.mJoystickSettings;

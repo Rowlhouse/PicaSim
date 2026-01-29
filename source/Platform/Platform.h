@@ -130,8 +130,8 @@ std::string GetDeviceID();
 // Screen/Display (replaces s3eSurface functions)
 // --------------------------------------------------------------------------
 
-int GetScreenWidth();
-int GetScreenHeight();
+int GetDisplayWidth();
+int GetDisplayHeight();
 float GetScreenDPI();
 float GetDisplayScale();  // For HiDPI displays
 

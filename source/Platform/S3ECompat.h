@@ -75,129 +75,17 @@ typedef int32 s3eResult;
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
-//==============================================================================
-// Device functions (from s3eDevice.h)
-//==============================================================================
-
-// Device property IDs
-enum s3eDeviceProperty
-{
-        S3E_DEVICE_MEM_FREE = 0,
-        S3E_DEVICE_MEM_TOTAL,
-        S3E_DEVICE_NUM_CPU_CORES,
-        S3E_DEVICE_OS,
-        S3E_DEVICE_OS_VERSION,
-        S3E_DEVICE_ID,
-        S3E_DEVICE_LANGUAGE,
-        S3E_DEVICE_LOCALE
-};
-
-// Device language constants
-enum s3eDeviceLanguage
-{
-        S3E_DEVICE_LANGUAGE_ENGLISH = 0,
-        S3E_DEVICE_LANGUAGE_GERMAN,
-        S3E_DEVICE_LANGUAGE_FRENCH,
-        S3E_DEVICE_LANGUAGE_SPANISH,
-        S3E_DEVICE_LANGUAGE_ITALIAN,
-        S3E_DEVICE_LANGUAGE_PORTUGUESE,
-        S3E_DEVICE_LANGUAGE_DUTCH,
-        S3E_DEVICE_LANGUAGE_JAPANESE,
-        S3E_DEVICE_LANGUAGE_CHINESE
-};
-
-// OS IDs
-enum s3eDeviceOSID
-{
-        S3E_OS_ID_UNKNOWN = 0,
-        S3E_OS_ID_WINDOWS,
-        S3E_OS_ID_OSX,
-        S3E_OS_ID_LINUX,
-        S3E_OS_ID_IPHONE,
-        S3E_OS_ID_ANDROID,
-        S3E_OS_ID_NACL,
-        S3E_OS_ID_QNX,
-        S3E_OS_ID_ROKU,
-        S3E_OS_ID_WP8,
-        S3E_OS_ID_WIN10
-};
-
 /**
-  * Get device integer property.
-  * Replacement for s3eDeviceGetInt()
+  * Poll and process SDL events, update input state.
+  * Call once per frame at the start of the frame.
   */
-inline int32 s3eDeviceGetInt(s3eDeviceProperty property)
-{
-        switch (property)
-        {
-        case S3E_DEVICE_NUM_CPU_CORES:
-                return Platform::GetCPUCount();
-        case S3E_DEVICE_MEM_TOTAL:
-                return Platform::GetSystemRAM();
-        case S3E_DEVICE_OS:
-                switch (Platform::GetPlatformID())
-                {
-                case Platform::PlatformID::Windows: return S3E_OS_ID_WINDOWS;
-                case Platform::PlatformID::macOS:   return S3E_OS_ID_OSX;
-                case Platform::PlatformID::Linux:   return S3E_OS_ID_LINUX;
-                case Platform::PlatformID::iOS:     return S3E_OS_ID_IPHONE;
-                case Platform::PlatformID::Android: return S3E_OS_ID_ANDROID;
-                default: return S3E_OS_ID_UNKNOWN;
-                }
-        default:
-                return 0;
-        }
-}
-
-/**
-  * Yield to system.
-  * Replacement for s3eDeviceYield()
-  * Now also processes SDL events and updates input state.
-  */
-void s3eDeviceYield(int32 ms);
-
-inline void s3eDeviceYield()
-{
-        s3eDeviceYield(0);
-}
+void PollEvents();
 
 /**
   * Check if application should quit.
   * Returns S3E_TRUE if quit was requested (e.g., window close button pressed).
   */
-s3eBool s3eDeviceCheckQuitRequest();
-
-/**
-  * Get device string property.
-  */
-inline const char* s3eDeviceGetString(s3eDeviceProperty property)
-{
-        switch (property)
-        {
-        case S3E_DEVICE_ID: return "SDL2_Device";
-        default: return "";
-        }
-}
-
-// Device callbacks
-enum s3eDeviceCallback
-{
-        S3E_DEVICE_PAUSE = 0,
-        S3E_DEVICE_UNPAUSE,
-        S3E_DEVICE_FOREGROUND,
-        S3E_DEVICE_BACKGROUND
-};
-
-typedef int32 (*s3eDeviceCallbackFn)(void*, void*);
-
-inline void s3eDeviceRegister(s3eDeviceCallback callback, s3eDeviceCallbackFn fn, void* userData) {}
-inline void s3eDeviceUnRegister(s3eDeviceCallback callback, s3eDeviceCallbackFn fn) {}
-
-// Config functions
-inline s3eResult s3eConfigGetInt(const char* section, const char* name, int32* value) {
-        if (value) *value = 0;
-        return S3E_RESULT_SUCCESS;
-}
+s3eBool CheckForQuitRequest();
 
 //==============================================================================
 // Surface functions (from s3eSurface.h)
@@ -224,10 +112,10 @@ inline int32 s3eSurfaceGetInt(s3eSurfaceProperty property)
         {
         case S3E_SURFACE_WIDTH:
         case S3E_SURFACE_DEVICE_WIDTH:
-                return Platform::GetScreenWidth();
+                return Platform::GetDisplayWidth();
         case S3E_SURFACE_HEIGHT:
         case S3E_SURFACE_DEVICE_HEIGHT:
-                return Platform::GetScreenHeight();
+                return Platform::GetDisplayHeight();
         default:
                 return 0;
         }
@@ -526,9 +414,9 @@ inline int32 s3eAccelerometerGetZ() { return 1000; } // 1g pointing down
 //==============================================================================
 
 
-// IwGx screen dimensions (use Platform functions)
-inline int32 IwGxGetScreenWidth() { return Platform::GetScreenWidth(); }
-inline int32 IwGxGetScreenHeight() { return Platform::GetScreenHeight(); }
+// IwGx display dimensions (use Platform functions)
+inline int32 IwGxGetDisplayWidth() { return Platform::GetDisplayWidth(); }
+inline int32 IwGxGetDisplayHeight() { return Platform::GetDisplayHeight(); }
 
 // IwGx print functions (stub - will be replaced with ImGui)
 inline void IwGxPrintSetColour(int r, int g, int b) {}
@@ -746,12 +634,6 @@ inline void s3eOSExecExecute(const char* command, bool async) {
 }
 
 //==============================================================================
-// iOS Background Audio (stubs for non-iOS)
-//==============================================================================
-inline bool s3eIOSBackgroundAudioAvailable() { return false; }
-inline void s3eIOSBackgroundAudioSetMix(bool mix) {}
-
-//==============================================================================
 // DPI (Screen density) - replacement for dpi/dpiInfo.h
 //==============================================================================
 namespace DPI {
@@ -773,18 +655,6 @@ uint32 gamepadIsPointOfViewAvailable(uint32 index);
 int32 gamepadGetPointOfViewAngle(uint32 index);
 uint32 gamepadGetButtons(uint32 index);
 void gamepadReset();
-
-//==============================================================================
-// Legacy IwUI lifecycle - IwUIInit calls eglInit to create window/OpenGL context
-//==============================================================================
-int eglInit(bool createSurface, int msaaSamples); // Declared in Graphics.h, implemented in Graphics.cpp
-inline void IwUIInit(int msaaSamples = 0) { eglInit(true, msaaSamples); }
-inline void IwUITerminate() {}
-
-//==============================================================================
-// Version string
-//==============================================================================
-#define MARMALADE_VERSION_STRING_FULL "SDL2/OpenGL Port"
 
 //==============================================================================
 // HTTP client stub (for version checking - reimplement with libcurl if needed)

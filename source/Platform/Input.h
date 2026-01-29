@@ -256,7 +256,6 @@ private:
 
         // State update tracking - prevents multiple state updates per frame
         bool mStatesDirty;
-        Uint32 mLastFrameTime;  // Time of last BeginFrame() call
 
         // Gamepad state
         std::vector<SDL_GameController*> mGamepads;
