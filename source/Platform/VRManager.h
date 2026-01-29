@@ -101,6 +101,9 @@ public:
     // facingYaw: direction to look at (for ground view alignment)
     void ResetVRView(float facingYaw, bool useHeadsetFacingDirection);
 
+    // Set the default facing yaw (typically upwind direction) for auto-reset on session start
+    void SetDefaultFacingYaw(float yaw) { mDefaultFacingYaw = yaw; }
+
     // Adjust the manual Yaw offset (for B/N key rotation)
     void AdjustYawOffset(float deltaDegrees);
 
@@ -183,6 +186,7 @@ private:
     glm::vec3 mReferencePosition;      // Headset position at calibration
     float mAutomaticYawOffset;     // offset from calibration (e.g. in ground view)
     float mManualYawOffset;        // User-adjustable offset via B/N keys
+    float mDefaultFacingYaw;       // Default facing direction (upwind) for auto-reset
     bool mUseAutoYawOffset = true;
 
     // Audio switching state

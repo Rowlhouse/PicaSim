@@ -77,6 +77,7 @@ VRManager::VRManager()
     , mReferencePosition(0.0f)
     , mAutomaticYawOffset(0.0f)
     , mManualYawOffset(0.0f)
+    , mDefaultFacingYaw(0.0f)
     , mAudioSwitchedToVR(false)
     , mLastSessionState(VR_SESSION_UNKNOWN)
 {
@@ -256,6 +257,14 @@ void VRManager::PollEvents()
     {
         TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Session state: %d -> %d, IsVRReady: %s",
             (int)mLastSessionState, (int)currentState, IsVRReady() ? "true" : "false");
+
+        // Reset VR view when session becomes focused (headset put on)
+        if (currentState == VR_SESSION_FOCUSED && mLastSessionState != VR_SESSION_FOCUSED)
+        {
+            TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Session focused, resetting VR view with yaw %.1f",
+                glm::degrees(mDefaultFacingYaw));
+            ResetVRView(mDefaultFacingYaw, false);
+        }
 
         // Switch to VR audio when session becomes focused
         bool shouldHaveVRAudio = (currentState == VR_SESSION_FOCUSED || currentState == VR_SESSION_VISIBLE);
@@ -573,7 +582,7 @@ void VRManager::ResetVRView(float facingYaw, bool useHeadsetFacingDirection)
     }
 
     // Reset manual offset
-    mManualYawOffset = 0.0f;
+//    mManualYawOffset = 0.0f;
 
     TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - automatic offset = %.1f", glm::degrees(mAutomaticYawOffset));
 }

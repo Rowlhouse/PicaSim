@@ -973,12 +973,14 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     {
         VRManager::GetInstance().UseAutoYawOffset(mMode == MODE_GROUND);
 
+        // Keep VRManager updated with current wind direction for auto-reset on session start
+        Vector3 upWindDir = -Environment::GetInstance().GetWindDirection(Environment::WIND_TYPE_SMOOTH);
+        float facingYaw = atan2f(upWindDir.y, upWindDir.x);
+        VRManager::GetInstance().SetDefaultFacingYaw(facingYaw);
+
         // V key - Reset VR view (calibrate headset position/orientation)
         if (s3eKeyboardGetState(s3eKeyV) & S3E_KEY_STATE_PRESSED)
         {
-            // Get wind direction for ground view alignment
-            Vector3 upWindDir = -Environment::GetInstance().GetWindDirection(Environment::WIND_TYPE_SMOOTH);
-            float facingYaw = atan2f(upWindDir.y, upWindDir.x);
             VRManager::GetInstance().ResetVRView(facingYaw, true);
         }
 
