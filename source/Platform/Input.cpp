@@ -197,28 +197,28 @@ void Input::ProcessEvent(const SDL_Event& event)
     {
     case SDL_KEYDOWN:
         {
-            int keyCode = SDLKeyToKeyCode(event.key.keysym.sym);
-            if (keyCode >= 0 && keyCode < MAX_KEYS)
+            SDL_Scancode scancode = event.key.keysym.scancode;
+            if (scancode >= 0 && scancode < MAX_KEYS)
             {
-                mKeyDown[keyCode] = true;
+                mKeyDown[scancode] = true;
             }
             if (mKeyboardCallback)
             {
-                mKeyboardCallback(keyCode, 1, mKeyboardUserData);
+                mKeyboardCallback((int)event.key.keysym.sym, 1, mKeyboardUserData);
             }
         }
         break;
 
     case SDL_KEYUP:
         {
-            int keyCode = SDLKeyToKeyCode(event.key.keysym.sym);
-            if (keyCode >= 0 && keyCode < MAX_KEYS)
+            SDL_Scancode scancode = event.key.keysym.scancode;
+            if (scancode >= 0 && scancode < MAX_KEYS)
             {
-                mKeyDown[keyCode] = false;
+                mKeyDown[scancode] = false;
             }
             if (mKeyboardCallback)
             {
-                mKeyboardCallback(keyCode, 0, mKeyboardUserData);
+                mKeyboardCallback((int)event.key.keysym.sym, 0, mKeyboardUserData);
             }
         }
         break;
@@ -449,27 +449,28 @@ void Input::UpdateTouchStates()
     }
 }
 
-KeyState Input::GetKeyState(int keyCode) const
+KeyState Input::GetKeyState(SDL_Keycode key) const
 {
-    if (keyCode >= 0 && keyCode < MAX_KEYS)
-        return mKeyStates[keyCode];
+    SDL_Scancode scancode = SDL_GetScancodeFromKey(key);
+    if (scancode >= 0 && scancode < MAX_KEYS)
+        return mKeyStates[scancode];
     return KEY_STATE_UP;
 }
 
-bool Input::IsKeyDown(int keyCode) const
+bool Input::IsKeyDown(SDL_Keycode key) const
 {
-    KeyState state = GetKeyState(keyCode);
+    KeyState state = GetKeyState(key);
     return state == KEY_STATE_DOWN || state == KEY_STATE_PRESSED;
 }
 
-bool Input::IsKeyPressed(int keyCode) const
+bool Input::IsKeyPressed(SDL_Keycode key) const
 {
-    return GetKeyState(keyCode) == KEY_STATE_PRESSED;
+    return GetKeyState(key) == KEY_STATE_PRESSED;
 }
 
-bool Input::IsKeyReleased(int keyCode) const
+bool Input::IsKeyReleased(SDL_Keycode key) const
 {
-    return GetKeyState(keyCode) == KEY_STATE_RELEASED;
+    return GetKeyState(key) == KEY_STATE_RELEASED;
 }
 
 bool Input::IsShiftDown() const
@@ -758,107 +759,6 @@ int Input::FindFreeTouchIndex() const
     return -1;
 }
 
-// Key code conversion from SDL to our codes
-int Input::SDLKeyToKeyCode(SDL_Keycode sdlKey)
-{
-    // Map SDL keys to our key codes (matching s3eKey values where possible)
-    switch (sdlKey)
-    {
-    case SDLK_ESCAPE: return 0x1B;
-    case SDLK_TAB: return 0x09;
-    case SDLK_BACKSPACE: return 0x08;
-    case SDLK_RETURN: return 0x0D;
-    case SDLK_SPACE: return 0x20;
-
-    case SDLK_LEFT: return 0x25;
-    case SDLK_UP: return 0x26;
-    case SDLK_RIGHT: return 0x27;
-    case SDLK_DOWN: return 0x28;
-
-    case SDLK_0: return 0x30;
-    case SDLK_1: return 0x31;
-    case SDLK_2: return 0x32;
-    case SDLK_3: return 0x33;
-    case SDLK_4: return 0x34;
-    case SDLK_5: return 0x35;
-    case SDLK_6: return 0x36;
-    case SDLK_7: return 0x37;
-    case SDLK_8: return 0x38;
-    case SDLK_9: return 0x39;
-
-    case SDLK_a: return 0x41;
-    case SDLK_b: return 0x42;
-    case SDLK_c: return 0x43;
-    case SDLK_d: return 0x44;
-    case SDLK_e: return 0x45;
-    case SDLK_f: return 0x46;
-    case SDLK_g: return 0x47;
-    case SDLK_h: return 0x48;
-    case SDLK_i: return 0x49;
-    case SDLK_j: return 0x4A;
-    case SDLK_k: return 0x4B;
-    case SDLK_l: return 0x4C;
-    case SDLK_m: return 0x4D;
-    case SDLK_n: return 0x4E;
-    case SDLK_o: return 0x4F;
-    case SDLK_p: return 0x50;
-    case SDLK_q: return 0x51;
-    case SDLK_r: return 0x52;
-    case SDLK_s: return 0x53;
-    case SDLK_t: return 0x54;
-    case SDLK_u: return 0x55;
-    case SDLK_v: return 0x56;
-    case SDLK_w: return 0x57;
-    case SDLK_x: return 0x58;
-    case SDLK_y: return 0x59;
-    case SDLK_z: return 0x5A;
-
-    case SDLK_F1: return 0x70;
-    case SDLK_F2: return 0x71;
-    case SDLK_F3: return 0x72;
-    case SDLK_F4: return 0x73;
-    case SDLK_F5: return 0x74;
-    case SDLK_F6: return 0x75;
-    case SDLK_F7: return 0x76;
-    case SDLK_F8: return 0x77;
-    case SDLK_F9: return 0x78;
-    case SDLK_F10: return 0x79;
-    case SDLK_F11: return 0x7A;
-    case SDLK_F12: return 0x7B;
-
-    case SDLK_LSHIFT: return 0xA0;
-    case SDLK_RSHIFT: return 0xA1;
-    case SDLK_LCTRL: return 0xA2;
-    case SDLK_RCTRL: return 0xA3;
-    case SDLK_LALT: return 0xA4;
-    case SDLK_RALT: return 0xA5;
-
-    default:
-        // For other keys, use SDL keycode directly if in range
-        if (sdlKey >= 0 && sdlKey < MAX_KEYS)
-            return (int)sdlKey;
-        return 0;
-    }
-}
-
-SDL_Keycode Input::KeyCodeToSDLKey(int keyCode)
-{
-    // Reverse mapping
-    switch (keyCode)
-    {
-    case 0x1B: return SDLK_ESCAPE;
-    case 0x09: return SDLK_TAB;
-    case 0x08: return SDLK_BACKSPACE;
-    case 0x0D: return SDLK_RETURN;
-    case 0x20: return SDLK_SPACE;
-    case 0x25: return SDLK_LEFT;
-    case 0x26: return SDLK_UP;
-    case 0x27: return SDLK_RIGHT;
-    case 0x28: return SDLK_DOWN;
-    default: return (SDL_Keycode)keyCode;
-    }
-}
-
 //==============================================================================
 // Marmalade s3ePointer compatibility functions
 //==============================================================================
@@ -967,47 +867,6 @@ int32 s3ePointerGetTouchY(int32 touchIndex)
 
     // Default to mouse position
     return input.GetMouseY();
-}
-
-int32 s3ePointerGetX()
-{
-    return Input::GetInstance().GetMouseX();
-}
-
-int32 s3ePointerGetY()
-{
-    return Input::GetInstance().GetMouseY();
-}
-
-void s3eClearPressedStates()
-{
-    Input::GetInstance().ClearPressedStates();
-}
-
-//==============================================================================
-// Marmalade s3eKeyboard compatibility functions
-//==============================================================================
-
-s3eKeyState s3eKeyboardGetState(s3eKey key)
-{
-    KeyState state = Input::GetInstance().GetKeyState(key);
-    switch (state)
-    {
-    case KEY_STATE_DOWN:     return S3E_KEY_STATE_DOWN;
-    case KEY_STATE_PRESSED:  return S3E_KEY_STATE_PRESSED;
-    case KEY_STATE_RELEASED: return S3E_KEY_STATE_RELEASED;
-    default:                 return S3E_KEY_STATE_UP;
-    }
-}
-
-s3eBool s3eKeyboardIsKeyDown(s3eKey key)
-{
-    return Input::GetInstance().IsKeyDown(key) ? S3E_TRUE : S3E_FALSE;
-}
-
-void s3eKeyboardUpdate()
-{
-    // Input state is updated in PollEvents(), nothing to do here
 }
 
 //==============================================================================

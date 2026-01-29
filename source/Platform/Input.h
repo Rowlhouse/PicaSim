@@ -96,17 +96,17 @@ public:
         // Keyboard
         //--------------------------------------------------------------------------
 
-        // Get current key state
-        KeyState GetKeyState(int keyCode) const;
+        // Get current key state (accepts SDL_Keycode, converts to scancode internally)
+        KeyState GetKeyState(SDL_Keycode key) const;
 
         // Check if key is currently down
-        bool IsKeyDown(int keyCode) const;
+        bool IsKeyDown(SDL_Keycode key) const;
 
         // Check if key was just pressed this frame
-        bool IsKeyPressed(int keyCode) const;
+        bool IsKeyPressed(SDL_Keycode key) const;
 
         // Check if key was just released this frame
-        bool IsKeyReleased(int keyCode) const;
+        bool IsKeyReleased(SDL_Keycode key) const;
 
         // Get modifier state
         bool IsShiftDown() const;
@@ -216,16 +216,6 @@ public:
         float GetAccelX() const { return mAccelX; }
         float GetAccelY() const { return mAccelY; }
         float GetAccelZ() const { return mAccelZ; }
-
-        //--------------------------------------------------------------------------
-        // Utility
-        //--------------------------------------------------------------------------
-
-        // Convert SDL keycode to our key code
-        static int SDLKeyToKeyCode(SDL_Keycode sdlKey);
-
-        // Convert our key code to SDL keycode
-        static SDL_Keycode KeyCodeToSDLKey(int keyCode);
 
 private:
         Input();

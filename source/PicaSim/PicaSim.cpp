@@ -20,6 +20,7 @@
 #include "Menus/PicaDialog.h"
 
 #include "../Platform/S3ECompat.h"
+#include "../Platform/Input.h"
 #include "Platform.h"
 
 #ifdef PICASIM_VR_SUPPORT
@@ -636,7 +637,6 @@ void PicaSim::ShowHelpOverlays()
 //======================================================================================================================
 PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 {
-    s3eKeyboardUpdate();
     UpdateJoystick(mGameSettings.mOptions.mJoystickID);
 
     float deltaTime = deltaTimeMs * 0.001f;
@@ -798,7 +798,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     }
 
     // L to reload the plane
-    if ((s3eKeyboardGetState(s3eKeyL) & S3E_KEY_STATE_PRESSED))
+    if ((Input::GetInstance().GetKeyState(SDLK_l) & KEY_STATE_PRESSED))
     {
         TRACE_FILE_IF(1) TRACE("Reloading aeroplane - manual prompt");
         // This is needed to prevent a white screen with textured models
@@ -816,7 +816,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 
     if (
         mStartMenuOverlay->IsPressed() ||
-        ((s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) && mGameSettings.mOptions.mUseBackButtonToExit)||
+        ((Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) && mGameSettings.mOptions.mUseBackButtonToExit)||
         CheckForQuitRequest()
         )
     {
@@ -824,20 +824,20 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         TRACE_FILE_IF(1) TRACE("Saving settings");
         mGameSettings.SaveToFile((Platform::GetUserSettingsPath() + "settings.xml").c_str());
         // Clear pressed states to prevent click bleed-through to start menu
-        s3eClearPressedStates();
+        Input::GetInstance().ClearPressedStates();
         return UPDATE_START;
     }
 
-    bool resetKeyPressed = (s3eKeyboardGetState(s3eKeyR) & S3E_KEY_STATE_PRESSED) != 0;
-    bool cameraKeyPressed = (s3eKeyboardGetState(s3eKeyC) & S3E_KEY_STATE_PRESSED) != 0;
-    bool walkaboutKeyPressed = (s3eKeyboardGetState(s3eKeyM) & S3E_KEY_STATE_PRESSED) != 0;
-    bool pauseKeyPressed = (s3eKeyboardGetState(s3eKeyP) & S3E_KEY_STATE_PRESSED) != 0;
-    bool slowmoKeyPressed = (s3eKeyboardGetState(s3eKeyT) & S3E_KEY_STATE_PRESSED) != 0;
-    bool uiKeyPressed = (s3eKeyboardGetState(s3eKeyU) & S3E_KEY_STATE_PRESSED) != 0;
-    bool zoomViewKeyPressed = (s3eKeyboardGetState(s3eKeyZ) & S3E_KEY_STATE_PRESSED) != 0;
+    bool resetKeyPressed = (Input::GetInstance().GetKeyState(SDLK_r) & KEY_STATE_PRESSED) != 0;
+    bool cameraKeyPressed = (Input::GetInstance().GetKeyState(SDLK_c) & KEY_STATE_PRESSED) != 0;
+    bool walkaboutKeyPressed = (Input::GetInstance().GetKeyState(SDLK_m) & KEY_STATE_PRESSED) != 0;
+    bool pauseKeyPressed = (Input::GetInstance().GetKeyState(SDLK_p) & KEY_STATE_PRESSED) != 0;
+    bool slowmoKeyPressed = (Input::GetInstance().GetKeyState(SDLK_t) & KEY_STATE_PRESSED) != 0;
+    bool uiKeyPressed = (Input::GetInstance().GetKeyState(SDLK_u) & KEY_STATE_PRESSED) != 0;
+    bool zoomViewKeyPressed = (Input::GetInstance().GetKeyState(SDLK_z) & KEY_STATE_PRESSED) != 0;
 
-    bool zoomInKeyPressed = (s3eKeyboardGetState(s3eKeyEquals) & S3E_KEY_STATE_DOWN) != 0;
-    bool zoomOutKeyPressed = (s3eKeyboardGetState(s3eKeyMinus) & S3E_KEY_STATE_DOWN) != 0;
+    bool zoomInKeyPressed = (Input::GetInstance().GetKeyState(SDLK_EQUALS) & KEY_STATE_DOWN) != 0;
+    bool zoomOutKeyPressed = (Input::GetInstance().GetKeyState(SDLK_MINUS) & KEY_STATE_DOWN) != 0;
 
     // Zoom
     if (mMode == MODE_GROUND)
@@ -862,7 +862,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // Rates button
     if (
         mControllerOverlay->IsPressed() ||
-        (s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_PRESSED)
+        (Input::GetInstance().GetKeyState(SDLK_RSHIFT) & KEY_STATE_PRESSED)
         )
     {
         mGameSettings.mControllerSettings.mCurrentAltSetting = (mGameSettings.mControllerSettings.mCurrentAltSetting + 1) % mGameSettings.mControllerSettings.mNumAltSettings;
@@ -898,7 +898,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // relaunch
     if (
         mRelaunchOverlay->IsPressed() ||
-        ((s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) && !mGameSettings.mOptions.mUseBackButtonToExit)||
+        ((Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) && !mGameSettings.mOptions.mUseBackButtonToExit)||
         resetKeyPressed ||
         joystickRelaunch
         )
@@ -912,7 +912,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // Change view
     if (
         mChangeViewOverlay->IsPressed() ||
-        (s3eKeyboardGetState(s3eKeySearch) & S3E_KEY_STATE_PRESSED) ||
+        (Input::GetInstance().GetKeyState(SDLK_AC_SEARCH) & KEY_STATE_PRESSED) ||
         cameraKeyPressed ||
         joystickChangeView
         )
@@ -935,31 +935,31 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     HandleMode();
 
     // Debugging
-    if (s3eKeyboardGetState(s3eKeyK) & S3E_KEY_STATE_PRESSED) 
+    if (Input::GetInstance().GetKeyState(SDLK_k) & KEY_STATE_PRESSED) 
     {
         mGameSettings.mOptions.mRenderPreference = (Options::RenderPreference) ( (mGameSettings.mOptions.mRenderPreference+1) % Options::RENDER_PREFER_MAX );
     }
-    if (s3eKeyboardGetState(s3eKeyG) & S3E_KEY_STATE_PRESSED) 
+    if (Input::GetInstance().GetKeyState(SDLK_g) & KEY_STATE_PRESSED) 
     {
         mGameSettings.mOptions.mDrawAeroplaneCoM = (Options::DrawCoMType) ((mGameSettings.mOptions.mDrawAeroplaneCoM + 1) % Options::COM_MAX);
     }
-    if (s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_PRESSED) 
+    if (Input::GetInstance().GetKeyState(SDLK_w) & KEY_STATE_PRESSED) 
     {
         mGameSettings.mOptions.mTerrainWireframe = !mGameSettings.mOptions.mTerrainWireframe;
     }
-    if (s3eKeyboardGetState(s3eKey9) & S3E_KEY_STATE_PRESSED) 
+    if (Input::GetInstance().GetKeyState(SDLK_9) & KEY_STATE_PRESSED) 
     {
         mGameSettings.mOptions.mAerofoilInfo = Maximum(mGameSettings.mOptions.mAerofoilInfo-1, -1);
     }
-    if (s3eKeyboardGetState(s3eKey0) & S3E_KEY_STATE_PRESSED) 
+    if (Input::GetInstance().GetKeyState(SDLK_0) & KEY_STATE_PRESSED) 
     {
         mGameSettings.mOptions.mAerofoilInfo = Minimum(mGameSettings.mOptions.mAerofoilInfo+1, 64);
     }
-    if (s3eKeyboardGetState(s3eKey7) & S3E_KEY_STATE_PRESSED) 
+    if (Input::GetInstance().GetKeyState(SDLK_7) & KEY_STATE_PRESSED) 
     {
         mGameSettings.mOptions.mNumWindStreamers = Maximum(mGameSettings.mOptions.mNumWindStreamers-1, 0);
     }
-    if (s3eKeyboardGetState(s3eKey8) & S3E_KEY_STATE_PRESSED)
+    if (Input::GetInstance().GetKeyState(SDLK_8) & KEY_STATE_PRESSED)
     {
         mGameSettings.mOptions.mNumWindStreamers = Minimum(mGameSettings.mOptions.mNumWindStreamers+1, 64);
     }
@@ -976,21 +976,21 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         VRManager::GetInstance().SetDefaultFacingYaw(facingYaw);
 
         // V key - Reset VR view (calibrate headset position/orientation)
-        if (s3eKeyboardGetState(s3eKeyV) & S3E_KEY_STATE_PRESSED)
+        if (Input::GetInstance().GetKeyState(SDLK_v) & KEY_STATE_PRESSED)
         {
             VRManager::GetInstance().ResetVRView(facingYaw, true);
         }
 
         // B/H/N keys - Adjust yaw offset (rotate view left/right)
-        if (s3eKeyboardGetState(s3eKeyB) & S3E_KEY_STATE_PRESSED)
+        if (Input::GetInstance().GetKeyState(SDLK_b) & KEY_STATE_PRESSED)
         {
             VRManager::GetInstance().AdjustYawOffset(15.0f);  // Rotate left
         }
-        if (s3eKeyboardGetState(s3eKeyH) & S3E_KEY_STATE_PRESSED)
+        if (Input::GetInstance().GetKeyState(SDLK_h) & KEY_STATE_PRESSED)
         {
             VRManager::GetInstance().ResetYawOffset();
         }
-        if (s3eKeyboardGetState(s3eKeyN) & S3E_KEY_STATE_PRESSED)
+        if (Input::GetInstance().GetKeyState(SDLK_n) & KEY_STATE_PRESSED)
         {
             VRManager::GetInstance().AdjustYawOffset(-15.0f);   // Rotate right
         }
@@ -1002,21 +1002,21 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     {
         Aeroplane* aeroplane = GetPlayerAeroplane();
         Transform tm = aeroplane->GetTransform();
-        if (s3eKeyboardGetState(s3eKeyLeftControl) & S3E_KEY_STATE_DOWN) 
+        if (Input::GetInstance().GetKeyState(SDLK_LCTRL) & KEY_STATE_DOWN) 
         {
             float angle = 1.0f * deltaTime;
             Quat q;
-            if (s3eKeyboardGetState(s3eKeyNumPad6) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_6) & KEY_STATE_DOWN) 
                 q = Quat(tm.RowX(), angle);
-            if (s3eKeyboardGetState(s3eKeyNumPad4) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_4) & KEY_STATE_DOWN) 
                 q = Quat(tm.RowX(), -angle);
-            if (s3eKeyboardGetState(s3eKeyNumPad8) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_8) & KEY_STATE_DOWN) 
                 q = Quat(tm.RowY(), angle);
-            if (s3eKeyboardGetState(s3eKeyNumPad2) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_2) & KEY_STATE_DOWN) 
                 q = Quat(tm.RowY(), -angle);
-            if (s3eKeyboardGetState(s3eKeyNumPad9) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_9) & KEY_STATE_DOWN) 
                 q = Quat(tm.RowZ(), -angle);
-            if (s3eKeyboardGetState(s3eKeyNumPad7) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_7) & KEY_STATE_DOWN) 
                 q = Quat(tm.RowZ(), angle);
             tm.PostRotate(q);;
         }
@@ -1024,17 +1024,17 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         {
             float dist = 1.0f * deltaTime;
             Vector3 v(0,0,0);
-            if (s3eKeyboardGetState(s3eKeyNumPad6) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_6) & KEY_STATE_DOWN) 
                 v = tm.RowY() * -dist;
-            if (s3eKeyboardGetState(s3eKeyNumPad4) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_4) & KEY_STATE_DOWN) 
                 v = tm.RowY() * dist;
-            if (s3eKeyboardGetState(s3eKeyNumPad8) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_8) & KEY_STATE_DOWN) 
                 v = tm.RowX() * dist;
-            if (s3eKeyboardGetState(s3eKeyNumPad2) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_2) & KEY_STATE_DOWN) 
                 v = tm.RowX() * -dist;
-            if (s3eKeyboardGetState(s3eKeyNumPad9) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_9) & KEY_STATE_DOWN) 
                 v = tm.RowZ() * dist;
-            if (s3eKeyboardGetState(s3eKeyNumPad7) & S3E_KEY_STATE_DOWN) 
+            if (Input::GetInstance().GetKeyState(SDLK_KP_7) & KEY_STATE_DOWN) 
                 v = tm.RowZ() * -dist;
             tm.SetTrans(tm.GetTrans() + v);
         }
@@ -1043,7 +1043,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 
     // Pause
     if (
-        (s3eKeyboardGetState(s3eKeyMenu) & S3E_KEY_STATE_PRESSED) ||
+        (Input::GetInstance().GetKeyState(SDLK_MENU) & KEY_STATE_PRESSED) ||
         pauseKeyPressed ||
         joystickPausePlay
         )
@@ -1277,7 +1277,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     }
     mTimeSinceEnabled += mCurrentDeltaTime;
 
-    if (s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_PRESSED) 
+    if (Input::GetInstance().GetKeyState(SDLK_s) & KEY_STATE_PRESSED) 
     {
         SaveScreenshot();
     }

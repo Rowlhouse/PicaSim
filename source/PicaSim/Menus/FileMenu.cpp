@@ -3,6 +3,7 @@
 #include "../GameSettings.h"
 #include "../PicaStrings.h"
 #include "../../Platform/S3ECompat.h"
+#include "../../Platform/Input.h"
 #include "Platform.h"
 #include <string>
 #include <vector>
@@ -641,8 +642,8 @@ FileMenuResult FileMenuLoad(
         while (!menu.Update())
         {
             if (CheckForQuitRequest() ||
-                    (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
-                    (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+                    (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
+                    (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
             {
                 RecoverFromIwGx(false);
                 return FILEMENURESULT_CANCEL;
@@ -678,8 +679,8 @@ FileMenuResult FileMenuSave(
     while (!menu.Update())
     {
         if (CheckForQuitRequest() ||
-                (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
-                (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+                (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
+                (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
         {
             RecoverFromIwGx(false);
             return FILEMENURESULT_CANCEL;
@@ -715,8 +716,8 @@ void FileMenuDelete(
     while (!menu.Update())
     {
         if (CheckForQuitRequest() ||
-                (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
-                (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+                (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
+                (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
         {
             RecoverFromIwGx(false);
             return;

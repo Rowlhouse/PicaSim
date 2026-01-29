@@ -8,6 +8,7 @@
 #include "Texture.h"
 #include "Platform.h"
 #include "../../Platform/S3ECompat.h"
+#include "../../Platform/Input.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
@@ -258,7 +259,7 @@ StartMenuResult DisplayStartMenu(GameSettings& gameSettings)
 
             // Check for back button / quit
             if (CheckForQuitRequest() ||
-                    (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED))
+                    (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED))
             {
                 result = STARTMENU_QUIT;
                 break;

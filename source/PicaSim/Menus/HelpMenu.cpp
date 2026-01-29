@@ -6,6 +6,7 @@
 #include "../VersionInfo.h"
 #include "Platform.h"
 #include "../../Platform/S3ECompat.h"
+#include "../../Platform/Input.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
@@ -258,8 +259,8 @@ void DisplayHelpMenu(GameSettings& gameSettings, bool showHowToFly)
     while (!helpMenu.Update())
     {
         if (CheckForQuitRequest() ||
-                (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
-                (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED))
+                (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
+                (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
         {
             break;
         }

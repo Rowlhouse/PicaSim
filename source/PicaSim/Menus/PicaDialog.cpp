@@ -6,6 +6,7 @@
 #include "Trace.h"
 
 #include "../../Platform/S3ECompat.h"
+#include "../../Platform/Input.h"
 
 #include <SDL.h>
 #include "imgui.h"
@@ -232,8 +233,8 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
     if (shouldExit)
     {
         *shouldExit = CheckForQuitRequest() ||
-                                    (s3eKeyboardGetState(s3eKeyBack) & S3E_KEY_STATE_PRESSED) ||
-                                    (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED);
+                                    (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
+                                    (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED);
     }
 
     return buttonClicked;

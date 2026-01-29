@@ -6,6 +6,7 @@
 #include "Menus/Menu.h"
 #include "PicaJoystick.h"
 #include "../Platform/S3ECompat.h"
+#include "../Platform/Input.h"
 
 //======================================================================================================================
 ControllerSettings::ControllerControls GetControlForStick(ControllerSettings::ControllerStick stick, int mode)
@@ -491,9 +492,9 @@ void HumanController::UpdateKeyboard(float deltaTime)
         if (mGameSettings.mControllerSettings.mControlPerChannel[i] == ControllerSettings::CONTROLLER_ARROW_HORIZONTAL)
         {
             float& input = mInputControls[ControllerSettings::CONTROLLER_ARROW_HORIZONTAL];
-            if (s3eKeyboardGetState(s3eKeyLeft) & S3E_KEY_STATE_DOWN)
+            if (Input::GetInstance().GetKeyState(SDLK_LEFT) & KEY_STATE_DOWN)
                 input -= delta;
-            else if (s3eKeyboardGetState(s3eKeyRight) & S3E_KEY_STATE_DOWN)
+            else if (Input::GetInstance().GetKeyState(SDLK_RIGHT) & KEY_STATE_DOWN)
                 input += delta;
             else
             {
@@ -508,9 +509,9 @@ void HumanController::UpdateKeyboard(float deltaTime)
         else if (mGameSettings.mControllerSettings.mControlPerChannel[i] == ControllerSettings::CONTROLLER_ARROW_VERTICAL)
         {
             float& input = mInputControls[ControllerSettings::CONTROLLER_ARROW_VERTICAL];
-            if (s3eKeyboardGetState(s3eKeyDown) & S3E_KEY_STATE_DOWN)
+            if (Input::GetInstance().GetKeyState(SDLK_DOWN) & KEY_STATE_DOWN)
                 input -= delta;
-            else if (s3eKeyboardGetState(s3eKeyUp) & S3E_KEY_STATE_DOWN)
+            else if (Input::GetInstance().GetKeyState(SDLK_UP) & KEY_STATE_DOWN)
                 input += delta;
             else
             {
@@ -526,7 +527,7 @@ void HumanController::UpdateKeyboard(float deltaTime)
 
     for (uint32_t iButton = 0 ; iButton != NUM_BUTTONS ; ++iButton)
     {
-        if (s3eKeyboardGetState((s3eKey) (s3eKey1 + iButton)) & S3E_KEY_STATE_PRESSED)
+        if (Input::GetInstance().GetKeyState((SDL_Keycode)(SDLK_1 + iButton)) & KEY_STATE_PRESSED)
         {
             float& control = mInputControls[ControllerSettings::CONTROLLER_BUTTON0 + iButton];
             if (control > 0.0f)
