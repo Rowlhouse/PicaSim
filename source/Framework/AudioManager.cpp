@@ -974,27 +974,15 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
 }
 
 //======================================================================================================================
-bool AudioManager::SwitchToVRHeadsetAudio(const char* headsetSystemName)
+std::string AudioManager::FindMatchingVRAudioDevice(const char* headsetSystemName)
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::SwitchToVRHeadsetAudio(%s)", headsetSystemName ? headsetSystemName : "null");
-
     if (!headsetSystemName)
-        return false;
+        return "";
 
     // Get list of available devices
     auto devices = EnumerateAudioDevices();
     if (devices.empty())
-    {
-        TRACE_FILE_IF(1) TRACE("No audio devices found");
-        return false;
-    }
-
-    // Log all available devices for debugging
-    TRACE_FILE_IF(1) TRACE("Available audio devices (%d):", (int)devices.size());
-    for (const auto& device : devices)
-    {
-        TRACE_FILE_IF(1) TRACE("  - %s", device.c_str());
-    }
+        return "";
 
     // Convert headset name to lowercase for matching
     std::string headsetLower = headsetSystemName;
@@ -1026,8 +1014,7 @@ bool AudioManager::SwitchToVRHeadsetAudio(const char* headsetSystemName)
             if (headsetLower.find(*keyword) != std::string::npos &&
                 deviceLower.find(*keyword) != std::string::npos)
             {
-                TRACE_FILE_IF(1) TRACE("Found matching VR audio device: %s (keyword: %s)", device.c_str(), *keyword);
-                return SwitchAudioDevice(device.c_str());
+                return device;
             }
         }
     }
@@ -1043,14 +1030,12 @@ bool AudioManager::SwitchToVRHeadsetAudio(const char* headsetSystemName)
         {
             if (deviceLower.find(*keyword) != std::string::npos)
             {
-                TRACE_FILE_IF(1) TRACE("Found VR audio device: %s (keyword: %s)", device.c_str(), *keyword);
-                return SwitchAudioDevice(device.c_str());
+                return device;
             }
         }
     }
 
-    TRACE_FILE_IF(1) TRACE("No VR audio device found for headset: %s", headsetSystemName);
-    return false;
+    return "";
 }
 
 //======================================================================================================================

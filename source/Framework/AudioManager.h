@@ -86,8 +86,9 @@ public:
     /// Switch to a specific audio device by name (nullptr = default device)
     bool SwitchAudioDevice(const char* deviceName);
 
-    /// Find and switch to VR headset audio device based on headset system name
-    bool SwitchToVRHeadsetAudio(const char* headsetSystemName);
+    /// Find a matching VR audio device name based on headset system name
+    /// Returns empty string if no match found
+    std::string FindMatchingVRAudioDevice(const char* headsetSystemName);
 
     /// Switch back to default audio device
     bool SwitchToDefaultAudio();

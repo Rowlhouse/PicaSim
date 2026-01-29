@@ -579,6 +579,18 @@ void SettingsMenu::RenderOptions1Tab()
                     auto audioDevices = AudioManager::GetInstance().EnumerateAudioDevices();
                     if (!audioDevices.empty())
                     {
+                        // Auto-select a matching device if none is configured
+                        if (options.mVRAudioDevice.empty())
+                        {
+                            std::string autoDevice = AudioManager::GetInstance().FindMatchingVRAudioDevice(
+                                VRManager::GetInstance().GetSystemName());
+                            if (!autoDevice.empty())
+                            {
+                                options.mVRAudioDevice = autoDevice;
+                                VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
+                            }
+                        }
+
                         // Build list with "None" option first
                         std::vector<std::string> deviceNames;
                         deviceNames.push_back("None (use default)");
