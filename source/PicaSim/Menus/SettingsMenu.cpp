@@ -15,6 +15,7 @@
 
 #ifdef PICASIM_VR_SUPPORT
 #include "../../Platform/VRManager.h"
+#include "../../Framework/AudioManager.h"
 #endif
 
 #include "imgui.h"
@@ -524,6 +525,7 @@ void SettingsMenu::RenderOptions1Tab()
                     if (options.mEnableVR)
                     {
                         VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
+                        VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
                         if (!VRManager::GetInstance().EnableVR())
                         {
                             options.mEnableVR = false;
@@ -571,6 +573,38 @@ void SettingsMenu::RenderOptions1Tab()
                         VRManager::GetInstance().DisableVR();
                         VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
                         VRManager::GetInstance().EnableVR();
+                    }
+
+                    // VR Audio device selection
+                    auto audioDevices = AudioManager::GetInstance().EnumerateAudioDevices();
+                    if (!audioDevices.empty())
+                    {
+                        // Build list with "None" option first
+                        std::vector<std::string> deviceNames;
+                        deviceNames.push_back("None (use default)");
+                        for (const auto& dev : audioDevices)
+                            deviceNames.push_back(dev);
+
+                        // Find current selection
+                        int audioDeviceIndex = 0;
+                        for (size_t i = 0; i < audioDevices.size(); ++i)
+                        {
+                            if (audioDevices[i] == options.mVRAudioDevice)
+                            {
+                                audioDeviceIndex = (int)(i + 1);  // +1 because "None" is at index 0
+                                break;
+                            }
+                        }
+
+                        if (SettingsWidgets::Combo("VR Audio", audioDeviceIndex, deviceNames))
+                        {
+                            if (audioDeviceIndex == 0)
+                                options.mVRAudioDevice.clear();
+                            else
+                                options.mVRAudioDevice = audioDevices[audioDeviceIndex - 1];
+                            // Update VRManager with new device
+                            VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
+                        }
                     }
                 }
             }

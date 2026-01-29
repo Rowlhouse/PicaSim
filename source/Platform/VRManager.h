@@ -6,6 +6,7 @@
 #include "VRRuntime.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <string>
 
 // Forward declarations
 struct SDL_Window;
@@ -39,6 +40,9 @@ public:
     // Set/get MSAA samples for VR rendering (call SetMSAASamples before EnableVR)
     void SetMSAASamples(int samples) { mMSAASamples = samples; }
     int GetMSAASamples() const { return mMSAASamples; }
+
+    // Set the audio device to use when VR session is focused (empty = no switch)
+    void SetVRAudioDevice(const std::string& deviceName) { mVRAudioDevice = deviceName; }
 
     // Enable VR mode. Returns true if VR was successfully enabled.
     bool EnableVR();
@@ -95,7 +99,7 @@ public:
 
     // Reset VR view calibration. Call when entering VR or pressing reset key.
     // facingYaw: direction to look at (for ground view alignment)
-    void ResetVRView(float facingYaw);
+    void ResetVRView(float facingYaw, bool useHeadsetFacingDirection);
 
     // Adjust the manual Yaw offset (for B/N key rotation)
     void AdjustYawOffset(float deltaDegrees);
@@ -180,6 +184,11 @@ private:
     float mAutomaticYawOffset;     // offset from calibration (e.g. in ground view)
     float mManualYawOffset;        // User-adjustable offset via B/N keys
     bool mUseAutoYawOffset = true;
+
+    // Audio switching state
+    std::string mVRAudioDevice;    // Audio device to switch to when focused
+    bool mAudioSwitchedToVR;       // True if audio is currently on VR device
+    VRSessionState mLastSessionState;  // For detecting focus changes
 };
 
 #endif // PICASIM_VR_SUPPORT

@@ -3,6 +3,7 @@
 #ifdef PICASIM_VR_SUPPORT
 
 #include "VRRuntime.h"
+#include "../Framework/AudioManager.h"
 #include "../Framework/Helpers.h"
 #include "../Framework/Graphics.h"
 #include "../Framework/Trace.h"
@@ -76,6 +77,8 @@ VRManager::VRManager()
     , mReferencePosition(0.0f)
     , mAutomaticYawOffset(0.0f)
     , mManualYawOffset(0.0f)
+    , mAudioSwitchedToVR(false)
+    , mLastSessionState(VR_SESSION_UNKNOWN)
 {
     for (int i = 0; i < VR_EYE_COUNT; ++i)
     {
@@ -189,6 +192,7 @@ bool VRManager::EnableVR()
     }
 
     mVREnabled = true;
+
     TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - VR mode enabled");
     return true;
 }
@@ -218,6 +222,7 @@ void VRManager::DisableVR()
     }
 
     mVREnabled = false;
+
     TRACE_FILE_IF(1) TRACE("VRManager::DisableVR - VR mode disabled");
 }
 
@@ -244,14 +249,38 @@ void VRManager::PollEvents()
     }
     mRuntime->PollEvents();
 
-    // Debug: log current state
-    static VRSessionState lastLoggedState = VR_SESSION_UNKNOWN;
     VRSessionState currentState = mRuntime->GetSessionState();
-    if (currentState != lastLoggedState)
+
+    // Handle audio switching on session state changes
+    if (currentState != mLastSessionState)
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Session state: %d, IsVRReady: %s",
-            (int)currentState, IsVRReady() ? "true" : "false");
-        lastLoggedState = currentState;
+        TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Session state: %d -> %d, IsVRReady: %s",
+            (int)mLastSessionState, (int)currentState, IsVRReady() ? "true" : "false");
+
+        // Switch to VR audio when session becomes focused
+        bool shouldHaveVRAudio = (currentState == VR_SESSION_FOCUSED || currentState == VR_SESSION_VISIBLE);
+
+        if (shouldHaveVRAudio && !mAudioSwitchedToVR && !mVRAudioDevice.empty())
+        {
+            TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Switching audio to VR device: %s", mVRAudioDevice.c_str());
+            if (AudioManager::IsAvailable())
+            {
+                AudioManager::GetInstance().SwitchAudioDevice(mVRAudioDevice.c_str());
+                mAudioSwitchedToVR = true;
+            }
+        }
+        // Switch back to default audio when session loses focus
+        else if (!shouldHaveVRAudio && mAudioSwitchedToVR)
+        {
+            TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Switching audio back to default");
+            if (AudioManager::IsAvailable())
+            {
+                AudioManager::GetInstance().SwitchToDefaultAudio();
+                mAudioSwitchedToVR = false;
+            }
+        }
+
+        mLastSessionState = currentState;
     }
 }
 
@@ -509,33 +538,39 @@ glm::mat4 VRManager::GetEyeProjectionMatrix(VREye eye, float nearClip, float far
 //======================================================================================================================
 // VR View Calibration
 //======================================================================================================================
-void VRManager::ResetVRView(float facingYaw)
+void VRManager::ResetVRView(float facingYaw, bool useHeadsetFacingDirection)
 {
     TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Facing yaw: %.1f", glm::degrees(facingYaw));
 
     // Capture current headset pose as reference
     mReferencePosition = mHeadPosition;
 
-    // Extract yaw from current headset orientation
-    // mHeadOrientation is in OpenXR's coordinate system (X=right, Y=up, Z=back)
-    // Apply the same coordinate transformation as GetViewMatrix to convert to PicaSim (X=forward, Y=left, Z=up)
-    // This is: first -90° around Y, then +90° around X = quaternion (0.5, 0.5, -0.5, -0.5)
-    glm::quat coordTransform(0.5f, 0.5f, -0.5f, -0.5f);
-    glm::quat transformedRot = coordTransform * mHeadOrientation;
-
-    // Now extract yaw (rotation around Z in the transformed Z-up system)
-    glm::vec3 euler = glm::eulerAngles(transformedRot);
-
-    euler.z += HALF_PI; // offset seems to be needed
-
-    // euler.z is zero when facing forwards (so long as everything is calibrated). It is +ve when facing left
-    // We might want the user to be able to adjust this direction by looking forward as they apply this calibration
-
-    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - headset Eulers: %f %f %f",
-    glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
 
     // The into-wind angle increases as it rotates anti-clockwise (i.e. to the left)
-    mAutomaticYawOffset = facingYaw - euler.z;
+    mAutomaticYawOffset = facingYaw;
+
+    if (useHeadsetFacingDirection)
+    {
+        // Extract yaw from current headset orientation
+        // mHeadOrientation is in OpenXR's coordinate system (X=right, Y=up, Z=back)
+        // Apply the same coordinate transformation as GetViewMatrix to convert to PicaSim (X=forward, Y=left, Z=up)
+        // This is: first -90° around Y, then +90° around X = quaternion (0.5, 0.5, -0.5, -0.5)
+        glm::quat coordTransform(0.5f, 0.5f, -0.5f, -0.5f);
+        glm::quat transformedRot = coordTransform * mHeadOrientation;
+
+        // Now extract yaw (rotation around Z in the transformed Z-up system)
+        glm::vec3 euler = glm::eulerAngles(transformedRot);
+
+        euler.z += HALF_PI; // offset seems to be needed
+
+        // euler.z is zero when facing forwards (so long as everything is calibrated). It is +ve when facing left
+        // We might want the user to be able to adjust this direction by looking forward as they apply this calibration
+
+        TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - headset Eulers: %f %f %f",
+        glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
+
+        mAutomaticYawOffset -= euler.z;
+    }
 
     // Reset manual offset
     mManualYawOffset = 0.0f;

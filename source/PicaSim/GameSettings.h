@@ -283,6 +283,7 @@ struct Options : public Settings
     float mVRWorldScale;          // World scale factor (1.0 = normal)
     VRDesktopMode mVRDesktopMode; // Desktop window display mode
     int   mVRMSAASamples;         // VR anti-aliasing: 0=off, 2=2x, 4=4x, 8=8x
+    std::string mVRAudioDevice;   // Audio device to use when VR session is active (empty = no switch)
 #endif
 
     float mMaxNearClipDistance;

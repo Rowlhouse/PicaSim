@@ -379,6 +379,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_DOUBLE_ATTRIBUTE(mVRWorldScale);
     WRITE_ATTRIBUTE(mVRDesktopMode);
     WRITE_ATTRIBUTE(mVRMSAASamples);
+    element->SetAttribute("mVRAudioDevice", mVRAudioDevice.c_str());
 #endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
@@ -605,6 +606,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
         READ_ATTRIBUTE(mVRWorldScale);
         READ_ENUM_ATTRIBUTE(mVRDesktopMode);
         READ_ATTRIBUTE(mVRMSAASamples);
+        READ_ATTRIBUTE(mVRAudioDevice);
 #endif
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);

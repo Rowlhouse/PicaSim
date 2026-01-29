@@ -46,12 +46,27 @@ AudioManager::AudioManager()
     mTM.SetIdentity();
     mVelocity = Vector3(0,0,0);
 
+    // Get and save default device name
+    const ALCchar* defaultDeviceName = alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER);
+    if (defaultDeviceName)
+    {
+        mDefaultDeviceName = defaultDeviceName;
+        TRACE_FILE_IF(1) TRACE("Default audio device: %s", defaultDeviceName);
+    }
+
     // Open default audio device
     mALDevice = alcOpenDevice(nullptr);
     if (!mALDevice)
     {
         TRACE_FILE_IF(1) TRACE("Failed to open OpenAL device");
         return;
+    }
+
+    // Store current device name
+    const ALCchar* actualDeviceName = alcGetString(mALDevice, ALC_DEVICE_SPECIFIER);
+    if (actualDeviceName)
+    {
+        mCurrentDeviceName = actualDeviceName;
     }
 
     // Create and activate context
@@ -609,4 +624,443 @@ void AudioManager::SetChannelTargetVolumeScale(SoundChannel soundChannel, float 
     Channel& channel = mChannels[soundChannel];
     channel.mTargetVolumeScaleF = volScale;
     channel.mTargetVolumeScaleFRate = volScaleRate;
+}
+
+//======================================================================================================================
+std::vector<std::string> AudioManager::EnumerateAudioDevices()
+{
+    std::vector<std::string> devices;
+
+    // Try the "enumerate all" extension first - this gives us actual device names on Windows
+    // ALC_ENUMERATE_ALL_EXT provides full device names like "Speakers (Realtek)" or "Headphones (Rift Audio)"
+    if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT"))
+    {
+        const ALCchar* deviceList = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
+        if (deviceList)
+        {
+            // Parse null-separated list
+            while (*deviceList)
+            {
+                devices.push_back(deviceList);
+                deviceList += strlen(deviceList) + 1;
+            }
+            return devices;
+        }
+    }
+
+    // Fall back to basic enumeration
+    if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
+    {
+        const ALCchar* deviceList = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
+        if (deviceList)
+        {
+            while (*deviceList)
+            {
+                devices.push_back(deviceList);
+                deviceList += strlen(deviceList) + 1;
+            }
+            return devices;
+        }
+    }
+
+    TRACE_FILE_IF(1) TRACE("Audio device enumeration not supported");
+    return devices;
+}
+
+//======================================================================================================================
+void AudioManager::RecreateALSources()
+{
+    // Recreate all sources (called after context recreation)
+    for (int i = 0; i < mNumAvailableChannels; ++i)
+    {
+        mChannels[i].mALSource = 0;
+        alGenSources(1, &mChannels[i].mALSource);
+        ALenum error = alGetError();
+        if (error != AL_NO_ERROR)
+        {
+            TRACE_FILE_IF(1) TRACE("Failed to recreate OpenAL source %d, error %d", i, error);
+        }
+    }
+}
+
+//======================================================================================================================
+void AudioManager::DeleteALBuffers()
+{
+    // Delete all OpenAL buffers before device switch
+    TRACE_FILE_IF(1) TRACE("Deleting %d sound buffers...", (int)mSounds.size());
+    for (Sound* sound : mSounds)
+    {
+        if (sound->mALBuffer != 0)
+        {
+            alDeleteBuffers(1, &sound->mALBuffer);
+            sound->mALBuffer = 0;
+        }
+    }
+}
+
+//======================================================================================================================
+void AudioManager::RecreateALBuffers()
+{
+    // Recreate all OpenAL buffers using stored sound data
+    TRACE_FILE_IF(1) TRACE("Recreating %d sound buffers...", (int)mSounds.size());
+    for (Sound* sound : mSounds)
+    {
+        if (sound->mSoundData == nullptr || sound->mSoundSamples == 0)
+        {
+            TRACE_FILE_IF(1) TRACE("  Skipping %s - no sound data", sound->mName);
+            continue;
+        }
+
+        // Create new buffer
+        alGenBuffers(1, &sound->mALBuffer);
+        ALenum error = alGetError();
+        if (error != AL_NO_ERROR)
+        {
+            TRACE_FILE_IF(1) TRACE("  Failed to create buffer for %s, error %d", sound->mName, error);
+            sound->mALBuffer = 0;
+            continue;
+        }
+
+        // Determine format
+        ALenum format = sound->mStereo ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+
+        // Upload data to OpenAL buffer
+        alBufferData(sound->mALBuffer, format, sound->mSoundData,
+                     sound->mSoundSamples * sizeof(int16), sound->mSampleFrequency);
+        error = alGetError();
+        if (error != AL_NO_ERROR)
+        {
+            TRACE_FILE_IF(1) TRACE("  Failed to upload data for %s, error %d", sound->mName, error);
+            alDeleteBuffers(1, &sound->mALBuffer);
+            sound->mALBuffer = 0;
+            continue;
+        }
+
+        TRACE_FILE_IF(1) TRACE("  Recreated buffer %u for %s", sound->mALBuffer, sound->mName);
+    }
+}
+
+//======================================================================================================================
+bool AudioManager::SwitchAudioDevice(const char* deviceName)
+{
+    TRACE_FILE_IF(1) TRACE("AudioManager::SwitchAudioDevice(%s) - current: %s",
+        deviceName ? deviceName : "default", mCurrentDeviceName.c_str());
+
+    // Check if already using this device
+    if (deviceName && mCurrentDeviceName == deviceName)
+    {
+        TRACE_FILE_IF(1) TRACE("Already using device: %s", deviceName);
+        return true;
+    }
+    if (!deviceName && mCurrentDeviceName == mDefaultDeviceName)
+    {
+        TRACE_FILE_IF(1) TRACE("Already using default device");
+        return true;
+    }
+
+    // Save channel state before stopping (so we can restore after switch)
+    struct ChannelState {
+        bool inUse;
+        bool use3D;
+        const Sound* sound;
+        bool looping;
+        float volumeScale;
+        float targetVolumeScale;
+        float targetVolumeScaleRate;
+        float frequencyScale;
+        float soundSourceRadius;
+        Vector3 position;
+        Vector3 velocity;
+    };
+    std::vector<ChannelState> savedChannels(mNumAvailableChannels);
+
+    TRACE_FILE_IF(1) TRACE("Saving state of %d channels...", mNumAvailableChannels);
+    int activeCount = 0;
+    for (int i = 0; i < mNumAvailableChannels; ++i)
+    {
+        Channel& ch = mChannels[i];
+        ChannelState& state = savedChannels[i];
+        state.inUse = ch.mInUse;
+        state.use3D = ch.mUse3D;
+        state.sound = ch.mSound;
+        state.volumeScale = ch.mVolumeScale;
+        state.targetVolumeScale = ch.mTargetVolumeScaleF;
+        state.targetVolumeScaleRate = ch.mTargetVolumeScaleFRate;
+        state.frequencyScale = ch.mFrequencyScale;
+        state.soundSourceRadius = ch.mSoundSourceRadius;
+        state.position = ch.mSourcePosition;
+        state.velocity = ch.mSourceVelocity;
+        state.looping = false;
+
+        if (ch.mInUse && ch.mALSource != 0)
+        {
+            ALint looping;
+            alGetSourcei(ch.mALSource, AL_LOOPING, &looping);
+            state.looping = (looping == AL_TRUE);
+            activeCount++;
+        }
+    }
+    TRACE_FILE_IF(1) TRACE("Saved %d active channels", activeCount);
+
+    TRACE_FILE_IF(1) TRACE("Stopping all channels...");
+    // Stop all playing sounds
+    StopAllChannels();
+
+    TRACE_FILE_IF(1) TRACE("Deleting %d sources...", mNumAvailableChannels);
+    // Delete all sources (must be done before destroying context)
+    for (int i = 0; i < mNumAvailableChannels; ++i)
+    {
+        if (mChannels[i].mALSource != 0)
+        {
+            alDeleteSources(1, &mChannels[i].mALSource);
+            mChannels[i].mALSource = 0;
+        }
+    }
+
+    // Delete all buffers (must be done before destroying context)
+    DeleteALBuffers();
+
+    // Destroy context
+    TRACE_FILE_IF(1) TRACE("Destroying context...");
+    if (mALContext)
+    {
+        alcMakeContextCurrent(nullptr);
+        alcDestroyContext(mALContext);
+        mALContext = nullptr;
+    }
+
+    // Close current device
+    TRACE_FILE_IF(1) TRACE("Closing device...");
+    if (mALDevice)
+    {
+        if (!alcCloseDevice(mALDevice))
+        {
+            TRACE_FILE_IF(1) TRACE("WARNING: alcCloseDevice failed!");
+        }
+        mALDevice = nullptr;
+    }
+
+    // Open new device
+    TRACE_FILE_IF(1) TRACE("Opening device: %s", deviceName ? deviceName : "(default)");
+    mALDevice = alcOpenDevice(deviceName);
+    if (!mALDevice)
+    {
+        ALCenum err = alcGetError(nullptr);
+        TRACE_FILE_IF(1) TRACE("Failed to open audio device: %s, error: %d", deviceName ? deviceName : "default", err);
+        // Try to fall back to default
+        if (deviceName)
+        {
+            TRACE_FILE_IF(1) TRACE("Trying fallback to default device...");
+            mALDevice = alcOpenDevice(nullptr);
+            if (mALDevice)
+            {
+                TRACE_FILE_IF(1) TRACE("Fell back to default audio device");
+            }
+        }
+        if (!mALDevice)
+        {
+            TRACE_FILE_IF(1) TRACE("Failed to open any audio device!");
+            return false;
+        }
+    }
+    TRACE_FILE_IF(1) TRACE("Device opened successfully");
+
+    // Store current device name (use full name if available)
+    const ALCchar* actualDeviceName = nullptr;
+    if (alcIsExtensionPresent(mALDevice, "ALC_ENUMERATE_ALL_EXT"))
+    {
+        actualDeviceName = alcGetString(mALDevice, ALC_ALL_DEVICES_SPECIFIER);
+    }
+    if (!actualDeviceName)
+    {
+        actualDeviceName = alcGetString(mALDevice, ALC_DEVICE_SPECIFIER);
+    }
+    if (actualDeviceName)
+    {
+        mCurrentDeviceName = actualDeviceName;
+        TRACE_FILE_IF(1) TRACE("Now using audio device: %s", actualDeviceName);
+    }
+
+    // Create new context
+    TRACE_FILE_IF(1) TRACE("Creating context...");
+    mALContext = alcCreateContext(mALDevice, nullptr);
+    if (!mALContext)
+    {
+        ALCenum err = alcGetError(mALDevice);
+        TRACE_FILE_IF(1) TRACE("Failed to create OpenAL context, error: %d", err);
+        alcCloseDevice(mALDevice);
+        mALDevice = nullptr;
+        return false;
+    }
+    if (!alcMakeContextCurrent(mALContext))
+    {
+        ALCenum err = alcGetError(mALDevice);
+        TRACE_FILE_IF(1) TRACE("Failed to make context current, error: %d", err);
+    }
+    TRACE_FILE_IF(1) TRACE("Context created and made current");
+
+    // Reconfigure audio settings
+    alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
+    alSpeedOfSound(330.0f);
+    alDopplerFactor(1.0f);
+
+    // Recreate all sources
+    TRACE_FILE_IF(1) TRACE("Recreating %d sources...", mNumAvailableChannels);
+    RecreateALSources();
+
+    // Recreate all buffers with the stored sound data
+    RecreateALBuffers();
+
+    // Restore channel states and restart sounds
+    TRACE_FILE_IF(1) TRACE("Restoring %d channel states...", mNumAvailableChannels);
+    int restoredCount = 0;
+    for (int i = 0; i < mNumAvailableChannels; ++i)
+    {
+        const ChannelState& state = savedChannels[i];
+        if (!state.inUse || state.sound == nullptr)
+            continue;
+
+        // Check that the sound's buffer was successfully recreated
+        if (state.sound->mALBuffer == 0)
+        {
+            TRACE_FILE_IF(1) TRACE("  Channel %d: skipping - sound buffer not available", i);
+            continue;
+        }
+
+        Channel& ch = mChannels[i];
+        ch.mInUse = true;
+        ch.mUse3D = state.use3D;
+        ch.mSound = state.sound;
+        ch.mVolumeScale = state.volumeScale;
+        ch.mTargetVolumeScaleF = state.targetVolumeScale;
+        ch.mTargetVolumeScaleFRate = state.targetVolumeScaleRate;
+        ch.mFrequencyScale = state.frequencyScale;
+        ch.mSoundSourceRadius = state.soundSourceRadius;
+        ch.mSourcePosition = state.position;
+        ch.mSourceVelocity = state.velocity;
+
+        // Configure the source
+        ALuint source = ch.mALSource;
+        if (state.use3D)
+        {
+            alSourcei(source, AL_SOURCE_RELATIVE, AL_FALSE);
+            alSourcef(source, AL_REFERENCE_DISTANCE, state.soundSourceRadius);
+            alSourcef(source, AL_ROLLOFF_FACTOR, 1.0f);
+            alSourcef(source, AL_MAX_DISTANCE, 10000.0f);
+            alSource3f(source, AL_POSITION, state.position.x, state.position.y, state.position.z);
+            alSource3f(source, AL_VELOCITY, state.velocity.x, state.velocity.y, state.velocity.z);
+        }
+        else
+        {
+            alSourcei(source, AL_SOURCE_RELATIVE, AL_TRUE);
+            alSource3f(source, AL_POSITION, 0.0f, 0.0f, 0.0f);
+            alSource3f(source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+        }
+
+        // Attach buffer and start playback
+        alSourcei(source, AL_BUFFER, state.sound->mALBuffer);
+        alSourcei(source, AL_LOOPING, state.looping ? AL_TRUE : AL_FALSE);
+        alSourcef(source, AL_GAIN, state.volumeScale * mVolScale);
+        alSourcef(source, AL_PITCH, Maximum(state.frequencyScale, 0.1f));
+        alSourcePlay(source);
+
+        restoredCount++;
+        TRACE_FILE_IF(1) TRACE("  Channel %d: restored sound %s", i, state.sound->mName);
+    }
+    TRACE_FILE_IF(1) TRACE("Restored %d active channels", restoredCount);
+
+    TRACE_FILE_IF(1) TRACE("Audio device switch complete - now using: %s", mCurrentDeviceName.c_str());
+    return true;
+}
+
+//======================================================================================================================
+bool AudioManager::SwitchToVRHeadsetAudio(const char* headsetSystemName)
+{
+    TRACE_FILE_IF(1) TRACE("AudioManager::SwitchToVRHeadsetAudio(%s)", headsetSystemName ? headsetSystemName : "null");
+
+    if (!headsetSystemName)
+        return false;
+
+    // Get list of available devices
+    auto devices = EnumerateAudioDevices();
+    if (devices.empty())
+    {
+        TRACE_FILE_IF(1) TRACE("No audio devices found");
+        return false;
+    }
+
+    // Log all available devices for debugging
+    TRACE_FILE_IF(1) TRACE("Available audio devices (%d):", (int)devices.size());
+    for (const auto& device : devices)
+    {
+        TRACE_FILE_IF(1) TRACE("  - %s", device.c_str());
+    }
+
+    // Convert headset name to lowercase for matching
+    std::string headsetLower = headsetSystemName;
+    for (char& c : headsetLower)
+        c = (char)tolower(c);
+
+    // Keywords to look for in VR headset audio device names
+    const char* vrKeywords[] = {
+        "rift", "oculus", "quest",  // Meta/Oculus
+        "index",                     // Valve Index
+        "vive",                      // HTC Vive
+        "reverb",                    // HP Reverb (Windows MR)
+        "pimax",                     // Pimax
+        "virtual audio",             // Oculus Virtual Audio Device
+        nullptr
+    };
+
+    // First, try to find a device that matches the headset name
+    for (const auto& device : devices)
+    {
+        std::string deviceLower = device;
+        for (char& c : deviceLower)
+            c = (char)tolower(c);
+
+        // Check if device name contains any part of headset name
+        // or if headset name contains any VR keywords that match the device
+        for (const char** keyword = vrKeywords; *keyword; ++keyword)
+        {
+            if (headsetLower.find(*keyword) != std::string::npos &&
+                deviceLower.find(*keyword) != std::string::npos)
+            {
+                TRACE_FILE_IF(1) TRACE("Found matching VR audio device: %s (keyword: %s)", device.c_str(), *keyword);
+                return SwitchAudioDevice(device.c_str());
+            }
+        }
+    }
+
+    // Second pass: look for any device with VR keywords
+    for (const auto& device : devices)
+    {
+        std::string deviceLower = device;
+        for (char& c : deviceLower)
+            c = (char)tolower(c);
+
+        for (const char** keyword = vrKeywords; *keyword; ++keyword)
+        {
+            if (deviceLower.find(*keyword) != std::string::npos)
+            {
+                TRACE_FILE_IF(1) TRACE("Found VR audio device: %s (keyword: %s)", device.c_str(), *keyword);
+                return SwitchAudioDevice(device.c_str());
+            }
+        }
+    }
+
+    TRACE_FILE_IF(1) TRACE("No VR audio device found for headset: %s", headsetSystemName);
+    return false;
+}
+
+//======================================================================================================================
+bool AudioManager::SwitchToDefaultAudio()
+{
+    TRACE_FILE_IF(1) TRACE("AudioManager::SwitchToDefaultAudio()");
+
+    if (mDefaultDeviceName.empty())
+    {
+        return SwitchAudioDevice(nullptr);
+    }
+    return SwitchAudioDevice(mDefaultDeviceName.c_str());
 }

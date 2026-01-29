@@ -4,6 +4,7 @@
 #include "Helpers.h"
 
 #include <vector>
+#include <string>
 
 // OpenAL headers
 #include <AL/al.h>
@@ -34,6 +35,7 @@ public:
 
     static void Init();
     static void Terminate();
+    static bool IsAvailable() { return mInstance != nullptr; }
 
     static AudioManager& GetInstance() {IwAssert(ROWLHOUSE, mInstance); return *mInstance;}
 
@@ -78,6 +80,18 @@ public:
 
     void UnloadSound(Sound* sound);
 
+    /// Get list of available audio device names
+    std::vector<std::string> EnumerateAudioDevices();
+
+    /// Switch to a specific audio device by name (nullptr = default device)
+    bool SwitchAudioDevice(const char* deviceName);
+
+    /// Find and switch to VR headset audio device based on headset system name
+    bool SwitchToVRHeadsetAudio(const char* headsetSystemName);
+
+    /// Switch back to default audio device
+    bool SwitchToDefaultAudio();
+
 private:
     struct Channel
     {
@@ -112,9 +126,22 @@ private:
 
     static AudioManager* mInstance;
 
+    /// Recreate OpenAL sources after device switch
+    void RecreateALSources();
+
+    /// Delete all OpenAL buffers before device switch
+    void DeleteALBuffers();
+
+    /// Recreate all OpenAL buffers after device switch using stored sound data
+    void RecreateALBuffers();
+
     /// OpenAL device and context
     ALCdevice* mALDevice;
     ALCcontext* mALContext;
+
+    /// Audio device names for VR switching
+    std::string mDefaultDeviceName;
+    std::string mCurrentDeviceName;
 
     /// Details on the channels available
     int mNumAvailableChannels;

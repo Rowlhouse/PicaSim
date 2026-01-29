@@ -979,7 +979,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             // Get wind direction for ground view alignment
             Vector3 upWindDir = -Environment::GetInstance().GetWindDirection(Environment::WIND_TYPE_SMOOTH);
             float facingYaw = atan2f(upWindDir.y, upWindDir.x);
-            VRManager::GetInstance().ResetVRView(facingYaw);
+            VRManager::GetInstance().ResetVRView(facingYaw, true);
         }
 
         // B/N keys - Adjust yaw offset (rotate view left/right)
