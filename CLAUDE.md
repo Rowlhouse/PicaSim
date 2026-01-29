@@ -16,6 +16,14 @@ I have placed the Marmalade SDK installer here, in case it is useful as a refere
 
 There is documentation for a slightly older version of Marmalade here: ReferenceMaterial\Marmalade-6.3_SDKDocumentation.chm
 
+## Building
+
+Always use CMake presets:
+- Debug: `cmake --build --preset windows-x64-debug`
+- Release: `cmake --build --preset windows-x64-release`
+
+Always build in debug when building automatically, if just asked to "build". Requests to build in release will always be explicit.
+
 ## Git Commits (instruction for Claude/AI)
 
 Never volunteer to commit changes. Only create commits when explicitly requested by the user.
@@ -156,6 +164,6 @@ PicaSim source is MIT licensed. Third-party components have separate licenses:
 - 3D models and images: authorized for PicaSim derivatives only; other uses require permission
 
 ## Read
- - README.md It tells you to build using presets
+ - README.md
  - CODE_STYLE.md
 

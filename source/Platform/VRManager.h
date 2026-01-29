@@ -105,6 +105,7 @@ public:
     void SetDefaultFacingYaw(float yaw) { mDefaultFacingYaw = yaw; }
 
     // Adjust the manual Yaw offset (for B/N key rotation)
+    void ResetYawOffset();
     void AdjustYawOffset(float deltaDegrees);
 
     // Get the total yaw offset to apply
@@ -113,7 +114,7 @@ public:
     // Get the calibrated reference position
     glm::vec3 GetReferencePosition() const { return mReferencePosition; }
 
-    void UseAutoYawOffset(bool use) {mUseAutoYawOffset = use;}
+    void UseYawOffsets(bool use) {mUseYawOffsets = use;}
 
     //----------------------------------------------------------------------------------------------------------------------
     // Head tracking
@@ -184,10 +185,11 @@ private:
 
     // VR view calibration state
     glm::vec3 mReferencePosition;      // Headset position at calibration
-    float mAutomaticYawOffset;     // offset from calibration (e.g. in ground view)
+    float mAutomaticYawOffset;     // offset for a default look direction (based on the wind)
+    float mCalibratedYawOffset;    // offset for the user's resting direction
     float mManualYawOffset;        // User-adjustable offset via B/N keys
     float mDefaultFacingYaw;       // Default facing direction (upwind) for auto-reset
-    bool mUseAutoYawOffset = true;
+    bool mUseYawOffsets = true;
 
     // Audio switching state
     std::string mVRAudioDevice;    // Audio device to switch to when focused

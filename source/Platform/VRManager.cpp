@@ -76,6 +76,7 @@ VRManager::VRManager()
     , mHeadOrientation(1.0f, 0.0f, 0.0f, 0.0f)  // Identity quaternion
     , mReferencePosition(0.0f)
     , mAutomaticYawOffset(0.0f)
+    , mCalibratedYawOffset(0.0f)
     , mManualYawOffset(0.0f)
     , mDefaultFacingYaw(0.0f)
     , mAudioSwitchedToVR(false)
@@ -554,7 +555,6 @@ void VRManager::ResetVRView(float facingYaw, bool useHeadsetFacingDirection)
     // Capture current headset pose as reference
     mReferencePosition = mHeadPosition;
 
-
     // The into-wind angle increases as it rotates anti-clockwise (i.e. to the left)
     mAutomaticYawOffset = facingYaw;
 
@@ -572,19 +572,26 @@ void VRManager::ResetVRView(float facingYaw, bool useHeadsetFacingDirection)
 
         euler.z += HALF_PI; // offset seems to be needed
 
+        mCalibratedYawOffset = -euler.z;
+
         // euler.z is zero when facing forwards (so long as everything is calibrated). It is +ve when facing left
         // We might want the user to be able to adjust this direction by looking forward as they apply this calibration
 
         TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - headset Eulers: %f %f %f",
         glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
-
-        mAutomaticYawOffset -= euler.z;
     }
 
     // Reset manual offset
 //    mManualYawOffset = 0.0f;
 
     TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - automatic offset = %.1f", glm::degrees(mAutomaticYawOffset));
+}
+
+//======================================================================================================================
+void VRManager::ResetYawOffset()
+{
+    mManualYawOffset = 0.0f;
+    TRACE_FILE_IF(1) TRACE("VRManager::ResetYawOffset - Manual offset reset to 0");
 }
 
 //======================================================================================================================
@@ -598,10 +605,10 @@ void VRManager::AdjustYawOffset(float deltaDegrees)
 //======================================================================================================================
 float VRManager::GetTotalYawOffset() const
 {
-    if (mUseAutoYawOffset)
-        return mManualYawOffset + mAutomaticYawOffset;
+    if (mUseYawOffsets)
+        return mCalibratedYawOffset + mManualYawOffset + mAutomaticYawOffset;
     else
-        return mManualYawOffset;
+        return mCalibratedYawOffset;
 }
 
 //======================================================================================================================

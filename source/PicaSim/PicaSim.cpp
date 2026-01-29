@@ -971,7 +971,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // VR view calibration keys
     if (VRManager::IsAvailable() && VRManager::GetInstance().IsVREnabled())
     {
-        VRManager::GetInstance().UseAutoYawOffset(mMode == MODE_GROUND);
+        VRManager::GetInstance().UseYawOffsets(mMode == MODE_GROUND);
 
         // Keep VRManager updated with current wind direction for auto-reset on session start
         Vector3 upWindDir = -Environment::GetInstance().GetWindDirection(Environment::WIND_TYPE_SMOOTH);
@@ -984,10 +984,14 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             VRManager::GetInstance().ResetVRView(facingYaw, true);
         }
 
-        // B/N keys - Adjust yaw offset (rotate view left/right)
+        // B/H/N keys - Adjust yaw offset (rotate view left/right)
         if (s3eKeyboardGetState(s3eKeyB) & S3E_KEY_STATE_PRESSED)
         {
             VRManager::GetInstance().AdjustYawOffset(15.0f);  // Rotate left
+        }
+        if (s3eKeyboardGetState(s3eKeyH) & S3E_KEY_STATE_PRESSED)
+        {
+            VRManager::GetInstance().ResetYawOffset();
         }
         if (s3eKeyboardGetState(s3eKeyN) & S3E_KEY_STATE_PRESSED)
         {
