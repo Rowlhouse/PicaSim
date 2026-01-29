@@ -258,7 +258,6 @@ int ShowInGameDialog(float widthFrac, float heightFrac,
 
     while (buttonClicked < 0)
     {
-        s3eDeviceBacklightOn();
         PollEvents();
         SDL_Delay(1);
 
@@ -340,7 +339,6 @@ void ShowHelpOverlays(const GameSettings& gameSettings)
 
         while (buttonClicked < 0)
         {
-            s3eDeviceBacklightOn();
             PollEvents();
             SDL_Delay(1);
 

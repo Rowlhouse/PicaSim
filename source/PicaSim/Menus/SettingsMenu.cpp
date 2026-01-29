@@ -191,7 +191,6 @@ SettingsStatus SettingsMenu::Update()
 
     // Update input state
     s3eKeyboardUpdate();
-    s3ePointerUpdate();
     UpdateJoystick(mGameSettings.mOptions.mJoystickID);
 
     IwGxClear();

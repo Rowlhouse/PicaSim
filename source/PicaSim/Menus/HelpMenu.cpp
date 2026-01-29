@@ -213,7 +213,7 @@ void HelpMenu::Render()
 
         ImGui::Separator();
 
-        int32 dpi = DPI::dpiGetScreenDPI();
+        int32 dpi = (int32)Platform::GetScreenDPI();
         int32 numCores = Platform::GetCPUCount();
 
         // Calculate screen diagonal

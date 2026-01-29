@@ -88,40 +88,6 @@ void PollEvents();
 s3eBool CheckForQuitRequest();
 
 //==============================================================================
-// Surface functions (from s3eSurface.h)
-//==============================================================================
-
-enum s3eSurfaceProperty
-{
-        S3E_SURFACE_WIDTH = 0,
-        S3E_SURFACE_HEIGHT,
-        S3E_SURFACE_PITCH,
-        S3E_SURFACE_PIXEL_TYPE,
-        S3E_SURFACE_DEVICE_WIDTH,
-        S3E_SURFACE_DEVICE_HEIGHT,
-        S3E_SURFACE_DEVICE_BLIT_DIRECTION
-};
-
-/**
-  * Get surface/screen property.
-  * Replacement for s3eSurfaceGetInt()
-  */
-inline int32 s3eSurfaceGetInt(s3eSurfaceProperty property)
-{
-        switch (property)
-        {
-        case S3E_SURFACE_WIDTH:
-        case S3E_SURFACE_DEVICE_WIDTH:
-                return Platform::GetDisplayWidth();
-        case S3E_SURFACE_HEIGHT:
-        case S3E_SURFACE_DEVICE_HEIGHT:
-                return Platform::GetDisplayHeight();
-        default:
-                return 0;
-        }
-}
-
-//==============================================================================
 // Keyboard functions (from s3eKeyboard.h)
 //==============================================================================
 
@@ -255,10 +221,6 @@ void s3eKeyboardUpdate();  // Called each frame to update keyboard state
 // Allow bitwise AND on s3eKeyState - returns bool for use in conditionals
 inline bool operator&(s3eKeyState a, s3eKeyState b) { return (static_cast<int>(a) & static_cast<int>(b)) != 0; }
 
-// Device functions (from s3eDevice.h)
-inline void s3eDeviceBacklightOn() {}  // Keep screen backlight on
-inline void s3ePointerUpdate() {}      // Update pointer/touch state each frame
-
 // Clear pressed states to prevent click bleed-through on screen transitions
 void s3eClearPressedStates();
 
@@ -391,25 +353,6 @@ int32 s3ePointerGetX();
 int32 s3ePointerGetY();
 
 //==============================================================================
-// Accelerometer functions (from s3eAccelerometer.h) - to be replaced with SDL2 sensor
-//==============================================================================
-
-enum s3eAccelerometerProperty
-{
-        S3E_ACCELEROMETER_AVAILABLE = 0
-};
-
-inline int32 s3eAccelerometerGetInt(s3eAccelerometerProperty property) {
-        // TODO: Check SDL2 sensor availability
-        return 0; // Not available by default on desktop
-}
-inline s3eResult s3eAccelerometerStart() { return S3E_RESULT_SUCCESS; }
-inline void s3eAccelerometerStop() {}
-inline int32 s3eAccelerometerGetX() { return 0; }
-inline int32 s3eAccelerometerGetY() { return 0; }
-inline int32 s3eAccelerometerGetZ() { return 1000; } // 1g pointing down
-
-//==============================================================================
 // IwGx graphics stubs (from IwGx.h) - to be replaced with ImGui/SDL2
 //==============================================================================
 
@@ -417,10 +360,6 @@ inline int32 s3eAccelerometerGetZ() { return 1000; } // 1g pointing down
 // IwGx display dimensions (use Platform functions)
 inline int32 IwGxGetDisplayWidth() { return Platform::GetDisplayWidth(); }
 inline int32 IwGxGetDisplayHeight() { return Platform::GetDisplayHeight(); }
-
-// IwGx print functions (stub - will be replaced with ImGui)
-inline void IwGxPrintSetColour(int r, int g, int b) {}
-inline void IwGxPrintString(int x, int y, const char* str) {}
 
 // IwGx flags
 #define IW_GX_COLOUR_BUFFER_F 1
@@ -435,24 +374,6 @@ void IwGxSetColClear(uint8 r, uint8 g, uint8 b, uint8 a);
 
 // IwGL swap - same as IwGxSwapBuffers
 inline void IwGLSwapBuffers() { IwGxSwapBuffers(); }
-
-// EGL stub (not needed with SDL2 but code references it for PVRVFrame)
-inline void* eglGetProcAddress(const char* name) { return nullptr; }
-
-// IwGL extension constants
-enum IwGLExtension
-{
-        IW_GL_OES_framebuffer_object = 0,
-        IW_GL_OES_texture_npot,
-        IW_GL_OES_depth24,
-        IW_GL_OES_depth_texture
-};
-
-// IwGL extension availability check
-inline bool IwGLExtAvailable(IwGLExtension ext) {
-        // Most OpenGL 2.0+ contexts support framebuffer objects
-        return true;
-}
 
 // PrepareForIwGx / RecoverFromIwGx - declared here, defined in Graphics.cpp
 void PrepareForIwGx(bool fullscreen);
@@ -583,27 +504,6 @@ inline void s3eFileListClose(s3eFileList* fileList)
 }
 
 //==============================================================================
-// 2D rendering stubs (from Iw2D.h) - to be replaced with ImGui
-//==============================================================================
-
-struct Vec2f
-{
-        float x, y;
-        Vec2f() : x(0), y(0) {}
-        Vec2f(float _x, float _y) : x(_x), y(_y) {}
-};
-
-inline void Iw2DInit() {}
-inline void Iw2DTerminate() {}
-
-inline void Iw2DFillPolygon(Vec2f* verts, int numVerts) {}
-inline void Iw2DSetColour(uint32 col) {}
-inline void Iw2DDrawRect(const Vec2f& pos, const Vec2f& size) {}
-inline void Iw2DDrawLine(const Vec2f& from, const Vec2f& to) {}
-inline void Iw2DSetFont(void* font) {}
-inline void Iw2DDrawString(const char* str, int x, int y) {}
-
-//==============================================================================
 // Vibration (mobile)
 //==============================================================================
 inline void s3eVibraVibrate(int32 amount, uint32 ms) {
@@ -631,15 +531,6 @@ inline void s3eOSExecExecute(const char* command, bool async) {
 #else
         // Stub - implement for other platforms
 #endif
-}
-
-//==============================================================================
-// DPI (Screen density) - replacement for dpi/dpiInfo.h
-//==============================================================================
-namespace DPI {
-        inline void dpiInit() {}
-        inline void dpiTerminate() {}
-        inline int32 dpiGetScreenDPI() { return 96; } // Standard Windows DPI
 }
 
 //==============================================================================

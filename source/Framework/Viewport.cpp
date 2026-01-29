@@ -87,7 +87,7 @@ void Viewport::SetupViewport(const DisplayConfig& displayConfig, bool resetting)
     {
         glScissor( x, y, w, h );
         glEnable(GL_SCISSOR_TEST);
-        glClear(GL_DEPTH_BUFFER_BIT); 
+        glClear(GL_DEPTH_BUFFER_BIT);
         glDisable(GL_SCISSOR_TEST);
     }
 }
@@ -95,15 +95,6 @@ void Viewport::SetupViewport(const DisplayConfig& displayConfig, bool resetting)
 //======================================================================================================================
 void Viewport::GxRender(int renderLevel, DisplayConfig& displayConfig)
 {
-    if (!mDrawFrame || !mEnabled)
-        return;
-
-    Iw2DSetColour(0x60606060); // AABBGGRR
-    float x0 = mLeft * displayConfig.mWidth;
-    float y0 = (1.0f - (mBottom + mHeight)) * displayConfig.mHeight;
-
-    float w = mWidth * displayConfig.mWidth;
-    float h = mHeight * displayConfig.mHeight;
-
-    Iw2DDrawRect(Vec2f(x0, y0), Vec2f(w, h));
+    // Frame drawing removed - was using Iw2D stubs
 }
+

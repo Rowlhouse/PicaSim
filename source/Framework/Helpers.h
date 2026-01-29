@@ -79,9 +79,6 @@ public:
 
     // Dot product
     float operator*(const Vector2& v) const { return x * v.x + y * v.y; }
-
-    // Conversion to Vec2f for Marmalade compatibility
-    operator Vec2f() const { return Vec2f(x, y); }
 };
 
 inline Vector2 operator*(float s, const Vector2& v) { return v * s; }

@@ -77,7 +77,6 @@ void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelp
     int height = Platform::GetDisplayHeight();
     GLint depthBits = 0;
     glGetIntegerv( GL_DEPTH_BITS, &depthBits);
-    TRACE_FILE_IF(1) TRACE("Screen BPP  : %d\n", s3eSurfaceGetInt(S3E_SURFACE_PIXEL_TYPE) & S3E_SURFACE_PIXEL_SIZE_MASK);
     TRACE_FILE_IF(1) TRACE("Screen Size : %dx%d\n", width, height);
     TRACE_FILE_IF(1) TRACE("\n");
     TRACE_FILE_IF(1) TRACE( "Vendor     : %s\n", (const char*)glGetString( GL_VENDOR ) );
@@ -86,8 +85,6 @@ void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelp
     TRACE_FILE_IF(1) TRACE( "Extensions : %s\n", (const char*)glGetString( GL_EXTENSIONS ) );
     TRACE_FILE_IF(1) TRACE( "Depth bits : %d\n", depthBits );
     TRACE_FILE_IF(1) TRACE("\n");
-
-    IwGxPrintSetColour(128, 128, 128);
 
     mInstance->mDebugRenderer->Init();
 }

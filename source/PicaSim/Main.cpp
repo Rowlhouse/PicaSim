@@ -32,7 +32,7 @@
 
 static float GetSurfaceDiagonalInches()
 {
-    int32 dpi = DPI::dpiGetScreenDPI();
+    int32 dpi = (int32)Platform::GetScreenDPI();
     if (dpi > 0)
     {
         int w = Platform::GetDisplayWidth();
@@ -221,14 +221,7 @@ int main()
     }
 #endif
 
-    TRACE_FILE_IF(1) TRACE("Calling Iw2DInit");
-    Iw2DInit();
-    TRACE_FILE_IF(1) TRACE("Iw2DInit has been called");
-
-    TRACE_FILE_IF(1) TRACE("Calling dpiInit");
-    DPI::dpiInit();
-    TRACE("dpi = %d so physical diagonal = %5.2f inches", DPI::dpiGetScreenDPI(), GetSurfaceDiagonalInches());
-    TRACE_FILE_IF(1) TRACE("dpiInit has been called");
+    TRACE("dpi = %d so physical diagonal = %5.2f inches", (int)Platform::GetScreenDPI(), GetSurfaceDiagonalInches());
 
 #if 0
     s3eWindowDisplayMode modes[32];
@@ -571,12 +564,6 @@ SelectPlane:
 
     TRACE_FILE_IF(1) TRACE("AudioManager::Terminate()");
     AudioManager::Terminate();
-
-    TRACE_FILE_IF(1) TRACE("Calling dpiTerminate");
-    DPI::dpiTerminate();
-
-    TRACE_FILE_IF(1) TRACE("Iw2DTerminate");
-    Iw2DTerminate();
 
 #ifdef PICASIM_VR_SUPPORT
     TRACE_FILE_IF(1) TRACE("VRManager::Terminate()");

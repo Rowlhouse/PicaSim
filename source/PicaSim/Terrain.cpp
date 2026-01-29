@@ -879,7 +879,7 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
             TRACE_FILE_IF(1) TRACE("Uploaded shadow texture id %d", mGenericShadowTexture->mHWID);
         }
 
-        if (gGLVersion == 2 || IwGLExtAvailable(IW_GL_OES_framebuffer_object))
+        if (gGLVersion >= 2)  // OpenGL 2.0+ supports framebuffer objects
         {
             int size = 1 << options.mProjectedShadowDetail;
             mShadowFrameBufferObject = new FrameBufferObject(size, size, GL_RGB, GL_UNSIGNED_BYTE);

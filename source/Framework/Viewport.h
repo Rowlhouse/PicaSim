@@ -25,6 +25,8 @@ public:
     Viewport(float left, float bottom, float width, float height, Camera* camera);
     ~Viewport();
 
+    void GxRender(int renderLevel, DisplayConfig& displayConfig) override;
+
     void SetDrawFrame(bool drawFrame) {mDrawFrame = drawFrame;} 
 
     Camera* GetCamera() {return mCamera;}
@@ -52,8 +54,6 @@ public:
     bool GetShouldRenderObject(const class RenderObject* renderObject) const;
 
 private:
-    void GxRender(int renderLevel, DisplayConfig& displayConfig) OVERRIDE;
-
     typedef std::set<const class RenderObject*> RenderObjects;
     RenderObjects mRenderObjects;
 

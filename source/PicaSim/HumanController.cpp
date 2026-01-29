@@ -431,6 +431,7 @@ void HumanController::UpdateScreenSticks(float deltaTime)
 //======================================================================================================================
 void HumanController::UpdateAccelerometer(float deltaTime)
 {
+#if 0
     if (s3eAccelerometerGetInt(S3E_ACCELEROMETER_AVAILABLE) <= 0)
         return;
 
@@ -470,6 +471,11 @@ void HumanController::UpdateAccelerometer(float deltaTime)
         mInputControls[ControllerSettings::CONTROLLER_ACCEL_HORIZONTAL] = 0.0f;
         mInputControls[ControllerSettings::CONTROLLER_ACCEL_VERTICAL] = 0.0f;
     }
+#endif
+
+    // Accelerometer not available on desktop - would need SDL2 sensor API for mobile
+    mInputControls[ControllerSettings::CONTROLLER_ACCEL_HORIZONTAL] = 0.0f;
+    mInputControls[ControllerSettings::CONTROLLER_ACCEL_VERTICAL] = 0.0f;
 }
 
 //======================================================================================================================

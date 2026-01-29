@@ -636,10 +636,7 @@ void PicaSim::ShowHelpOverlays()
 //======================================================================================================================
 PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 {
-    // prevent backlight turning off, whatever the device is set to
-    s3eDeviceBacklightOn();
     s3eKeyboardUpdate();
-    s3ePointerUpdate();
     UpdateJoystick(mGameSettings.mOptions.mJoystickID);
 
     float deltaTime = deltaTimeMs * 0.001f;

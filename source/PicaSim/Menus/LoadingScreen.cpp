@@ -189,7 +189,6 @@ void LoadingScreen::Update(const char* moduleName)
     // Render the screen
     Render();
 
-    s3eDeviceBacklightOn();
     PollEvents();
 }
 
