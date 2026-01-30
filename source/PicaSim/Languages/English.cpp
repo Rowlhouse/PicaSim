@@ -24,8 +24,6 @@
 
 void InitStringsEN(const char** txt)
 {
-  txt[PS_LANGUAGE_EN] = "English";
-  txt[PS_LANGUAGE_NATIVE] = "English";
   txt[PS_OK] = "OK";
   txt[PS_ENABLE] = "Enable";
   txt[PS_REMOVE] = "Remove";
@@ -35,28 +33,14 @@ void InitStringsEN(const char** txt)
   txt[PS_YES] = "Yes";
   txt[PS_INVERT] = "Invert";
   txt[PS_AUTO] = "Auto";
-  txt[PS_FREEFLY] = "Free-Fly";
-  txt[PS_RACE] = "Challenge";
-  txt[PS_LIMBO] = "Limbo";
-  txt[PS_DONATEMSG] = "Full Version";
-  txt[PS_INTRIALMODE] = "In trial mode - purchase full version to access all planes and sceneries.";
   txt[PS_GAMEPADDETECTED] = "Gamepad detected. Enable in the settings to use it.";
   txt[PS_WHATSNEW] = "Welcome to PicaSim!";
-  txt[PS_WHATSNEWTEXT] = "Here's what's new in this version (or recent versions):\n\n"
-"• Add the Quark glider.\n"
-"• Update various links etc in plane descriptions.\n"
-"• Various tweaks/bug fixes.\n"
-"\nPlease contact picasimulator@gmail.com with bug reports and questions.\n";
-  txt[PS_ONERACE] = "This free simulator contains just one challenge. Please consider purchasing the full version "
-    "which includes more challenges, planes, sceneries and will support past and future development of PicaSim.";
-  txt[PS_FULLVERSION] = "The full version contains all the planes/sceneries etc - the small purchase price will help future development of PicaSim.";
   txt[PS_SELECTAEROPLANE] = "Plane";
   txt[PS_SELECTSCENERY] = "Scenery";
   txt[PS_SELECTOPTIONS] = "Please select a suitable set of default options";
   txt[PS_SELECTSCENARIO] = "Scenario";
   txt[PS_USEDEFAULT] = "Use default";
   txt[PS_USEDEFAULTPREVIOUS] = "Use default/previous";
-  txt[PS_INVALIDRACE] = "Invalid challenge for the free version of PicaSim";
   txt[PS_BACK] = "Back";
   txt[PS_OPTIONS1] = "Options 1";
   txt[PS_OPTIONS2] = "Options 2";
@@ -76,20 +60,8 @@ void InitStringsEN(const char** txt)
   txt[PS_CONFIRMCLEARALLSETTINGS] = "This will clear all saved settings and exit PicaSim - are you sure?";
   txt[PS_SIMPLE] = "Simple";
   txt[PS_FILENAME] = "Filename:";
-  txt[PS_INFULLVERSION] = "In full version";
-  txt[PS_PURCHASE] = "Purchase";
-  txt[PS_PURCHASESUCCESSFUL] = "Purchase successful - thanks!";
-  txt[PS_PURCHASECANCELLED] = "Purchase cancelled.";
-  txt[PS_PURCHASEERROR] = "Purchase unsuccessful due to an unknown error.";
-  txt[PS_PURCHASEALREADY] = "Purchase unsuccessful since the product was already purchased!";
-  txt[PS_PURCHASEFROMSTORE] = "Purchase from the Windows Store?";
-  txt[PS_NOTNOW] = "Not now";
-  txt[PS_CANCEL] = "Cancel";
-  txt[PS_TRIALOVER] = "Trial period expired. Please purchase the full version or use one of the free planes and sceneries.";
-  txt[PS_SELECTLANGUAGE] = "Select language";
   txt[PS_LANGUAGESETTINGS] = "Language settings";
   txt[PS_CURRENTLANGUAGE] = "Current language";
-  txt[PS_INFREEFLYMODE] = "In free-fly mode";
   txt[PS_CAMERASETTINGS] = "Camera settings";
   txt[PS_ZOOMVIEW] = "Zoom view";
   txt[PS_PLANEONLYINZOOMVIEW] = "Draw plane alone in zoom view";
@@ -187,15 +159,6 @@ void InitStringsEN(const char** txt)
   txt[PS_GRAPHWINDSPEED] = "Show wind speed (yellow)";
   txt[PS_GRAPHWINDVERTICALVELOCITY] = "Show wind vertical velocity (purple)";
   txt[PS_STALLMARKERS] = "Stall markers";
-  txt[PS_AEROFOILPLOT] = "Plot aerofoil data";
-  txt[PS_AEROFOILINFO] = "Aerofoil index";
-  txt[PS_AEROFOILRANGE] = "Angle range";
-  txt[PS_AEROFOILCLMAX] = "Max CL";
-  txt[PS_AEROFOILCDMAX] = "Max CD";
-  txt[PS_AEROFOILCMMAX] = "Max CM";
-  txt[PS_AEROFOILLDMAX] = "Max L/D";
-  txt[PS_AEROFOILPLOTREFERENCE] = "Plot reference aerofoil";
-  txt[PS_AEROFOILPOLAR] = "Plot polar diagram";
   txt[PS_DRAWAEROPLANECOM] = "Draw aeroplane CoM";
   txt[PS_GRAPHFPS] = "Show FPS";
   txt[PS_NUMWINDSTREAMERS] = "Num wind streamers";
@@ -214,7 +177,6 @@ void InitStringsEN(const char** txt)
   txt[PS_BLOB] = "Blob";
   txt[PS_PROJECTED] = "Projected";
   txt[PS_AEROPLANERENDER] = "Aeroplane render";
-  txt[PS_DRAWSHADOWS] = "Draw shadows";
   txt[PS_USE16BIT] = "Use 16 bit textures to reduce memory (requires restart)";
   txt[PS_SEPARATESPECULAR] = "Separate specular calculation";
   txt[PS_AMBIENTLIGHTINGSCALE] = "Ambient lighting scale";
@@ -226,13 +188,6 @@ void InitStringsEN(const char** txt)
   txt[PS_ANTIALIASING_4X] = "4x";
   txt[PS_ANTIALIASING_8X] = "8x";
   txt[PS_REQUIRESRESTART] = "Requires restart";
-  txt[PS_REQUIRESVRRESTART] = "Requires VR restart";
-  txt[PS_NEARCLIPDISTANCE] = "Near clip distance";
-  txt[PS_FARCLIPDISTANCE] = "Far clip distance";
-  txt[PS_SHADINGMETHOD] = "Shading method";
-  txt[PS_USEMULTILIGHTS] = "Use multiple lights";
-  txt[PS_ENABLESMOKE] = "Enable smoke";
-  txt[PS_SMOKEQUALITY] = "Smoke quality";
   txt[PS_MISCSETTINGS] = "Misc settings";
   txt[PS_USEBACKBUTTON] = "Use back button to exit";
   txt[PS_DRAWLAUNCHMARKER] = "Draw launch marker";
@@ -272,7 +227,6 @@ void InitStringsEN(const char** txt)
   txt[PS_RACEVIBRATIONAMOUNT] = "Vibration amount";
   txt[PS_RACEBEEPVOLUME] = "Beep volume";
   txt[PS_LIMBODIFFICULTY] = "Limbo difficulty";
-  txt[PS_ENABLESCORELOOP] = "Enable Scoreloop";
   txt[PS_DELETELOCALHIGHSCORES] = "Delete local high scores";
   txt[PS_GENERALSETTINGS] = "General settings";
   txt[PS_COLOURSCHEME] = "Colour scheme";
@@ -316,13 +270,10 @@ void InitStringsEN(const char** txt)
   txt[PS_UNDERCARRIAGE] = "Undercarriage";
   txt[PS_PROPELLER] = "Propeller";
   txt[PS_BELLYHOOKOFFSETFORWARD] = "Belly hook offset forwards";
-  txt[PS_BELLYHOOKOFFSETLEFT] = "Belly hook offset left";
   txt[PS_BELLYHOOKOFFSETUP] = "Belly hook offset up";
   txt[PS_NOSEHOOKOFFSETFORWARD] = "Nose tow hook offset forwards";
-  txt[PS_NOSEHOOKOFFSETLEFT] = "Nose tow hook offset left";
   txt[PS_NOSEHOOKOFFSETUP] = "Nose tow hook offset up";
   txt[PS_TAILHOOKOFFSETFORWARD] = "Tail tow hook offset forwards";
-  txt[PS_TAILHOOKOFFSETLEFT] = "Tail tow hook offset left";
   txt[PS_TAILHOOKOFFSETUP] = "Tail tow hook offset up";
   txt[PS_MAXBUNGEELENGTH] = "Max bungee length";
   txt[PS_MAXBUNGEEACCEL] = "Max bungee acceleration";
@@ -462,7 +413,6 @@ void InitStringsEN(const char** txt)
   txt[PS_EDGEHEIGHT] = "Edge height";
   txt[PS_UPWARDSBIAS] = "Upwards bias";
   txt[PS_FILTERITERATIONS] = "Filter iterations";
-  txt[PS_PLAINSETTINGS] = "Plain/water settings";
   txt[PS_DRAWPLAIN] = "Draw plain/water";
   txt[PS_COLLIDEWITHPLAIN] = "Collide with plain/water";
   txt[PS_PLAININNERRADIUS] = "Plain inner radius";
@@ -478,7 +428,6 @@ void InitStringsEN(const char** txt)
   txt[PS_HORIZONTALVARIATION] = "Horizontal variation";
   txt[PS_HORIZONTALWAVELENGTH] = "Horizontal wavelength";
   txt[PS_VERTICALVARIATION] = "Vertical variation fraction";
-  txt[PS_PANORAMASETTINGS] = "Panorama settings";
   txt[PS_PANORAMA3DSETTINGS] = "Panorama 3D settings";
   txt[PS_HEIGHTFIELDSETTINGS] = "Heightfield settings";
   txt[PS_MINHEIGHT] = "Min height";
@@ -496,16 +445,11 @@ void InitStringsEN(const char** txt)
   txt[PS_CROSS] = "Cross";
   txt[PS_BOX] = "Box";
   txt[PS_CROSSANDBOX] = "Cross & Box";
-  txt[PS_CONFIGURATION] = "Configuration";
   txt[PS_STYLE] = "Style";
   txt[PS_CONTROLLERMODE] = "Controller mode";
   txt[PS_TREATTHROTTLEASBRAKES] = "Treat throttle stick as brakes";
   txt[PS_RESETALTSETTINGONLAUNCH] = "Reset configuration on launch";
   txt[PS_NUMCONFIGURATIONS] = "Number of configurations";
-  txt[PS_RIGHTSTICKHORIZONTAL] = "Right stick horizontal";
-  txt[PS_RIGHTSTICKVERTICAL] = "Right stick vertical";
-  txt[PS_LEFTSTICKHORIZONTAL] = "Left stick horizontal";
-  txt[PS_LEFTSTICKVERTICAL] = "Left stick vertical";
   txt[PS_TILTHORIZONTAL] = "Tilt horizontal";
   txt[PS_TILTVERTICAL] = "Tilt vertical";
   txt[PS_ARROWSHORIZONTAL] = "Arrows horizontal";
@@ -587,7 +531,6 @@ void InitStringsEN(const char** txt)
   txt[PS_ADJUSTFORCIRCULARSTICKMOVEMENT] = "Adjust for circular stick movement";
   txt[PS_EXTERNALJOYSTICKSETTINGS] = "External joystick settings";
   txt[PS_JOYSTICKLABEL] = "Joystick %d: Input = %5.2f Output = %5.2f";
-  txt[PS_JOYSTICKABUTTONLABEL] = "Joystick %d: Input = %5.2f Output = %d";
   txt[PS_JOYSTICKBUTTONLABEL] = "Joystick button %d: Input = %5.2f Output = %d";
   txt[PS_SCALEPOSITIVE] = "Input +ve scale";
   txt[PS_SCALENEGATIVE] = "Input -ve scale";
@@ -645,27 +588,6 @@ void InitStringsEN(const char** txt)
   txt[PS_CREDITS] = "Credits";
   txt[PS_LICENCE] = "Licence";
   txt[PS_VERSIONS] = "Versions";
-  txt[PS_ABOUTFREETEXT] = "PicaSim is a simulator for radio controlled aircraft. At the moment it is designed to help you learn "
-"to fly and improve your skills at slope soaring - flying gliders using the lift from the wind as it "
-"flows up and over hills.\n"
-"\n"
-"If you've never flown a model aeroplane before, you're likely to crash the first few times (or more!) "
-"that you try to fly. That's OK - it's better to crash in the simulator than with an expensive model that "
-"you've spent a long time building or setting up.\n"
-"\n"
-"PicaSim can help you learn three skills:\n"
-"\n"
-"1. Using the transmitter sticks to control the aircraft.\n"
-"2. Evaluating where to find lift at slope soaring sites.\n"
-"3. Controlling the aircraft even when it is flying directly towards you.\n"
-"\n"
-"In addition, more experienced users can use PicaSim to practise aerobatics, or "
-"just enjoy flying when there's no wind!\n"
-"\n"
-"I have lots of plans to extend and improve PicaSim - to include powered aircraft, more models for "
-"the planes, networked flying, AI controlled aircraft etc. If you would like to support/encourage me "
-"in this, or just want to say thanks for the current version, purchasing the full version "
-"would be hugely appreciated!\n";
   txt[PS_ABOUTPAIDTEXT] = "PicaSim is a simulator for radio controlled aircraft. At the moment it is designed to help you learn "
 "to fly and improve your skills at slope soaring - flying gliders using the lift from the wind as it "
 "flows up and over hills.\n"
@@ -849,9 +771,6 @@ void InitStringsEN(const char** txt)
   txt[PS_TIPS14] = "Like/follow PicaSim on Facebook or Google+ to get notified of updates and plans";
   txt[PS_TIPS15] = "The full version of PicaSim contains additional planes, sceneries and challenges";
   txt[PS_TIPS16] = "Add AI controlled planes in Settings»AI Controllers. Limit the maximum number in Settings»Options 2";
-  txt[PS_TIPS17] = "You can enable elevator trim in Settings»Options 1";
-  txt[PS_TIPS18] = "Ask questions and get news about PicaSim on Facebook, Google+ or the forum";
-  txt[PS_ALLOWCHOICE] = "Allow choice of plane/scenery next time";
   txt[PS_LOADING] = "Loading...";
   txt[PS_RACETIP] = "%s\n\nThe white arrow points to the next checkpoint.";
   txt[PS_LIMBOTIP] = "%s\n\nAdjust the difficulty/score multipler in Settings»Options 2";
@@ -862,56 +781,9 @@ void InitStringsEN(const char** txt)
   txt[PS_TRAINERPOWEREDTIP] = "Press the play button to launch, and the pause/rewind button to reset. "
     "Use the controls in the lower right corner to control elevator and ailerons. The controls on the left are for throttle and rudder.\n"
     "Use the help button above for more info, or the help/website back in the main menu for hints on how to fly if you find it hard to keep airborne.";
-  txt[PS_MOUSETOCONTINUE] = "Mouse or any key to continue";
-  txt[PS_TAPTOCONTINUE] = "Tap to continue";
-  txt[PS_ALLRESULTS] = "All results";
-  txt[PS_LAST24HOURS] = "Last 24 hours";
-  txt[PS_LAST7DAYS] = "Last 7 days";
-  txt[PS_LAST30DAYS] = "Last 30 days";
-  txt[PS_TIMEPERIODFORRESULTS] = "Time period for results";
-  txt[PS_SCORELINERACE] = "  Score = %.1f Time = %.2f";
-  txt[PS_SCORELINELIMBO] = "  Score = %.1f Count = %d";
-  txt[PS_NOSCORES] = "No scores yet";
-  txt[PS_CURRENTSCORE] = "Current Score = %.1f Time = %.2f";
-  txt[PS_NOSCORESINTIME] = "No scores in the time period";
-  txt[PS_LEADERBOARDFAILED] = "Leaderboard failed and will retry - check for an internet connection";
-  txt[PS_LEADERBOARDFAILEDRETRYING] = "Leaderboard failed and will retry...";
-  txt[PS_RETRIEVINGLEADERBOARD] = "Retrieving leaderboard...";
-  txt[PS_SCORESUBMISSIONFAILED] = "Score submission failed and will retry - check for an internet connection";
-  txt[PS_SCORESUBMISSIONFAILEDRETRYING] = "Score submission failed and will retry...";
-  txt[PS_RESTARTAFTERCALIBRATION] = "You may need to restart PicaSim after joystick calibration";
-  txt[PS_SETUSERNAME] = "Set username";
-  txt[PS_SETEMAIL] = "Set email";
-  txt[PS_USERFAILED] = "User request failed and will retry - check for an internet connection";
-  txt[PS_USERFAILEDRETRYING] = "User request failed and will retry...";
-  txt[PS_PROFILE] = "Profile";
-  txt[PS_USERNAME] = "Username";
-  txt[PS_EMAIL] = "Email";
-  txt[PS_LEADERBOARDS] = "Leaderboards";
-  txt[PS_UPLOADINGSCORE] = "Uploading score...";
-  txt[PS_REQUESTINGUSER] = "Requesting user details...";
   txt[PS_SELECTRACE] = "Select challenge";
-  txt[PS_SELECTRACETOSEE] = "Select a race to see the leaderboard";
-  txt[PS_EDIT] = "Edit";
-  txt[PS_PROFILESTATUS] = "Profile status";
-  txt[PS_SCORELOOPUSERNAME] = "Scoreloop username";
-  txt[PS_EMAILADDRESS] = "Email address";
-  txt[PS_OPTIONALEMAIL] = "Optional - links Scoreloop usernames across devices";
-  txt[PS_FETCHINGEMAIL] = "Fetching email";
   txt[PS_PREV] = "Prev";
-  txt[PS_TOP] = "Top";
-  txt[PS_ME] = "Me";
   txt[PS_NEXT] = "Next";
-  txt[PS_UPDATINGLEADERBOARD] = "Updating leaderboard...";
-  txt[PS_NOMORESCORES] = "No more scores";
-  txt[PS_SELECTARACE] = "Select a challenge";
-  txt[PS_UPLOADINGDATA] = "Uploading data...";
-  txt[PS_FAILED] = "Failed: ";
-  txt[PS_EMAILTAKEN] = "Email already taken. ";
-  txt[PS_EMAILINVALID] = "Email format is invalid. ";
-  txt[PS_USERTAKEN] = "Username already taken. ";
-  txt[PS_USERINVALID] = "Username format is invalid. ";
-  txt[PS_USERSHORT] = "Username is too short. ";
   txt[PS_QUITANDHELP] = "Quit and help";
   txt[PS_CAMERAANDSETTINGS] = "Camera and settings";
   txt[PS_RESETANDPLAY] = "Reset and play/pause";
