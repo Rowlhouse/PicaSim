@@ -743,6 +743,18 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         glDisable(GL_FOG);
     }
 
+    // DEBUG: Force reset critical GL state before VR rendering
+    glDepthMask(GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glDepthRange(0.0, 1.0);
+    glDisable(GL_SCISSOR_TEST);
+    GLenum preErr = glGetError();
+    if (preErr != GL_NO_ERROR)
+    {
+        TRACE_FILE_IF(1) TRACE("VR pre-render GL error: 0x%x", preErr);
+    }
+
     // Render each eye
     for (int eye = 0; eye < VR_EYE_COUNT; ++eye)
     {
@@ -806,9 +818,24 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
 
         // Bind the render FBO (either MSAA or swapchain)
         glBindFramebuffer(GL_FRAMEBUFFER, renderFBO);
+
+        // DEBUG: Check FBO completeness
+        GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
+        {
+            TRACE_FILE_IF(1) TRACE("VR FBO incomplete for eye %d: 0x%x", eye, fboStatus);
+        }
+
         glViewport(0, 0, eyeWidth, eyeHeight);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // DEBUG: Check for errors after clear
+        GLenum clearErr = glGetError();
+        if (clearErr != GL_NO_ERROR)
+        {
+            TRACE_FILE_IF(1) TRACE("VR clear GL error for eye %d: 0x%x", eye, clearErr);
+        }
 
         // Create display config for this eye
         DisplayConfig displayConfig;
@@ -824,6 +851,12 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         {
             Viewport* viewport = *iViewport;
             if (!viewport->GetEnabled())
+                continue;
+
+            // Skip zoom viewport in VR - it's only for the desktop view
+            // CAMERA_ZOOM = 3 (defined in PicaSim.h)
+            const int CAMERA_ZOOM_ID = 3;
+            if ((size_t)viewport->GetCamera()->GetUserData() == CAMERA_ZOOM_ID)
                 continue;
 
             esMatrixMode(GL_TEXTURE);
