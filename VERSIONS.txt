@@ -1,3 +1,6 @@
+Version 1.1.0
+- VR support (tested on Oculus Rift)
+
 Version 1.0.1
 - Fix logging location - will be %APPDATA%/Rowlhouse/PicaSim/Logs/
 - Add a PlayStation controller mapping (thanks 8vD!)

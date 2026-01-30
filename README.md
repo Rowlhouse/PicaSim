@@ -37,15 +37,22 @@ Within this directory:
 | Right Shift | Cycle controller rates |
 | +/= | Zoom in |
 | - | Zoom out |
+| U | Toggle UI visibility |
 | Z | Toggle zoom view |
 | S | Save screenshot |
 | L | Reload aeroplane (re-reads settings) |
 | Back | Return to menu (or relaunch, depending on settings) |
 
+### VR controls
+| Key | Action |
+|-----|--------|
+| V | Calibrate headset look direction (press when looking forwards) |
+| B / N | Rotate the default look direction |
+| H | Reset the default look direction |
+
 ### Debug Keys
 | Key | Action |
 |-----|--------|
-| U | Toggle UI visibility |
 | K | Cycle render preference |
 | G | Cycle centre of mass display |
 | W | Toggle terrain wireframe |
