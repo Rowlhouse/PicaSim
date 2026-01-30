@@ -600,6 +600,31 @@ void InitStringsPT(const char** txt)
     "Press the play button to launch, and the pause/rewind button to reset. "
     "Use the controls in the lower right corner to control elevator and ailerons. The controls on the left are for throttle and rudder.\n"
     "Use the help button above for more info, or the help/website back in the main menu for hints on how to fly if you find it hard to keep airborne.";
+
+  // VR settings (English placeholders)
+  txt[PS_VRHEADSET] = "VR Headset";
+  txt[PS_ENABLEVRMODE] = "Enable VR Mode";
+  txt[PS_HEADSET] = "Headset";
+  txt[PS_VRWORLDSCALE] = "World Scale";
+  txt[PS_NOTHING] = "Nothing";
+  txt[PS_VRVIEW] = "VR View";
+  txt[PS_NORMALVIEW] = "Normal View";
+  txt[PS_VRDESKTOP] = "VR Desktop";
+  txt[PS_VRANTIALIASING] = "VR Anti-Aliasing";
+  txt[PS_NONEUSEDEFAULT] = "None (use default)";
+  txt[PS_VRAUDIO] = "VR Audio";
+  txt[PS_STATUS] = "Status";
+  txt[PS_VRNOTAVAILABLE] = "VR not available - no headset detected";
+
+  // Additional settings strings (English placeholders)
+  txt[PS_ORIENTATION] = "Orientation";
+  txt[PS_SMOKESOURCE] = "Smoke source %d";
+  txt[PS_NAME] = "Name";
+  txt[PS_BUTTONMAPPINGS] = "Button Mappings";
+
+  // File menu strings (English placeholders)
+  txt[PS_USERFILES] = "User files:";
+  txt[PS_NOFILESFOUND] = "No files found";
 }
 
 

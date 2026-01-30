@@ -201,7 +201,8 @@ void StartMenu::Render()
 #if defined(PICASIM_WINDOWS)
     if (!mGameSettings.mJoystickSettings.mEnableJoystick && JoystickAvailable())
     {
-        UIHelpers::DrawCenteredText("Gamepad detected. Enable in settings to use it.",
+        Language language = mGameSettings.mOptions.mLanguage;
+        UIHelpers::DrawCenteredText(TXT(PS_GAMEPADDETECTED),
                                      0.5f, UIHelpers::Colors::Yellow);
     }
 #endif

@@ -509,14 +509,14 @@ void SettingsMenu::RenderOptions1Tab()
 #ifdef PICASIM_VR_SUPPORT
     // VR Headset settings
     {
-        SettingsWidgets::SectionHeader("VR Headset");
+        SettingsWidgets::SectionHeader(TXT(PS_VRHEADSET));
         SettingsWidgets::BeginSettingsBlock();
         {
             if (VRManager::IsAvailable())
             {
                 // VR enable checkbox
                 bool wasEnabled = options.mEnableVR;
-                SettingsWidgets::Checkbox("Enable VR Mode", options.mEnableVR);
+                SettingsWidgets::Checkbox(TXT(PS_ENABLEVRMODE), options.mEnableVR);
 
                 // Handle enable/disable
                 if (options.mEnableVR != wasEnabled)
@@ -543,14 +543,14 @@ void SettingsMenu::RenderOptions1Tab()
                     snprintf(infoStr, sizeof(infoStr), "%s - %s",
                         VRManager::GetInstance().GetRuntimeName(),
                         VRManager::GetInstance().GetSystemName());
-                    SettingsWidgets::InfoLabel("Headset", infoStr);
+                    SettingsWidgets::InfoLabel(TXT(PS_HEADSET), infoStr);
 
-                    SettingsWidgets::SliderFloat("World Scale", options.mVRWorldScale, 0.5f, 2.0f, "%.2f");
+                    SettingsWidgets::SliderFloat(TXT(PS_VRWORLDSCALE), options.mVRWorldScale, 0.5f, 2.0f, "%.2f");
 
                     // VR Desktop window display mode
-                    static const char* vrDesktopDescs[] = { "Nothing", "VR View", "Normal View" };
+                    static const char* vrDesktopDescs[] = { TXT(PS_NOTHING), TXT(PS_VRVIEW), TXT(PS_NORMALVIEW) };
                     int vrDesktopIndex = (int)options.mVRDesktopMode;
-                    if (SettingsWidgets::Combo("VR Desktop", vrDesktopIndex, vrDesktopDescs, 3))
+                    if (SettingsWidgets::Combo(TXT(PS_VRDESKTOP), vrDesktopIndex, vrDesktopDescs, 3))
                         options.mVRDesktopMode = (Options::VRDesktopMode)vrDesktopIndex;
 
                     // VR Anti-aliasing
@@ -565,7 +565,7 @@ void SettingsMenu::RenderOptions1Tab()
                             break;
                         }
                     }
-                    if (SettingsWidgets::Combo("VR Anti-Aliasing", vrMsaaIndex, vrMsaaDescs, 4))
+                    if (SettingsWidgets::Combo(TXT(PS_VRANTIALIASING), vrMsaaIndex, vrMsaaDescs, 4))
                     {
                         options.mVRMSAASamples = vrMsaaValues[vrMsaaIndex];
                         // Restart VR to apply new MSAA setting
@@ -592,7 +592,7 @@ void SettingsMenu::RenderOptions1Tab()
 
                         // Build list with "None" option first
                         std::vector<std::string> deviceNames;
-                        deviceNames.push_back("None (use default)");
+                        deviceNames.push_back(TXT(PS_NONEUSEDEFAULT));
                         for (const auto& dev : audioDevices)
                             deviceNames.push_back(dev);
 
@@ -607,7 +607,7 @@ void SettingsMenu::RenderOptions1Tab()
                             }
                         }
 
-                        if (SettingsWidgets::Combo("VR Audio", audioDeviceIndex, deviceNames))
+                        if (SettingsWidgets::Combo(TXT(PS_VRAUDIO), audioDeviceIndex, deviceNames))
                         {
                             if (audioDeviceIndex == 0)
                                 options.mVRAudioDevice.clear();
@@ -621,7 +621,7 @@ void SettingsMenu::RenderOptions1Tab()
             }
             else
             {
-                SettingsWidgets::InfoLabel("Status", "VR not available - no headset detected");
+                SettingsWidgets::InfoLabel(TXT(PS_STATUS), TXT(PS_VRNOTAVAILABLE));
             }
         }
         SettingsWidgets::EndSettingsBlock();
@@ -1236,7 +1236,7 @@ void SettingsMenu::RenderAeroplaneTab()
     {
         AeroplaneSettings::SmokeSource& smoke = as.mSmokeSources[i];
         char sectionLabel[64];
-        sprintf(sectionLabel, "Smoke source %d", i + 1);
+        sprintf(sectionLabel, TXT(PS_SMOKESOURCE), i + 1);
 
         // Use smoke color for section header background
         SettingsWidgets::SectionHeaderColored(sectionLabel, smoke.mColour.x, smoke.mColour.y, smoke.mColour.z);
@@ -1361,7 +1361,7 @@ void SettingsMenu::RenderAeroplaneTab()
                         float yaw = atan2f(fwd.y, fwd.x) * 180.0f / 3.14159265f;
                         float roll = atan2f(tm.RowY().z, up.z) * 180.0f / 3.14159265f;
                         snprintf(buf, sizeof(buf), "%.1f, %.1f, %.1f deg", yaw, pitch, roll);
-                        SettingsWidgets::InfoLabel("Orientation", buf);
+                        SettingsWidgets::InfoLabel(TXT(PS_ORIENTATION), buf);
                     }
                 }
                 SettingsWidgets::EndSettingsBlock();
@@ -2192,7 +2192,7 @@ void SettingsMenu::RenderJoystickTab()
         if (hasJoystick)
         {
             SettingsWidgets::InfoLabel(TXT(PS_JOYSTICKINFO), "");
-            SettingsWidgets::InfoLabel("Name", joystick.mName);
+            SettingsWidgets::InfoLabel(TXT(PS_NAME), joystick.mName);
         }
         else
         {
@@ -2310,7 +2310,7 @@ void SettingsMenu::RenderJoystickTab()
     buttonControlDescs[JoystickSettings::JoystickButtonOverride::CONTROL_BUTTON_BUTTON1TOGGLE] = TXT(PS_BUTTON1TOGGLE);
     buttonControlDescs[JoystickSettings::JoystickButtonOverride::CONTROL_BUTTON_BUTTON2TOGGLE] = TXT(PS_BUTTON2TOGGLE);
 
-    SettingsWidgets::SectionHeader("Button Mappings");
+    SettingsWidgets::SectionHeader(TXT(PS_BUTTONMAPPINGS));
     for (int i = 0; i < (int)JoystickSettings::JOYSTICK_NUM_BUTTONS; ++i)
     {
         JoystickSettings::JoystickButtonOverride& j = js.mJoystickButtonOverrides[i];

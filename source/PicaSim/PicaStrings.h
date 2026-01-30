@@ -730,6 +730,31 @@ enum PicaString
     PS_AILERONSANDELEVATORTEXT,
     PS_FLYINGINFOTEXT,
 
+// VR settings
+    PS_VRHEADSET,
+    PS_ENABLEVRMODE,
+    PS_HEADSET,
+    PS_VRWORLDSCALE,
+    PS_NOTHING,
+    PS_VRVIEW,
+    PS_NORMALVIEW,
+    PS_VRDESKTOP,
+    PS_VRANTIALIASING,
+    PS_NONEUSEDEFAULT,
+    PS_VRAUDIO,
+    PS_STATUS,
+    PS_VRNOTAVAILABLE,
+
+// Additional settings strings
+    PS_ORIENTATION,
+    PS_SMOKESOURCE,
+    PS_NAME,
+    PS_BUTTONMAPPINGS,
+
+// File menu strings
+    PS_USERFILES,
+    PS_NOFILESFOUND,
+
 // That's all
     PS_NUM_STRINGS,
 };

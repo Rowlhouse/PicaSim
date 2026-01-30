@@ -503,7 +503,7 @@ void FileMenu::Render()
         if (item.isFromUserPath && !userFilesLabelDrawn)
         {
             userFilesLabelDrawn = true;
-            ImGui::TextUnformatted("User files:");
+            ImGui::TextUnformatted(TXT(PS_USERFILES));
         }
 
         ImGui::PushID((int)i);
@@ -578,8 +578,8 @@ void FileMenu::Render()
     // Show "No files found" in DELETE mode if no user files
     if (mMode == DELETE_MODE && !hasUserFiles)
     {
-        ImGui::TextUnformatted("User files:");
-        ImGui::TextUnformatted("No files found");
+        ImGui::TextUnformatted(TXT(PS_USERFILES));
+        ImGui::TextUnformatted(TXT(PS_NOFILESFOUND));
     }
 
     ImGui::EndChild();

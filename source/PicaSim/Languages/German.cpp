@@ -517,5 +517,30 @@ void InitStringsDE(const char** txt)
    "Druecke Start um loszufliegen, und Pause oder Rueckstellknopf um neuzustarten. "
    "Benutze die Kontrollen in der unteren rechten Ecke um das Hoehen- und Steuerruder zu beherrschen. Die Kontrollen links sind fuer das Gas/Seitenruder.\n"
    "Benutze den Hilfsknopf fuer weitere Informationen, oder die Hilfsseite/website im Hauptmenue fuer Hinweise wie man fliegt, falls du es schwierig findest, in der Luft zu bleiben.";
+
+  // VR settings (English placeholders)
+  txt[PS_VRHEADSET] = "VR Headset";
+  txt[PS_ENABLEVRMODE] = "Enable VR Mode";
+  txt[PS_HEADSET] = "Headset";
+  txt[PS_VRWORLDSCALE] = "World Scale";
+  txt[PS_NOTHING] = "Nothing";
+  txt[PS_VRVIEW] = "VR View";
+  txt[PS_NORMALVIEW] = "Normal View";
+  txt[PS_VRDESKTOP] = "VR Desktop";
+  txt[PS_VRANTIALIASING] = "VR Anti-Aliasing";
+  txt[PS_NONEUSEDEFAULT] = "None (use default)";
+  txt[PS_VRAUDIO] = "VR Audio";
+  txt[PS_STATUS] = "Status";
+  txt[PS_VRNOTAVAILABLE] = "VR not available - no headset detected";
+
+  // Additional settings strings (English placeholders)
+  txt[PS_ORIENTATION] = "Orientation";
+  txt[PS_SMOKESOURCE] = "Smoke source %d";
+  txt[PS_NAME] = "Name";
+  txt[PS_BUTTONMAPPINGS] = "Button Mappings";
+
+  // File menu strings (English placeholders)
+  txt[PS_USERFILES] = "User files:";
+  txt[PS_NOFILESFOUND] = "No files found";
 }
 
