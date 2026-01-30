@@ -33,7 +33,8 @@
       "Bash([ -s \"$f\" ])",
       "Bash(then sed -i 's/m_HWID/mHWID/g' \"$f\")",
       "Bash(xargs -I{} sh -c 'awk \"\"length > 180 {print length\\\\\"\":\\\\\"\"FILENAME\\\\\"\":\\\\\"\"NR}\"\" \"\"{}\"\"')",
-      "Bash(sort:*)"
+      "Bash(sort:*)",
+      "Bash(comm:*)"
     ]
   }
 }
