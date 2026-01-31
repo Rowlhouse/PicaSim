@@ -15,7 +15,8 @@
 Skybox::Skybox() :
     mOffset(0.0f),
     mExtendBelowHorizon(1.0f),
-    mInitialised(false)
+    mInitialised(false),
+    mVRParallaxEnabled(false)
 {}
 
 //======================================================================================================================
@@ -297,6 +298,141 @@ void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
         glDisableVertexAttribArray(skyboxShader->a_position);
         glDisableVertexAttribArray(skyboxShader->a_texCoord);
     }
+
+    glFrontFace(GL_CCW);
+
+    esPopMatrix();
+}
+
+//======================================================================================================================
+void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader) const
+{
+    float fNumPerSide = sqrtf((float) mTextures[side].size());
+    int numPerSide = (int) (fNumPerSide + 0.5f);
+
+    float imageScale = 1.0f / numPerSide;
+    esScalef(1.0f, imageScale, imageScale);
+
+    size_t index = 0;
+    for (int j = 0 ; j != numPerSide ; ++j)
+    {
+        for (int i = 0 ; i != numPerSide ; ++i)
+        {
+            if (index < mTextures[side].size())
+            {
+                Texture* texture = mTextures[side][index];
+                if (texture && texture->GetFlags() & Texture::UPLOADED_F)
+                {
+                    // Bind skybox texture to unit 0
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, texture->mHWID);
+
+                    float y = scale * (numPerSide - (i * 2 + 1.0f));
+                    float z = scale * (numPerSide - (j * 2 + 1.0f));
+                    esPushMatrix();
+                    esTranslatef(0.0f, y, z);
+                    esSetModelViewProjectionMatrix(shader->u_mvpMatrix);
+                    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+                    esPopMatrix();
+                }
+            }
+            ++index;
+        }
+    }
+}
+
+//======================================================================================================================
+void Skybox::RenderVRParallax(Viewport* viewport,
+                               float eyeOffset, float ipd,
+                               GLuint depthTexture,
+                               int screenWidth, int screenHeight,
+                               float nearPlane, float farPlane,
+                               float skyDistance, float parallaxScale)
+{
+    TRACE_METHOD_ONLY(2);
+
+    if (!mInitialised)
+        return;
+
+    esPushMatrix();
+
+    glFrontFace(GL_CW);
+
+    DisableDepthMask disableDepthMask;
+    DisableDepthTest disableDepthTest;
+    DisableFog disableFog;
+
+    const SkyboxVRParallaxShader* vrShader = (SkyboxVRParallaxShader*) ShaderManager::GetInstance().GetShader(SHADER_SKYBOX_VR_PARALLAX);
+    vrShader->Use();
+
+    // Set up uniforms
+    glUniform1i(vrShader->u_skyboxTexture, 0);  // Texture unit 0
+    glUniform1i(vrShader->u_depthTexture, 1);   // Texture unit 1
+    glUniform1f(vrShader->u_eyeOffset, eyeOffset);
+    glUniform1f(vrShader->u_ipd, ipd);
+    glUniform1f(vrShader->u_nearPlane, nearPlane);
+    glUniform1f(vrShader->u_farPlane, farPlane);
+    glUniform1f(vrShader->u_skyDistance, skyDistance);
+    glUniform2f(vrShader->u_screenSize, (float)screenWidth, (float)screenHeight);
+    glUniform1f(vrShader->u_parallaxScale, parallaxScale);
+
+    // Bind depth texture to unit 1
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+    Vector3 pos = viewport->GetCamera()->GetPosition();
+    esTranslatef(pos.x, pos.y, pos.z);
+    esRotatef(-mOffset, 0, 0, 1);
+
+    // Set up vertex attributes
+    glVertexAttribPointer(vrShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glEnableVertexAttribArray(vrShader->a_position);
+
+    glVertexAttribPointer(vrShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
+    glEnableVertexAttribArray(vrShader->a_texCoord);
+
+    // Render all sides
+    {
+        esPushMatrix();
+        DrawSideVRParallax(FRONT, vrShader);
+        esPopMatrix();
+    }
+    {
+        esPushMatrix();
+        ROTATE_270_Z;
+        DrawSideVRParallax(RIGHT, vrShader);
+        esPopMatrix();
+    }
+    {
+        esPushMatrix();
+        ROTATE_180_Z;
+        DrawSideVRParallax(BACK, vrShader);
+        esPopMatrix();
+    }
+    {
+        esPushMatrix();
+        ROTATE_90_Z;
+        DrawSideVRParallax(LEFT, vrShader);
+        esPopMatrix();
+    }
+    {
+        esPushMatrix();
+        ROTATE_270_Y;
+        DrawSideVRParallax(UP, vrShader);
+        esPopMatrix();
+    }
+    {
+        esPushMatrix();
+        ROTATE_90_Y;
+        DrawSideVRParallax(DOWN, vrShader);
+        esPopMatrix();
+    }
+
+    glDisableVertexAttribArray(vrShader->a_position);
+    glDisableVertexAttribArray(vrShader->a_texCoord);
+
+    // Reset to texture unit 0
+    glActiveTexture(GL_TEXTURE0);
 
     glFrontFace(GL_CCW);
 

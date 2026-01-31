@@ -1170,7 +1170,14 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         VRFrameInfo vrFrameInfo;
         if (VRManager::GetInstance().GetRuntime())
         {
-            RenderManager::GetInstance().RenderUpdateVR(vrFrameInfo);
+            // Configure VR panorama depth settings
+            RenderManager& rm = RenderManager::GetInstance();
+            rm.SetVRPanoramaDepthEnabled(mGameSettings.mOptions.mVRPanoramaDepth);
+            rm.SetVRSkyDistance(mGameSettings.mOptions.mVRSkyDistance);
+            rm.SetVRParallaxScale(mGameSettings.mOptions.mVRParallaxScale);
+            rm.SetVRSkybox(&Environment::getSkybox());
+
+            rm.RenderUpdateVR(vrFrameInfo);
 
             // Handle desktop window display based on VR desktop mode
             switch (mGameSettings.mOptions.mVRDesktopMode)

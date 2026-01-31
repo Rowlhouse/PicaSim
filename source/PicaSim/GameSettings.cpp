@@ -233,6 +233,9 @@ Options::Options() :
     mVRWorldScale(1.0f),
     mVRDesktopMode(VR_DESKTOP_VR_VIEW),
     mVRMSAASamples(8),
+    mVRPanoramaDepth(false),
+    mVRSkyDistance(5000.0f),
+    mVRParallaxScale(1.0f),
 #endif
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
@@ -373,6 +376,9 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_ATTRIBUTE(mVRDesktopMode);
     WRITE_ATTRIBUTE(mVRMSAASamples);
     element->SetAttribute("mVRAudioDevice", mVRAudioDevice.c_str());
+    WRITE_ATTRIBUTE(mVRPanoramaDepth);
+    WRITE_DOUBLE_ATTRIBUTE(mVRSkyDistance);
+    WRITE_DOUBLE_ATTRIBUTE(mVRParallaxScale);
 #endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
@@ -600,6 +606,9 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
         READ_ENUM_ATTRIBUTE(mVRDesktopMode);
         READ_ATTRIBUTE(mVRMSAASamples);
         READ_ATTRIBUTE(mVRAudioDevice);
+        READ_ATTRIBUTE(mVRPanoramaDepth);
+        READ_ATTRIBUTE(mVRSkyDistance);
+        READ_ATTRIBUTE(mVRParallaxScale);
 #endif
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);

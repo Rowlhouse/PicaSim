@@ -186,6 +186,19 @@ public:
     // Get the view matrix for an eye (inverse of eye pose).
     virtual glm::mat4 GetViewMatrix(VREye eye) const = 0;
 
+    // Get the interpupillary distance (IPD) in meters.
+    // Calculated from the distance between the two eye positions.
+    float GetIPD() const
+    {
+        glm::vec3 leftPos, rightPos;
+        glm::quat leftOri, rightOri;
+        if (GetEyePose(VR_EYE_LEFT, leftPos, leftOri) && GetEyePose(VR_EYE_RIGHT, rightPos, rightOri))
+        {
+            return glm::length(rightPos - leftPos);
+        }
+        return 0.063f; // Default average IPD in meters
+    }
+
     //----------------------------------------------------------------------------------------------------------------------
     // Runtime info
     //----------------------------------------------------------------------------------------------------------------------

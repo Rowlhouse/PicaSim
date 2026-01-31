@@ -813,6 +813,9 @@ void InitStringsEN(const char** txt)
   txt[PS_VRAUDIO] = "VR Audio";
   txt[PS_STATUS] = "Status";
   txt[PS_VRNOTAVAILABLE] = "VR not available - no headset detected";
+  txt[PS_VRPANORAMADEPTH] = "VR Panorama Depth";
+  txt[PS_VRSKYDISTANCE] = "Sky Distance (m)";
+  txt[PS_VRPARALLAXSCALE] = "Parallax Scale";
   txt[PS_ORIENTATION] = "Orientation";
   txt[PS_SMOKESOURCE] = "Smoke source %d";
   txt[PS_NAME] = "Name";

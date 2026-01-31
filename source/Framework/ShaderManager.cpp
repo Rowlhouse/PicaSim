@@ -25,6 +25,7 @@ ShaderManager::ShaderManager(LoadingScreenHelper* loadingScreen)
     mShaders[SHADER_SIMPLE]                        = new SimpleShader();
     mShaders[SHADER_CONTROLLER]                    = new ControllerShader();
     mShaders[SHADER_SKYBOX]                        = new SkyboxShader();
+    mShaders[SHADER_SKYBOX_VR_PARALLAX]            = new SkyboxVRParallaxShader();
     mShaders[SHADER_OVERLAY]                       = new OverlayShader();
     mShaders[SHADER_MODEL]                         = new ModelShader();
     mShaders[SHADER_TEXTUREDMODEL]                 = new TexturedModelShader();

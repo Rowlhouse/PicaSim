@@ -408,6 +408,66 @@ const char smokeFragmentShaderStr[] = GLSL(
     }
 );
 
+// VR Skybox with depth-based parallax for stereoscopic effect
+const char skyboxVRParallaxVertexShaderStr[] = GLSL(
+    precision mediump float;
+    uniform mat4 u_mvpMatrix;
+    attribute vec4 a_position;
+    attribute vec2 a_texCoord;
+    varying vec2 v_texCoord;
+    void main()
+    {
+        gl_Position = u_mvpMatrix * a_position;
+        v_texCoord = a_texCoord;
+    }
+);
+
+const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
+    precision mediump float;
+    varying vec2 v_texCoord;
+    uniform sampler2D u_skyboxTexture;
+    uniform sampler2D u_depthTexture;
+    uniform float u_eyeOffset;      // -1.0 for left eye, +1.0 for right eye
+    uniform float u_ipd;            // interpupillary distance in world units
+    uniform float u_nearPlane;
+    uniform float u_farPlane;
+    uniform float u_skyDistance;    // distance for sky pixels (far plane)
+    uniform vec2 u_screenSize;      // screen width and height
+    uniform float u_parallaxScale;  // scale factor for parallax effect
+
+    void main()
+    {
+        // Sample depth at this fragment's screen position
+        vec2 screenUV = gl_FragCoord.xy / u_screenSize;
+        float depthSample = texture2D(u_depthTexture, screenUV).r;
+
+        // Convert from normalized depth [0,1] to linear depth
+        // Using standard perspective depth formula reversal
+        float linearDepth = u_nearPlane * u_farPlane /
+                            (u_farPlane - depthSample * (u_farPlane - u_nearPlane));
+
+        // For sky pixels (at or near far plane), use configurable sky distance
+        if (depthSample > 0.9999)
+        {
+            linearDepth = u_skyDistance;
+        }
+
+        // Calculate parallax offset
+        // Standard stereo formula: offset = (IPD/2) / depth
+        // u_eyeOffset is -1 or +1 to shift in opposite directions per eye
+        float parallax = (u_ipd * 0.5) / linearDepth * u_eyeOffset * u_parallaxScale;
+
+        // Apply horizontal offset to skybox UV
+        vec2 offsetUV = v_texCoord;
+        offsetUV.x += parallax;
+
+        // Clamp UV to valid range to prevent wrapping artifacts at edges
+        offsetUV.x = clamp(offsetUV.x, 0.0, 1.0);
+
+        gl_FragColor = texture2D(u_skyboxTexture, offsetUV);
+    }
+);
+
 //======================================================================================================================
 void Shader::Init(const char* vertexShaderStr, const char* fragmentShaderStr)
 {
@@ -598,6 +658,24 @@ void SmokeShader::Init()
     a_texCoord       = getAttribLocation(mShaderProgram, "a_texCoord");
     u_colour         = getUniformLocation(mShaderProgram, "u_colour");
     u_texture        = getUniformLocation(mShaderProgram, "u_texture");
+}
+
+//======================================================================================================================
+void SkyboxVRParallaxShader::Init()
+{
+    Shader::Init(skyboxVRParallaxVertexShaderStr, skyboxVRParallaxFragmentShaderStr);
+    u_mvpMatrix      = getUniformLocation(mShaderProgram, "u_mvpMatrix");
+    a_position       = getAttribLocation(mShaderProgram, "a_position");
+    a_texCoord       = getAttribLocation(mShaderProgram, "a_texCoord");
+    u_skyboxTexture  = getUniformLocation(mShaderProgram, "u_skyboxTexture");
+    u_depthTexture   = getUniformLocation(mShaderProgram, "u_depthTexture");
+    u_eyeOffset      = getUniformLocation(mShaderProgram, "u_eyeOffset");
+    u_ipd            = getUniformLocation(mShaderProgram, "u_ipd");
+    u_nearPlane      = getUniformLocation(mShaderProgram, "u_nearPlane");
+    u_farPlane       = getUniformLocation(mShaderProgram, "u_farPlane");
+    u_skyDistance    = getUniformLocation(mShaderProgram, "u_skyDistance");
+    u_screenSize     = getUniformLocation(mShaderProgram, "u_screenSize");
+    u_parallaxScale  = getUniformLocation(mShaderProgram, "u_parallaxScale");
 }
 
 

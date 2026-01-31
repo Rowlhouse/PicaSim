@@ -17,6 +17,7 @@
 #include "../Platform/VRManager.h"
 #include "../Platform/VRRuntime.h"
 #include "Camera.h"  // For VROrientationMode
+#include "Skybox.h"  // For VR parallax skybox
 #include <glm/gtc/matrix_transform.hpp>
 #endif
 
@@ -53,6 +54,13 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
     mShadowSizeScale = 1.3f;
     mEnableStereoscopy = false;
     mStereoSeparation = 0.0f;
+
+#ifdef PICASIM_VR_SUPPORT
+    mVRSkybox = nullptr;
+    mVRPanoramaDepthEnabled = false;
+    mVRSkyDistance = 5000.0f;
+    mVRParallaxScale = 1.0f;
+#endif
 
     float lightBearing   = 0.0f;
     float lightElevation = 0.0f;
@@ -978,7 +986,9 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
 
             SetupLighting();
 
-            // Render all objects (skip frustum culling for VR as it needs recalculation)
+            // Render objects - if VR panorama depth enabled, split into two passes:
+            // Pass 1: Background objects (for depth-based parallax)
+            // Pass 2: Foreground objects (rendered after parallax skybox)
             for (RenderObjects::iterator it = mRenderObjects.begin(); it != mRenderObjects.end(); ++it)
             {
                 RenderObject* renderObject = it->second;
@@ -986,6 +996,16 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                     continue;
 
                 int renderLevel = it->first;
+
+                // Skip skybox when VR panorama depth is enabled - rendered with parallax
+                if (mVRPanoramaDepthEnabled && renderLevel == RENDER_LEVEL_SKYBOX)
+                    continue;
+
+                // Skip visible objects (RENDER_LEVEL_OBJECTS and above) in first pass
+                // They will be rendered after the parallax skybox
+                if (mVRPanoramaDepthEnabled && renderLevel >= RENDER_LEVEL_OBJECTS)
+                    continue;
+
                 renderObject->RenderUpdate(viewport, renderLevel);
             }
         }
@@ -998,6 +1018,154 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
                               0, 0, eyeWidth, eyeHeight,
                               GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+            // Also resolve depth for VR panorama depth feature
+            if (mVRPanoramaDepthEnabled)
+            {
+                glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
+                                  0, 0, eyeWidth, eyeHeight,
+                                  GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+            }
+        }
+
+        // VR Panorama Depth: Render skybox with depth-based parallax
+        // Must happen AFTER MSAA resolve so we read from resolved depth buffer
+        if (mVRPanoramaDepthEnabled && mVRSkybox)
+        {
+            // Bind swapchain FBO (non-MSAA) for depth copy and skybox render
+            glBindFramebuffer(GL_FRAMEBUFFER, swapchainFBO);
+
+            // Create a depth texture by copying the current depth buffer
+            GLuint depthTexture;
+            glGenTextures(1, &depthTexture);
+            glBindTexture(GL_TEXTURE_2D, depthTexture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, eyeWidth, eyeHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+            // Copy depth buffer to texture (now from resolved swapchain FBO)
+            glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 0, 0, eyeWidth, eyeHeight, 0);
+
+            // Calculate eye offset (-1 for left, +1 for right)
+            float eyeOffset = (eye == VR_EYE_LEFT) ? -1.0f : 1.0f;
+
+            // Get IPD from VR runtime
+            float ipd = runtime->GetIPD();
+
+            // Get the first enabled viewport for rendering
+            Viewport* vrViewport = nullptr;
+            for (Viewports::iterator iViewport = mViewports.begin(); iViewport != mViewports.end(); ++iViewport)
+            {
+                if ((*iViewport)->GetEnabled())
+                {
+                    vrViewport = *iViewport;
+                    break;
+                }
+            }
+
+            if (vrViewport)
+            {
+                // Render skybox with depth-based parallax
+                mVRSkybox->RenderVRParallax(
+                    vrViewport,
+                    eyeOffset,
+                    ipd,
+                    depthTexture,
+                    eyeWidth, eyeHeight,
+                    mFrameworkSettings.mNearClipPlaneDistance,
+                    mFrameworkSettings.mFarClipPlaneDistance,
+                    mVRSkyDistance,
+                    mVRParallaxScale
+                );
+            }
+
+            // Clean up depth texture
+            glDeleteTextures(1, &depthTexture);
+
+            // Pass 2: Render foreground objects (visible objects like plane, crates)
+            // These render ON TOP of the parallax skybox
+            for (Viewports::iterator iViewport = mViewports.begin(); iViewport != mViewports.end(); ++iViewport)
+            {
+                Viewport* viewport = *iViewport;
+                if (!viewport->GetEnabled())
+                    continue;
+
+                // Skip zoom viewport in VR
+                const int CAMERA_ZOOM_ID = 3;
+                if ((size_t)viewport->GetCamera()->GetUserData() == CAMERA_ZOOM_ID)
+                    continue;
+
+                Camera& camera = *viewport->GetCamera();
+
+                // Restore matrices for rendering
+                esMatrixMode(GL_PROJECTION);
+                esLoadIdentity();
+
+                glm::mat4 projMatrix = runtime->GetProjectionMatrix((VREye)eye,
+                    mFrameworkSettings.mNearClipPlaneDistance,
+                    mFrameworkSettings.mFarClipPlaneDistance);
+                esMultMatrixf(&projMatrix[0][0]);
+
+                esMatrixMode(GL_MODELVIEW);
+                esLoadIdentity();
+
+                // Get base camera transform
+                Transform baseTM;
+                if (camera.GetCameraTransform())
+                {
+                    baseTM = camera.GetCameraTransform()->GetCameraTransform(camera.GetUserData());
+                }
+                else
+                {
+                    baseTM = camera.GetTransform();
+                }
+
+                // Get VR view matrix
+                glm::mat4 vrViewMatrix = runtime->GetViewMatrix((VREye)eye);
+
+                float yawOffset = vrManager.GetTotalYawOffset();
+                glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), yawOffset, glm::vec3(0.0f, 0.0f, 1.0f));
+
+                vrViewMatrix = vrViewMatrix * glm::inverse(yawRotation);
+
+                bool vrOverridesOrientation = (camera.GetVROrientationMode() == Camera::VROrientationMode::Override);
+
+                glm::mat4 baseMatrix = glm::mat4(1.0f);
+                if (vrOverridesOrientation)
+                {
+                    baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
+                }
+                else
+                {
+                    baseMatrix[0] = glm::vec4(baseTM.m[0][0], baseTM.m[0][1], baseTM.m[0][2], 0.0f);
+                    baseMatrix[1] = glm::vec4(baseTM.m[1][0], baseTM.m[1][1], baseTM.m[1][2], 0.0f);
+                    baseMatrix[2] = glm::vec4(baseTM.m[2][0], baseTM.m[2][1], baseTM.m[2][2], 0.0f);
+                    baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
+                }
+
+                glm::mat4 combinedView = vrViewMatrix * glm::inverse(baseMatrix);
+                esMultMatrixf(&combinedView[0][0]);
+
+                SetupLighting();
+
+                // Render foreground objects only
+                for (RenderObjects::iterator it = mRenderObjects.begin(); it != mRenderObjects.end(); ++it)
+                {
+                    RenderObject* renderObject = it->second;
+                    if (!viewport->GetShouldRenderObject(renderObject))
+                        continue;
+
+                    int renderLevel = it->first;
+
+                    // Only render visible objects (RENDER_LEVEL_OBJECTS and above)
+                    if (renderLevel < RENDER_LEVEL_OBJECTS)
+                        continue;
+
+                    renderObject->RenderUpdate(viewport, renderLevel);
+                }
+            }
         }
 
         // Copy rendered content to VRManager's mirror texture (for desktop display)

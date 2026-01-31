@@ -21,16 +21,36 @@ public:
     void SetOffset(float degrees) {mOffset = degrees;}
     void SetExtendBelowHorizon(float amount) {mExtendBelowHorizon = amount;}
 
+    // VR depth-based parallax support
+    void SetVRParallaxEnabled(bool enabled) { mVRParallaxEnabled = enabled; }
+    bool IsVRParallaxEnabled() const { return mVRParallaxEnabled; }
+
+    // Render skybox with depth-based parallax for VR
+    // eyeOffset: -1.0 for left eye, +1.0 for right eye
+    // ipd: interpupillary distance in world units
+    // depthTexture: texture containing the depth buffer
+    // nearPlane, farPlane: clipping plane distances
+    // skyDistance: distance to use for sky pixels at far plane
+    // parallaxScale: scale factor for parallax effect
+    void RenderVRParallax(class Viewport* viewport,
+                          float eyeOffset, float ipd,
+                          GLuint depthTexture,
+                          int screenWidth, int screenHeight,
+                          float nearPlane, float farPlane,
+                          float skyDistance, float parallaxScale);
+
 private:
     enum Side {UP, FRONT, LEFT, BACK, RIGHT, DOWN, NUM_SIDES};
 
     void DrawSide(Side side, int mvpLoc) const;
+    void DrawSideVRParallax(Side side, const class SkyboxVRParallaxShader* shader) const;
 
     typedef std::vector<Texture*> Textures;
     Textures mTextures[NUM_SIDES];
     float mOffset;
     float mExtendBelowHorizon;
     bool mInitialised;
+    bool mVRParallaxEnabled;
 };
 
 #endif

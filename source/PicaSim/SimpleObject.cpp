@@ -47,7 +47,10 @@ BoxObject::BoxObject(const Vector3& extents,
     SetExtents(mExtents);
 
     if (enableRender)
-        RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_OBJECTS);
+    {
+        int level = visible ? RENDER_LEVEL_OBJECTS : RENDER_LEVEL_OBJECTS_BACKGROUND;
+        RenderManager::GetInstance().RegisterRenderObject(this, level);
+    }
     if (enableShadows)
         RenderManager::GetInstance().RegisterShadowCasterObject(this);
     if (mMass > 0.0f)
@@ -58,7 +61,10 @@ BoxObject::BoxObject(const Vector3& extents,
 BoxObject::~BoxObject()
 {
     if (mRenderEnabled)
-        RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
+    {
+        int level = mVisible ? RENDER_LEVEL_OBJECTS : RENDER_LEVEL_OBJECTS_BACKGROUND;
+        RenderManager::GetInstance().UnregisterRenderObject(this, level);
+    }
     if (mShadowsEnabled)
         RenderManager::GetInstance().UnregisterShadowCasterObject(this);
     if (mMass > 0.0f)

@@ -17,6 +17,7 @@ class RenderObject;
 class RenderOverlayObject;
 class DebugRenderer;
 class Viewport;
+class Skybox;
 struct DisplayConfig;
 
 enum RenderLevels
@@ -25,6 +26,7 @@ enum RenderLevels
     RENDER_LEVEL_SKYBOX  =            0,
     RENDER_LEVEL_PLAIN   =           10,
     RENDER_LEVEL_TERRAIN =           20,
+    RENDER_LEVEL_OBJECTS_BACKGROUND = 25,  // Invisible objects (collision proxies for panoramas)
     RENDER_LEVEL_OBJECTS =           30,
     RENDER_LEVEL_TERRAIN_SHADOW =    40,
     RENDER_LEVEL_DEBUG   =           50,
@@ -144,6 +146,12 @@ public:
 
     // Render to mirror window after VR frame
     void RenderMirrorWindow();
+
+    // VR skybox with depth-based parallax
+    void SetVRSkybox(Skybox* skybox) { mVRSkybox = skybox; }
+    void SetVRPanoramaDepthEnabled(bool enabled) { mVRPanoramaDepthEnabled = enabled; }
+    void SetVRSkyDistance(float distance) { mVRSkyDistance = distance; }
+    void SetVRParallaxScale(float scale) { mVRParallaxScale = scale; }
 #endif
 
     const struct FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
@@ -183,6 +191,13 @@ private:
     bool    mEnableStereoscopy;
     float   mStereoSeparation;
     bool    mUseMultiLights;
+
+#ifdef PICASIM_VR_SUPPORT
+    Skybox* mVRSkybox;
+    bool    mVRPanoramaDepthEnabled;
+    float   mVRSkyDistance;
+    float   mVRParallaxScale;
+#endif
 
     FrameworkSettings& mFrameworkSettings;
 };

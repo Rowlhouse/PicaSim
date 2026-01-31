@@ -134,6 +134,20 @@ public:
     int u_texture;
 };
 
+//======================================================================================================================
+class SkyboxVRParallaxShader : public Shader
+{
+public:
+    void Init() OVERRIDE;
+    int u_mvpMatrix, a_position, a_texCoord;
+    int u_skyboxTexture, u_depthTexture;
+    int u_eyeOffset;       // -1.0 for left eye, +1.0 for right eye
+    int u_ipd;             // interpupillary distance
+    int u_nearPlane, u_farPlane;
+    int u_skyDistance;     // distance to use for sky pixels (at far plane)
+    int u_screenSize;      // screen dimensions for depth texture sampling
+    int u_parallaxScale;   // scale factor for parallax effect
+};
 
 
 #endif
