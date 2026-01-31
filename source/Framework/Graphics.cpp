@@ -8,15 +8,6 @@
 #include <cmath>
 #include <cstring>
 
-// Dear ImGui
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_opengl3.h"
-#include <SDL.h>
-
-// UI Helpers
-#include "../PicaSim/Menus/UIHelpers.h"
-
 int gGLVersion = 2;
 
 static const int MAX_STACK_SIZE = 8;
@@ -70,22 +61,6 @@ int eglInit(bool createSurface, int msaaSamples)
 
         // Initialize Input system after window is created
         Input::GetInstance().Init();
-
-        // Initialize Dear ImGui
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
-        // Setup Platform/Renderer backends
-        ImGui_ImplSDL2_InitForOpenGL(gWindow->GetSDLWindow(), gWindow->GetGLContext());
-        ImGui_ImplOpenGL3_Init("#version 130");
-
-        // Setup style
-        ImGui::StyleColorsDark();
-
-        // Initialize UI helpers (loads fonts)
-        UIHelpers::Init();
     }
 
     // Initialize font renderer
@@ -103,14 +78,6 @@ void eglTerm(bool destroySurface)
     {
         // Shutdown font renderer
         FontRenderer::GetInstance().Shutdown();
-
-        // Shutdown UI helpers
-        UIHelpers::Shutdown();
-
-        // Shutdown Dear ImGui
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplSDL2_Shutdown();
-        ImGui::DestroyContext();
 
         // Shutdown Input system
         Input::GetInstance().Shutdown();

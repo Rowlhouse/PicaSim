@@ -29,6 +29,13 @@ public:
 class Camera
 {
 public:
+    // Controls how VR orientation interacts with camera orientation
+    enum class VROrientationMode
+    {
+        Inherit,   // VR orientation is additive to camera orientation (e.g., chase/cockpit cameras)
+        Override   // VR fully controls orientation, camera provides position only (e.g., ground camera)
+    };
+
     Camera(const FrameworkSettings& frameworkSettings);
 
     /// Update to allow the camera to move etc
@@ -80,6 +87,10 @@ public:
     void SetUserData(void* userData) {mUserData = userData;}
     void* GetUserData() const {return mUserData;}
 
+    /// VR orientation mode controls how VR headset orientation interacts with camera
+    void SetVROrientationMode(VROrientationMode mode) {mVROrientationMode = mode;}
+    VROrientationMode GetVROrientationMode() const {return mVROrientationMode;}
+
     const FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
 
     bool isPointInFrustum(const Vector3& pt) const;
@@ -117,6 +128,7 @@ private:
     float mAutoZoom;
 
     void* mUserData;
+    VROrientationMode mVROrientationMode = VROrientationMode::Inherit;
 };
 
 #endif

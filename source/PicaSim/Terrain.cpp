@@ -858,7 +858,6 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
     // Prepare shadow textures
     {
         mGenericShadowTexture = new Texture;
-        // TODO need to create this texture by rendering the object into it...
         LoadTextureFromFile(*mGenericShadowTexture, "SystemData/Textures/ShadowTexture.png");
         mGenericShadowTexture->SetClamping(false);
         mGenericShadowTexture->SetFiltering(false);

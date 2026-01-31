@@ -16,14 +16,13 @@
 #include "../Platform/S3ECompat.h"
 #include "../Framework/Graphics.h"
 #include "Platform.h"
+#include "Menus/UIHelpers.h"
 #include <SDL.h>
 
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
 #include "../Platform/VRRuntime.h"
 #endif
-
-#define EXPLICIT_EGL_INITx
 
 //======================================================================================================================
 // Attempt to lock to a 60 frames per second
@@ -192,13 +191,6 @@ int main()
     s3eGLRegister(S3E_GL_RESUME, resumeCallback, 0);
 #endif
 
-#ifdef EXPLICIT_EGL_INIT
-    // This is no good as Marmalade recreates the surface badly on suspend/resume
-    TRACE_FILE_IF(1) TRACE("Calling eglInit");
-    eglInit(true);
-    TRACE_FILE_IF(1) TRACE("eglInit has been called");
-#endif
-
     // Read MSAA setting early (before window creation)
     int msaaSamples = ReadMSAASamplesFromSettings(settingsPath.c_str());
     TRACE_FILE_IF(1) TRACE("MSAA samples from settings: %d", msaaSamples);
@@ -207,6 +199,9 @@ int main()
     TRACE_FILE_IF(1) TRACE("Calling eglInit with MSAA=%d", msaaSamples);
     eglInit(true, msaaSamples);
     TRACE_FILE_IF(1) TRACE("eglInit has been called");
+
+    // Initialize UI helpers (loads fonts, requires ImGui context)
+    UIHelpers::Init();
 
 #ifdef PICASIM_VR_SUPPORT
     // Initialize VR manager (requires OpenGL context to be created)
@@ -570,10 +565,8 @@ SelectPlane:
     VRManager::Terminate();
 #endif
 
-#ifdef EXPLICIT_EGL_INIT
-    TRACE_FILE_IF(1) TRACE("eglTerm");
-    eglTerm(true);
-#endif
+    // Shutdown UI helpers
+    UIHelpers::Shutdown();
 
     return 0;
 }

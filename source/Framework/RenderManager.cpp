@@ -16,7 +16,7 @@
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
 #include "../Platform/VRRuntime.h"
-#include "../PicaSim/PicaSim.h"  // For CameraID enum
+#include "Camera.h"  // For VROrientationMode
 #include <glm/gtc/matrix_transform.hpp>
 #endif
 
@@ -907,21 +907,20 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             vrViewMatrix = vrViewMatrix * glm::inverse(yawRotation);
 
             // The VR view matrix needs to be combined with the game world position
-            // Detect camera mode to determine how to build base matrix
-            CameraID cameraMode = (CameraID)(size_t)camera.GetUserData();
-            bool isGroundMode = (cameraMode == CAMERA_GROUND);
+            // Determine how to build base matrix based on VR orientation mode
+            bool vrOverridesOrientation = (camera.GetVROrientationMode() == Camera::VROrientationMode::Override);
 
-            // Build base matrix - differs between ground mode and chase/cockpit modes
+            // Build base matrix - differs based on VR orientation mode
             glm::mat4 baseMatrix = glm::mat4(1.0f);
-            if (isGroundMode)
+            if (vrOverridesOrientation)
             {
-                // Ground mode: Use only position, with identity orientation
+                // Override mode: Use only position, with identity orientation
                 // This lets VR headset + yaw offset fully control view direction
                 baseMatrix[3] = glm::vec4(baseTM.t.x, baseTM.t.y, baseTM.t.z, 1.0f);
             }
             else
             {
-                // Chase/cockpit modes: Use full transform (orientation follows plane)
+                // Inherit mode: Use full transform (orientation from camera)
                 // Transform is row-major (m[row][col]), glm is column-major
                 // Each row of Transform becomes a column in glm (transpose)
                 baseMatrix[0] = glm::vec4(baseTM.m[0][0], baseTM.m[0][1], baseTM.m[0][2], 0.0f);
@@ -937,14 +936,14 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
             // Update camera position to include VR head offset (needed for skybox rendering)
             // The actual eye position is base position plus head offset rotated appropriately
             glm::vec3 eyePos;
-            if (isGroundMode)
+            if (vrOverridesOrientation)
             {
-                // Ground mode: head offset rotated by yaw only
+                // Override mode: head offset rotated by yaw only
                 eyePos = glm::vec3(baseTM.t.x, baseTM.t.y, baseTM.t.z) + rotatedPosOffset;
             }
             else
             {
-                // Chase/cockpit: head offset rotated by base orientation and yaw
+                // Inherit mode: head offset rotated by base orientation and yaw
                 glm::mat3 baseRot(baseMatrix);
                 eyePos = glm::vec3(baseTM.t.x, baseTM.t.y, baseTM.t.z) + baseRot * rotatedPosOffset;
             }

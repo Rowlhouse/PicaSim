@@ -21,6 +21,7 @@
 
 #include "../Platform/S3ECompat.h"
 #include "../Platform/Input.h"
+#include "../Framework/Camera.h"
 #include "Platform.h"
 
 #ifdef PICASIM_VR_SUPPORT
@@ -337,6 +338,7 @@ void PicaSim::HandleMode()
     {
     case MODE_AEROPLANE:
         mViewport->GetCamera()->SetUserData((void*) CAMERA_AEROPLANE);
+        mViewport->GetCamera()->SetVROrientationMode(Camera::VROrientationMode::Inherit);
         mViewport->GetCamera()->SetCameraTransform(cameraAeroplane);
         mViewport->GetCamera()->SetCameraTarget(0);
         mViewport->GetCamera()->SetVerticalFOV(DegreesToRadians(mGameSettings.mOptions.mAeroplaneViewFieldOfView));
@@ -346,6 +348,7 @@ void PicaSim::HandleMode()
         break;
     case MODE_CHASE:
         mViewport->GetCamera()->SetUserData((void*) CAMERA_CHASE);
+        mViewport->GetCamera()->SetVROrientationMode(Camera::VROrientationMode::Inherit);
         mViewport->GetCamera()->SetCameraTransform(cameraAeroplane);
         mViewport->GetCamera()->SetCameraTarget(cameraAeroplane);
         mViewport->GetCamera()->SetVerticalFOV(DegreesToRadians(mGameSettings.mOptions.mAeroplaneViewFieldOfView));
@@ -356,6 +359,7 @@ void PicaSim::HandleMode()
     case MODE_GROUND:
         {
             mViewport->GetCamera()->SetUserData((void*) CAMERA_GROUND);
+            mViewport->GetCamera()->SetVROrientationMode(Camera::VROrientationMode::Override);
             mViewport->GetCamera()->SetCameraTransform(mObserver);
             if (mGameSettings.mOptions.mGroundViewFollow)
                 mViewport->GetCamera()->SetCameraTarget(cameraAeroplane);
@@ -407,6 +411,7 @@ void PicaSim::HandleMode()
         else
         {
             mViewport->GetCamera()->SetUserData((void*) CAMERA_GROUND);
+            mViewport->GetCamera()->SetVROrientationMode(Camera::VROrientationMode::Override);
             mViewport->GetCamera()->SetCameraTransform(mObserver);
             mViewport->GetCamera()->SetCameraTarget(0);
             mViewport->GetCamera()->SetVerticalFOV(DegreesToRadians(mGameSettings.mOptions.mGroundViewFieldOfView));

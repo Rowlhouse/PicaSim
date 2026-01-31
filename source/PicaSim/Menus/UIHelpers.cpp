@@ -1,8 +1,11 @@
 #include "UIHelpers.h"
 #include "Texture.h"
 #include "Platform.h"
+#include "../../Platform/Window.h"
 
 #include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
 
 #include <cstdio>
 
@@ -16,6 +19,20 @@ static float sBaseFontSize = 18.0f;  // Base font size at 720p
 //======================================================================================================================
 void Init()
 {
+    // Initialize Dear ImGui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+    // Setup Platform/Renderer backends
+    Window& window = Window::GetInstance();
+    ImGui_ImplSDL2_InitForOpenGL(window.GetSDLWindow(), window.GetGLContext());
+    ImGui_ImplOpenGL3_Init("#version 130");
+
+    // Setup style
+    ImGui::StyleColorsDark();
+
     // Font path relative to data directory (app runs from data folder)
     const char* fontPath = "Fonts/FontRegular.ttf";
 
@@ -24,9 +41,6 @@ void Init()
     float scale = height / 720.0f;
     if (scale < 1.0f) scale = 1.0f;
     float fontSize = sBaseFontSize * scale;
-
-    // Load the font
-    ImGuiIO& io = ImGui::GetIO();
 
     // Custom glyph ranges: basic Latin + Latin Extended + General Punctuation (includes bullet •)
     static const ImWchar glyphRanges[] =
@@ -62,6 +76,11 @@ void Shutdown()
 {
     // Font is managed by ImGui, no need to manually delete
     sFont = nullptr;
+
+    // Shutdown Dear ImGui
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
 }
 
 //======================================================================================================================
