@@ -433,8 +433,7 @@ bool SliderInt(const char* label, int& value, int min, int max)
 
     if (changed)
     {
-        // Round to nearest integer
-        value = (int)(floatValue + 0.5f);
+        value = std::lround(floatValue);
         // Clamp to range
         if (value < min) value = min;
         if (value > max) value = max;

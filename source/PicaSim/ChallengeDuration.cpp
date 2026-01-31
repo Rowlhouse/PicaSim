@@ -203,7 +203,7 @@ void ChallengeDuration::GxRender(int renderLevel, DisplayConfig& displayConfig)
     {
         font.SetRect(displayConfig.mLeft,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)displayConfig.mWidth,fontHeight);
         font.SetAlignmentHor(FONT_ALIGN_RIGHT);
-        sprintf(txt, "%d", (int) (gs.mStatistics.mSmoothedFPS + 0.5f));
+        sprintf(txt, "%ld", std::lround(gs.mStatistics.mSmoothedFPS));
         font.SetColourABGR(0xff00ffff);
         font.RenderText(txt);
     }

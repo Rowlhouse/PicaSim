@@ -147,8 +147,7 @@ static GLfloat uvs[] = {
 //======================================================================================================================
 void Skybox::DrawSide(Side side, int mvpLoc) const
 {
-    float fNumPerSide = sqrtf((float) mTextures[side].size());
-    int numPerSide = (int) (fNumPerSide + 0.5f);
+    int numPerSide = std::lround(std::sqrt(mTextures[side].size()));
 
     float imageScale = 1.0f / numPerSide;
     esScalef(1.0f, imageScale, imageScale);
@@ -308,8 +307,7 @@ void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
 void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
                                 float parallaxDirX, float parallaxDirY, int faceType) const
 {
-    float fNumPerSide = sqrtf((float) mTextures[side].size());
-    int numPerSide = (int) (fNumPerSide + 0.5f);
+    int numPerSide = std::lround(std::sqrt(mTextures[side].size()));
 
     // Set per-face uniforms
     glUniform2f(shader->u_parallaxDir, parallaxDirX, parallaxDirY);

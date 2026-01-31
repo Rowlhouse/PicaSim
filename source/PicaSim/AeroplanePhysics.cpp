@@ -1142,7 +1142,7 @@ void AeroplanePhysics::UpdateTetheringPrePhysics(float deltaTime)
             float subSteps = ClampToRange<float>((float) PicaSim::GetInstance().GetSettings().mOptions.mFrameworkSettings.mPhysicsSubsteps, 4.0f, 12.0f);
             float p = (subSteps - 4.0f) / 4.0f;
             float fiters = float(maxIters) / powf(2, p);
-            int iters = ClampToRange((int) (fiters + 0.5f), 4, maxIters);
+            int iters = ClampToRange((int)std::lround(fiters), 4, maxIters);
             iters = 2 * (iters / 2);
 
             mRopeSoftBody->setTotalMass(mass);
@@ -1480,7 +1480,7 @@ void AeroplanePhysics::AttachToTug(Aeroplane& tugAeroplane)
     float subSteps = ClampToRange<float>((float) PicaSim::GetInstance().GetSettings().mOptions.mFrameworkSettings.mPhysicsSubsteps, 4.0f, 12.0f);
     float p = (subSteps - 4.0f) / 4.0f;
     float fiters = float(maxIters) / powf(2, p);
-    int iters = ClampToRange((int) (fiters + 0.5f), 4, maxIters);
+    int iters = ClampToRange((int)std::lround(fiters), 4, maxIters);
     iters = 2 * (iters / 2); // make it even
 
     mTowRopeSoftBody->setTotalMass(mass);
