@@ -65,10 +65,6 @@ void Aeroplane::Init(const AeroplaneSettings& as,
     }
     IwAssert(ROWLHOUSE, ok);
 
-    // Work out the start transform based on the basic position plus an offset in the configuration file, relative to the wind
-    TiXmlHandle handle = doc.FirstChild("Misc");
-    TiXmlElement* element = handle.ToElement();
-
     // Get physics to initialise in approximately the right place
     if (basicLaunchPos)
     {

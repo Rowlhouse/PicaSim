@@ -2,12 +2,6 @@
 Tigger - 2.9m span F3F racer
 -->
 
-<Misc
-  launchOffsetX="2.0"
-  launchOffsetY="0.0"
-  launchOffsetZ="0.2"
-  launchSpeed="10.0"
-/>
 <Physics>
   <Dynamics
     wingSpan="2.9"

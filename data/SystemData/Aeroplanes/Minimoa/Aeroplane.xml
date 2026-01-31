@@ -3,12 +3,6 @@
 -->
 
 
-<Misc
-  launchOffsetX="2.0"
-  launchOffsetY="0.0"
-  launchOffsetZ="0.15"
-  launchSpeed="4.0"
-/>
 <Physics>
   <Dynamics
     wingSpan="2.5"

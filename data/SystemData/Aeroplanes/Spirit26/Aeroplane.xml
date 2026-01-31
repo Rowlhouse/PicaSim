@@ -2,12 +2,6 @@
 Spirit - 2.6m span F3F plane
 -->
 
-<Misc
-  launchOffsetX="2.0"
-  launchOffsetY="0.0"
-  launchOffsetZ="0.2"
-  launchSpeed="10.0"
-/>
 <Physics>
   <Dynamics
     wingSpan="2.9"

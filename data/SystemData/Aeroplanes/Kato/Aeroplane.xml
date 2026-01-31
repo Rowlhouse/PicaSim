@@ -2,12 +2,6 @@
 Kato
 -->
 
-<Misc
-  launchOffsetX="2.0"
-  launchOffsetY="0.5"
-  launchOffsetZ="0.2"
-  launchSpeed="10"
-/>
 <Physics>
   <Dynamics
     wingSpan="1.21"

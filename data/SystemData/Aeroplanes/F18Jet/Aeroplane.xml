@@ -3,12 +3,6 @@ F18 1.5m span EDF/Jet
 -->
 
 
-<Misc
-  launchOffsetX="2.0"
-  launchOffsetY="0.0"
-  launchOffsetZ="0.2"
-  launchSpeed="6.0"
-/>
 <Physics>
   <Dynamics
     wingSpan="1.5"

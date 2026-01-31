@@ -2,12 +2,6 @@
 Wasp - Quadcopter - motors separated by 45cm along the diagonal
 -->
 
-<Misc
-  launchOffsetX="2.0"
-  launchOffsetY="0.0"
-  launchOffsetZ="0.2"
-  launchSpeed="6.0"
-/>
 <Physics>
   <Dynamics
     friction="1"

@@ -2,12 +2,6 @@
 Full size hang glider
 -->
 
-<Misc
-  launchOffsetX="5.0"
-  launchOffsetY="0.0"
-  launchOffsetZ="2.0"
-  launchSpeed="15.0"
-/>
 <Physics>
   <Dynamics
     wingSpan="7.0"

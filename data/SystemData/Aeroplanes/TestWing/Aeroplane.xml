@@ -1,10 +1,4 @@
 
-<Misc
-  launchOffsetX="2.0"
-  launchOffsetY="0.0"
-  launchOffsetZ="2.0"
-  launchSpeed="15.0"
-/>
 <Physics>
   <Dynamics
     friction="0.5"
