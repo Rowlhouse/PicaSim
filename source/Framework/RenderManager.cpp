@@ -898,18 +898,19 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                 baseTM = camera.GetTransform();
             }
 
-            // Get VR view matrix and combine with base transform
-            glm::mat4 vrViewMatrix = runtime->GetViewMatrix((VREye)eye);
+            // Get VR view matrix (VRManager handles panoramic scene mode)
+            glm::mat4 vrViewMatrix = vrManager.GetViewMatrixForScene((VREye)eye);
 
             // Apply yaw offset to align headset forward with target direction
             float yawOffset = vrManager.GetTotalYawOffset();
             glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), yawOffset, glm::vec3(0.0f, 0.0f, 1.0f));
 
-            // Apply position offset relative to reference position
+            // Calculate head position offset relative to reference position
+            // In panoramic mode, GetHeadPosition() returns reference position, so offset is zero
             glm::vec3 posOffset = vrManager.GetHeadPosition() - vrManager.GetReferencePosition();
+
             // Rotate the position offset by the yaw to keep it consistent
             glm::vec3 rotatedPosOffset = glm::vec3(yawRotation * glm::vec4(posOffset, 0.0f));
-            glm::mat4 posTranslation = glm::translate(glm::mat4(1.0f), -rotatedPosOffset);
 
             // Combine: yaw rotation * view matrix (applied to view space)
             vrViewMatrix = vrViewMatrix * glm::inverse(yawRotation);
@@ -1067,9 +1068,24 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
 
             if (vrViewport)
             {
+                // Get the base camera position (pilot position, not VR head position)
+                // This ensures the skybox doesn't move when the head position changes
+                Camera& vrCamera = *vrViewport->GetCamera();
+                Transform baseTM;
+                if (vrCamera.GetCameraTransform())
+                {
+                    baseTM = vrCamera.GetCameraTransform()->GetCameraTransform(vrCamera.GetUserData());
+                }
+                else
+                {
+                    baseTM = vrCamera.GetTransform();
+                }
+                Vector3 skyboxCenter = baseTM.t;
+
                 // Render skybox with depth-based parallax
                 mVRSkybox->RenderVRParallax(
                     vrViewport,
+                    skyboxCenter,
                     eyeOffset,
                     ipd,
                     depthTexture,
@@ -1122,8 +1138,8 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                     baseTM = camera.GetTransform();
                 }
 
-                // Get VR view matrix
-                glm::mat4 vrViewMatrix = runtime->GetViewMatrix((VREye)eye);
+                // Get VR view matrix (VRManager handles panoramic scene mode)
+                glm::mat4 vrViewMatrix = vrManager.GetViewMatrixForScene((VREye)eye);
 
                 float yawOffset = vrManager.GetTotalYawOffset();
                 glm::mat4 yawRotation = glm::rotate(glm::mat4(1.0f), yawOffset, glm::vec3(0.0f, 0.0f, 1.0f));

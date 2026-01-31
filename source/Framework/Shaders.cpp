@@ -434,6 +434,9 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform float u_skyDistance;    // distance for sky pixels (far plane)
     uniform vec2 u_screenSize;      // screen width and height
     uniform float u_parallaxScale;  // scale factor for parallax effect
+    uniform vec2 u_parallaxDir;     // direction of parallax in UV space
+    uniform float u_tileScale;      // numPerSide - scales parallax for tile coordinates
+    uniform int u_faceType;         // 0 = side faces, 1 = up/down faces (disabled)
 
     void main()
     {
@@ -442,7 +445,6 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         float depthSample = texture2D(u_depthTexture, screenUV).r;
 
         // Convert from normalized depth [0,1] to linear depth
-        // Using standard perspective depth formula reversal
         float linearDepth = u_nearPlane * u_farPlane /
                             (u_farPlane - depthSample * (u_farPlane - u_nearPlane));
 
@@ -452,17 +454,22 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
             linearDepth = u_skyDistance;
         }
 
-        // Calculate parallax offset
-        // Standard stereo formula: offset = (IPD/2) / depth
-        // u_eyeOffset is -1 or +1 to shift in opposite directions per eye
-        float parallax = (u_ipd * 0.5) / linearDepth * u_eyeOffset * u_parallaxScale;
+        // Base parallax angle (radians, approximately)
+        float parallaxAngle = (u_ipd * 0.5) / linearDepth * u_eyeOffset;
 
-        // Apply horizontal offset to skybox UV
-        vec2 offsetUV = v_texCoord;
-        offsetUV.x += parallax;
+        // Convert to UV space: dU/dtheta is approx 0.5 for cube skybox faces
+        // Also scale by tileScale for tiled panoramas (each tile UV spans 1/numPerSide)
+        float parallaxMagnitude = parallaxAngle * 0.5 * u_parallaxScale * u_tileScale;
 
-        // Clamp UV to valid range to prevent wrapping artifacts at edges
-        offsetUV.x = clamp(offsetUV.x, 0.0, 1.0);
+        // Disable parallax for up/down faces (complex circular motion)
+        if (u_faceType == 1)
+            parallaxMagnitude = 0.0;
+
+        // Apply parallax offset in the face-specific direction
+        vec2 offsetUV = v_texCoord + u_parallaxDir * parallaxMagnitude;
+
+        // Clamp UV to valid range
+        offsetUV = clamp(offsetUV, 0.0, 1.0);
 
         gl_FragColor = texture2D(u_skyboxTexture, offsetUV);
     }
@@ -676,6 +683,9 @@ void SkyboxVRParallaxShader::Init()
     u_skyDistance    = getUniformLocation(mShaderProgram, "u_skyDistance");
     u_screenSize     = getUniformLocation(mShaderProgram, "u_screenSize");
     u_parallaxScale  = getUniformLocation(mShaderProgram, "u_parallaxScale");
+    u_parallaxDir    = getUniformLocation(mShaderProgram, "u_parallaxDir");
+    u_tileScale      = getUniformLocation(mShaderProgram, "u_tileScale");
+    u_faceType       = getUniformLocation(mShaderProgram, "u_faceType");
 }
 
 

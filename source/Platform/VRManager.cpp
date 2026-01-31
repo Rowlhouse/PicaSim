@@ -476,7 +476,55 @@ uint32_t VRManager::GetEyeColorTexture(VREye eye) const
 //======================================================================================================================
 glm::vec3 VRManager::GetHeadPosition() const
 {
+    if (mPanoramicScene)
+        return mReferencePosition;
     return mHeadPosition;
+}
+
+//======================================================================================================================
+glm::mat4 VRManager::GetViewMatrixForScene(VREye eye) const
+{
+    if (!mRuntime)
+        return glm::mat4(1.0f);
+
+    // Get the original view matrix from OpenXR
+    glm::mat4 viewMatrix = mRuntime->GetViewMatrix(eye);
+
+    if (!mPanoramicScene)
+        return viewMatrix;
+
+    // Panoramic mode - modify the view matrix to use fixed position
+    // The view matrix V = R^T * T(-eyePos), where R^T is in the upper 3x3
+    // and the 4th column is R^T * (-transformedEyePos)
+
+    // Get current eye position from the runtime (in OpenXR coordinates)
+    glm::vec3 eyePos;
+    glm::quat eyeOri;
+    mRuntime->GetEyePose(eye, eyePos, eyeOri);
+
+    // Eye offset from head (IPD/2 for stereo) - in OpenXR coordinates
+    glm::vec3 eyeOffset = eyePos - mHeadPosition;
+
+    // Fixed eye position = reference position + eye offset (still in OpenXR coordinates)
+    glm::vec3 fixedEyePos = mReferencePosition + eyeOffset;
+
+    // The view matrix uses PicaSim coordinates, so we need to apply the same
+    // coordinate transform that GetViewMatrix uses internally:
+    // OpenXR: X=right, Y=up, Z=back -> PicaSim: X=forward, Y=left, Z=up
+    // Transform quaternion: (w=0.5, x=0.5, y=-0.5, z=-0.5)
+    glm::quat coordTransform(0.5f, 0.5f, -0.5f, -0.5f);
+    glm::vec3 transformedFixedPos = coordTransform * fixedEyePos;
+
+    // Extract rotation from view matrix (upper 3x3) - already in PicaSim coordinates
+    glm::mat3 viewRotation(viewMatrix);
+
+    // Recalculate translation column: R^T * (-transformedFixedPos)
+    glm::vec3 newTranslation = viewRotation * (-transformedFixedPos);
+
+    // Update only the translation column (4th column)
+    viewMatrix[3] = glm::vec4(newTranslation, 1.0f);
+
+    return viewMatrix;
 }
 
 //======================================================================================================================

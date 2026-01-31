@@ -305,10 +305,16 @@ void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
 }
 
 //======================================================================================================================
-void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader) const
+void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
+                                float parallaxDirX, float parallaxDirY, int faceType) const
 {
     float fNumPerSide = sqrtf((float) mTextures[side].size());
     int numPerSide = (int) (fNumPerSide + 0.5f);
+
+    // Set per-face uniforms
+    glUniform2f(shader->u_parallaxDir, parallaxDirX, parallaxDirY);
+    glUniform1f(shader->u_tileScale, (float)numPerSide);
+    glUniform1i(shader->u_faceType, faceType);
 
     float imageScale = 1.0f / numPerSide;
     esScalef(1.0f, imageScale, imageScale);
@@ -343,6 +349,7 @@ void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader)
 
 //======================================================================================================================
 void Skybox::RenderVRParallax(Viewport* viewport,
+                               const Vector3& skyboxCenter,
                                float eyeOffset, float ipd,
                                GLuint depthTexture,
                                int screenWidth, int screenHeight,
@@ -380,8 +387,9 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
 
-    Vector3 pos = viewport->GetCamera()->GetPosition();
-    esTranslatef(pos.x, pos.y, pos.z);
+    // Use provided skybox center (base camera position, not VR head position)
+    // This prevents the skybox from moving when the head position changes
+    esTranslatef(skyboxCenter.x, skyboxCenter.y, skyboxCenter.z);
     esRotatef(-mOffset, 0, 0, 1);
 
     // Set up vertex attributes
@@ -391,40 +399,42 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     glVertexAttribPointer(vrShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
     glEnableVertexAttribArray(vrShader->a_texCoord);
 
-    // Render all sides
+    // Render all sides with face-specific parallax directions
+    // Side faces: parallax is horizontal (in UV.x direction)
+    // Up/Down faces: parallax is complex (disabled, faceType=1)
     {
         esPushMatrix();
-        DrawSideVRParallax(FRONT, vrShader);
+        DrawSideVRParallax(FRONT, vrShader, 1.0f, 0.0f, 0);
         esPopMatrix();
     }
     {
         esPushMatrix();
         ROTATE_270_Z;
-        DrawSideVRParallax(RIGHT, vrShader);
+        DrawSideVRParallax(RIGHT, vrShader, 1.0f, 0.0f, 0);
         esPopMatrix();
     }
     {
         esPushMatrix();
         ROTATE_180_Z;
-        DrawSideVRParallax(BACK, vrShader);
+        DrawSideVRParallax(BACK, vrShader, 1.0f, 0.0f, 0);
         esPopMatrix();
     }
     {
         esPushMatrix();
         ROTATE_90_Z;
-        DrawSideVRParallax(LEFT, vrShader);
+        DrawSideVRParallax(LEFT, vrShader, 1.0f, 0.0f, 0);
         esPopMatrix();
     }
     {
         esPushMatrix();
         ROTATE_270_Y;
-        DrawSideVRParallax(UP, vrShader);
+        DrawSideVRParallax(UP, vrShader, 0.0f, 0.0f, 1);     // disabled
         esPopMatrix();
     }
     {
         esPushMatrix();
         ROTATE_90_Y;
-        DrawSideVRParallax(DOWN, vrShader);
+        DrawSideVRParallax(DOWN, vrShader, 0.0f, 0.0f, 1);   // disabled
         esPopMatrix();
     }
 

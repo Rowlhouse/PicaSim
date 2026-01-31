@@ -26,6 +26,7 @@ public:
     bool IsVRParallaxEnabled() const { return mVRParallaxEnabled; }
 
     // Render skybox with depth-based parallax for VR
+    // skyboxCenter: world position to center the skybox (use base camera position, not VR head position)
     // eyeOffset: -1.0 for left eye, +1.0 for right eye
     // ipd: interpupillary distance in world units
     // depthTexture: texture containing the depth buffer
@@ -33,6 +34,7 @@ public:
     // skyDistance: distance to use for sky pixels at far plane
     // parallaxScale: scale factor for parallax effect
     void RenderVRParallax(class Viewport* viewport,
+                          const Vector3& skyboxCenter,
                           float eyeOffset, float ipd,
                           GLuint depthTexture,
                           int screenWidth, int screenHeight,
@@ -43,7 +45,8 @@ private:
     enum Side {UP, FRONT, LEFT, BACK, RIGHT, DOWN, NUM_SIDES};
 
     void DrawSide(Side side, int mvpLoc) const;
-    void DrawSideVRParallax(Side side, const class SkyboxVRParallaxShader* shader) const;
+    void DrawSideVRParallax(Side side, const class SkyboxVRParallaxShader* shader,
+                            float parallaxDirX, float parallaxDirY, int faceType) const;
 
     typedef std::vector<Texture*> Textures;
     Textures mTextures[NUM_SIDES];

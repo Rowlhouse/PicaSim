@@ -117,10 +117,24 @@ public:
     void UseYawOffsets(bool use) {mUseYawOffsets = use;}
 
     //----------------------------------------------------------------------------------------------------------------------
+    // Panoramic scene mode
+    //----------------------------------------------------------------------------------------------------------------------
+
+    // Set/get panoramic scene mode. When true, head position is locked to reference position
+    // while head orientation and stereo eye offset are preserved.
+    void SetPanoramicScene(bool isPanoramic) { mPanoramicScene = isPanoramic; }
+    bool IsPanoramicScene() const { return mPanoramicScene; }
+
+    // Get view matrix adjusted for scene type.
+    // In panoramic mode, uses fixed position but current orientation + eye offset.
+    glm::mat4 GetViewMatrixForScene(VREye eye) const;
+
+    //----------------------------------------------------------------------------------------------------------------------
     // Head tracking
     //----------------------------------------------------------------------------------------------------------------------
 
     // Get the current head position in local space.
+    // In panoramic mode, returns reference position instead of actual head position.
     glm::vec3 GetHeadPosition() const;
 
     // Get the current head orientation as a quaternion.
@@ -195,6 +209,9 @@ private:
     std::string mVRAudioDevice;    // Audio device to switch to when focused
     bool mAudioSwitchedToVR;       // True if audio is currently on VR device
     VRSessionState mLastSessionState;  // For detecting focus changes
+
+    // Panoramic scene mode - when true, head position is fixed
+    bool mPanoramicScene = false;
 };
 
 #endif // PICASIM_VR_SUPPORT

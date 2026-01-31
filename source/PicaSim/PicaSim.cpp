@@ -1170,8 +1170,10 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         VRFrameInfo vrFrameInfo;
         if (VRManager::GetInstance().GetRuntime())
         {
-            // Configure VR panorama depth settings
+            // Configure VR settings
             RenderManager& rm = RenderManager::GetInstance();
+            bool isPanoramicScene = mGameSettings.mEnvironmentSettings.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA;
+            VRManager::GetInstance().SetPanoramicScene(isPanoramicScene);
             rm.SetVRPanoramaDepthEnabled(mGameSettings.mOptions.mVRPanoramaDepth);
             rm.SetVRSkyDistance(mGameSettings.mOptions.mVRSkyDistance);
             rm.SetVRParallaxScale(mGameSettings.mOptions.mVRParallaxScale);

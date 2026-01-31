@@ -623,7 +623,7 @@ void SettingsMenu::RenderOptions1Tab()
                     if (options.mVRPanoramaDepth)
                     {
                         SettingsWidgets::SliderFloat(TXT(PS_VRSKYDISTANCE), options.mVRSkyDistance, 1000.0f, 20000.0f);
-                        SettingsWidgets::SliderFloat(TXT(PS_VRPARALLAXSCALE), options.mVRParallaxScale, 0.1f, 3.0f);
+                        SettingsWidgets::SliderFloat(TXT(PS_VRPARALLAXSCALE), options.mVRParallaxScale, -1.0f, 1.0f);
                     }
                 }
             }

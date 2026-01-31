@@ -147,6 +147,9 @@ public:
     int u_skyDistance;     // distance to use for sky pixels (at far plane)
     int u_screenSize;      // screen dimensions for depth texture sampling
     int u_parallaxScale;   // scale factor for parallax effect
+    int u_parallaxDir;     // direction of parallax in UV space (vec2)
+    int u_tileScale;       // numPerSide - scales parallax for tile coordinates
+    int u_faceType;        // 0 = side faces, 1 = up/down faces (disabled)
 };
 
 
