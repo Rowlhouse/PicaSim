@@ -85,16 +85,16 @@ void InitStringsFR(const char** txt)
   txt[PS_FORCEALLVISIBLE] = "Rendre visible lors de l'édition";
   txt[PS_RESETOBJECTS] = "Réinitialiser objets et recharger scène";
   txt[PS_OBJECTEDITING] = "Édition objets";
-  txt[PS_OBJECTEDITINGTEXT] = "PicaSim allows additional objects to be simulated and drawn, apart from the terrain and the plane (etc).\n"
+  txt[PS_OBJECTEDITINGTEXT] = "PicaSim permet de simuler et d'afficher des objets supplémentaires, en plus du terrain et de l'avion (etc).\n"
 "\n"
-"In the Settings»Objects tab you can load a set of these objects - this is done automatically when loading a "
-"scene. Most scenes will not include any objects. However, some panoramic scenes will to represent objects "
-"that are not part of the ground.\n"
+"Dans l'onglet Réglages»Objets, vous pouvez charger un ensemble de ces objets - ceci est fait automatiquement lors du "
+"chargement d'une scène. La plupart des scènes n'incluent pas d'objets. Cependant, certaines scènes panoramiques en "
+"contiennent pour représenter des éléments qui ne font pas partie du sol.\n"
 "\n"
-"If you want to add objects to the scene, you can enable object editing in Settings»Objects. This will make a set of "
-"on-screen buttons that let you create/delete objects, change the selection, and change their properties. When moving "
-"them around, bear in mind that you can select to work in world space, relative to the camera, or relative to the space of "
-"the object. After creating a set of objects, don't forget to save them!\n"
+"Si vous souhaitez ajouter des objets à la scène, vous pouvez activer l'édition d'objets dans Réglages»Objets. Cela fera "
+"apparaître des boutons à l'écran vous permettant de créer/supprimer des objets, de changer la sélection et de modifier "
+"leurs propriétés. Lors du déplacement, gardez à l'esprit que vous pouvez choisir de travailler dans l'espace monde, "
+"relatif à la caméra, ou relatif à l'espace de l'objet. Après avoir créé un ensemble d'objets, n'oubliez pas de les sauvegarder !\n"
 "\n";
   txt[PS_OBJECTNUMBER] = "Objet %d";
   txt[PS_POSITIONX] = "Position avant";
@@ -569,9 +569,9 @@ void InitStringsFR(const char** txt)
   txt[PS_SELECTPREFERREDCONTROLLER] = "Selection contrôle préféré";
   txt[PS_SELECTOBJECTSSETTINGS] = "Sélection paramètres objets";
   txt[PS_SUMMARY] = "Résumé";
-  txt[PS_NOOBJECTS] = "There are no objects loaded (other than the terrain etc). You can load a set of static and dynamic objects, "
-    "making sure they're suitable for the current scene. By enabling object editing you can "
-    "create your own - see help and the PicaSim web page for more info.";
+  txt[PS_NOOBJECTS] = "Aucun objet n'est chargé (à part le terrain, etc). Vous pouvez charger un ensemble d'objets statiques et dynamiques, "
+    "en vous assurant qu'ils conviennent à la scène actuelle. En activant l'édition d'objets, vous pouvez "
+    "créer les vôtres - consultez l'aide et le site Web PicaSim pour plus d'informations.";
   txt[PS_OBJECTSTOTAL] = "Nombre total d'objets:";
   txt[PS_OBJECTSSTATICVISIBLE] = "Nombre statiques visibles:";
   txt[PS_OBJECTSSTATICINVISIBLE] = "Nombre statiques invisibles:";
@@ -665,39 +665,39 @@ void InitStringsFR(const char** txt)
 "Quand la course est terminée les points et classement sont automatiquement ajoutés au palmares global, malgré vous "
 "Ce peut être désactivé dans les options. Vous pouvez selectionner le nom qui s'affiche dans la section profil de l'écran de menu 'classement'. "
 "Si vous mettez une adresse email cela vous permettra de faire le lien entre le mobile ou PC utilisé.";
-  txt[PS_TIPSTEXT] = "Here are some tips to help you get the most out of PicaSim:\n"
+  txt[PS_TIPSTEXT] = "Voici quelques conseils pour tirer le meilleur parti de PicaSim :\n"
 "\n"
-"• Remember it's a simulator for radio-controlled planes - the primary focus is on realistic control, with the \"pilot\" standing on "
-"the ground. Remember that learning to fly is a skill that needs practice - look on the website below for help.\n"
+"• N'oubliez pas qu'il s'agit d'un simulateur d'avions radiocommandés - l'accent est mis sur un contrôle réaliste, avec le \"pilote\" "
+"debout au sol. Apprendre à voler est une compétence qui demande de la pratique - consultez le site Web ci-dessous pour de l'aide.\n"
 "\n"
-"• Experiment with the settings, especially if you're a R/C pilot and have preferences! If you mess things up, immediately after "
-"starting PicaSim go into settings and load a preset for the relevant sections.\n"
+"• Expérimentez avec les réglages, surtout si vous êtes pilote R/C et avez des préférences ! Si vous faites des erreurs, immédiatement "
+"après avoir démarré PicaSim, allez dans les réglages et chargez un préréglage pour les sections concernées.\n"
 "\n"
-"• If you experience any problems or have suggestions, email picasimulator@gmail.com\n"
+"• Si vous rencontrez des problèmes ou avez des suggestions, envoyez un email à picasimulator@gmail.com\n"
 "\n"
-"• Panoramas can be displayed at \"normal\" and \"maximum\" detail - it's certainly worth trying the higher detail level, though if "
-"PicaSim crashes when loading panoramic sceneries, try reducing the detail in Settings»Options 1.\n"
+"• Les panoramas peuvent être affichés en détail \"normal\" et \"maximum\" - cela vaut la peine d'essayer le niveau de détail supérieur, "
+"mais si PicaSim plante lors du chargement des scènes panoramiques, essayez de réduire le détail dans Réglages»Options 1.\n"
 "\n"
-"• AI controlled planes are configured in two places. Settings»Options 2 allows you to set what the maximum number of AI planes "
-"your device will run. Settings»AI Controllers allows you to configure what planes will actually be loaded.\n";
-  txt[PS_KEYBOARDTEXT] = "If you have a keyboard, there are some shortcuts:\n"
+"• Les avions contrôlés par l'IA sont configurés à deux endroits. Réglages»Options 2 vous permet de définir le nombre maximum d'avions IA "
+"que votre appareil peut gérer. Réglages»Contrôleurs IA vous permet de configurer quels avions seront réellement chargés.\n";
+  txt[PS_KEYBOARDTEXT] = "Avec un clavier, voici les raccourcis disponibles :\n"
 "\n"
-"[r] - Relaunch\n"
-"[p] - Toggle pause\n"
-"[c] - Cycles through the camera views\n"
-"[z] - Toggles the zoom view\n";
-  txt[PS_JOYSTICKSETUPTEXT] = "PicaSim supports external USB joysticks/gamepads under Android 3.0 and above, and under Windows. On Android devices "
-"this will require a USB OTG (On The Go) connector, and your device will need to support it - so please check that first. "
-"If the joystick tab appears in the settings menus there's a good chance your device will support external USB controllers, "
-"but it's not guaranteed!\n"
+"[r] - Relancer\n"
+"[p] - Basculer pause\n"
+"[c] - Parcourir les vues caméra\n"
+"[z] - Basculer vue zoom\n";
+  txt[PS_JOYSTICKSETUPTEXT] = "PicaSim prend en charge les joysticks/manettes USB externes sous Android 3.0 et supérieur, ainsi que sous Windows. Sur les appareils "
+"Android, cela nécessite un connecteur USB OTG (On The Go), et votre appareil doit le supporter - veuillez vérifier cela d'abord. "
+"Si l'onglet joystick apparaît dans les menus de réglages, il y a de bonnes chances que votre appareil supporte les contrôleurs USB externes, "
+"mais ce n'est pas garanti !\n"
 "\n"
-"The external controller needs to be connected before running PicaSim, and under Windows it is recommended to calibrate the joystick using "
-"the \"calibrate\" button in Settings»Joystick.\n"
+"Le contrôleur externe doit être connecté avant de lancer PicaSim, et sous Windows il est recommandé de calibrer le joystick en utilisant "
+"le bouton \"calibrer\" dans Réglages»Joystick.\n"
 "\n"
-"If your joystick is detected and selected in Settings»Joystick you will need to assign physical inputs to the controls recognised by PicaSim. "
-"This is done by identifying which joystick axis corresponds to which control input, and then there are buttons to press when the stick is "
-"in the centre, to the left or down, and to the right or up. You can then check that the stick movements maps to the correct outputs. "
-"This procedure is the same under Windows and Android - visit the website below for a video describing this in more detail.";
+"Si votre joystick est détecté et sélectionné dans Réglages»Joystick, vous devrez assigner les entrées physiques aux commandes reconnues par PicaSim. "
+"Cela se fait en identifiant quel axe du joystick correspond à quelle entrée de commande, puis il y a des boutons à appuyer lorsque le manche est "
+"au centre, à gauche ou en bas, et à droite ou en haut. Vous pouvez ensuite vérifier que les mouvements du manche correspondent aux sorties correctes. "
+"Cette procédure est la même sous Windows et Android - visitez le site Web ci-dessous pour une vidéo décrivant cela plus en détail.";
   txt[PS_CREDITSTEXT] = "PicaSim est développé par Danny Chapman\n"
 "Avec l'aide et en remerciant :\n\n"
 "Heidi and Hazel pour leur patience\n\n"
@@ -724,28 +724,28 @@ void InitStringsFR(const char** txt)
 "Veuillez noter que même si j'ai essayé de concevoir des modèles au vol réaliste, je ne prétends pas avoir "
 "parfaitement atteint cet objectif. La seule façon de le découvrir, c'est d'aller sur le terrain faire voler les vrais, "
 "Je vous invite à le faire !";
-  txt[PS_LICENCETEXT] = "PicaSim is available from me in the following versions:\n\n"
-"Free: The simulator and assets (including planes and sceneries etc) may be distributed according to the Creative Commons Attribution-NonCommercial-NoDerivs licence.\n\n"
-"Paid: This version or its derivatives may only be distributed with my explicit authorisation.\n\n"
-"If you wish to share content that you have created then you must do so separately from the PicaSim distribution.\n\n"
-"The assets in PicaSim may be distributed according to the Creative Commons Attribution-NonCommercial licence (i.e. you may modify and distribute them, so long as you credit the source).\n\n"
-"It is quite easy to distribute content for PicaSim by placing it in the UserData and UserSettings. See the website and ask on the forum for more details.";
+  txt[PS_LICENCETEXT] = "PicaSim est disponible dans les versions suivantes :\n\n"
+"Gratuite : Le simulateur et les ressources (y compris les avions et les scènes, etc.) peuvent être distribués selon la licence Creative Commons Attribution-NonCommercial-NoDerivs.\n\n"
+"Payante : Cette version ou ses dérivés ne peuvent être distribués qu'avec mon autorisation explicite.\n\n"
+"Si vous souhaitez partager du contenu que vous avez créé, vous devez le faire séparément de la distribution PicaSim.\n\n"
+"Les ressources de PicaSim peuvent être distribuées selon la licence Creative Commons Attribution-NonCommercial (c'est-à-dire que vous pouvez les modifier et les distribuer, à condition de créditer la source).\n\n"
+"Il est assez facile de distribuer du contenu pour PicaSim en le plaçant dans UserData et UserSettings. Consultez le site Web et demandez sur le forum pour plus de détails.";
   txt[PS_TIPS1] = "Svp, envoyez moi des retours d'expérience que je puisse améliorer PicaSim";
   txt[PS_TIPS2] = "Si vous aimez PicaSim, Svp laissez un commentaire";
   txt[PS_TIPS3] = "Vous pouvez utiliser le gyroscope du mobile pour piloter - Réglage>Contrôle";
   txt[PS_TIPS4] = "Aimez/suivez PicaSim sur Facebook ou Google+ pour être informé des mises à jour et améliorations prévues";
-  txt[PS_TIPS5] = "If you like PicaSim, please leave a review/rating on the mobile versions";
-  txt[PS_TIPS6] = "Switch between mode 1 and 2 etc in the options";
-  txt[PS_TIPS7] = "Please send me feedback so I can improve PicaSim";
-  txt[PS_TIPS8] = "If the frame rate is low, try loading a lower quality setting in the options, and/or reduce the physics quality setting";
-  txt[PS_TIPS9] = "On mobile devices try using the accelerometer by loading a suitable preset in Settings»Controller";
-  txt[PS_TIPS10] = "Adding ballast to gliders increases their ability to penetrate into the wind, at the cost of faster descent";
-  txt[PS_TIPS11] = "Enable 'walkabout' mode in 3D scenes, and use the walk button when paused to move the launch point and wind direction";
-  txt[PS_TIPS12] = "Circling hawks indicate areas of thermal lift, but it is actually better to watch for the glider's wing tip or nose to lift";
-  txt[PS_TIPS13] = "Flying real R/C planes is even more fun!";
-  txt[PS_TIPS14] = "Like/follow PicaSim on Facebook or Google+ to get notified of updates and plans";
-  txt[PS_TIPS15] = "The full version of PicaSim contains additional planes, sceneries and challenges";
-  txt[PS_TIPS16] = "Add AI controlled planes in Settings»AI Controllers. Limit the maximum number in Settings»Options 2";
+  txt[PS_TIPS5] = "Si vous aimez PicaSim, laissez un avis/note sur les versions mobiles";
+  txt[PS_TIPS6] = "Basculez entre mode 1 et 2 etc dans les options";
+  txt[PS_TIPS7] = "Envoyez-moi vos commentaires pour que je puisse améliorer PicaSim";
+  txt[PS_TIPS8] = "Si le taux d'images est bas, essayez de charger un réglage de qualité inférieure dans les options, et/ou réduisez le réglage de qualité physique";
+  txt[PS_TIPS9] = "Sur les appareils mobiles, essayez d'utiliser l'accéléromètre en chargeant un préréglage approprié dans Réglages»Contrôle";
+  txt[PS_TIPS10] = "Ajouter du ballast aux planeurs augmente leur capacité à pénétrer dans le vent, au prix d'une descente plus rapide";
+  txt[PS_TIPS11] = "Activez le mode 'positionpilote' dans les scènes 3D, et utilisez le bouton marche en pause pour déplacer le point de lancement et la direction du vent";
+  txt[PS_TIPS12] = "Les buses en cercle indiquent des zones d'ascendance thermique, mais il est préférable de surveiller le bout d'aile ou le nez du planeur qui se lève";
+  txt[PS_TIPS13] = "Piloter de vrais avions R/C est encore plus amusant !";
+  txt[PS_TIPS14] = "Suivez PicaSim sur Facebook ou Google+ pour être informé des mises à jour et des projets";
+  txt[PS_TIPS15] = "La version complète de PicaSim contient des avions, scènes et défis supplémentaires";
+  txt[PS_TIPS16] = "Ajoutez des avions contrôlés par l'IA dans Réglages»Contrôleurs IA. Limitez le nombre maximum dans Réglages»Options 2";
   txt[PS_LOADING] = "Chargement...";
   txt[PS_RACETIP] = "%s\n\nThe white arrow points to the next checkpoint.";
   txt[PS_LIMBOTIP] = "%s\n\nAjuster difficulté/score multiples dans Réglages»Mode";
