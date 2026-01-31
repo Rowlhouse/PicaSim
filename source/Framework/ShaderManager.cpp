@@ -12,6 +12,7 @@ ShaderManager& ShaderManager::GetInstance()
     IwAssert(ROWLHOUSE, mInstance != 0);
     return *mInstance;
 }
+
 //======================================================================================================================
 ShaderManager::ShaderManager(LoadingScreenHelper* loadingScreen)
 {
