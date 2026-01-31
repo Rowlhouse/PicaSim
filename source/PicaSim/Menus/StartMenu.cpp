@@ -181,16 +181,18 @@ void StartMenu::Render()
     // Style for main buttons (using unified style system)
     PicaStyle::PushStartMenuButtonStyle(scale);
 
+    Language language = mGameSettings.mOptions.mLanguage;
+
     // Free-Fly button (left side, ~20% from top)
     ImGui::SetCursorPos(ImVec2(width * 0.1f, height * 0.18f));
-    if (ImGui::Button("Free-Fly", ImVec2(mainButtonW, mainButtonH)))
+    if (ImGui::Button(TXT(PS_FREEFLY), ImVec2(mainButtonW, mainButtonH)))
     {
         mResult = STARTMENU_FLY;
     }
 
     // Challenge button (right side, ~20% from top)
     ImGui::SetCursorPos(ImVec2(width * 0.9f - mainButtonW, height * 0.18f));
-    if (ImGui::Button("Challenge", ImVec2(mainButtonW, mainButtonH)))
+    if (ImGui::Button(TXT(PS_CHALLENGE), ImVec2(mainButtonW, mainButtonH)))
     {
         mResult = STARTMENU_CHALLENGE;
     }

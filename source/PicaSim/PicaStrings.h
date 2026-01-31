@@ -20,6 +20,8 @@ enum PicaString
 // Start menu
     PS_GAMEPADDETECTED,
     PS_WHATSNEW,
+    PS_FREEFLY,
+    PS_CHALLENGE,
 // Prompts
     PS_SELECTAEROPLANE,
     PS_SELECTSCENERY,

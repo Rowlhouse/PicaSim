@@ -35,6 +35,8 @@ void InitStringsFR(const char** txt)
   txt[PS_AUTO] = "Auto";
   txt[PS_GAMEPADDETECTED] = "Manette détectée. Activez-la dans les réglages pour l'utiliser.";
   txt[PS_WHATSNEW] = "Welcome to PicaSim!";
+  txt[PS_FREEFLY] = "Vol Libre";
+  txt[PS_CHALLENGE] = "Défi";
   txt[PS_SELECTAEROPLANE] = "Planeur";
   txt[PS_SELECTSCENERY] = "Scène";
   txt[PS_SELECTOPTIONS] = "Veuillez séléctionner les options par défaut";
@@ -704,8 +706,8 @@ void InitStringsFR(const char** txt)
 "Heidi, Jenne, André et Sylvain pour les traductions\n\n"
 "Bullet physics\n\n"
 "TinyXML\n\n"
-"Marmalade pour la plateforme de distribution\n\n"
-"Gleb Lebedev pour son gamepad extension\n\n"
+"SDL\n\n"
+"OpenAL\n\n"
 "Detlef Jacobi pour Litermonthalle Nalbach/\n\n"
 "Quelques sons depuis www.freesfx.co.uk\n\n"
 "Textures depuis seamless-pixels.blogspot.co.uk/\n\n"

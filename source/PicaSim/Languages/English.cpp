@@ -35,6 +35,8 @@ void InitStringsEN(const char** txt)
   txt[PS_AUTO] = "Auto";
   txt[PS_GAMEPADDETECTED] = "Gamepad detected. Enable in the settings to use it.";
   txt[PS_WHATSNEW] = "Welcome to PicaSim!";
+  txt[PS_FREEFLY] = "Free-Fly";
+  txt[PS_CHALLENGE] = "Challenge";
   txt[PS_SELECTAEROPLANE] = "Plane";
   txt[PS_SELECTSCENERY] = "Scenery";
   txt[PS_SELECTOPTIONS] = "Please select a suitable set of default options";
@@ -729,8 +731,8 @@ void InitStringsEN(const char** txt)
 "Heidi, Jenne, André and Sylvain for translations\n\n"
 "Bullet physics\n\n"
 "TinyXML\n\n"
-"Marmalade for the cross-platform libraries\n\n"
-"Gleb Lebedev for his gamepad extension\n\n"
+"SDL\n\n"
+"OpenAL\n\n"
 "Detlef Jacobi for Litermonthalle Nalbach\n\n"
 "Some sounds from www.freesfx.co.uk and soundjay\n\n"
 "Textures from seamless-pixels.blogspot.co.uk/\n\n"
