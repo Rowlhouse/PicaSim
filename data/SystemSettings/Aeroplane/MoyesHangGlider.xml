@@ -20,7 +20,7 @@
  mSizeScale="1"
  mMassScale="1"
  mEngineScale="1"
- mLaunchSpeed="15"
+ mLaunchSpeed="12"
  mLaunchAngleUp="-5"
  mLaunchUp="1.3"
  mLaunchForwards="4"
