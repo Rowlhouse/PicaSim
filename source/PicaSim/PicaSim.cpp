@@ -711,9 +711,11 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             mObserver->SetTransform(tm);
 
             mPlayerAeroplane->Terminate();
+            Transform camTM = mInstance->mObserver->GetCameraTransform(nullptr);
+            Vector3 camPos = camTM.GetTrans();
             mPlayerAeroplane->Init(
                 mGameSettings.mAeroplaneSettings,
-                &mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans(), loadingScreen);
+                &camPos, loadingScreen);
             // Reset any challenge
             mChallenge->Terminate();
             mChallenge->Init(mPlayerAeroplane, loadingScreen);

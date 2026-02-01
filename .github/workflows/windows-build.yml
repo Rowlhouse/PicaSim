@@ -1,0 +1,37 @@
+name: Windows Build
+
+on:
+  push:
+    branches:
+      - main
+      - macos-fix
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+      
+      - name: Configure CMake
+        run: |
+          cmake --preset windows-x64
+      
+      - name: Build Release
+        run: |
+          cmake --build --preset windows-x64-release
+      
+      - name: Install
+        run: |
+          cmake --install build/windows-x64 --config Release
+      
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: picasim-windows-x64
+          path: dist/
+          retention-days: 30

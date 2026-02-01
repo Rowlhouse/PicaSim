@@ -46,6 +46,23 @@ endif()
 
 message(STATUS "Building PicaSim for platform: ${PICASIM_PLATFORM}")
 
+# --------------------------------------------------------------------------
+# AI generated fix for MacOS
+# --------------------------------------------------------------------------
+if(APPLE)
+    add_compile_options(-include "${CMAKE_SOURCE_DIR}/source/Platform/GLCompat.h")
+    add_compile_definitions(GL_SILENCE_DEPRECATION)
+    add_compile_options(-Wno-deprecated-declarations)
+endif()
+
+list(REMOVE_ITEM PICASIM_SOURCES
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.cpp
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.cpp
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.h
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.h
+)
+
+
 # Compile definitions matching original Marmalade build
 add_compile_definitions(
     BT_NO_PROFILE          # Disable Bullet physics profiling
@@ -75,7 +92,23 @@ find_package(glm CONFIG REQUIRED)
 find_package(OpenAL CONFIG REQUIRED)
 
 # OpenGL
+# Prefer the platform OpenGL framework on macOS instead of any Brew GLVND/Mesa libs
+if(APPLE)
+    set(OpenGL_GL_PREFERENCE LEGACY)
+endif()
 find_package(OpenGL REQUIRED)
+set(PICASIM_OPENGL_LIB OpenGL::GL)
+if(APPLE AND TARGET OpenGL::GL)
+    set(PICASIM_OPENGL_LIB OpenGL::GL)
+    set(PICASIM_APPLE_OPENGL_TBD "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL.tbd")
+    if(NOT EXISTS "${PICASIM_APPLE_OPENGL_TBD}")
+        set(PICASIM_APPLE_OPENGL_TBD "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL.tbd")
+    endif()
+    set_target_properties(OpenGL::GL PROPERTIES
+        IMPORTED_LOCATION "${PICASIM_APPLE_OPENGL_TBD}"
+        INTERFACE_INCLUDE_DIRECTORIES ""
+        INTERFACE_LINK_OPTIONS "-framework;OpenGL")
+endif()
 
 # --------------------------------------------------------------------------
 # Third-party libraries
@@ -133,7 +166,7 @@ target_link_libraries(Framework PUBLIC
     Platform
     BulletPhysics
     glm::glm
-    OpenGL::GL
+    ${PICASIM_OPENGL_LIB}
     imgui::imgui
 )
 if(WIN32)
@@ -167,7 +200,7 @@ target_include_directories(Platform PUBLIC
 target_link_libraries(Platform PUBLIC
     SDL2::SDL2
     glm::glm
-    OpenGL::GL
+    ${PICASIM_OPENGL_LIB}
     imgui::imgui
 )
 
@@ -241,8 +274,14 @@ endif()
 target_include_directories(PicaSim PRIVATE ${BULLET_SOURCE_DIR})
 
 # Link SDL2_net if available
+find_package(SDL2_net CONFIG QUIET)
+
 if(TARGET SDL2_net::SDL2_net)
-    target_link_libraries(PicaSim PRIVATE SDL2_net::SDL2_net)
+  target_link_libraries(PicaSim PRIVATE SDL2_net::SDL2_net)
+elseif(TARGET SDL2_net::SDL2_net-static)
+  target_link_libraries(PicaSim PRIVATE SDL2_net::SDL2_net-static)
+else()
+  message(WARNING "SDL2_net not found: network features will not link")
 endif()
 
 # Link OpenAL
@@ -323,6 +362,9 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Menus
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Fonts
     DESTINATION .
 )
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData/Icons
+    DESTINATION SystemData
+)
 
 # Install LICENSE and VERSIONS files
 install(FILES
@@ -337,6 +379,35 @@ if(WIN32)
     install(FILES ${VCPKG_DLLS}
         DESTINATION .
     )
+endif()
+
+# --------------------------------------------------------------------------
+# macOS App Bundle and DMG targets
+# --------------------------------------------------------------------------
+if(APPLE AND NOT IOS)
+    # Create macOS .app bundle from installed distribution
+    add_custom_target(macos-app-bundle
+        COMMAND bash ${CMAKE_SOURCE_DIR}/macos_create_app_bundle.sh
+            ${CMAKE_INSTALL_PREFIX}
+            dist
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Creating macOS .app bundle"
+    )
+    add_dependencies(macos-app-bundle PicaSim)
+    
+    # Create macOS .dmg (disk image) for distribution
+    add_custom_target(macos-dmg
+        COMMAND bash ${CMAKE_SOURCE_DIR}/macos_create_dmg.sh
+            dist/PicaSim.app
+            dist
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Creating macOS .dmg for distribution"
+    )
+    add_dependencies(macos-dmg macos-app-bundle)
+    
+    message(STATUS "macOS targets available:")
+    message(STATUS "  cmake --build <preset> --target macos-app-bundle  (create .app)")
+    message(STATUS "  cmake --build <preset> --target macos-dmg         (create .dmg)")
 endif()
 
 # --------------------------------------------------------------------------

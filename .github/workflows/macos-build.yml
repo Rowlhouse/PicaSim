@@ -1,0 +1,127 @@
+name: macOS Multi-Architecture Release
+
+on:
+  push:
+    branches:
+      - main
+      - macos-fix
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create GitHub Release'
+        required: false
+        default: 'false'
+
+jobs:
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            configure_preset: macos-arm64
+            build_preset: macos-arm64-release
+            runner: macos-latest
+          - arch: x86_64
+            configure_preset: macos-x64
+            build_preset: macos-x64-release
+            runner: macos-15-intel
+    
+    runs-on: ${{ matrix.runner }}
+    continue-on-error: ${{ matrix.arch == 'x86_64' }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+      
+      - name: Configure CMake
+        run: |
+          cmake --preset ${{ matrix.configure_preset }}
+      
+      - name: Build
+        run: |
+          cmake --build --preset ${{ matrix.build_preset }}
+      
+      - name: Install
+        run: |
+          cmake --install build/${{ matrix.arch == 'arm64' && 'macos-arm64' || 'macos-x64' }} --config Release
+      
+      - name: Create app bundle
+        run: |
+          ./macos_create_app_bundle.sh dist/PicaSim-*/ dist
+      
+      - name: Create DMG
+        run: |
+          ./macos_create_dmg.sh dist/PicaSim.app dist
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: picasim-${{ matrix.arch }}
+          path: dist/
+          retention-days: 1
+
+  merge-universal:
+    needs: build-macos
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download ARM64 build
+        uses: actions/download-artifact@v4
+        with:
+          name: picasim-arm64
+          path: dist-arm64
+      
+      - name: Download x86_64 build
+        uses: actions/download-artifact@v4
+        with:
+          name: picasim-x86_64
+          path: dist-x86_64
+      
+      - name: Create universal binary
+        run: |
+          # Create output directory
+          mkdir -p dist-universal
+          
+          # Copy arm64 app as base
+          cp -r dist-arm64/PicaSim.app dist-universal/PicaSim.app
+          
+          # Get the executable paths
+          ARM_EXEC="dist-arm64/PicaSim.app/Contents/MacOS/PicaSim"
+          X86_EXEC="dist-x86_64/PicaSim.app/Contents/MacOS/PicaSim"
+          LAUNCHER_ARM="dist-arm64/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          
+          # Create universal executables
+          echo "Creating universal binary for PicaSim..."
+          lipo -create "$ARM_EXEC" "$X86_EXEC" \
+               -output "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+          chmod +x "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+          
+          echo "Copying launcher script (identical across arch)..."
+          cp "$LAUNCHER_ARM" "dist-universal/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          chmod +x "dist-universal/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          
+          # Verify
+          echo "Verifying universal binary..."
+          file "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+          lipo -info "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+      
+      - name: Create universal DMG
+        run: |
+          ./macos_create_dmg.sh dist-universal/PicaSim.app dist-universal
+          
+          # Verify DMG was created
+          ls -lh dist-universal/PicaSim-*.dmg
+      
+      - name: Upload universal build
+        uses: actions/upload-artifact@v4
+        with:
+          name: picasim-universal
+          path: dist-universal/
+          retention-days: 30

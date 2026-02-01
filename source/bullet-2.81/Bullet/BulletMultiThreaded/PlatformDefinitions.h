@@ -45,7 +45,7 @@ typedef union
 #endif //__PHYSICS_COMMON_H__
 		typedef unsigned short    uint16_t;
 
-		#include <malloc.h>
+		#include <cstdlib> //AI generated fix, it was <malloc.h>
 		#define memalign(alignment, size) malloc(size);
 			
 #include <string.h> //memcpy

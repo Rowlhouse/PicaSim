@@ -23,7 +23,9 @@
 #include <stb_image.h>
 
 // OpenGL headers
-#include <glad/glad.h>
+#if !defined(PICASIM_MACOS)
+  #include <glad/glad.h>
+#endif
 
 // For esSetModelViewProjectionMatrix
 void esSetModelViewProjectionMatrix(int location);

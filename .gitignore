@@ -40,3 +40,7 @@ imgui.ini
 nul
 CodingStyleQueries.md
 data/VERSIONS.txt
+
+# MacOS files
+.DS_Store
+fastlane/.env

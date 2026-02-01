@@ -1,412 +1,463 @@
 #include "Shaders.h"
 #include "Trace.h"
 
+// AI generated fix for mac build
+// This prevent runtime crash on macos
+
 // Use appropriate GLSL version for platform
-// Desktop GL 3.0 uses GLSL 130, OpenGL ES 2.0 uses GLSL 100
+// Desktop GL 3.3 Core (macOS) uses GLSL 150 core, OpenGL ES 2.0 uses GLSL 100
 #if defined(PS_PLATFORM_ANDROID) || defined(PS_PLATFORM_IOS)
 #define GLSL(src) "#version 100\n" #src
+#define GLSL_VERSION "#version 100\n"
+#define PRECISION_MEDIUMP "precision mediump float;\n"
+#define PRECISION_LOWP "precision lowp float;\n"
+#define LOWP "lowp "
+#define MEDIUMP "mediump "
+#define ATTRIBUTE "attribute"
+#define VARYING_OUT "varying"
+#define VARYING_IN "varying"
+#define FRAGCOLOR "gl_FragColor"
+#define FRAGCOLOR_DECLARATION ""
+#define TEXTURE2D "texture2D"
+#elif defined(PICASIM_MACOS)
+// macOS - use GLSL 120 for OpenGL 2.1 compatibility
+// (GLSL 120 does not support precision qualifiers)
+#define GLSL_VERSION "#version 120\n"
+#define PRECISION_MEDIUMP ""
+#define PRECISION_LOWP ""
+#define LOWP ""
+#define MEDIUMP ""
+#define ATTRIBUTE "attribute"
+#define VARYING_OUT "varying"
+#define VARYING_IN "varying"
+#define FRAGCOLOR "gl_FragColor"
+#define FRAGCOLOR_DECLARATION ""
+#define TEXTURE2D "texture2D"
 #else
 // Desktop GL - use version 130 which supports precision qualifiers as no-ops
 #define GLSL(src) "#version 130\n" #src
+#define GLSL_VERSION "#version 130\n"
+#define PRECISION_MEDIUMP "precision mediump float;\n"
+#define PRECISION_LOWP "precision lowp float;\n"
+#define LOWP "lowp "
+#define MEDIUMP "mediump "
+#define ATTRIBUTE "attribute"
+#define VARYING_OUT "varying"
+#define VARYING_IN "varying"
+#define FRAGCOLOR "gl_FragColor"
+#define FRAGCOLOR_DECLARATION ""
+#define TEXTURE2D "texture2D"
 #endif
 
-const char simpleVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    attribute vec4 a_position;
-    attribute vec4 a_colour;
-    varying lowp vec4 v_colour;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_colour = a_colour;
-    }
-);
+const char simpleVertexShaderStr[] = 
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " vec4 a_colour;\n"
+    VARYING_OUT " vec4 v_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_colour = a_colour;\n"
+    "}\n";
 
-const char simpleFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    varying vec4 v_colour;
-    void main()
-    {
-        gl_FragColor = v_colour;
-    }
-);
+const char simpleFragmentShaderStr[] = 
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    VARYING_IN " vec4 v_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = v_colour;\n"
+    "}\n";
 
-const char controllerVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    attribute vec4 a_position;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-    }
-);
+const char controllerVertexShaderStr[] = 
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "}\n";
 
-const char controllerFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    uniform vec4 u_colour;
-    void main()
-    {
-        gl_FragColor = u_colour;
-    }
-);
+const char controllerFragmentShaderStr[] = 
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    "uniform vec4 u_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = u_colour;\n"
+    "}\n";
 
-const char skyboxVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4   u_mvpMatrix;
-    attribute vec4 a_position;
-    attribute vec2 a_texCoord;
-    varying lowp vec2 v_texCoord;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_texCoord = a_texCoord;
-    }
-);
+const char skyboxVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4   u_mvpMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " vec2 a_texCoord;\n"
+    VARYING_OUT " vec2 v_texCoord;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_texCoord = a_texCoord;\n"
+    "}\n";
 
-const char skyboxFragmentShaderStr[] = GLSL(
-    precision mediump float;
-    varying vec2 v_texCoord;
-    uniform sampler2D u_texture;
-    void main()
-    {
-        gl_FragColor = texture2D(u_texture, v_texCoord);
-    }
-);
+const char skyboxFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    FRAGCOLOR_DECLARATION
+    VARYING_IN " vec2 v_texCoord;\n"
+    "uniform sampler2D u_texture;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = " TEXTURE2D "(u_texture, v_texCoord);\n"
+    "}\n";
 
-const char plainVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    uniform mat4 u_textureMatrix;
-    attribute vec4 a_position;
-    attribute lowp vec4 a_colour;
-    varying lowp vec2 v_texCoord;
-    varying lowp vec4 v_colour;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_texCoord = (u_textureMatrix * a_position).xy;
-        v_colour = a_colour;
-    }
-);
+const char plainVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    "uniform mat4 u_textureMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " " LOWP " vec4 a_colour;\n"
+    VARYING_OUT " " LOWP " vec2 v_texCoord;\n"
+    VARYING_OUT " " LOWP " vec4 v_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_texCoord = (u_textureMatrix * a_position).xy;\n"
+    "    v_colour = a_colour;\n"
+    "}\n";
 
-const char plainFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    varying vec2 v_texCoord;
-    uniform sampler2D u_texture;
-    varying vec4 v_colour;
-    void main()
-    {
-        gl_FragColor = texture2D(u_texture, v_texCoord);
-        gl_FragColor *= v_colour;
-    }
-);
+const char plainFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    VARYING_IN " vec2 v_texCoord;\n"
+    "uniform sampler2D u_texture;\n"
+    VARYING_IN " vec4 v_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = " TEXTURE2D "(u_texture, v_texCoord);\n"
+    "    " FRAGCOLOR " *= v_colour;\n"
+    "}\n";
 
-const char terrainVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    uniform mat4 u_textureMatrix0;
-    uniform mat4 u_textureMatrix1;
-    attribute vec4 a_position;
-    varying lowp vec2 v_texCoord1;
-    varying lowp vec2 v_texCoord0;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_texCoord0 = (u_textureMatrix0 * a_position).xy;
-        v_texCoord1 = (u_textureMatrix1 * a_position).xy;
-    }
-);
+const char terrainVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    "uniform mat4 u_textureMatrix0;\n"
+    "uniform mat4 u_textureMatrix1;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    VARYING_OUT " " LOWP " vec2 v_texCoord1;\n"
+    VARYING_OUT " " LOWP " vec2 v_texCoord0;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_texCoord0 = (u_textureMatrix0 * a_position).xy;\n"
+    "    v_texCoord1 = (u_textureMatrix1 * a_position).xy;\n"
+    "}\n";
 
-const char terrainFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    varying vec2 v_texCoord0;
-    varying vec2 v_texCoord1;
-    uniform sampler2D u_texture0;
-    uniform sampler2D u_texture1;
-    void main()
-    {
-        gl_FragColor = texture2D(u_texture0, v_texCoord0);
-        gl_FragColor *= texture2D(u_texture1, v_texCoord1);
-    }
-);
+const char terrainFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    VARYING_IN " vec2 v_texCoord0;\n"
+    VARYING_IN " vec2 v_texCoord1;\n"
+    "uniform sampler2D u_texture0;\n"
+    "uniform sampler2D u_texture1;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = " TEXTURE2D "(u_texture0, v_texCoord0);\n"
+    "    " FRAGCOLOR " *= " TEXTURE2D "(u_texture1, v_texCoord1);\n"
+    "}\n";
 
-const char terrainPanoramaVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    attribute vec4 a_position;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-    }
-);
+const char terrainPanoramaVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "}\n";
 
-const char terrainPanoramaFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    void main()
-    {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-);
+const char terrainPanoramaFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = vec4(1.0, 1.0, 1.0, 1.0);\n"
+    "}\n";
 
-const char overlayVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    attribute vec4 a_position;
-    attribute vec2 a_texCoord;
-    varying lowp vec2 v_texCoord;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_texCoord = a_texCoord;
-    }
-);
+const char overlayVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " vec2 a_texCoord;\n"
+    VARYING_OUT " " LOWP " vec2 v_texCoord;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_texCoord = a_texCoord;\n"
+    "}\n";
 
-const char overlayFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    varying vec2 v_texCoord;
-    uniform sampler2D u_texture;
-    uniform vec4 u_colour;
-    void main()
-    {
-        gl_FragColor = u_colour * texture2D(u_texture, v_texCoord);
-    }
-);
+const char overlayFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    VARYING_IN " vec2 v_texCoord;\n"
+    "uniform sampler2D u_texture;\n"
+    "uniform vec4 u_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = u_colour * " TEXTURE2D "(u_texture, v_texCoord);\n"
+    "}\n";
 
-const char modelVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    uniform mat3 u_normalMatrix;
-    attribute vec4 a_position;
-    attribute vec3 a_normal;
-    attribute vec4 a_colour;
-    varying lowp vec4 v_colour;
-    varying lowp vec3 v_normal;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_normal    = u_normalMatrix * a_normal;
-        v_colour    = a_colour;
-    }
-);
+const char modelVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    "uniform mat3 u_normalMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " vec3 a_normal;\n"
+    ATTRIBUTE " vec4 a_colour;\n"
+    VARYING_OUT " " LOWP " vec4 v_colour;\n"
+    VARYING_OUT " " LOWP " vec3 v_normal;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_normal    = u_normalMatrix * a_normal;\n"
+    "    v_colour    = a_colour;\n"
+    "}\n";
 
-const char modelFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    uniform vec3      u_lightDir[5];
-    uniform vec4      u_lightDiffuseColour[5];
-    uniform vec4      u_lightSpecularColour[5];
-    uniform vec4      u_lightAmbientColour[5];
-    uniform float     u_specularAmount;
-    uniform float     u_specularExponent;
-    varying vec4      v_colour;
-    varying lowp vec3 v_normal;
+const char modelFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    "uniform vec3      u_lightDir[5];\n"
+    "uniform vec4      u_lightDiffuseColour[5];\n"
+    "uniform vec4      u_lightSpecularColour[5];\n"
+    "uniform vec4      u_lightAmbientColour[5];\n"
+    "uniform float     u_specularAmount;\n"
+    "uniform float     u_specularExponent;\n"
+    VARYING_IN " vec4      v_colour;\n"
+    VARYING_IN " " LOWP " vec3 v_normal;\n"
+    "\n"
+    "vec4 processLight(\n"
+    "    vec3 normal,\n"
+    "    vec3 lightDir,\n"
+    "    vec4 lightDiffuseColour,\n"
+    "    vec4 lightSpecularColour,\n"
+    "    vec4 lightAmbientColour)\n"
+    "{\n"
+    "    vec4 colour = lightAmbientColour * v_colour;\n"
+    "    // Diffuse\n"
+    "    " LOWP " float ndotl = max(0.0, dot(normal, lightDir));\n"
+    "    colour += ndotl * lightDiffuseColour * v_colour;\n"
+    "    // Specular\n"
+    "    " LOWP " vec3 h_vec = normalize(lightDir + vec3(0,0,1));\n"
+    "    " LOWP " float ndoth = dot(normal, h_vec);\n"
+    "    if (ndoth > 0.0)\n"
+    "    {\n"
+    "        colour += (pow(ndoth, u_specularExponent) * \n"
+    "            vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);\n"
+    "    }\n"
+    "    return colour;\n"
+    "}\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    vec3 normal = normalize(v_normal);\n"
+    "    " FRAGCOLOR "  = processLight(normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);\n"
+    "    " FRAGCOLOR ".a = v_colour.a;\n"
+    "}\n";
 
-    vec4 processLight(
-        vec3 normal,
-        vec3 lightDir,
-        vec4 lightDiffuseColour,
-        vec4 lightSpecularColour,
-        vec4 lightAmbientColour)
-    {
-        vec4 colour = lightAmbientColour * v_colour;
-        // Diffuse
-        lowp float ndotl = max(0.0, dot(normal, lightDir));
-        colour += ndotl * lightDiffuseColour * v_colour;
-        // Specular
-        lowp vec3 h_vec = normalize(lightDir + vec3(0,0,1));
-        lowp float ndoth = dot(normal, h_vec);
-        if (ndoth > 0.0)
-        {
-            colour += (pow(ndoth, u_specularExponent) * 
-                vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
-        }
-        return colour;
-    }
+const char texturedModelVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    "uniform mat3 u_normalMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " vec3 a_normal;\n"
+    ATTRIBUTE " vec4 a_colour;\n"
+    ATTRIBUTE " vec2 a_texCoord;\n"
+    VARYING_OUT " " LOWP " vec4 v_colour;\n"
+    VARYING_OUT " " LOWP " vec3 v_normal;\n"
+    VARYING_OUT " " LOWP " vec2 v_texCoord;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_normal    = u_normalMatrix * a_normal;\n"
+    "    v_colour    = a_colour;\n"
+    "    v_texCoord = a_texCoord;\n"
+    "}\n";
 
-    void main()
-    {
-        vec3 normal = normalize(v_normal);
-        gl_FragColor  = processLight(normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
-        gl_FragColor += processLight(normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
-        gl_FragColor += processLight(normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
-        gl_FragColor += processLight(normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
-        gl_FragColor += processLight(normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
-        gl_FragColor.a = v_colour.a;
-    }
-);
+const char texturedModelFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    "uniform vec3      u_lightDir[5];\n"
+    "uniform vec4      u_lightDiffuseColour[5];\n"
+    "uniform vec4      u_lightSpecularColour[5];\n"
+    "uniform vec4      u_lightAmbientColour[5];\n"
+    "uniform float     u_specularAmount;\n"
+    "uniform float     u_specularExponent;\n"
+    "uniform sampler2D u_texture;\n"
+    "uniform float     u_texBias;\n"
+    VARYING_IN " vec4      v_colour;\n"
+    VARYING_IN " " LOWP " vec3 v_normal;\n"
+    VARYING_IN " vec2      v_texCoord;\n"
+    "\n"
+    "vec4 processLight(\n"
+    "    vec3 normal,\n"
+    "    vec3 lightDir,\n"
+    "    vec4 lightDiffuseColour,\n"
+    "    vec4 lightSpecularColour,\n"
+    "    vec4 lightAmbientColour)\n"
+    "{\n"
+    "    vec4 colour = lightAmbientColour * v_colour;\n"
+    "    // Diffuse\n"
+    "    " LOWP " float ndotl = max(0.0, dot(normal, lightDir));\n"
+    "    colour += ndotl * lightDiffuseColour * v_colour;\n"
+    "    // Specular\n"
+    "    " LOWP " vec3 h_vec = normalize(lightDir + vec3(0,0,1));\n"
+    "    " LOWP " float ndoth = dot(normal, h_vec);\n"
+    "    if (ndoth > 0.0)\n"
+    "    {\n"
+    "        colour += (pow(ndoth, u_specularExponent) * \n"
+    "            vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);\n"
+    "    }\n"
+    "    return colour;\n"
+    "}\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    vec3 normal = normalize(v_normal);\n"
+    "    " FRAGCOLOR "  = processLight(normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);\n"
+    "    " FRAGCOLOR " += processLight(normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);\n"
+    "    " FRAGCOLOR ".a = v_colour.a;\n"
+    "    " FRAGCOLOR " = min(" FRAGCOLOR ", 1.0);\n"
+    "    " FRAGCOLOR " *= " TEXTURE2D "(u_texture, v_texCoord, u_texBias);\n"
+    "}\n";
 
-const char texturedModelVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    uniform mat3 u_normalMatrix;
-    attribute vec4 a_position;
-    attribute vec3 a_normal;
-    attribute vec4 a_colour;
-    attribute vec2 a_texCoord;
-    varying lowp vec4 v_colour;
-    varying lowp vec3 v_normal;
-    varying lowp vec2 v_texCoord;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_normal    = u_normalMatrix * a_normal;
-        v_colour    = a_colour;
-        v_texCoord = a_texCoord;
-    }
-);
-
-const char texturedModelFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    uniform vec3      u_lightDir[5];
-    uniform vec4      u_lightDiffuseColour[5];
-    uniform vec4      u_lightSpecularColour[5];
-    uniform vec4      u_lightAmbientColour[5];
-    uniform float     u_specularAmount;
-    uniform float     u_specularExponent;
-    uniform sampler2D u_texture;
-    uniform float     u_texBias;
-    varying vec4      v_colour;
-    varying lowp vec3 v_normal;
-    varying vec2      v_texCoord;
-
-    vec4 processLight(
-        vec3 normal,
-        vec3 lightDir,
-        vec4 lightDiffuseColour,
-        vec4 lightSpecularColour,
-        vec4 lightAmbientColour)
-    {
-        vec4 colour = lightAmbientColour * v_colour;
-        // Diffuse
-        lowp float ndotl = max(0.0, dot(normal, lightDir));
-        colour += ndotl * lightDiffuseColour * v_colour;
-        // Specular
-        lowp vec3 h_vec = normalize(lightDir + vec3(0,0,1));
-        lowp float ndoth = dot(normal, h_vec);
-        if (ndoth > 0.0)
-        {
-            colour += (pow(ndoth, u_specularExponent) * 
-                vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
-        }
-        return colour;
-    }
-
-    void main()
-    {
-        vec3 normal = normalize(v_normal);
-        gl_FragColor  = processLight(normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
-        gl_FragColor += processLight(normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
-        gl_FragColor += processLight(normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
-        gl_FragColor += processLight(normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
-        gl_FragColor += processLight(normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
-        gl_FragColor.a = v_colour.a;
-        gl_FragColor = min(gl_FragColor, 1.0);
-        gl_FragColor *= texture2D(u_texture, v_texCoord, u_texBias);
-    }
-);
-
-const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    uniform vec3      u_lightDir[5];
-    uniform vec4      u_lightDiffuseColour[5];
-    uniform vec4      u_lightSpecularColour[5];
-    uniform vec4      u_lightAmbientColour[5];
-    uniform float     u_specularAmount;
-    uniform float     u_specularExponent;
-    uniform sampler2D u_texture;
-    uniform float     u_texBias;
-    varying vec4      v_colour;
-    varying lowp vec3 v_normal;
-    varying vec2      v_texCoord;
-
-    vec4 processLight(
-        vec4 fragColour,
-        vec3 normal,
-        vec3 lightDir,
-        vec4 lightDiffuseColour,
-        vec4 lightSpecularColour,
-        vec4 lightAmbientColour)
-    {
-        vec4 colour = lightAmbientColour * fragColour;
-        // Diffuse
-        lowp float ndotl = max(0.0, dot(normal, lightDir));
-        colour += ndotl * lightDiffuseColour * fragColour;
-        // Specular
-        lowp vec3 h_vec = normalize(lightDir + vec3(0,0,1));
-        lowp float ndoth = dot(normal, h_vec);
-        if (ndoth > 0.0)
-        {
-            colour += (pow(ndoth, u_specularExponent) * 
-                vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
-        }
-        return colour;
-    }
-
-    void main()
-    {
-        vec3 normal = normalize(v_normal);
-        vec4 texColour = texture2D(u_texture, v_texCoord, u_texBias);
-        vec4 fragColour = v_colour * texColour;
-        gl_FragColor  = processLight(fragColour, normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
-        gl_FragColor.a = v_colour.a * texColour.a;
-        gl_FragColor = min(gl_FragColor, 1.0);
-    }
-);
+const char texturedModelSeparateSpecularFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    "uniform vec3      u_lightDir[5];\n"
+    "uniform vec4      u_lightDiffuseColour[5];\n"
+    "uniform vec4      u_lightSpecularColour[5];\n"
+    "uniform vec4      u_lightAmbientColour[5];\n"
+    "uniform float     u_specularAmount;\n"
+    "uniform float     u_specularExponent;\n"
+    "uniform sampler2D u_texture;\n"
+    "uniform float     u_texBias;\n"
+    VARYING_IN " vec4      v_colour;\n"
+    VARYING_IN " " LOWP " vec3 v_normal;\n"
+    VARYING_IN " vec2      v_texCoord;\n"
+    "\n"
+    "vec4 processLight(\n"
+    "    vec4 fragColour,\n"
+    "    vec3 normal,\n"
+    "    vec3 lightDir,\n"
+    "    vec4 lightDiffuseColour,\n"
+    "    vec4 lightSpecularColour,\n"
+    "    vec4 lightAmbientColour)\n"
+    "{\n"
+    "    vec4 colour = lightAmbientColour * fragColour;\n"
+    "    // Diffuse\n"
+    "    " LOWP " float ndotl = max(0.0, dot(normal, lightDir));\n"
+    "    colour += ndotl * lightDiffuseColour * fragColour;\n"
+    "    // Specular\n"
+    "    " LOWP " vec3 h_vec = normalize(lightDir + vec3(0,0,1));\n"
+    "    " LOWP " float ndoth = dot(normal, h_vec);\n"
+    "    if (ndoth > 0.0)\n"
+    "    {\n"
+    "        colour += (pow(ndoth, u_specularExponent) * \n"
+    "            vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);\n"
+    "    }\n"
+    "    return colour;\n"
+    "}\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    vec3 normal = normalize(v_normal);\n"
+    "    vec4 texColour = " TEXTURE2D "(u_texture, v_texCoord, u_texBias);\n"
+    "    vec4 fragColour = v_colour * texColour;\n"
+    "    " FRAGCOLOR "  = processLight(fragColour, normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);\n"
+    "    " FRAGCOLOR " += processLight(fragColour, normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);\n"
+    "    " FRAGCOLOR " += processLight(fragColour, normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);\n"
+    "    " FRAGCOLOR " += processLight(fragColour, normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);\n"
+    "    " FRAGCOLOR " += processLight(fragColour, normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);\n"
+    "    " FRAGCOLOR ".a = v_colour.a * texColour.a;\n"
+    "    " FRAGCOLOR " = min(" FRAGCOLOR ", 1.0);\n"
+    "}\n";
 
 
-const char shadowVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    uniform mat4 u_textureMatrix;
-    attribute vec4 a_position;
-    attribute vec4 a_texCoord;
-    varying lowp vec2 v_texCoord;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_texCoord = (u_textureMatrix * a_texCoord).xy;
-    }
-);
+const char shadowVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    "uniform mat4 u_textureMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " vec4 a_texCoord;\n"
+    VARYING_OUT " " LOWP " vec2 v_texCoord;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_texCoord = (u_textureMatrix * a_texCoord).xy;\n"
+    "}\n";
 
-const char shadowFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    varying vec2 v_texCoord;
-    uniform sampler2D u_texture;
-    uniform vec4 u_colour;
-    void main()
-    {
-        gl_FragColor = u_colour * texture2D(u_texture, v_texCoord);
-    }
-);
+const char shadowFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    VARYING_IN " vec2 v_texCoord;\n"
+    "uniform sampler2D u_texture;\n"
+    "uniform vec4 u_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = u_colour * " TEXTURE2D "(u_texture, v_texCoord);\n"
+    "}\n";
 
-const char smokeVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4 u_mvpMatrix;
-    attribute vec4 a_position;
-    attribute vec2 a_texCoord;
-    varying lowp vec2 v_texCoord;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_texCoord = a_texCoord.xy;
-    }
-);
+const char smokeVertexShaderStr[] =
+    GLSL_VERSION
+    PRECISION_MEDIUMP
+    "uniform mat4 u_mvpMatrix;\n"
+    ATTRIBUTE " vec4 a_position;\n"
+    ATTRIBUTE " vec2 a_texCoord;\n"
+    VARYING_OUT " " LOWP " vec2 v_texCoord;\n"
+    "void main()\n"
+    "{\n"
+    "    gl_Position = u_mvpMatrix * a_position;\n"
+    "    v_texCoord = a_texCoord.xy;\n"
+    "}\n";
 
-const char smokeFragmentShaderStr[] = GLSL(
-    precision lowp float;
-    varying vec2 v_texCoord;
-    uniform sampler2D u_texture;
-    uniform lowp vec4 u_colour;
-    void main()
-    {
-        gl_FragColor = texture2D(u_texture, v_texCoord);
-        gl_FragColor *= u_colour;
-    }
-);
+const char smokeFragmentShaderStr[] =
+    GLSL_VERSION
+    PRECISION_LOWP
+    FRAGCOLOR_DECLARATION
+    VARYING_IN " vec2 v_texCoord;\n"
+    "uniform sampler2D u_texture;\n"
+    "uniform " LOWP " vec4 u_colour;\n"
+    "void main()\n"
+    "{\n"
+    "    " FRAGCOLOR " = " TEXTURE2D "(u_texture, v_texCoord);\n"
+    "    " FRAGCOLOR " *= u_colour;\n"
+    "}\n";
 
 //======================================================================================================================
 void Shader::Init(const char* vertexShaderStr, const char* fragmentShaderStr)
