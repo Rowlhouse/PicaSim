@@ -80,7 +80,23 @@ find_package(glm CONFIG REQUIRED)
 find_package(OpenAL CONFIG REQUIRED)
 
 # OpenGL
+# Prefer the platform OpenGL framework on macOS instead of any Brew GLVND/Mesa libs
+if(APPLE)
+    set(OpenGL_GL_PREFERENCE LEGACY)
+endif()
 find_package(OpenGL REQUIRED)
+set(PICASIM_OPENGL_LIB OpenGL::GL)
+if(APPLE AND TARGET OpenGL::GL)
+    set(PICASIM_OPENGL_LIB OpenGL::GL)
+    set(PICASIM_APPLE_OPENGL_TBD "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL.tbd")
+    if(NOT EXISTS "${PICASIM_APPLE_OPENGL_TBD}")
+        set(PICASIM_APPLE_OPENGL_TBD "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL.tbd")
+    endif()
+    set_target_properties(OpenGL::GL PROPERTIES
+        IMPORTED_LOCATION "${PICASIM_APPLE_OPENGL_TBD}"
+        INTERFACE_INCLUDE_DIRECTORIES ""
+        INTERFACE_LINK_OPTIONS "-framework;OpenGL")
+endif()
 
 # --------------------------------------------------------------------------
 # Third-party libraries
@@ -138,7 +154,7 @@ target_link_libraries(Framework PUBLIC
     Platform
     BulletPhysics
     glm::glm
-    OpenGL::GL
+    ${PICASIM_OPENGL_LIB}
     imgui::imgui
 )
 if(WIN32)
@@ -172,7 +188,7 @@ target_include_directories(Platform PUBLIC
 target_link_libraries(Platform PUBLIC
     SDL2::SDL2
     glm::glm
-    OpenGL::GL
+    ${PICASIM_OPENGL_LIB}
     imgui::imgui
 )
 

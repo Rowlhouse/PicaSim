@@ -69,8 +69,13 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#elif defined(PS_PLATFORM_MACOS)
+    // macOS only exposes legacy fixed-function via 2.1; avoid core profile which drops our GLSL 120 shaders
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 #else
-    // Desktop platforms - OpenGL 3.3 Compatibility Profile (supports legacy + modern GL)
+    // Other desktop platforms - OpenGL 3.3 Compatibility Profile (supports legacy + modern GL)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -132,7 +137,12 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
         if (!mContext)
         {
             fprintf(stderr, "Retrying with OpenGL 2.1...\n");
+#if defined(PS_PLATFORM_MACOS)
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 0);
+#else
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+#endif
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
             mContext = SDL_GL_CreateContext(mWindow);
@@ -148,7 +158,15 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     }
 
     // Make context current
-    SDL_GL_MakeCurrent(mWindow, mContext);
+    if (SDL_GL_MakeCurrent(mWindow, mContext) != 0)
+    {
+        fprintf(stderr, "SDL_GL_MakeCurrent failed: %s\n", SDL_GetError());
+        SDL_GL_DeleteContext(mContext);
+        SDL_DestroyWindow(mWindow);
+        mContext = nullptr;
+        mWindow = nullptr;
+        return false;
+    }
 
 #ifdef _WIN32
     // Initialize GLAD for OpenGL function loading on Windows
@@ -184,10 +202,28 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     int actualMsaaSamples = 0;
     SDL_GL_GetAttribute(SDL_GL_MULTISAMPLESAMPLES, &actualMsaaSamples);
 
+    const GLubyte* vendor = glGetString(GL_VENDOR);
+    const GLubyte* renderer = glGetString(GL_RENDERER);
+    const GLubyte* version = glGetString(GL_VERSION);
+
+    if (!vendor || !renderer || !version)
+    {
+        fprintf(stderr, "OpenGL context is missing required strings (vendor=%p renderer=%p version=%p)\n", vendor, renderer, version);
+        SDL_GL_DeleteContext(mContext);
+        SDL_DestroyWindow(mWindow);
+        mContext = nullptr;
+        mWindow = nullptr;
+        return false;
+    }
+
+    GLint depthBits = 0;
+    glGetIntegerv(GL_DEPTH_BITS, &depthBits);
+
     printf("Window created: %dx%d, OpenGL %d.%d\n", mWidth, mHeight, mGlMajorVersion, mGlMinorVersion);
-    printf("OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
-    printf("OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
-    printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
+    printf("OpenGL Vendor: %s\n", vendor);
+    printf("OpenGL Renderer: %s\n", renderer);
+    printf("OpenGL Version: %s\n", version);
+    printf("Depth buffer bits: %d\n", depthBits);
     printf("MSAA: requested=%d, actual=%d\n", msaaSamples, actualMsaaSamples);
 
     return true;

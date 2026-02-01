@@ -61,8 +61,8 @@ bool readFromXML(TiXmlElement* elem, const char* name, long unsigned int& value,
 }
 
 //======================================================================================================================
-// size_t overload for 64-bit Windows compatibility
-#if defined(_WIN64) || defined(__x86_64__) || defined(__ppc64__)
+// size_t overload for 64-bit Windows compatibility (avoid duplicate with unsigned long on POSIX)
+#if defined(_WIN64)
 bool readFromXML(TiXmlElement* elem, const char* name, size_t& value, size_t* index)
 {
     unsigned int v = (unsigned int) value;

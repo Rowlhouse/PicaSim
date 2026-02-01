@@ -369,8 +369,9 @@ int main()
         #if defined(PICASIM_MACOS) || defined(PICASIM_LINUX)
         // OpenGL 3.3+ Core Profile: query framebuffer attachment
         glBindFramebuffer(GL_FRAMEBUFFER, 0); // Ensure default framebuffer is bound
-        glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH, 
-                                              GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE, &depthBits);
+        // Query default framebuffer depth attachment size; use GL_DEPTH_ATTACHMENT to avoid invalid enum
+        glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, 
+                              GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE, &depthBits);
         #else
         // Legacy/compatibility mode
         glGetIntegerv(GL_DEPTH_BITS, &depthBits);

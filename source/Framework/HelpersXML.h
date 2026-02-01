@@ -7,8 +7,8 @@
 bool readFromXML(TiXmlElement* elem, const char* name, bool& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, unsigned int& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, long unsigned int& value, size_t* index = 0);
-// size_t overload for 64-bit Windows compatibility
-#if defined(_WIN64) || defined(__x86_64__) || defined(__ppc64__)
+// size_t overload for 64-bit Windows compatibility (only needed on Windows where size_t differs)
+#if defined(_WIN64)
 bool readFromXML(TiXmlElement* elem, const char* name, size_t& value, size_t* index = 0);
 #endif
 bool readFromXML(TiXmlElement* elem, const char* name, unsigned char& value, size_t* index = 0);
