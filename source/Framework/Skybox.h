@@ -27,6 +27,7 @@ public:
 
     // Render skybox with depth-based parallax for VR
     // skyboxCenter: world position to center the skybox (use base camera position, not VR head position)
+    // eyeRightDir: eye separation direction in world space (from left eye to right eye)
     // eyeOffset: -1.0 for left eye, +1.0 for right eye
     // ipd: interpupillary distance in world units
     // depthTexture: texture containing the depth buffer
@@ -35,6 +36,7 @@ public:
     // parallaxScale: scale factor for parallax effect
     void RenderVRParallax(class Viewport* viewport,
                           const Vector3& skyboxCenter,
+                          const Vector3& eyeRightDir,
                           float eyeOffset, float ipd,
                           GLuint depthTexture,
                           int screenWidth, int screenHeight,

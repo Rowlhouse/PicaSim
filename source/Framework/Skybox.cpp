@@ -11,6 +11,52 @@
 #include "Viewport.h"
 #include "Trace.h"
 
+#include <glm/glm.hpp>
+
+// Local constants matching Skybox::Side enum
+namespace {
+    enum SkyboxSide { SKY_UP = 0, SKY_FRONT, SKY_LEFT, SKY_BACK, SKY_RIGHT, SKY_DOWN };
+}
+
+//======================================================================================================================
+// Calculate parallax direction in UV space for a given skybox face
+// side: skybox face (0=UP, 1=FRONT, 2=LEFT, 3=BACK, 4=RIGHT, 5=DOWN)
+// eyeRightDir: eye separation direction in world space (points from left eye to right eye)
+// Returns: direction in UV space for parallax offset
+//======================================================================================================================
+static glm::vec2 CalculateFaceParallaxDir(int side, const glm::vec3& eyeRightDir)
+{
+    // UV axes in world space for each face (PicaSim coords: +X forward, +Y left, +Z up)
+    // The base face (FRONT) has vertices at x=scale, spanning y and z
+    // UV.x increases in -Y direction, UV.y increases in +Z direction
+    glm::vec3 uAxis, vAxis;
+
+    switch (side)
+    {
+    // UV axes derived from FRONT face vertex data, then transformed by each face's rotation
+    // FRONT base: U along -Y, V along -Z (V=0 at top, V=1 at bottom)
+    case SKY_FRONT: uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(0, 0, -1); break;  // no rotation
+    case SKY_RIGHT: uAxis = glm::vec3(-1, 0, 0); vAxis = glm::vec3(0, 0, -1); break;  // ROTATE_270_Z (90° CW)
+    case SKY_BACK:  uAxis = glm::vec3(0, 1, 0);  vAxis = glm::vec3(0, 0, -1); break;  // ROTATE_180_Z
+    case SKY_LEFT:  uAxis = glm::vec3(1, 0, 0);  vAxis = glm::vec3(0, 0, -1); break;  // ROTATE_90_Z (90° CCW)
+    // Up/Down faces use rotations around Y axis
+    case SKY_UP:    uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(-1, 0, 0); break;  // ROTATE_270_Y
+    case SKY_DOWN:  uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(1, 0, 0);  break;  // ROTATE_90_Y
+    default:        uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(0, 0, -1); break;
+    }
+
+    // Project eyeRightDir onto face plane by taking dot products with UV axes
+    float u = glm::dot(eyeRightDir, uAxis);
+    float v = glm::dot(eyeRightDir, vAxis);
+
+    glm::vec2 dir(u, v);
+    float len = glm::length(dir);
+    if (len > 0.001f)
+        dir /= len;  // normalize
+
+    return dir;
+}
+
 //======================================================================================================================
 Skybox::Skybox() :
     mOffset(0.0f),
@@ -348,6 +394,7 @@ void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
 //======================================================================================================================
 void Skybox::RenderVRParallax(Viewport* viewport,
                                const Vector3& skyboxCenter,
+                               const Vector3& eyeRightDir,
                                float eyeOffset, float ipd,
                                GLuint depthTexture,
                                int screenWidth, int screenHeight,
@@ -397,42 +444,66 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     glVertexAttribPointer(vrShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
     glEnableVertexAttribArray(vrShader->a_texCoord);
 
-    // Render all sides with face-specific parallax directions
-    // Side faces: parallax is horizontal (in UV.x direction)
-    // Up/Down faces: parallax is complex (disabled, faceType=1)
+    // Convert eye right direction to glm for calculations
+    glm::vec3 eyeRight(eyeRightDir.x, eyeRightDir.y, eyeRightDir.z);
+
+    // Render all sides with calculated parallax directions based on eye separation
+    glm::vec2 parallaxDir;
+
+    // FRONT - looks at +X
+    parallaxDir = CalculateFaceParallaxDir(SKY_FRONT, eyeRight);
     {
+        TRACE("Front: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
-        DrawSideVRParallax(FRONT, vrShader, 1.0f, 0.0f, 0);
+        DrawSideVRParallax(FRONT, vrShader, parallaxDir.x, parallaxDir.y, 0);
         esPopMatrix();
     }
+
+    // RIGHT - looks at -Y
+    parallaxDir = CalculateFaceParallaxDir(SKY_RIGHT, eyeRight);
     {
+        TRACE("Right: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
         ROTATE_270_Z;
-        DrawSideVRParallax(RIGHT, vrShader, 1.0f, 0.0f, 0);
+        DrawSideVRParallax(RIGHT, vrShader, parallaxDir.x, parallaxDir.y, 0);
         esPopMatrix();
     }
+
+    // BACK - looks at -X
+    parallaxDir = CalculateFaceParallaxDir(SKY_BACK, eyeRight);
     {
+        TRACE("Back: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
         ROTATE_180_Z;
-        DrawSideVRParallax(BACK, vrShader, 1.0f, 0.0f, 0);
+        DrawSideVRParallax(BACK, vrShader, parallaxDir.x, parallaxDir.y, 0);
         esPopMatrix();
     }
+
+    // LEFT - looks at +Y
+    parallaxDir = CalculateFaceParallaxDir(SKY_LEFT, eyeRight);
     {
+        TRACE("Left: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
         ROTATE_90_Z;
-        DrawSideVRParallax(LEFT, vrShader, 1.0f, 0.0f, 0);
+        DrawSideVRParallax(LEFT, vrShader, parallaxDir.x, parallaxDir.y, 0);
         esPopMatrix();
     }
+
+    // UP - looks at +Z
+    parallaxDir = CalculateFaceParallaxDir(SKY_UP, eyeRight);
     {
         esPushMatrix();
         ROTATE_270_Y;
-        DrawSideVRParallax(UP, vrShader, 0.0f, 0.0f, 1);     // disabled
+        // DrawSideVRParallax(UP, vrShader, parallaxDir.x, parallaxDir.y, 0);
         esPopMatrix();
     }
+
+    // DOWN - looks at -Z
+    parallaxDir = CalculateFaceParallaxDir(SKY_DOWN, eyeRight);
     {
         esPushMatrix();
         ROTATE_90_Y;
-        DrawSideVRParallax(DOWN, vrShader, 0.0f, 0.0f, 1);   // disabled
+        // DrawSideVRParallax(DOWN, vrShader, parallaxDir.x, parallaxDir.y, 0);
         esPopMatrix();
     }
 

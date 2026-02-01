@@ -1082,10 +1082,22 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                 }
                 Vector3 skyboxCenter = baseTM.t;
 
+                // Get the eye-to-eye direction from the VR view matrix
+                // The view matrix is already in PicaSim coordinates (X=forward, Y=left, Z=up)
+                // The "right" direction is the first row of the view matrix (camera's local X axis in world space)
+                // Note: We do NOT apply yaw offset here - the eye separation direction is based on
+                // physical head orientation, not the virtual world rotation.
+                glm::mat4 vrView = vrManager.GetViewMatrixForScene(VR_EYE_LEFT);
+
+                // Extract right vector from view matrix (first row = camera's right axis in world space)
+                // GLM is column-major: mat[col][row], so first row is elements [0][0], [1][0], [2][0]
+                Vector3 eyeRightDir(vrView[0][0], vrView[1][0], vrView[2][0]);
+
                 // Render skybox with depth-based parallax
                 mVRSkybox->RenderVRParallax(
                     vrViewport,
                     skyboxCenter,
+                    eyeRightDir,
                     eyeOffset,
                     ipd,
                     depthTexture,
