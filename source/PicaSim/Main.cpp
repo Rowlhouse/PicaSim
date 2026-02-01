@@ -314,13 +314,18 @@ int main()
 
         GLint depthBits = 0;
         // AI generated fix
-        // Query depth buffer size - use Core Profile method if available
+        // Query depth buffer size - use Core Profile method if available, with fallback
         #if defined(PICASIM_MACOS) || defined(PICASIM_LINUX)
         // OpenGL 3.3+ Core Profile: query framebuffer attachment
         glBindFramebuffer(GL_FRAMEBUFFER, 0); // Ensure default framebuffer is bound
         // Query default framebuffer depth attachment size; use GL_DEPTH_ATTACHMENT to avoid invalid enum
         glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, 
-                              GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE, &depthBits);
+                                  GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE, &depthBits);
+        // Fallback if Core Profile query returns 0 (common on macOS system framebuffers)
+        if (depthBits == 0)
+        {
+            glGetIntegerv(GL_DEPTH_BITS, &depthBits);
+        }
         #else
         // Legacy/compatibility mode
         glGetIntegerv(GL_DEPTH_BITS, &depthBits);
