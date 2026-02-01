@@ -185,6 +185,35 @@ PicaSim2/
 
 - `BT_NO_PROFILE` - Disables Bullet physics profiling
 
+### Building (macOS)
+
+```bash
+# Install deps via homebrew
+brew install cmake ninja
+
+# Install vcpkg via git
+git clone https://github.com/microsoft/vcpkg.git ~/vcpkg
+export VCPKG_ROOT="$HOME/vcpkg/" 
+
+# Configure (pick your arch)
+cmake --preset macos-arm64   # or macos-x64 for Intel
+
+# Build
+cmake --build --preset macos-arm64-release # or macos-arm64-debug macos-x64-debug macos-x64-release
+
+# Run
+cd data && ../build/macos-arm64/Debug/PicaSim
+
+# Install staged release files into dist/ (per arch)
+cmake --install build/macos-arm64 --config Release
+
+# Create .app and DMG for the local arch
+./macos_create_app_bundle.sh dist/PicaSim-*/ dist
+./macos_create_dmg.sh dist/PicaSim.app dist
+```
+
+The local `.app` and DMG are single-architecture; the universal (arm64+x86_64) merge is handled by the GitHub Action workflow in [.github/workflows/macos-build.yml](.github/workflows/macos-build.yml).
+
 # Notes on the licence 
 
 PicaSim's licence only covers PicaSim source code and some of the data it uses.
