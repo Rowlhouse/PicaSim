@@ -101,6 +101,7 @@ jobs:
           echo "Creating universal binary for PicaSim..."
           lipo -create "$ARM_EXEC" "$X86_EXEC" \
                -output "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
+          chmod +x "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
           
           echo "Copying launcher script (identical across arch)..."
           cp "$LAUNCHER_ARM" "dist-universal/PicaSim.app/Contents/MacOS/PicaSim-launcher"
