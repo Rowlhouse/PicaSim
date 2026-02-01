@@ -75,8 +75,13 @@ add_compile_definitions(
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_net CONFIG QUIET)
 
-# VR Support (optional, requires OpenXR)
-option(PICASIM_ENABLE_VR "Enable VR headset support (requires OpenXR)" ON)
+# VR Support (optional, requires OpenXR - not available on macOS)
+if(PICASIM_PLATFORM STREQUAL "MACOS")
+    set(PICASIM_ENABLE_VR OFF CACHE BOOL "Enable VR headset support (requires OpenXR - not available on macOS)" FORCE)
+else()
+    option(PICASIM_ENABLE_VR "Enable VR headset support (requires OpenXR)" ON)
+endif()
+
 if(PICASIM_ENABLE_VR)
     find_package(OpenXR CONFIG REQUIRED)
     add_compile_definitions(PICASIM_VR_SUPPORT=1)
@@ -190,6 +195,14 @@ target_link_libraries(Heightfield PUBLIC Framework)
 # --------------------------------------------------------------------------
 file(GLOB PLATFORM_SOURCES CONFIGURE_DEPENDS source/Platform/*.cpp)
 file(GLOB PLATFORM_HEADERS CONFIGURE_DEPENDS source/Platform/*.h)
+
+# Exclude VR support files on macOS (OpenXR not available)
+if(PICASIM_PLATFORM STREQUAL "MACOS")
+    list(REMOVE_ITEM PLATFORM_SOURCES
+        ${CMAKE_SOURCE_DIR}/source/Platform/OpenXRRuntime.cpp
+        ${CMAKE_SOURCE_DIR}/source/Platform/VRManager.cpp
+    )
+endif()
 
 add_library(Platform STATIC ${PLATFORM_SOURCES} ${PLATFORM_HEADERS})
 target_include_directories(Platform PUBLIC
