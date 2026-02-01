@@ -183,7 +183,11 @@ typedef unsigned short wchar_t;
 
 #endif  /* _WIN32 */
 
-#include <GL/gl.h>
+#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  
+#endif
 #include <GL/glu.h>
 
 #ifdef __cplusplus

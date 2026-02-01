@@ -871,7 +871,7 @@ SIMD_FORCE_INLINE btMatrix3x3
 operator*(const btMatrix3x3& m, const btScalar & k)
 {
 #if (defined (BT_USE_SSE_IN_API) && defined (BT_USE_SSE))
-    __m128 vk = bt_splat_ps(_mm_load_ss((float *)&k), 0x80);
+	__m128 vk = bt_splat_ps(_mm_load_ss((float *)&k), 0x00); // AI generated fix, it was 0x80
     return btMatrix3x3(
                 _mm_mul_ps(m[0].mVec128, vk), 
                 _mm_mul_ps(m[1].mVec128, vk), 

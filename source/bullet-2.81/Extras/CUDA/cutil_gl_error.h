@@ -46,7 +46,11 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else
-#include <GL/gl.h>
+#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  
+#endif
 #include <GL/glu.h>
 #endif
 

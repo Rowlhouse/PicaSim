@@ -14,7 +14,7 @@ subject to the following restrictions:
 */
 
 #include <stdio.h>
-#include <malloc.h>		// For _alloca
+#include <cstdlib> //AI generated fix, it was <malloc.h>		// For _alloca
 #include <windows.h>
 #include "GL/glut.h"
 #include "AntTweakBar.h"

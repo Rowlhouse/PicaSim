@@ -7,7 +7,9 @@
 
 // OpenGL headers
 #ifdef _WIN32
-#include <glad/glad.h>
+#if !defined(PICASIM_MACOS)
+  #include <glad/glad.h>
+#endif
 #else
 #ifdef PS_PLATFORM_ANDROID
 #include <GLES2/gl2.h>
@@ -16,7 +18,15 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #else
-#include <GL/gl.h>
+#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  #ifdef __APPLE__
+    #include <OpenGL/gl.h>
+    #else
+    
+    #endif
+#endif
 #include <GL/glext.h>
 #endif
 #endif

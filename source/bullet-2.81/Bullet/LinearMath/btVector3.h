@@ -296,7 +296,7 @@ public:
         #if 0
         vd = _mm_sqrt_ss(vd);
 		vd = _mm_div_ss(v1110, vd);
-		vd = bt_splat_ps(vd, 0x80);
+		vd = bt_splat_ps(vd, 0x00);
 		mVec128 = _mm_mul_ps(mVec128, vd);
         #else
         
@@ -313,7 +313,7 @@ public:
 
         y = _mm_mul_ss(y, z);   // y0 * (1.5 - vd * 0.5 * y0 * y0)
 
-		y = bt_splat_ps(y, 0x80);
+		y = bt_splat_ps(y, 0x00);
 		mVec128 = _mm_mul_ps(mVec128, y);
 
         #endif

@@ -79,7 +79,28 @@ int eglInit(bool createSurface, int msaaSamples)
 
         // Setup Platform/Renderer backends
         ImGui_ImplSDL2_InitForOpenGL(gWindow->GetSDLWindow(), gWindow->GetGLContext());
-        ImGui_ImplOpenGL3_Init("#version 130");
+        
+        // AI generated fix for mac build
+        // Select appropriate GLSL version based on actual OpenGL version
+        int glMajor = gWindow->GetGLMajorVersion();
+        int glMinor = gWindow->GetGLMinorVersion();
+        const char* glslVersion = nullptr;
+        
+        if (glMajor >= 3 && glMinor >= 3)
+        {
+            glslVersion = "#version 150"; // OpenGL 3.3+
+        }
+        else if (glMajor >= 3)
+        {
+            glslVersion = "#version 130"; // OpenGL 3.0-3.2
+        }
+        else
+        {
+            glslVersion = "#version 120"; // OpenGL 2.1
+        }
+        
+        printf("Using GLSL version: %s for OpenGL %d.%d\n", glslVersion, glMajor, glMinor);
+        ImGui_ImplOpenGL3_Init(glslVersion);
 
         // Setup style
         ImGui::StyleColorsDark();
@@ -1022,7 +1043,11 @@ void esGetMatrix(GLMat44& m, GLenum mode)
 void esFrustumf(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
 {
     if (gGLVersion == 1)
-        glFrustumf(left, right, bottom, top, zNear, zFar);
+        #if defined(PICASIM_MACOS)
+            glFrustum(left, right, bottom, top, zNear, zFar);
+        #else
+            glFrustumf(left, right, bottom, top, zNear, zFar);
+        #endif
     else 
         esMatrixFrustum(gMatrixStack[gModeIndex][gStackIndex[gModeIndex]], left, right, bottom, top, zNear, zFar);
 }

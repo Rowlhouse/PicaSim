@@ -2,6 +2,25 @@
 #include "Graphics.h"
 #include "../Platform/S3ECompat.h"
 
+#if defined(PICASIM_MACOS)
+  #define glGenFramebuffersOES glGenFramebuffers
+  #define glDeleteFramebuffersOES glDeleteFramebuffers
+  #define glBindFramebufferOES glBindFramebuffer
+  #define glFramebufferTexture2DOES glFramebufferTexture2D
+  #define glCheckFramebufferStatusOES glCheckFramebufferStatus
+  #define GL_FRAMEBUFFER_OES GL_FRAMEBUFFER
+  #define GL_COLOR_ATTACHMENT0_OES GL_COLOR_ATTACHMENT0
+  #define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE
+
+  #define glGenRenderbuffersOES glGenRenderbuffers
+  #define glDeleteRenderbuffersOES glDeleteRenderbuffers
+  #define glBindRenderbufferOES glBindRenderbuffer
+  #define glRenderbufferStorageOES glRenderbufferStorage
+  #define GL_RENDERBUFFER_OES GL_RENDERBUFFER
+  #define GL_DEPTH_COMPONENT16_OES GL_DEPTH_COMPONENT
+  #define GL_DEPTH_ATTACHMENT_OES GL_DEPTH_ATTACHMENT
+#endif
+
 //======================================================================================================================
 FrameBufferObject::FrameBufferObject(int width, int height, GLenum format, GLenum type)
 {

@@ -45,7 +45,11 @@ subject to the following restrictions:
 
 #ifdef _WINDOWS
 #include <windows.h>
-#include <GL/gl.h>
+#if defined(PICASIM_MACOS)
+  #include <OpenGL/gl.h>
+#else
+  
+#endif
 #include <GL/glu.h>
 #else
 #include <GL/glut.h>
