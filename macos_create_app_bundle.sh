@@ -1,6 +1,8 @@
 #!/bin/bash
-# Script to create a .app bundle of PicaSim for macOS
-# Usage: ./create_macos_app_bundle.sh [source_dir] [output_dir]
+# Script to create a .app bundle of PicaSim for macOS. 
+# It packages only the architecture built on the current machine; the 
+# universal merge happens in the GitHub Action workflow.
+# Usage: ./macos_create_app_bundle.sh [source_dir] [output_dir]
 
 set -e
 

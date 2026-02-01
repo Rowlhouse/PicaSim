@@ -1,5 +1,8 @@
 #!/bin/bash
-set -e
+# Creates the DMG for the app built on the current machine architecture; the
+# universal (arm64 + x86_64) merge is performed separately in the GitHub
+# Action workflow.
+set -euo pipefail
 
 APP_BUNDLE="${1}"
 OUTPUT_DIR="${2:-.}"
@@ -20,25 +23,23 @@ fi
 
 APP_NAME="PicaSim"
 DMG_FILE="$OUTPUT_DIR/PicaSim-${VERSION}.dmg"
-TEMP_DIR="/tmp/picasim_dmg"
+TEMP_DIR=$(mktemp -d /tmp/picasim_dmg.XXXXXX)
+
+# Best-effort detach any mounted PicaSim volume and clear stale DMG
+hdiutil info | awk '/PicaSim/{print $1}' | xargs -I{} hdiutil detach {} 2>/dev/null || true
+[ -f "$DMG_FILE" ] && rm -f "$DMG_FILE"
 
 echo "Creating DMG for PicaSim v$VERSION..."
-rm -rf "$TEMP_DIR" 2>/dev/null || true
-mkdir -p "$TEMP_DIR"
-
 cp -r "$APP_BUNDLE" "$TEMP_DIR/"
 [ -f "LICENSE.txt" ] && cp LICENSE.txt "$TEMP_DIR/" || true
 [ -f "README.md" ] && cp README.md "$TEMP_DIR/" || true
 ln -s /Applications "$TEMP_DIR/Applications"
-
-[ -f "$DMG_FILE" ] && rm -f "$DMG_FILE"
 
 hdiutil create -volname "$APP_NAME" \
     -srcfolder "$TEMP_DIR" \
     -ov \
     -format UDZO \
     "$DMG_FILE"
-
 rm -rf "$TEMP_DIR"
 
 DMG_SIZE=$(du -h "$DMG_FILE" | awk '{print $1}')

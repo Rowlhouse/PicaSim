@@ -52,11 +52,11 @@ jobs:
       
       - name: Create app bundle
         run: |
-          ./macos-create_app_bundle.sh dist/PicaSim-*/ dist
+          ./macos_create_app_bundle.sh dist/PicaSim-*/ dist
       
       - name: Create DMG
         run: |
-          ./macos-create_dmg.sh dist/PicaSim.app dist
+          ./macos_create_dmg.sh dist/PicaSim.app dist
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -113,7 +113,7 @@ jobs:
       
       - name: Create universal DMG
         run: |
-          ./macos-create_dmg.sh dist-universal/PicaSim.app dist-universal
+          ./macos_create_dmg.sh dist-universal/PicaSim.app dist-universal
           
           # Verify DMG was created
           ls -lh dist-universal/PicaSim-*.dmg

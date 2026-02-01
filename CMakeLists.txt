@@ -370,7 +370,7 @@ endif()
 if(APPLE AND NOT IOS)
     # Create macOS .app bundle from installed distribution
     add_custom_target(macos-app-bundle
-        COMMAND bash ${CMAKE_SOURCE_DIR}/create_macos_app_bundle.sh
+        COMMAND bash ${CMAKE_SOURCE_DIR}/macos_create_app_bundle.sh
             ${CMAKE_INSTALL_PREFIX}
             dist
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -380,7 +380,7 @@ if(APPLE AND NOT IOS)
     
     # Create macOS .dmg (disk image) for distribution
     add_custom_target(macos-dmg
-        COMMAND bash ${CMAKE_SOURCE_DIR}/create_dmg.sh
+        COMMAND bash ${CMAKE_SOURCE_DIR}/macos_create_dmg.sh
             dist/PicaSim.app
             dist
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
