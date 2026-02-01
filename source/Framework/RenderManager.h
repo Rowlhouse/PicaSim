@@ -141,11 +141,19 @@ public:
     void SetStereoSeparation(float separation) {mStereoSeparation = separation;}
 
 #ifdef PICASIM_VR_SUPPORT
+    // VR mirror window display mode
+    enum VRMirrorMode
+    {
+        VR_MIRROR_LEFT_EYE = 0,   // Show left eye only
+        VR_MIRROR_RIGHT_EYE = 1,  // Show right eye only
+        VR_MIRROR_BOTH_EYES = 2   // Show both eyes side by side
+    };
+
     // VR rendering - renders to VR headset swapchains
     void RenderUpdateVR(VRFrameInfo& frameInfo);
 
     // Render to mirror window after VR frame
-    void RenderMirrorWindow();
+    void RenderMirrorWindow(VRMirrorMode mode = VR_MIRROR_LEFT_EYE);
 
     // VR skybox with depth-based parallax
     void SetVRSkybox(Skybox* skybox) { mVRSkybox = skybox; }

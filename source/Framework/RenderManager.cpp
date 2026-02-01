@@ -1227,7 +1227,7 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
 }
 
 //======================================================================================================================
-void RenderManager::RenderMirrorWindow()
+void RenderManager::RenderMirrorWindow(VRMirrorMode mode)
 {
     if (!VRManager::IsAvailable() || !VRManager::GetInstance().IsVREnabled())
     {
@@ -1235,13 +1235,6 @@ void RenderManager::RenderMirrorWindow()
     }
 
     VRManager& vrManager = VRManager::GetInstance();
-
-    // Get the left eye texture to display
-    uint32_t eyeTexture = vrManager.GetEyeColorTexture(VR_EYE_LEFT);
-    if (eyeTexture == 0)
-    {
-        return;
-    }
 
     int eyeWidth, eyeHeight;
     vrManager.GetEyeRenderTargetSize(VR_EYE_LEFT, eyeWidth, eyeHeight);
@@ -1252,15 +1245,26 @@ void RenderManager::RenderMirrorWindow()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Calculate letterboxed/pillarboxed rectangle to maintain aspect ratio
-    float eyeAspect = (float)eyeWidth / (float)eyeHeight;
+    // Calculate aspect ratio for the content we're displaying
+    float contentAspect;
+    if (mode == VR_MIRROR_BOTH_EYES)
+    {
+        // Both eyes side by side = double width
+        contentAspect = (float)(eyeWidth * 2) / (float)eyeHeight;
+    }
+    else
+    {
+        // Single eye
+        contentAspect = (float)eyeWidth / (float)eyeHeight;
+    }
+
     float screenAspect = (float)mFrameworkSettings.mScreenWidth / (float)mFrameworkSettings.mScreenHeight;
 
     float x0, y0, x1, y1;
-    if (eyeAspect > screenAspect)
+    if (contentAspect > screenAspect)
     {
-        // Eye is wider - letterbox (black bars top/bottom)
-        float height = mFrameworkSettings.mScreenWidth / eyeAspect;
+        // Content is wider - letterbox (black bars top/bottom)
+        float height = mFrameworkSettings.mScreenWidth / contentAspect;
         float yOffset = (mFrameworkSettings.mScreenHeight - height) * 0.5f;
         x0 = 0;
         x1 = (float)mFrameworkSettings.mScreenWidth;
@@ -1269,8 +1273,8 @@ void RenderManager::RenderMirrorWindow()
     }
     else
     {
-        // Eye is taller - pillarbox (black bars left/right)
-        float width = mFrameworkSettings.mScreenHeight * eyeAspect;
+        // Content is taller - pillarbox (black bars left/right)
+        float width = mFrameworkSettings.mScreenHeight * contentAspect;
         float xOffset = (mFrameworkSettings.mScreenWidth - width) * 0.5f;
         x0 = xOffset;
         x1 = xOffset + width;
@@ -1288,15 +1292,7 @@ void RenderManager::RenderMirrorWindow()
     esPushMatrix();
     esLoadIdentity();
 
-    // Vertex positions for fullscreen quad
-    GLfloat pts[] = {
-        x0, y0, 0,
-        x1, y0, 0,
-        x1, y1, 0,
-        x0, y1, 0,
-    };
-
-    // Texture coordinates (flip V since OpenGL textures are bottom-up)
+    // Texture coordinates (same for all quads)
     GLfloat uvs[] = {
         0, 0,
         1, 0,
@@ -1313,22 +1309,75 @@ void RenderManager::RenderMirrorWindow()
     overlayShader->Use();
 
     glUniform1i(overlayShader->u_texture, 0);
-
-    glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
-    glEnableVertexAttribArray(overlayShader->a_position);
+    glUniform4f(overlayShader->u_colour, 1.0f, 1.0f, 1.0f, 1.0f);
 
     glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
     glEnableVertexAttribArray(overlayShader->a_texCoord);
 
-    glUniform4f(overlayShader->u_colour, 1.0f, 1.0f, 1.0f, 1.0f);
-    esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
-
-    // Bind the eye texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, eyeTexture);
 
-    // Draw the quad
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    if (mode == VR_MIRROR_BOTH_EYES)
+    {
+        // Draw left eye on the left half
+        float xMid = (x0 + x1) * 0.5f;
+
+        GLfloat ptsLeft[] = {
+            x0, y0, 0,
+            xMid, y0, 0,
+            xMid, y1, 0,
+            x0, y1, 0,
+        };
+
+        uint32_t leftTexture = vrManager.GetEyeColorTexture(VR_EYE_LEFT);
+        if (leftTexture != 0)
+        {
+            glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, ptsLeft);
+            glEnableVertexAttribArray(overlayShader->a_position);
+            esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
+            glBindTexture(GL_TEXTURE_2D, leftTexture);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
+
+        // Draw right eye on the right half
+        GLfloat ptsRight[] = {
+            xMid, y0, 0,
+            x1, y0, 0,
+            x1, y1, 0,
+            xMid, y1, 0,
+        };
+
+        uint32_t rightTexture = vrManager.GetEyeColorTexture(VR_EYE_RIGHT);
+        if (rightTexture != 0)
+        {
+            glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, ptsRight);
+            glEnableVertexAttribArray(overlayShader->a_position);
+            esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
+            glBindTexture(GL_TEXTURE_2D, rightTexture);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
+    }
+    else
+    {
+        // Single eye mode
+        VREye eye = (mode == VR_MIRROR_RIGHT_EYE) ? VR_EYE_RIGHT : VR_EYE_LEFT;
+        uint32_t eyeTexture = vrManager.GetEyeColorTexture(eye);
+
+        if (eyeTexture != 0)
+        {
+            GLfloat pts[] = {
+                x0, y0, 0,
+                x1, y0, 0,
+                x1, y1, 0,
+                x0, y1, 0,
+            };
+
+            glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+            glEnableVertexAttribArray(overlayShader->a_position);
+            esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
+            glBindTexture(GL_TEXTURE_2D, eyeTexture);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
+    }
 
     // Clean up
     glDisableVertexAttribArray(overlayShader->a_position);

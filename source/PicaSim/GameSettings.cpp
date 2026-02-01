@@ -231,7 +231,7 @@ Options::Options() :
 #ifdef PICASIM_VR_SUPPORT
     mEnableVR(false),
     mVRWorldScale(1.0f),
-    mVRDesktopMode(VR_DESKTOP_VR_VIEW),
+    mVRDesktopMode(VR_DESKTOP_LEFT_EYE),
     mVRMSAASamples(8),
     mVRPanoramaDepth(false),
     mVRSkyDistance(5000.0f),

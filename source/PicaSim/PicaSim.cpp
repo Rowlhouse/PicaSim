@@ -1190,9 +1190,17 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 break;
-            case Options::VR_DESKTOP_VR_VIEW:
-                // Show VR view in desktop window
-                RenderManager::GetInstance().RenderMirrorWindow();
+            case Options::VR_DESKTOP_LEFT_EYE:
+                // Show left eye view in desktop window
+                RenderManager::GetInstance().RenderMirrorWindow(RenderManager::VR_MIRROR_LEFT_EYE);
+                break;
+            case Options::VR_DESKTOP_RIGHT_EYE:
+                // Show right eye view in desktop window
+                RenderManager::GetInstance().RenderMirrorWindow(RenderManager::VR_MIRROR_RIGHT_EYE);
+                break;
+            case Options::VR_DESKTOP_BOTH_EYES:
+                // Show both eyes side by side in desktop window
+                RenderManager::GetInstance().RenderMirrorWindow(RenderManager::VR_MIRROR_BOTH_EYES);
                 break;
             case Options::VR_DESKTOP_NORMAL_VIEW:
                 // Render normal non-VR view to desktop window
