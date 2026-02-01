@@ -41,8 +41,8 @@ static glm::vec2 CalculateFaceParallaxDir(int side, const glm::vec3& eyeRightDir
     case SKY_BACK:  uAxis = glm::vec3(0, 1, 0);  vAxis = glm::vec3(0, 0, -1); break;  // ROTATE_180_Z
     case SKY_LEFT:  uAxis = glm::vec3(1, 0, 0);  vAxis = glm::vec3(0, 0, -1); break;  // ROTATE_90_Z (90° CCW)
     // Up/Down faces use rotations around Y axis
-    case SKY_UP:    uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(-1, 0, 0); break;  // ROTATE_270_Y
-    case SKY_DOWN:  uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(1, 0, 0);  break;  // ROTATE_90_Y
+    case SKY_UP:    uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(1, 0, 0);  break;  // ROTATE_270_Y
+    case SKY_DOWN:  uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(-1, 0, 0); break;  // ROTATE_90_Y
     default:        uAxis = glm::vec3(0, -1, 0); vAxis = glm::vec3(0, 0, -1); break;
     }
 
