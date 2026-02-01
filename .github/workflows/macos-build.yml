@@ -96,16 +96,15 @@ jobs:
           ARM_EXEC="dist-arm64/PicaSim.app/Contents/MacOS/PicaSim"
           X86_EXEC="dist-x86_64/PicaSim.app/Contents/MacOS/PicaSim"
           LAUNCHER_ARM="dist-arm64/PicaSim.app/Contents/MacOS/PicaSim-launcher"
-          LAUNCHER_X86="dist-x86_64/PicaSim.app/Contents/MacOS/PicaSim-launcher"
           
           # Create universal executables
           echo "Creating universal binary for PicaSim..."
           lipo -create "$ARM_EXEC" "$X86_EXEC" \
                -output "dist-universal/PicaSim.app/Contents/MacOS/PicaSim"
           
-          echo "Creating universal binary for launcher..."
-          lipo -create "$LAUNCHER_ARM" "$LAUNCHER_X86" \
-               -output "dist-universal/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          echo "Copying launcher script (identical across arch)..."
+          cp "$LAUNCHER_ARM" "dist-universal/PicaSim.app/Contents/MacOS/PicaSim-launcher"
+          chmod +x "dist-universal/PicaSim.app/Contents/MacOS/PicaSim-launcher"
           
           # Verify
           echo "Verifying universal binary..."
