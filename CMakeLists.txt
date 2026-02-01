@@ -45,19 +45,19 @@ endif()
 message(STATUS "Building PicaSim for platform: ${PICASIM_PLATFORM}")
 
 # --------------------------------------------------------------------------
-# mod
+# AI generated fix for MacOS
 # --------------------------------------------------------------------------
 if(APPLE)
-  add_compile_options(-include "${CMAKE_SOURCE_DIR}/source/Platform/GLCompat.h")
-  add_compile_definitions(GL_SILENCE_DEPRECATION)
-  add_compile_options(-Wno-deprecated-declarations)
+    add_compile_options(-include "${CMAKE_SOURCE_DIR}/source/Platform/GLCompat.h")
+    add_compile_definitions(GL_SILENCE_DEPRECATION)
+    add_compile_options(-Wno-deprecated-declarations)
 endif()
 
 list(REMOVE_ITEM PICASIM_SOURCES
-${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.cpp
-${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.cpp
-${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.h
-${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.h
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.cpp
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.cpp
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/ConnectionListener.h
+    ${CMAKE_SOURCE_DIR}/source/PicaSim/IncomingConnection.h
 )
 
 
@@ -256,7 +256,7 @@ endif()
 
 target_include_directories(PicaSim PRIVATE ${BULLET_SOURCE_DIR})
 
-# Link SDL2_net if available TODO: fix
+# Link SDL2_net if available
 find_package(SDL2_net CONFIG QUIET)
 
 if(TARGET SDL2_net::SDL2_net)

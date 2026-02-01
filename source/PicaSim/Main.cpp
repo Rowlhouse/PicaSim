@@ -365,6 +365,7 @@ int main()
         LoadingScreen* initialLoadingScreen = new LoadingScreen(GetPS(PS_LOADING, gameSettings.mOptions.mLanguage), gameSettings, true, false, true);
 
         GLint depthBits = 0;
+        // AI generated fix
         // Query depth buffer size - use Core Profile method if available
         #if defined(PICASIM_MACOS) || defined(PICASIM_LINUX)
         // OpenGL 3.3+ Core Profile: query framebuffer attachment

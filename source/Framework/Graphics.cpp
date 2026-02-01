@@ -80,6 +80,7 @@ int eglInit(bool createSurface, int msaaSamples)
         // Setup Platform/Renderer backends
         ImGui_ImplSDL2_InitForOpenGL(gWindow->GetSDLWindow(), gWindow->GetGLContext());
         
+        // AI generated fix for mac build
         // Select appropriate GLSL version based on actual OpenGL version
         int glMajor = gWindow->GetGLMajorVersion();
         int glMinor = gWindow->GetGLMinorVersion();

@@ -43,6 +43,7 @@ long _maxdot_large( const float *vv, const float *vec, unsigned long count, floa
 long _maxdot_large( const float *vv, const float *vec, unsigned long count, float *dotResult )
 {
     const float4 *vertices = (const float4*) vv;
+    // AI generated fix for mac build
     static const unsigned char indexTable[16] = {
         static_cast<unsigned char>(-1), 0, 1, 0,
         2, 0, 1, 0,
@@ -433,6 +434,7 @@ long _mindot_large( const float *vv, const float *vec, unsigned long count, floa
 long _mindot_large( const float *vv, const float *vec, unsigned long count, float *dotResult )
 {
     const float4 *vertices = (const float4*) vv;
+    // AI generated fix for mac build
     static const unsigned char indexTable[16] = {
         static_cast<unsigned char>(-1), 0, 1, 0,
         2, 0, 1, 0,

@@ -10,16 +10,13 @@
 
 #include "Platform.h"
 
-#ifdef _WIN32
-#if !defined(PICASIM_MACOS)
-  #include <glad/glad.h>
-#endif
+// AI generated fix for macos build
+#if defined(_WIN32)
+    #include <glad/glad.h>
+#elif defined(PICASIM_MACOS) || defined(__APPLE__)
+    #include <OpenGL/gl.h>
 #else
-#if defined(PICASIM_MACOS)
-  #include <OpenGL/gl.h>
-#else
-  #include "GLCompat.h"
-#endif
+    #include "GLCompat.h"
 #endif
 
 #include <string>

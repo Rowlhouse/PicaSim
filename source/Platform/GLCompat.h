@@ -1,5 +1,8 @@
 #pragma once
 
+// AI generated fix
+// this header is an AI generated fix for macos build
+
 #ifdef __APPLE__
   // OpenGL desktop su macOS
   #include <OpenGL/gl.h>

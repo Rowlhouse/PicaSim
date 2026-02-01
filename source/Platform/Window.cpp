@@ -2,21 +2,13 @@
 #include "Platform.h"
 #include <stdio.h>
 
-// TODO: fixare
-#ifdef _WIN32
-#if !defined(PICASIM_MACOS)
-  #include <glad/glad.h>
-#endif
-#else
-#if defined(PICASIM_MACOS)
-  #include <OpenGL/gl.h>
-#else
-  #ifdef __APPLE__
+// AI generated fix for macos build
+#if defined(_WIN32)
+    #include <glad/glad.h>
+#elif defined(PICASIM_MACOS) || defined(__APPLE__)
     #include <OpenGL/gl.h>
 #else
     #include "GLCompat.h"
-    #endif
-#endif
 #endif
 
 // Global window instance

@@ -1,6 +1,9 @@
 #include "Shaders.h"
 #include "Trace.h"
 
+// AI generated fix for mac build
+// This prevent runtime crash on macos
+
 // Use appropriate GLSL version for platform
 // Desktop GL 3.3 Core (macOS) uses GLSL 150 core, OpenGL ES 2.0 uses GLSL 100
 #if defined(PS_PLATFORM_ANDROID) || defined(PS_PLATFORM_IOS)
