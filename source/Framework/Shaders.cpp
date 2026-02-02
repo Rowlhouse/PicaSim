@@ -434,12 +434,9 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform float u_ipd;            // interpupillary distance in world units
     uniform float u_nearPlane;
     uniform float u_farPlane;
-    uniform float u_skyDistance;    // distance for sky pixels (far plane)
     uniform vec2 u_screenSize;      // screen width and height
-    uniform float u_parallaxScale;  // scale factor for parallax effect
     uniform vec2 u_parallaxDir;     // direction of parallax in UV space
     uniform float u_tileScale;      // numPerSide - scales parallax for tile coordinates
-    uniform int u_faceType;         // 0 = side faces, 1 = up/down faces (disabled)
 
     void main()
     {
@@ -451,30 +448,25 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         float linearDepth = u_nearPlane * u_farPlane /
                             (u_farPlane - depthSample * (u_farPlane - u_nearPlane));
 
-        // For sky pixels (at or near far plane), use configurable sky distance
-        if (depthSample > 0.9999)
+        // For sky pixels (at or near far plane), no parallax (sky is at infinity)
+        float parallaxMagnitude = 0.0;
+        if (depthSample < 0.9999)
         {
-            linearDepth = u_skyDistance;
+            // Base parallax angle (radians, approximately)
+            float parallaxAngle = (u_ipd * 0.5) / linearDepth * u_eyeOffset;
+
+            // Convert to UV space: dU/dtheta is approx 0.5 for cube skybox faces
+            // Also scale by tileScale for tiled panoramas (each tile UV spans 1/numPerSide)
+            parallaxMagnitude = parallaxAngle * 0.5 * u_tileScale;
+
+            // Perspective correction for oblique viewing angles
+            // At face center, the view is perpendicular (angle phi = 0)
+            // At edges/corners, the view is oblique (phi > 0), reducing parallax effect
+            // Correction factor: 1/cos(phi) = length(position) / position.x
+            // All faces use the same vertex data with x = scale (rotations are in MVP matrix)
+            float correction = length(v_position) / v_position.x;
+            parallaxMagnitude *= correction;
         }
-
-        // Base parallax angle (radians, approximately)
-        float parallaxAngle = (u_ipd * 0.5) / linearDepth * u_eyeOffset;
-
-        // Convert to UV space: dU/dtheta is approx 0.5 for cube skybox faces
-        // Also scale by tileScale for tiled panoramas (each tile UV spans 1/numPerSide)
-        float parallaxMagnitude = parallaxAngle * 0.5 * u_parallaxScale * u_tileScale;
-
-        // Perspective correction for oblique viewing angles
-        // At face center, the view is perpendicular (angle phi = 0)
-        // At edges/corners, the view is oblique (phi > 0), reducing parallax effect
-        // Correction factor: 1/cos(phi) = length(position) / position.x
-        // All faces use the same vertex data with x = scale (rotations are in MVP matrix)
-        float correction = length(v_position) / v_position.x;
-        parallaxMagnitude *= correction;
-
-        // Disable parallax for up/down faces (complex circular motion)
-        if (u_faceType == 1)
-            parallaxMagnitude = 0.0;
 
         // Apply parallax offset in the face-specific direction
         vec2 offsetUV = v_texCoord + u_parallaxDir * parallaxMagnitude;
@@ -691,12 +683,9 @@ void SkyboxVRParallaxShader::Init()
     u_ipd            = getUniformLocation(mShaderProgram, "u_ipd");
     u_nearPlane      = getUniformLocation(mShaderProgram, "u_nearPlane");
     u_farPlane       = getUniformLocation(mShaderProgram, "u_farPlane");
-    u_skyDistance    = getUniformLocation(mShaderProgram, "u_skyDistance");
     u_screenSize     = getUniformLocation(mShaderProgram, "u_screenSize");
-    u_parallaxScale  = getUniformLocation(mShaderProgram, "u_parallaxScale");
     u_parallaxDir    = getUniformLocation(mShaderProgram, "u_parallaxDir");
     u_tileScale      = getUniformLocation(mShaderProgram, "u_tileScale");
-    u_faceType       = getUniformLocation(mShaderProgram, "u_faceType");
 }
 
 

@@ -230,12 +230,9 @@ Options::Options() :
     mStereoSeparation(0.1f),
 #ifdef PICASIM_VR_SUPPORT
     mEnableVR(false),
-    mVRWorldScale(1.0f),
     mVRDesktopMode(VR_DESKTOP_LEFT_EYE),
     mVRMSAASamples(8),
-    mVRPanoramaDepth(false),
-    mVRSkyDistance(5000.0f),
-    mVRParallaxScale(1.0f),
+    mVRPanoramaDepth(true),
 #endif
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
@@ -372,13 +369,10 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_DOUBLE_ATTRIBUTE(mStereoSeparation);
 #ifdef PICASIM_VR_SUPPORT
     WRITE_ATTRIBUTE(mEnableVR);
-    WRITE_DOUBLE_ATTRIBUTE(mVRWorldScale);
     WRITE_ATTRIBUTE(mVRDesktopMode);
     WRITE_ATTRIBUTE(mVRMSAASamples);
     element->SetAttribute("mVRAudioDevice", mVRAudioDevice.c_str());
     WRITE_ATTRIBUTE(mVRPanoramaDepth);
-    WRITE_DOUBLE_ATTRIBUTE(mVRSkyDistance);
-    WRITE_DOUBLE_ATTRIBUTE(mVRParallaxScale);
 #endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
@@ -602,13 +596,10 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
         READ_ATTRIBUTE(mEnableStereoscopy);
 #ifdef PICASIM_VR_SUPPORT
         READ_ATTRIBUTE(mEnableVR);
-        READ_ATTRIBUTE(mVRWorldScale);
         READ_ENUM_ATTRIBUTE(mVRDesktopMode);
         READ_ATTRIBUTE(mVRMSAASamples);
         READ_ATTRIBUTE(mVRAudioDevice);
         READ_ATTRIBUTE(mVRPanoramaDepth);
-        READ_ATTRIBUTE(mVRSkyDistance);
-        READ_ATTRIBUTE(mVRParallaxScale);
 #endif
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);

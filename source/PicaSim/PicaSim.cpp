@@ -1175,8 +1175,6 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             bool isPanoramicScene = mGameSettings.mEnvironmentSettings.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA;
             VRManager::GetInstance().SetPanoramicScene(isPanoramicScene);
             rm.SetVRPanoramaDepthEnabled(mGameSettings.mOptions.mVRPanoramaDepth && isPanoramicScene);
-            rm.SetVRSkyDistance(mGameSettings.mOptions.mVRSkyDistance);
-            rm.SetVRParallaxScale(mGameSettings.mOptions.mVRParallaxScale);
             rm.SetVRSkybox(&Environment::getSkybox());
 
             rm.RenderUpdateVR(vrFrameInfo);

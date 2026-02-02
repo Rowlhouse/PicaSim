@@ -58,8 +58,6 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
 #ifdef PICASIM_VR_SUPPORT
     mVRSkybox = nullptr;
     mVRPanoramaDepthEnabled = false;
-    mVRSkyDistance = 5000.0f;
-    mVRParallaxScale = 1.0f;
 #endif
 
     float lightBearing   = 0.0f;
@@ -1113,9 +1111,7 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                     depthTexture,
                     eyeWidth, eyeHeight,
                     mFrameworkSettings.mNearClipPlaneDistance,
-                    mFrameworkSettings.mFarClipPlaneDistance,
-                    mVRSkyDistance,
-                    mVRParallaxScale
+                    mFrameworkSettings.mFarClipPlaneDistance
                 );
             }
 

@@ -352,14 +352,13 @@ void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
 
 //======================================================================================================================
 void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
-                                float parallaxDirX, float parallaxDirY, int faceType) const
+                                float parallaxDirX, float parallaxDirY) const
 {
     int numPerSide = std::lround(std::sqrt(mTextures[side].size()));
 
     // Set per-face uniforms
     glUniform2f(shader->u_parallaxDir, parallaxDirX, parallaxDirY);
     glUniform1f(shader->u_tileScale, (float)numPerSide);
-    glUniform1i(shader->u_faceType, faceType);
 
     float imageScale = 1.0f / numPerSide;
     esScalef(1.0f, imageScale, imageScale);
@@ -399,8 +398,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
                                float eyeOffset, float ipd,
                                GLuint depthTexture,
                                int screenWidth, int screenHeight,
-                               float nearPlane, float farPlane,
-                               float skyDistance, float parallaxScale)
+                               float nearPlane, float farPlane)
 {
     TRACE_METHOD_ONLY(2);
 
@@ -425,9 +423,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     glUniform1f(vrShader->u_ipd, ipd);
     glUniform1f(vrShader->u_nearPlane, nearPlane);
     glUniform1f(vrShader->u_farPlane, farPlane);
-    glUniform1f(vrShader->u_skyDistance, skyDistance);
     glUniform2f(vrShader->u_screenSize, (float)screenWidth, (float)screenHeight);
-    glUniform1f(vrShader->u_parallaxScale, parallaxScale);
 
     // Bind depth texture to unit 1
     glActiveTexture(GL_TEXTURE1);
@@ -469,7 +465,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     {
         // TRACE("Front: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
-        DrawSideVRParallax(FRONT, vrShader, parallaxDir.x, parallaxDir.y, 0);
+        DrawSideVRParallax(FRONT, vrShader, parallaxDir.x, parallaxDir.y);
         esPopMatrix();
     }
 
@@ -479,7 +475,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
         // TRACE("Right: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
         ROTATE_270_Z;
-        DrawSideVRParallax(RIGHT, vrShader, parallaxDir.x, parallaxDir.y, 0);
+        DrawSideVRParallax(RIGHT, vrShader, parallaxDir.x, parallaxDir.y);
         esPopMatrix();
     }
 
@@ -489,7 +485,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
         // TRACE("Back: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
         ROTATE_180_Z;
-        DrawSideVRParallax(BACK, vrShader, parallaxDir.x, parallaxDir.y, 0);
+        DrawSideVRParallax(BACK, vrShader, parallaxDir.x, parallaxDir.y);
         esPopMatrix();
     }
 
@@ -499,7 +495,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
         // TRACE("Left: %.3f %.3f", parallaxDir.x, parallaxDir.y);
         esPushMatrix();
         ROTATE_90_Z;
-        DrawSideVRParallax(LEFT, vrShader, parallaxDir.x, parallaxDir.y, 0);
+        DrawSideVRParallax(LEFT, vrShader, parallaxDir.x, parallaxDir.y);
         esPopMatrix();
     }
 
@@ -508,7 +504,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     {
         esPushMatrix();
         ROTATE_270_Y;
-        DrawSideVRParallax(UP, vrShader, parallaxDir.x, parallaxDir.y, 0);
+        DrawSideVRParallax(UP, vrShader, parallaxDir.x, parallaxDir.y);
         esPopMatrix();
     }
 
@@ -517,7 +513,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     {
         esPushMatrix();
         ROTATE_90_Y;
-        DrawSideVRParallax(DOWN, vrShader, parallaxDir.x, parallaxDir.y, 0);
+        DrawSideVRParallax(DOWN, vrShader, parallaxDir.x, parallaxDir.y);
         esPopMatrix();
     }
 

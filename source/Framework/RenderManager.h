@@ -159,8 +159,6 @@ public:
     // VR skybox with depth-based parallax
     void SetVRSkybox(Skybox* skybox) { mVRSkybox = skybox; }
     void SetVRPanoramaDepthEnabled(bool enabled) { mVRPanoramaDepthEnabled = enabled; }
-    void SetVRSkyDistance(float distance) { mVRSkyDistance = distance; }
-    void SetVRParallaxScale(float scale) { mVRParallaxScale = scale; }
 #endif
 
     const struct FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
@@ -204,8 +202,6 @@ private:
 #ifdef PICASIM_VR_SUPPORT
     Skybox* mVRSkybox;
     bool    mVRPanoramaDepthEnabled;
-    float   mVRSkyDistance;
-    float   mVRParallaxScale;
 #endif
 
     FrameworkSettings& mFrameworkSettings;

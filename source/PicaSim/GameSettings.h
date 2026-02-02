@@ -283,15 +283,12 @@ struct Options : public Settings
 
     // VR headset settings
     bool  mEnableVR;              // Enable VR headset rendering (when it is available)
-    float mVRWorldScale;          // World scale factor (1.0 = normal)
     VRDesktopMode mVRDesktopMode; // Desktop window display mode
     int   mVRMSAASamples;         // VR anti-aliasing: 0=off, 2=2x, 4=4x, 8=8x
     std::string mVRAudioDevice;   // Audio device to use when VR session is active (empty = no switch)
 
     // VR panorama depth settings - for stereoscopic parallax in panoramic sceneries
     bool  mVRPanoramaDepth;       // Enable depth-based parallax for panorama skybox
-    float mVRSkyDistance;         // Distance to use for sky pixels (meters, default 5000)
-    float mVRParallaxScale;       // Scale factor for parallax effect (default 1.0)
 #endif
 
     float mMaxNearClipDistance;

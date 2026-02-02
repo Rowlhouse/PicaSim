@@ -545,8 +545,6 @@ void SettingsMenu::RenderOptions1Tab()
                         VRManager::GetInstance().GetSystemName());
                     SettingsWidgets::InfoLabel(TXT(PS_HEADSET), infoStr);
 
-                    SettingsWidgets::SliderFloat(TXT(PS_VRWORLDSCALE), options.mVRWorldScale, 0.5f, 2.0f, "%.2f");
-
                     // VR Desktop window display mode
                     static const char* vrDesktopDescs[] = { TXT(PS_NOTHING), TXT(PS_LEFTEYE), TXT(PS_RIGHTEYE), TXT(PS_BOTHEYES), TXT(PS_BOTHEYESCROSSED), TXT(PS_NORMALVIEW) };
                     int vrDesktopIndex = (int)options.mVRDesktopMode;
@@ -620,11 +618,6 @@ void SettingsMenu::RenderOptions1Tab()
 
                     // VR Panorama Depth - stereoscopic parallax for panoramic sceneries
                     SettingsWidgets::Checkbox(TXT(PS_VRPANORAMADEPTH), options.mVRPanoramaDepth);
-                    if (options.mVRPanoramaDepth)
-                    {
-                        SettingsWidgets::SliderFloat(TXT(PS_VRSKYDISTANCE), options.mVRSkyDistance, 1000.0f, 20000.0f);
-                        SettingsWidgets::SliderFloat(TXT(PS_VRPARALLAXSCALE), options.mVRParallaxScale, -1.0f, 1.0f);
-                    }
                 }
             }
             else

@@ -740,7 +740,6 @@ void InitStringsPT(const char** txt)
   txt[PS_VRHEADSET] = "Headset VR";
   txt[PS_ENABLEVRMODE] = "Ativar modo VR";
   txt[PS_HEADSET] = "Headset";
-  txt[PS_VRWORLDSCALE] = "Escala do mundo";
   txt[PS_NOTHING] = "Nada";
   txt[PS_LEFTEYE] = "Olho esquerdo";
   txt[PS_RIGHTEYE] = "Olho direito";
@@ -754,8 +753,6 @@ void InitStringsPT(const char** txt)
   txt[PS_STATUS] = "Estado";
   txt[PS_VRNOTAVAILABLE] = "VR não disponível - nenhum headset detetado";
   txt[PS_VRPANORAMADEPTH] = "Profundidade panorama VR";
-  txt[PS_VRSKYDISTANCE] = "Distância do céu (m)";
-  txt[PS_VRPARALLAXSCALE] = "Escala de paralaxe";
   txt[PS_ORIENTATION] = "Orientação";
   txt[PS_SMOKESOURCE] = "Fonte de fumo %d";
   txt[PS_NAME] = "Nome";

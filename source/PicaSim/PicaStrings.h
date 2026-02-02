@@ -633,7 +633,6 @@ enum PicaString
     PS_VRHEADSET,
     PS_ENABLEVRMODE,
     PS_HEADSET,
-    PS_VRWORLDSCALE,
     PS_NOTHING,
     PS_LEFTEYE,
     PS_RIGHTEYE,
@@ -647,8 +646,6 @@ enum PicaString
     PS_STATUS,
     PS_VRNOTAVAILABLE,
     PS_VRPANORAMADEPTH,
-    PS_VRSKYDISTANCE,
-    PS_VRPARALLAXSCALE,
 
 // Additional settings strings
     PS_ORIENTATION,
