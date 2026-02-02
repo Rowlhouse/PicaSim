@@ -1174,7 +1174,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             RenderManager& rm = RenderManager::GetInstance();
             bool isPanoramicScene = mGameSettings.mEnvironmentSettings.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA;
             VRManager::GetInstance().SetPanoramicScene(isPanoramicScene);
-            rm.SetVRPanoramaDepthEnabled(mGameSettings.mOptions.mVRPanoramaDepth);
+            rm.SetVRPanoramaDepthEnabled(mGameSettings.mOptions.mVRPanoramaDepth && isPanoramicScene);
             rm.SetVRSkyDistance(mGameSettings.mOptions.mVRSkyDistance);
             rm.SetVRParallaxScale(mGameSettings.mOptions.mVRParallaxScale);
             rm.SetVRSkybox(&Environment::getSkybox());
@@ -1201,6 +1201,10 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             case Options::VR_DESKTOP_BOTH_EYES:
                 // Show both eyes side by side in desktop window
                 RenderManager::GetInstance().RenderMirrorWindow(RenderManager::VR_MIRROR_BOTH_EYES);
+                break;
+            case Options::VR_DESKTOP_BOTH_EYES_CROSSED:
+                // Show both eyes crossed (right-left) for cross-eyed viewing
+                RenderManager::GetInstance().RenderMirrorWindow(RenderManager::VR_MIRROR_BOTH_EYES_CROSSED);
                 break;
             case Options::VR_DESKTOP_NORMAL_VIEW:
                 // Render normal non-VR view to desktop window

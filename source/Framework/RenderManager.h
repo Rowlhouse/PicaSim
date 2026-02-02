@@ -144,9 +144,10 @@ public:
     // VR mirror window display mode
     enum VRMirrorMode
     {
-        VR_MIRROR_LEFT_EYE = 0,   // Show left eye only
-        VR_MIRROR_RIGHT_EYE = 1,  // Show right eye only
-        VR_MIRROR_BOTH_EYES = 2   // Show both eyes side by side
+        VR_MIRROR_LEFT_EYE = 0,         // Show left eye only
+        VR_MIRROR_RIGHT_EYE = 1,        // Show right eye only
+        VR_MIRROR_BOTH_EYES = 2,        // Show both eyes side by side (left-right)
+        VR_MIRROR_BOTH_EYES_CROSSED = 3 // Show both eyes crossed (right-left) for cross-eyed viewing
     };
 
     // VR rendering - renders to VR headset swapchains

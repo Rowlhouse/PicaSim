@@ -273,11 +273,12 @@ struct Options : public Settings
     // VR desktop window display mode
     enum VRDesktopMode
     {
-        VR_DESKTOP_NOTHING = 0,     // Black/blank window
-        VR_DESKTOP_LEFT_EYE = 1,    // Show left eye view
-        VR_DESKTOP_RIGHT_EYE = 2,   // Show right eye view
-        VR_DESKTOP_BOTH_EYES = 3,   // Show both eyes side by side
-        VR_DESKTOP_NORMAL_VIEW = 4  // Show normal non-VR view
+        VR_DESKTOP_NOTHING = 0,         // Black/blank window
+        VR_DESKTOP_LEFT_EYE = 1,        // Show left eye view
+        VR_DESKTOP_RIGHT_EYE = 2,       // Show right eye view
+        VR_DESKTOP_BOTH_EYES = 3,       // Show both eyes side by side
+        VR_DESKTOP_BOTH_EYES_CROSSED = 4, // Show both eyes crossed (right-left) for cross-eyed viewing
+        VR_DESKTOP_NORMAL_VIEW = 5      // Show normal non-VR view
     };
 
     // VR headset settings

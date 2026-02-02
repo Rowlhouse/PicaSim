@@ -415,16 +415,19 @@ const char skyboxVRParallaxVertexShaderStr[] = GLSL(
     attribute vec4 a_position;
     attribute vec2 a_texCoord;
     varying vec2 v_texCoord;
+    varying vec3 v_position;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
         v_texCoord = a_texCoord;
+        v_position = a_position.xyz;
     }
 );
 
 const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     precision mediump float;
     varying vec2 v_texCoord;
+    varying vec3 v_position;
     uniform sampler2D u_skyboxTexture;
     uniform sampler2D u_depthTexture;
     uniform float u_eyeOffset;      // -1.0 for left eye, +1.0 for right eye
@@ -460,6 +463,14 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         // Convert to UV space: dU/dtheta is approx 0.5 for cube skybox faces
         // Also scale by tileScale for tiled panoramas (each tile UV spans 1/numPerSide)
         float parallaxMagnitude = parallaxAngle * 0.5 * u_parallaxScale * u_tileScale;
+
+        // Perspective correction for oblique viewing angles
+        // At face center, the view is perpendicular (angle phi = 0)
+        // At edges/corners, the view is oblique (phi > 0), reducing parallax effect
+        // Correction factor: 1/cos(phi) = length(position) / position.x
+        // All faces use the same vertex data with x = scale (rotations are in MVP matrix)
+        float correction = length(v_position) / v_position.x;
+        parallaxMagnitude *= correction;
 
         // Disable parallax for up/down faces (complex circular motion)
         if (u_faceType == 1)

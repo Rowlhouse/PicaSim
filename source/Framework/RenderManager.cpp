@@ -1269,7 +1269,7 @@ void RenderManager::RenderMirrorWindow(VRMirrorMode mode)
 
     // Calculate aspect ratio for the content we're displaying
     float contentAspect;
-    if (mode == VR_MIRROR_BOTH_EYES)
+    if (mode == VR_MIRROR_BOTH_EYES || mode == VR_MIRROR_BOTH_EYES_CROSSED)
     {
         // Both eyes side by side = double width
         contentAspect = (float)(eyeWidth * 2) / (float)eyeHeight;
@@ -1338,9 +1338,12 @@ void RenderManager::RenderMirrorWindow(VRMirrorMode mode)
 
     glActiveTexture(GL_TEXTURE0);
 
-    if (mode == VR_MIRROR_BOTH_EYES)
+    if (mode == VR_MIRROR_BOTH_EYES || mode == VR_MIRROR_BOTH_EYES_CROSSED)
     {
-        // Draw left eye on the left half
+        // For crossed mode, swap left/right textures for cross-eyed viewing
+        VREye leftHalfEye = (mode == VR_MIRROR_BOTH_EYES_CROSSED) ? VR_EYE_RIGHT : VR_EYE_LEFT;
+        VREye rightHalfEye = (mode == VR_MIRROR_BOTH_EYES_CROSSED) ? VR_EYE_LEFT : VR_EYE_RIGHT;
+
         float xMid = (x0 + x1) * 0.5f;
 
         GLfloat ptsLeft[] = {
@@ -1350,7 +1353,7 @@ void RenderManager::RenderMirrorWindow(VRMirrorMode mode)
             x0, y1, 0,
         };
 
-        uint32_t leftTexture = vrManager.GetEyeColorTexture(VR_EYE_LEFT);
+        uint32_t leftTexture = vrManager.GetEyeColorTexture(leftHalfEye);
         if (leftTexture != 0)
         {
             glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, ptsLeft);
@@ -1360,7 +1363,7 @@ void RenderManager::RenderMirrorWindow(VRMirrorMode mode)
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         }
 
-        // Draw right eye on the right half
+        // Draw on the right half
         GLfloat ptsRight[] = {
             xMid, y0, 0,
             x1, y0, 0,
@@ -1368,7 +1371,7 @@ void RenderManager::RenderMirrorWindow(VRMirrorMode mode)
             xMid, y1, 0,
         };
 
-        uint32_t rightTexture = vrManager.GetEyeColorTexture(VR_EYE_RIGHT);
+        uint32_t rightTexture = vrManager.GetEyeColorTexture(rightHalfEye);
         if (rightTexture != 0)
         {
             glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, ptsRight);

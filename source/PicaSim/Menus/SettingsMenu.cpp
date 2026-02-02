@@ -548,9 +548,9 @@ void SettingsMenu::RenderOptions1Tab()
                     SettingsWidgets::SliderFloat(TXT(PS_VRWORLDSCALE), options.mVRWorldScale, 0.5f, 2.0f, "%.2f");
 
                     // VR Desktop window display mode
-                    static const char* vrDesktopDescs[] = { TXT(PS_NOTHING), TXT(PS_LEFTEYE), TXT(PS_RIGHTEYE), TXT(PS_BOTHEYES), TXT(PS_NORMALVIEW) };
+                    static const char* vrDesktopDescs[] = { TXT(PS_NOTHING), TXT(PS_LEFTEYE), TXT(PS_RIGHTEYE), TXT(PS_BOTHEYES), TXT(PS_BOTHEYESCROSSED), TXT(PS_NORMALVIEW) };
                     int vrDesktopIndex = (int)options.mVRDesktopMode;
-                    if (SettingsWidgets::Combo(TXT(PS_VRDESKTOP), vrDesktopIndex, vrDesktopDescs, 5))
+                    if (SettingsWidgets::Combo(TXT(PS_VRDESKTOP), vrDesktopIndex, vrDesktopDescs, 6))
                         options.mVRDesktopMode = (Options::VRDesktopMode)vrDesktopIndex;
 
                     // VR Anti-aliasing

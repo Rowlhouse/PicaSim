@@ -783,6 +783,7 @@ void InitStringsFR(const char** txt)
   txt[PS_LEFTEYE] = "Oeil gauche";
   txt[PS_RIGHTEYE] = "Oeil droit";
   txt[PS_BOTHEYES] = "Les deux yeux";
+  txt[PS_BOTHEYESCROSSED] = "Vision croisee";
   txt[PS_NORMALVIEW] = "Vue normale";
   txt[PS_VRDESKTOP] = "Bureau VR";
   txt[PS_VRANTIALIASING] = "Anticrénelage VR";
