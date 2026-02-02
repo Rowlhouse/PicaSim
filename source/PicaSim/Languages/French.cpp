@@ -700,38 +700,6 @@ void InitStringsFR(const char** txt)
 "Cela se fait en identifiant quel axe du joystick correspond à quelle entrée de commande, puis il y a des boutons à appuyer lorsque le manche est "
 "au centre, à gauche ou en bas, et à droite ou en haut. Vous pouvez ensuite vérifier que les mouvements du manche correspondent aux sorties correctes. "
 "Cette procédure est la même sous Windows et Android - visitez le site Web ci-dessous pour une vidéo décrivant cela plus en détail.";
-  txt[PS_CREDITSTEXT] = "PicaSim est développé par Danny Chapman\n"
-"Avec l'aide et en remerciant :\n\n"
-"Heidi and Hazel pour leur patience\n\n"
-"Heidi, Jenne, André et Sylvain pour les traductions\n\n"
-"Bullet physics\n\n"
-"TinyXML\n\n"
-"SDL\n\n"
-"OpenAL\n\n"
-"Detlef Jacobi pour Litermonthalle Nalbach/\n\n"
-"Quelques sons depuis www.freesfx.co.uk\n\n"
-"Textures depuis seamless-pixels.blogspot.co.uk/\n\n"
-"Tous ceux qui m'ont aidé par leur tests et signalements de bugs\n\n"
-"Modèles volants réalisés par:\n\n"
-"Mark Cassidy (Phase 6, F18)\n\n"
-"Jim Sekol (Banana, Discus, Genie)\n\n"
-"rrcdoug2000 (Hang gliders)\n\n"
-"Steve Lange (Le Fish, The Plank, Weasel)\n\n"
-"Julian Kent (Jart)\n\n"
-"Alexander Monell (Kato)\n\n"
-"Markus Golec (Spirit26)\n\n"
-"Igor Burger & Tatyana Uzunova (Max Bee textures)\n\n"
-"Danny Chapman (Magpie, Jet, Canard, Trainer, Extra3D etc)\n\n"
-"\n"
-"Veuillez noter que même si j'ai essayé de concevoir des modèles au vol réaliste, je ne prétends pas avoir "
-"parfaitement atteint cet objectif. La seule façon de le découvrir, c'est d'aller sur le terrain faire voler les vrais, "
-"Je vous invite à le faire !";
-  txt[PS_LICENCETEXT] = "PicaSim est disponible dans les versions suivantes :\n\n"
-"Gratuite : Le simulateur et les ressources (y compris les avions et les scènes, etc.) peuvent être distribués selon la licence Creative Commons Attribution-NonCommercial-NoDerivs.\n\n"
-"Payante : Cette version ou ses dérivés ne peuvent être distribués qu'avec mon autorisation explicite.\n\n"
-"Si vous souhaitez partager du contenu que vous avez créé, vous devez le faire séparément de la distribution PicaSim.\n\n"
-"Les ressources de PicaSim peuvent être distribuées selon la licence Creative Commons Attribution-NonCommercial (c'est-à-dire que vous pouvez les modifier et les distribuer, à condition de créditer la source).\n\n"
-"Il est assez facile de distribuer du contenu pour PicaSim en le plaçant dans UserData et UserSettings. Consultez le site Web et demandez sur le forum pour plus de détails.";
   txt[PS_TIPS1] = "Svp, envoyez moi des retours d'expérience que je puisse améliorer PicaSim";
   txt[PS_TIPS2] = "Si vous aimez PicaSim, Svp laissez un commentaire";
   txt[PS_TIPS3] = "Vous pouvez utiliser le gyroscope du mobile pour piloter - Réglage>Contrôle";

@@ -664,36 +664,6 @@ void InitStringsDE(const char** txt)
 "erkannten Steuerelementen zuweisen. Dies geschieht durch Identifizieren, welche Joystick-Achse welcher Steuerungseingabe entspricht. "
 "Dann gibt es Tasten zum Drücken, wenn der Stick in der Mitte, links/unten oder rechts/oben ist. "
 "Dieses Verfahren ist unter Windows und Android gleich - besuchen Sie die Website für ein ausführliches Video.";
-  txt[PS_CREDITSTEXT] = "Autor: Danny Chapman.\n\n\n"
-"Danke an:\n\n"
-"Heidi und Hazel für ihre Geduld\n\n"
-"Heidi, Jenne, André und Sylvain für die Übersetzung\n\n"
-"Bullet physics\n\n"
-"TinyXML\n\n"
-"SDL\n\n"
-"OpenAL\n\n"
-"Detlef Jacobi für Litermonthalle Nalbach/\n\n"
-"Sounds von www.freesfx.co.uk\n\n"
-"Textures von seamless-pixels.blogspot.co.uk/\n\n"
-"Alle, die mir beim Testen und Berichten von Fehlern geholfen haben\n\n"
-"Modelle bereitgestellt von:\n\n"
-"Mark Cassidy (Phase 6, F18)\n\n"
-"Jim Sekol (Banana, Discus, Genie)\n\n"
-"rrcdoug2000 (Hang gliders)\n\n"
-"Steve Lange (Le Fish, The Plank, Weasel)\n\n"
-"Julian Kent (Jart)\n\n"
-"Alexander Monell (Kato)\n\n"
-"Markus Golec (Spirit26)\n\n"
-"Igor Burger & Tatyana Uzunova (Max Bee textures)\n\n"
-"Danny Chapman (Magpie, Jet, Canard, Trainer, Extra3D etc)\n\n"
-"\n"
-"Beachtet bitte, dass trotz grösster Sorgfalt das Flugverhalten der Modelle so realistisch wie möglich zu gestalten, mir dies mitunter nicht immer gelungen sein mag. Am besten findet Ihr dies heraus, wenn Ihr ein wirkliches Modell fliegt!";
-  txt[PS_LICENCETEXT] = "PicaSim ist von mir in folgenden Versionen erhältlich:\n\n"
-"Kostenlos: Der Simulator und Inhalte (inkl. Flugzeuge, Landschaften usw.) dürfen gemäß der Creative Commons Attribution-NonCommercial-NoDerivs Lizenz verteilt werden.\n\n"
-"Bezahlt: Diese Version oder Ableitungen dürfen nur mit meiner ausdrücklichen Genehmigung verteilt werden.\n\n"
-"Wenn Sie selbst erstellte Inhalte teilen möchten, müssen Sie dies getrennt von der PicaSim-Distribution tun.\n\n"
-"Die Inhalte in PicaSim dürfen gemäß der Creative Commons Attribution-NonCommercial Lizenz verteilt werden (d.h. Sie dürfen sie modifizieren und verteilen, solange Sie die Quelle nennen).\n\n"
-"Es ist einfach, Inhalte für PicaSim zu verteilen, indem Sie sie in UserData und UserSettings platzieren. Siehe Website und Forum für weitere Details.";
   txt[PS_TIPS1] = "Bitte schickt mir Rüchmeldungen, damit ich PicaSim verbessern kann";
   txt[PS_TIPS2] = "Gefällt Euch PicaSim, hinterlasst bitte eine Bewertung";
   txt[PS_TIPS3] = " Ihr könnt den Beschleunigungssensor benutzen, um das Modell zu steuern - geht zu Einstellungen»Steuerung";

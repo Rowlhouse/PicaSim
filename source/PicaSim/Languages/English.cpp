@@ -746,6 +746,7 @@ void InitStringsEN(const char** txt)
 "Alexander Monell (Kato)\n\n"
 "Markus Golec (Spirit26)\n\n"
 "Igor Burger & Tatyana Uzunova (Max Bee textures)\n\n"
+"Richard West (Bedlam)\n\n"
 "Danny Chapman (Magpie, Jet, Canard, Trainer, Extra3D etc)\n\n"
 "\n"
 "Please note that whilst I've tried to set up the models to fly realistically, I make no claims that "

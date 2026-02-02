@@ -1,0 +1,24 @@
+<Aerofoil
+  name="MH 42"
+  liftPositionOffsetFractionForwards="0.5"
+  liftPositionOffsetFractionReverse="-0.5"
+  CDFlying="0.009"
+  CDStalled="1.7"
+  CM0="-0.04"
+  CMPerDeg="0.0"
+  refRe="200000"
+  CDPower="-0.15"
+  minReFrac="0.1"
+  
+  useData="0"
+  
+  CL0 = "0.23"
+  CLPerDeg = "0.11"
+  positiveAttachedAngle = "11.0"
+  positiveStallRange = "12"
+  negativeAttachedAngle = "-10"
+  negativeStallRange = "-12"
+  dragBucketFactor = "0.1"
+  dragBucketLowerAngle = "-4.5"
+  dragBucketUpperAngle = "6.5"
+/>

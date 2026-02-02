@@ -698,38 +698,6 @@ void InitStringsPT(const char** txt)
 "Isto é feito identificando qual eixo do joystick corresponde a qual entrada de controlo, e depois há botões para premir quando o stick está "
 "no centro, à esquerda ou em baixo, e à direita ou em cima. Pode então verificar que os movimentos do stick correspondem às saídas corretas. "
 "Este procedimento é o mesmo no Windows e Android - visite o site abaixo para um vídeo que descreve isto em mais detalhe.";
-  txt[PS_CREDITSTEXT] = "O PicaSim foi desenvolvido por Danny Chapman.\n\n\n"
-"Com agradecimentos a:\n\n"
-"Heidi e Hazel pela sua paciência\n\n"
-"Heidi, Jenne, André e Sylvain pelas traduções\n\n"
-"Bullet pela física\n\n"
-"TinyXML\n\n"
-"SDL\n\n"
-"OpenAL\n\n"
-"Detlef Jacobi para Litermonthalle Nalbach/\n\n"
-"Alguns sons de www.freesfx.co.uk\n\n"
-"Textures de seamless-pixels.blogspot.co.uk/\n\n"
-"A todos que tem ajudado com testes e a relatar bugs\n\n"
-"Modelos de aviões fornecidos por:\n\n"
-"Mark Cassidy (Phase 6, F18)\n\n"
-"Jim Sekol (Banana, Discus, Genie)\n\n"
-"rrcdoug2000 (Hang gliders)\n\n"
-"Steve Lange (Le Fish, The Plank, Weasel)\n\n"
-"Julian Kent (Jart)\n\n"
-"Alexander Monell (Kato)\n\n"
-"Markus Golec (Spirit26)\n\n"
-"Igor Burger & Tatyana Uzunova (Max Bee textures)\n\n"
-"Danny Chapman (Magpie, Jet, Canard, Trainer, Extra3D etc)\n\n"
-"\n"
-"Por favor, note que, embora eu tenha tentado configurar os modelos a voar de forma realista, não exijo que "
-"realmente atingam esse objetivo. A única maneira de descobrir isso é ir lá para fora e voar no mundo real."
-"Faça isso!";
-  txt[PS_LICENCETEXT] = "O PicaSim está disponível nas seguintes versões:\n\n"
-"Gratuita: O simulador e recursos (incluindo aviões e cenários, etc.) podem ser distribuídos de acordo com a licença Creative Commons Attribution-NonCommercial-NoDerivs.\n\n"
-"Paga: Esta versão ou os seus derivados só podem ser distribuídos com a minha autorização explícita.\n\n"
-"Se desejar partilhar conteúdo que criou, deve fazê-lo separadamente da distribuição do PicaSim.\n\n"
-"Os recursos do PicaSim podem ser distribuídos de acordo com a licença Creative Commons Attribution-NonCommercial (ou seja, pode modificá-los e distribuí-los, desde que credite a fonte).\n\n"
-"É bastante fácil distribuir conteúdo para o PicaSim colocando-o em UserData e UserSettings. Consulte o site e pergunte no fórum para mais detalhes.";
   txt[PS_TIPS1] = "Por favor, envie-me a sua opinião para que possa melhorar o PicaSim";
   txt[PS_TIPS2] = "Se gosta do PicaSim, por favor, deixe um comentário/classificação";
   txt[PS_TIPS3] = "Pode usar o acelerómetro para controlar o modelo - em Definições»Controlador";
