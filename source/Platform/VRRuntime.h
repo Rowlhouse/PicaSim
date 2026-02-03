@@ -186,6 +186,11 @@ public:
     // Get the view matrix for an eye (inverse of eye pose).
     virtual glm::mat4 GetViewMatrix(VREye eye) const = 0;
 
+    // Get FOV tangent values for an eye (for reconstructing view rays from screen position)
+    // Returns false if FOV data is not available
+    virtual bool GetFovTangents(VREye eye, float& tanLeft, float& tanRight,
+                                float& tanUp, float& tanDown) const = 0;
+
     // Get the interpupillary distance (IPD) in meters.
     // Calculated from the distance between the two eye positions.
     float GetIPD() const

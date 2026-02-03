@@ -399,7 +399,9 @@ void Skybox::RenderVRParallax(Viewport* viewport,
                                float eyeOffset, float ipd,
                                GLuint depthTexture,
                                int screenWidth, int screenHeight,
-                               float nearPlane, float farPlane)
+                               float nearPlane, float farPlane,
+                               float tanFovLeft, float tanFovRight,
+                               float tanFovUp, float tanFovDown)
 {
     TRACE_METHOD_ONLY(2);
 
@@ -425,6 +427,8 @@ void Skybox::RenderVRParallax(Viewport* viewport,
     glUniform1f(vrShader->u_nearPlane, nearPlane);
     glUniform1f(vrShader->u_farPlane, farPlane);
     glUniform2f(vrShader->u_screenSize, (float)screenWidth, (float)screenHeight);
+    glUniform2f(vrShader->u_tanFovMin, tanFovLeft, tanFovDown);
+    glUniform2f(vrShader->u_tanFovMax, tanFovRight, tanFovUp);
 
     // Bind depth texture to unit 1
     glActiveTexture(GL_TEXTURE1);

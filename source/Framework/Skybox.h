@@ -32,13 +32,16 @@ public:
     // ipd: interpupillary distance in world units
     // depthTexture: texture containing the depth buffer
     // nearPlane, farPlane: clipping plane distances
+    // tanFovLeft/Right/Up/Down: FOV tangent values for depth correction
     void RenderVRParallax(class Viewport* viewport,
                           const Vector3& skyboxCenter,
                           const Vector3& eyeRightDir,
                           float eyeOffset, float ipd,
                           GLuint depthTexture,
                           int screenWidth, int screenHeight,
-                          float nearPlane, float farPlane);
+                          float nearPlane, float farPlane,
+                          float tanFovLeft, float tanFovRight,
+                          float tanFovUp, float tanFovDown);
 
 private:
     enum Side {UP, FRONT, LEFT, BACK, RIGHT, DOWN, NUM_SIDES};

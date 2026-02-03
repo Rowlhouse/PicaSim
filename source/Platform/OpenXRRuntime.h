@@ -70,6 +70,8 @@ public:
     // Projection
     glm::mat4 GetProjectionMatrix(VREye eye, float nearClip, float farClip) const override;
     glm::mat4 GetViewMatrix(VREye eye) const override;
+    bool GetFovTangents(VREye eye, float& tanLeft, float& tanRight,
+                        float& tanUp, float& tanDown) const override;
 
     // Runtime info
     const char* GetRuntimeName() const override;

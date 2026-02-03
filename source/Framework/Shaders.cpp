@@ -438,6 +438,8 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform vec2 u_parallaxDir;     // direction of parallax in UV space
     uniform float u_tileScale;      // numPerSide - scales parallax for tile coordinates
     uniform vec2 u_tileOffset;      // tile translation offset (y, z components)
+    uniform vec2 u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
+    uniform vec2 u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
 
     void main()
     {
@@ -445,31 +447,44 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         vec2 screenUV = gl_FragCoord.xy / u_screenSize;
         float depthSample = texture2D(u_depthTexture, screenUV).r;
 
-        // Convert from normalized depth [0,1] to linear depth
+        // Convert from normalized depth [0,1] to linear depth. This is the perpendicular distance - 
+        // i.e. along the look direction (not the absolute distance).
         float linearDepth = u_nearPlane * u_farPlane /
                             (u_farPlane - depthSample * (u_farPlane - u_nearPlane));
+                            
+        // Correct for screen position: linearDepth is perpendicular distance,
+        // but we need actual radial distance for proper parallax.
+        // Map screen UV to view ray direction using FOV tangents.
+        vec2 viewRay = mix(u_tanFovMin, u_tanFovMax, screenUV);
+        float cosAngle = 1.0 / sqrt(1.0 + dot(viewRay, viewRay));
+        linearDepth = linearDepth / cosAngle;
+//        linearDepth = linearDepth / (1 + cosAngle * 0.000001);
+
+        // At this point, if we render distance above a flat ground then we get circles around the 
+        // observer.
 
         // For sky pixels (at or near far plane), no parallax (sky is at infinity)
         float parallaxMagnitude = 0.0;
         if (depthSample < 0.9999)
         {
-            // Base parallax angle (radians, approximately)
+            // Base parallax angle (radians, for small angles)
             float parallaxAngle = (u_ipd * 0.5) / linearDepth * u_eyeOffset;
 
-            // Convert to UV space: dU/dtheta is approx 0.5 for cube skybox faces
+            // Convert to UV space: dU/dtheta is exactly 0.5 at the centre of the skybox faces
+            // This increases to 1 at the edges
             // Also scale by tileScale for tiled panoramas (each tile UV spans 1/numPerSide)
             parallaxMagnitude = parallaxAngle * 0.5 * u_tileScale;
 
             // Perspective correction for oblique viewing angles
-            // At face center, the view is perpendicular (angle phi = 0)
-            // At edges/corners, the view is oblique (phi > 0), reducing parallax effect
-            // Correction factor: 1/cos(phi) = length(position) / position.x
-            // Reconstruct actual skybox position accounting for tile scale and offset
-            // v_position is raw vertex data, we apply the same transform as CPU
+            // The UV-to-angle relationship is: tan(θ) = 2*UV - 1, so dUV/dθ = sec²(θ)/2
+            // At face center (θ=0), dUV/dθ = 0.5 (already accounted for above)
+            // At other positions, we need to multiply by sec²(θ) = 1 + tan²(θ)
+            // where θ is the angle in the direction of the UV shift
             vec3 skyboxPos;
             skyboxPos.x = v_position.x;
             skyboxPos.y = v_position.y + u_tileOffset.x;
             skyboxPos.z = v_position.z + u_tileOffset.y;
+
             float correction = length(skyboxPos) / skyboxPos.x;
             parallaxMagnitude *= correction;
         }
@@ -486,9 +501,9 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         // Debug overrides. Need to reference things to avoid errors!
         if (false)
         {
-            if (false)
+            if (true)
             {
-                float g = clamp(linearDepth / 100.0, 0.0, 1.0);
+                float g = clamp(linearDepth / 30.0, 0.0, 1.0);
                 gl_FragColor = gl_FragColor * 0.001 + vec4(g + v_texCoord.x * 0.0001, g, g, 1.0);
             }
             else
@@ -727,6 +742,8 @@ void SkyboxVRParallaxShader::Init()
     u_parallaxDir    = getUniformLocation(mShaderProgram, "u_parallaxDir");
     u_tileScale      = getUniformLocation(mShaderProgram, "u_tileScale");
     u_tileOffset     = getUniformLocation(mShaderProgram, "u_tileOffset");
+    u_tanFovMin      = getUniformLocation(mShaderProgram, "u_tanFovMin");
+    u_tanFovMax      = getUniformLocation(mShaderProgram, "u_tanFovMax");
 }
 
 

@@ -1101,6 +1101,15 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                     eyeRight.z
                 );
 
+                // Get FOV tangents for depth correction
+                float tanLeft, tanRight, tanUp, tanDown;
+                if (!runtime->GetFovTangents((VREye)eye, tanLeft, tanRight, tanUp, tanDown))
+                {
+                    // Fallback: assume symmetric 90 degree FOV
+                    tanLeft = tanDown = -1.0f;
+                    tanRight = tanUp = 1.0f;
+                }
+
                 // Render skybox with depth-based parallax
                 mVRSkybox->RenderVRParallax(
                     vrViewport,
@@ -1111,7 +1120,8 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                     depthTexture,
                     eyeWidth, eyeHeight,
                     mFrameworkSettings.mNearClipPlaneDistance,
-                    mFrameworkSettings.mFarClipPlaneDistance
+                    mFrameworkSettings.mFarClipPlaneDistance,
+                    tanLeft, tanRight, tanUp, tanDown
                 );
             }
 

@@ -1051,6 +1051,20 @@ glm::mat4 OpenXRRuntime::GetProjectionMatrix(VREye eye, float nearClip, float fa
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+bool OpenXRRuntime::GetFovTangents(VREye eye, float& tanLeft, float& tanRight,
+                                   float& tanUp, float& tanDown) const
+{
+    if (eye < 0 || eye >= VR_EYE_COUNT || !mPosesValid)
+        return false;
+
+    tanLeft = std::tan(mEyeFovs[eye].angleLeft);
+    tanRight = std::tan(mEyeFovs[eye].angleRight);
+    tanUp = std::tan(mEyeFovs[eye].angleUp);
+    tanDown = std::tan(mEyeFovs[eye].angleDown);
+    return true;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 glm::mat4 OpenXRRuntime::GetViewMatrix(VREye eye) const
 {
     if (eye < 0 || eye >= VR_EYE_COUNT || !mPosesValid)

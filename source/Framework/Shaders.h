@@ -148,6 +148,8 @@ public:
     int u_parallaxDir;     // direction of parallax in UV space (vec2)
     int u_tileScale;       // numPerSide - scales parallax for tile coordinates
     int u_tileOffset;      // tile translation offset (y, z)
+    int u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
+    int u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
 };
 
 
