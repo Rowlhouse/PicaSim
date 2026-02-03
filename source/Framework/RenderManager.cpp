@@ -52,6 +52,7 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
     mShadowStrength = 0.2f;
     mShadowDecayHeight = 40.0f;
     mShadowSizeScale = 1.3f;
+    mShadowBlur = 0.0f;
     mEnableStereoscopy = false;
     mStereoSeparation = 0.0f;
 
@@ -535,13 +536,13 @@ void RenderManager::UnregisterRenderObject(RenderObject* renderObject, int rende
     // TODO make this more efficient
     for (RenderObjects::iterator it = mRenderObjects.begin() ; it != mRenderObjects.end() ; ++it)
     {
-        if (it->second == renderObject && it->first == renderLevel)
+        if (it->second == renderObject && (renderLevel == RENDER_LEVEL_ANY || it->first == renderLevel))
         {
             mRenderObjects.erase(it);
-            return;
+            if (renderLevel != RENDER_LEVEL_ANY)
+                return;
         }
     }
-    IwAssertMsg(ROWLHOUSE, false, ("RenderObject should be registered before unregistration")); 
 }
 
 //======================================================================================================================
@@ -1014,11 +1015,17 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         {
             glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFBO);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, swapchainFBO);
-            glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
-                              0, 0, eyeWidth, eyeHeight,
-                              GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-            // Also resolve depth for VR panorama depth feature
+            // When VR panorama depth is enabled, DON'T resolve color yet - we'll continue
+            // rendering to MSAA FBO and do final color resolve at the end
+            if (!mVRPanoramaDepthEnabled)
+            {
+                glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
+                                  0, 0, eyeWidth, eyeHeight,
+                                  GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            }
+
+            // Resolve depth for VR panorama depth feature (needed for parallax shader)
             if (mVRPanoramaDepthEnabled)
             {
                 glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
@@ -1046,6 +1053,12 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
 
             // Copy depth buffer to texture (now from resolved swapchain FBO)
             glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 0, 0, eyeWidth, eyeHeight, 0);
+
+            // Rebind MSAA FBO for skybox and foreground rendering (preserves anti-aliasing)
+            if (msaaSamples > 1)
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO);
+            }
 
             // Calculate eye offset (-1 for left, +1 for right)
             float eyeOffset = (eye == VR_EYE_LEFT) ? -1.0f : 1.0f;
@@ -1210,6 +1223,16 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                     renderObject->RenderUpdate(viewport, renderLevel);
                 }
             }
+        }
+
+        // Final color resolve for VR panorama depth mode (skybox + foreground were rendered to MSAA FBO)
+        if (mVRPanoramaDepthEnabled && msaaSamples > 1)
+        {
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFBO);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, swapchainFBO);
+            glBlitFramebuffer(0, 0, eyeWidth, eyeHeight,
+                              0, 0, eyeWidth, eyeHeight,
+                              GL_COLOR_BUFFER_BIT, GL_NEAREST);
         }
 
         // Copy rendered content to VRManager's mirror texture (for desktop display)

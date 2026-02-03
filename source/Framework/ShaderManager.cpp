@@ -34,6 +34,7 @@ ShaderManager::ShaderManager(LoadingScreenHelper* loadingScreen)
     mShaders[SHADER_TERRAIN]                       = new TerrainShader();
     mShaders[SHADER_TERRAIN_PANORAMA]              = new TerrainPanoramaShader();
     mShaders[SHADER_SHADOW]                        = new ShadowShader();
+    mShaders[SHADER_SHADOW_BLUR]                   = new ShadowBlurShader();
     mShaders[SHADER_SMOKE]                         = new SmokeShader();
 
     if (gGLVersion > 1)

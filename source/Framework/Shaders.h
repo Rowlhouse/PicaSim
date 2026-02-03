@@ -126,6 +126,17 @@ public:
 };
 
 //======================================================================================================================
+class ShadowBlurShader : public Shader
+{
+public:
+    void Init() OVERRIDE;
+    int u_mvpMatrix, u_textureMatrix, a_position, a_texCoord;
+    int u_texture, u_colour;
+    int u_blurAmount;   // Blur radius multiplier
+    int u_texelSize;    // 1.0/textureSize for offset calculation
+};
+
+//======================================================================================================================
 class SmokeShader : public Shader
 {
 public:

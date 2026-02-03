@@ -38,6 +38,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     float shadowStrength = 0.2f;
     float shadowDecayHeight = 40.0f;
     float shadowSizeScale = 1.3f;
+    float shadowBlur = 2.0f;
     std::string skyboxName;
 
     if (gs.mEnvironmentSettings.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
@@ -73,6 +74,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
         readFromXML(element, "shadowStrength", shadowStrength);
         readFromXML(element, "shadowDecayHeight", shadowDecayHeight);
         readFromXML(element, "shadowSizeScale", shadowSizeScale);
+        readFromXML(element, "shadowBlur", shadowBlur);
     }
 
     RenderManager::GetInstance().SetLightingAmbientColour(ambientLight * gs.mOptions.mAmbientLightingScale);
@@ -80,6 +82,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     RenderManager::GetInstance().SetShadowStrength(shadowStrength);
     RenderManager::GetInstance().SetShadowDecayHeight(shadowDecayHeight);
     RenderManager::GetInstance().SetShadowSizeScale(shadowSizeScale);
+    RenderManager::GetInstance().SetShadowBlur(shadowBlur);
 
     mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen);
 

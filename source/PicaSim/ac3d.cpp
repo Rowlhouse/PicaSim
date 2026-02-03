@@ -517,7 +517,7 @@ bool ACLoadModel(ACModel& model, const char *fname)
     FILE *f = fopen(fname, "rb");
     if (f == NULL)
     {
-        IwAssertMsg(ROWLHOUSE, false, ("Failed to open file"));
+        // If we fail to open the file, it may be compressed
         char cf[512];
         sprintf(cf, "%s.p", fname);
         f = fopen(cf, "rb");

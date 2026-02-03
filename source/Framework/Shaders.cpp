@@ -383,6 +383,155 @@ const char shadowFragmentShaderStr[] = GLSL(
     }
 );
 
+#if 0
+// Shadow blur shader - uses vertex shader same as regular shadow
+// Uses 9-tap blur for shadowBlur <= 1.0, 25-tap for shadowBlur > 1.0
+const char shadowBlurFragmentShaderStr[] = GLSL(
+    precision mediump float;
+    varying vec2 v_texCoord;
+    uniform sampler2D u_texture;
+    uniform vec4 u_colour;
+    uniform float u_blurAmount;
+    uniform vec2 u_texelSize;
+    void main()
+    {
+        vec4 color = vec4(0.0);
+
+        if (u_blurAmount > 1.0)
+        {
+            // 21-tap Gaussian-weighted blur (normalized weights sum to 1.0)
+            // Based on Gaussian kernel with sigma ~1.0, excluding far corners
+            vec2 t1 = u_texelSize * u_blurAmount;        // 1 texel offset
+            vec2 t2 = u_texelSize * u_blurAmount * 2.0;  // 2 texel offset
+
+            // Center (weight 0.1524)
+            color += texture2D(u_texture, v_texCoord) * 0.1524;
+
+            // 4 adjacent at distance 1 (weight 0.0966 each)
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x, 0.0)) * 0.0966;
+            color += texture2D(u_texture, v_texCoord - vec2(t1.x, 0.0)) * 0.0966;
+            color += texture2D(u_texture, v_texCoord + vec2(0.0, t1.y)) * 0.0966;
+            color += texture2D(u_texture, v_texCoord - vec2(0.0, t1.y)) * 0.0966;
+
+            // 4 diagonal at distance sqrt(2) (weight 0.0595 each)
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x, t1.y)) * 0.0595;
+            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, t1.y)) * 0.0595;
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x, -t1.y)) * 0.0595;
+            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, -t1.y)) * 0.0595;
+
+            // 4 far adjacent at distance 2 (weight 0.0260 each)
+            color += texture2D(u_texture, v_texCoord + vec2(t2.x, 0.0)) * 0.0260;
+            color += texture2D(u_texture, v_texCoord - vec2(t2.x, 0.0)) * 0.0260;
+            color += texture2D(u_texture, v_texCoord + vec2(0.0, t2.y)) * 0.0260;
+            color += texture2D(u_texture, v_texCoord - vec2(0.0, t2.y)) * 0.0260;
+
+            // 8 knight-move positions at distance sqrt(5) (weight 0.0149 each)
+            color += texture2D(u_texture, v_texCoord + vec2(t2.x, t1.y)) * 0.0149;
+            color += texture2D(u_texture, v_texCoord + vec2(t2.x, -t1.y)) * 0.0149;
+            color += texture2D(u_texture, v_texCoord + vec2(-t2.x, t1.y)) * 0.0149;
+            color += texture2D(u_texture, v_texCoord + vec2(-t2.x, -t1.y)) * 0.0149;
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x, t2.y)) * 0.0149;
+            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, t2.y)) * 0.0149;
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x, -t2.y)) * 0.0149;
+            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, -t2.y)) * 0.0149;
+        }
+        else
+        {
+            // 9-tap 3x3 Gaussian-weighted blur (normalized weights sum to 1.0)
+            vec2 offset1 = u_texelSize * u_blurAmount;
+            vec2 offset2 = offset1 * 0.7071; // diagonal offset (1/sqrt(2))
+
+            // Center (weight 0.1884)
+            color += texture2D(u_texture, v_texCoord) * 0.1884;
+
+            // 4 adjacent taps (weight 0.1614 each)
+            color += texture2D(u_texture, v_texCoord + vec2(offset1.x, 0.0)) * 0.1614;
+            color += texture2D(u_texture, v_texCoord - vec2(offset1.x, 0.0)) * 0.1614;
+            color += texture2D(u_texture, v_texCoord + vec2(0.0, offset1.y)) * 0.1614;
+            color += texture2D(u_texture, v_texCoord - vec2(0.0, offset1.y)) * 0.1614;
+
+            // 4 diagonal taps (weight 0.0415 each)
+            color += texture2D(u_texture, v_texCoord + offset2) * 0.0415;
+            color += texture2D(u_texture, v_texCoord - offset2) * 0.0415;
+            color += texture2D(u_texture, v_texCoord + vec2(offset2.x, -offset2.y)) * 0.0415;
+            color += texture2D(u_texture, v_texCoord + vec2(-offset2.x, offset2.y)) * 0.0415;
+        }
+
+        gl_FragColor = u_colour * color;
+    }
+);
+
+#else
+
+// Shadow blur shader - uses vertex shader same as regular shadow
+// Optimized using bilinear filtering: 5-tap for shadowBlur <= 1.0, 9-tap for shadowBlur > 1.0
+const char shadowBlurFragmentShaderStr[] = GLSL(
+    precision mediump float;
+    varying vec2 v_texCoord;
+    uniform sampler2D u_texture;
+    uniform vec4 u_colour;
+    uniform float u_blurAmount;
+    uniform vec2 u_texelSize;
+    void main()
+    {
+        vec4 color = vec4(0.0);
+
+        if (u_blurAmount > 1.0)
+        {
+            // 9-tap optimized (was 21-tap) using bilinear filtering
+            // Combines axis + diagonal samples using hardware interpolation
+            vec2 t1 = u_texelSize * u_blurAmount;
+            vec2 t2 = t1 * 2.0;
+
+            // Weights renormalized so they sum to 1.0 (original sum was 0.8812)
+            // Center (weight 0.1730)
+            color = texture2D(u_texture, v_texCoord) * 0.1730;
+
+            // Inner ring: 4 bilinear samples combining axis + diagonal
+            // Sample position offset: 0.236, weight: 0.1434
+            float innerBias = 0.236;
+            float innerWeight = 0.1434;
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x, t1.y * innerBias)) * innerWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, -t1.y * innerBias)) * innerWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x * innerBias, t1.y)) * innerWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(-t1.x * innerBias, -t1.y)) * innerWeight;
+
+            // Outer ring: 4 bilinear samples combining far-axis + knights
+            // Sample position bias: 0.534, weight: 0.0633
+            float outerBias = 0.534;
+            float outerWeight = 0.0633;
+            color += texture2D(u_texture, v_texCoord + vec2(t2.x, t1.y * outerBias)) * outerWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(-t2.x, -t1.y * outerBias)) * outerWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(t1.x * outerBias, t2.y)) * outerWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(-t1.x * outerBias, -t2.y)) * outerWeight;
+        }
+        else
+        {
+            // 5-tap optimized (was 9-tap) using bilinear filtering
+            // Combines axis-adjacent (0.1614) with diagonal (0.0415*0.5) samples
+            vec2 t = u_texelSize * u_blurAmount;
+
+            // Center (weight 0.1884)
+            color = texture2D(u_texture, v_texCoord) * 0.1884;
+
+            // 4 bilinear samples: axis weight + half diagonal weight each
+            // Bias toward diagonal: 0.0208 / (0.1614 + 0.0208) = 0.114
+            // Combined weight: 0.1614 + 0.0208 = 0.1822 (adjusted for 4 samples)
+            // Renormalized: center 0.20, each sample 0.20 (sum = 1.0)
+            float bilinearBias = 0.114;
+            float combinedWeight = 0.2029;
+            color += texture2D(u_texture, v_texCoord + vec2(t.x, t.y * bilinearBias)) * combinedWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(-t.x, -t.y * bilinearBias)) * combinedWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(t.x * bilinearBias, t.y)) * combinedWeight;
+            color += texture2D(u_texture, v_texCoord + vec2(-t.x * bilinearBias, -t.y)) * combinedWeight;
+        }
+
+        gl_FragColor = u_colour * color;
+    }
+);
+
+#endif
+
 const char smokeVertexShaderStr[] = GLSL(
     precision mediump float;
     uniform mat4 u_mvpMatrix;
@@ -714,6 +863,20 @@ void ShadowShader::Init()
     a_texCoord       = getAttribLocation(mShaderProgram, "a_texCoord");
     u_texture        = getUniformLocation(mShaderProgram, "u_texture");
     u_colour         = getUniformLocation(mShaderProgram, "u_colour");
+}
+
+//======================================================================================================================
+void ShadowBlurShader::Init()
+{
+    Shader::Init(shadowVertexShaderStr, shadowBlurFragmentShaderStr);
+    u_mvpMatrix      = getUniformLocation(mShaderProgram, "u_mvpMatrix");
+    u_textureMatrix  = getUniformLocation(mShaderProgram, "u_textureMatrix");
+    a_position       = getAttribLocation(mShaderProgram, "a_position");
+    a_texCoord       = getAttribLocation(mShaderProgram, "a_texCoord");
+    u_texture        = getUniformLocation(mShaderProgram, "u_texture");
+    u_colour         = getUniformLocation(mShaderProgram, "u_colour");
+    u_blurAmount     = getUniformLocation(mShaderProgram, "u_blurAmount");
+    u_texelSize      = getUniformLocation(mShaderProgram, "u_texelSize");
 }
 
 //======================================================================================================================

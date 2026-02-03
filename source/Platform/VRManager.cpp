@@ -600,8 +600,9 @@ void VRManager::ResetVRView(float facingYaw, bool useHeadsetFacingDirection)
 {
     TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Facing yaw: %.1f", glm::degrees(facingYaw));
 
-    // Capture current headset pose as reference
-    mReferencePosition = mHeadPosition;
+    // We could capture current headset pose as reference. However, if this is done then panoramic scenes get an offset 
+    // between the skybox and the 3D objects.
+    // mReferencePosition = mHeadPosition;
 
     // The into-wind angle increases as it rotates anti-clockwise (i.e. to the left)
     mAutomaticYawOffset = facingYaw;

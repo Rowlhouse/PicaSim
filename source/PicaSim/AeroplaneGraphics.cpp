@@ -1014,11 +1014,18 @@ void AeroplaneGraphics::RenderUpdatePropDisks(Viewport* viewport, int renderLeve
             glVertexAttrib3f(modelShader->a_normal, 0.0f, 0, 0.0f);
         }
 
-        // Set the colour
+        // Set the colour - combine shadow colour with disk colour when rendering terrain shadow
+        Vector4 diskColour = propDisk.mColour;
+        diskColour.w *= opacity;
+        if (renderLevel == RENDER_LEVEL_TERRAIN_SHADOW)
+        {
+            diskColour.w *= mShadowAmount;
+        }
+
         if (gGLVersion == 1)
-            glColor4f(propDisk.mColour.x, propDisk.mColour.y, propDisk.mColour.z, propDisk.mColour.w * opacity);
+            glColor4f(diskColour.x, diskColour.y, diskColour.z, diskColour.w);
         else
-            glVertexAttrib4f(modelShader->a_colour, propDisk.mColour.x, propDisk.mColour.y, propDisk.mColour.z, propDisk.mColour.w * opacity);
+            glVertexAttrib4f(modelShader->a_colour, diskColour.x, diskColour.y, diskColour.z, diskColour.w);
 
         esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, mNumPropDiskPoints);

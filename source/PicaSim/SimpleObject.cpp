@@ -46,12 +46,12 @@ BoxObject::BoxObject(const Vector3& extents,
 
     SetExtents(mExtents);
 
-    if (enableRender)
+    if (mRenderEnabled)
     {
-        int level = visible ? RENDER_LEVEL_OBJECTS : RENDER_LEVEL_OBJECTS_BACKGROUND;
+        int level = mVisible ? RENDER_LEVEL_OBJECTS : RENDER_LEVEL_OBJECTS_BACKGROUND;
         RenderManager::GetInstance().RegisterRenderObject(this, level);
     }
-    if (enableShadows)
+    if (mShadowsEnabled)
         RenderManager::GetInstance().RegisterShadowCasterObject(this);
     if (mMass > 0.0f)
         EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_POST_PHYSICS);
@@ -76,6 +76,21 @@ BoxObject::~BoxObject()
     delete mCollisionShape;
 }
 
+//======================================================================================================================
+void BoxObject::SetVisible(bool visible) 
+{
+    if (visible == mVisible || !mRenderEnabled)
+        return;
+
+    int oldLevel = mVisible ? RENDER_LEVEL_OBJECTS : RENDER_LEVEL_OBJECTS_BACKGROUND;
+    RenderManager::GetInstance().UnregisterRenderObject(this, oldLevel);
+
+    mVisible = visible;
+
+    int newLevel = mVisible ? RENDER_LEVEL_OBJECTS : RENDER_LEVEL_OBJECTS_BACKGROUND;
+    RenderManager::GetInstance().RegisterRenderObject(this, newLevel);
+}
+
 // points for the top face
 static const float d = 0.5f;
 static GLfloat boxPoints[] = {
@@ -91,7 +106,6 @@ static GLfloat uvs[] = {
     1, 1,
     0, 1,
 };
-
 
 //======================================================================================================================
 void BoxObject::RenderUpdate(class Viewport* viewport, int renderLevel)

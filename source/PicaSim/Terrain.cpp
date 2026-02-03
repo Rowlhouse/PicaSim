@@ -1785,7 +1785,7 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
     float distToShadow = (shadowPos - shadowCasterPos).GetLength();
 
     float shadowAmount = 1.0f - distToShadow / maxDistToShadow;
-    if (shadowAmount < 0.0f)
+    if (shadowAmount <= 0.001f)
         return;
     shadowAmount *= shadowAmount;
     shadowAmount *= RenderManager::GetInstance().GetShadowStrength();
@@ -1879,7 +1879,14 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
     Vector3 offset = ClampToRange(distance * 0.01f, 0.01f, 5.0f) * dirToCamera;
     esTranslatef(offset.x, offset.y, offset.z + 0.02f); // small upwards to stop shimmering when camera is at the object's location
 
+    // Determine whether to use blur shader for projected shadows
+    float shadowBlur = RenderManager::GetInstance().GetShadowBlur();
+    bool useBlurShader = (shadowBlur > 0.001f) && !useBlob && (gGLVersion >= 2);
+
     const ShadowShader* shadowShader = (ShadowShader*) ShaderManager::GetInstance().GetShader(SHADER_SHADOW);
+    const ShadowBlurShader* shadowBlurShader = useBlurShader ?
+        (ShadowBlurShader*) ShaderManager::GetInstance().GetShader(SHADER_SHADOW_BLUR) : nullptr;
+
     if (gGLVersion == 1)
     {
         glEnable(GL_TEXTURE_2D);
@@ -1891,6 +1898,18 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
         glEnableClientState(GL_VERTEX_ARRAY);
         glColor4f(1,1,1,shadowAmount);
         glClientActiveTexture(GL_TEXTURE0);
+    }
+    else if (useBlurShader)
+    {
+        shadowBlurShader->Use();
+        glUniform1i(shadowBlurShader->u_texture, 0);
+        glEnableVertexAttribArray(shadowBlurShader->a_position);
+        glEnableVertexAttribArray(shadowBlurShader->a_texCoord);
+        glUniform4f(shadowBlurShader->u_colour, 1.0f, 1.0f, 1.0f, shadowAmount);
+        // Set blur-specific uniforms
+        int fboSize = 1 << PicaSim::GetInstance().GetSettings().mOptions.mProjectedShadowDetail;
+        glUniform2f(shadowBlurShader->u_texelSize, 1.0f / fboSize, 1.0f / fboSize);
+        glUniform1f(shadowBlurShader->u_blurAmount, shadowBlur);
     }
     else
     {
@@ -1961,9 +1980,19 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
         esMultMatrixf(&mat[0][0]);
     }
 
-    esSetTextureMatrix(shadowShader->u_textureMatrix);
-    esMatrixMode( GL_MODELVIEW );
-    esSetModelViewProjectionMatrix(shadowShader->u_mvpMatrix);
+    // Set matrix uniforms using the active shader's locations
+    if (useBlurShader)
+    {
+        esSetTextureMatrix(shadowBlurShader->u_textureMatrix);
+        esMatrixMode( GL_MODELVIEW );
+        esSetModelViewProjectionMatrix(shadowBlurShader->u_mvpMatrix);
+    }
+    else
+    {
+        esSetTextureMatrix(shadowShader->u_textureMatrix);
+        esMatrixMode( GL_MODELVIEW );
+        esSetModelViewProjectionMatrix(shadowShader->u_mvpMatrix);
+    }
 
     float cellSize = mHeightfield->getCellSize();
     int heightfieldSize = mHeightfield->getSize();
@@ -1979,6 +2008,10 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
     int di = 1 + (int) (shadowCasterRadius / (1.0f + fabsf(dirToLight.x) * cellSize));
     int dj = 1 + (int) (shadowCasterRadius / (1.0f + fabsf(dirToLight.y) * cellSize));
 
+    // Get attribute locations from the active shader
+    int a_position = useBlurShader ? shadowBlurShader->a_position : shadowShader->a_position;
+    int a_texCoord = useBlurShader ? shadowBlurShader->a_texCoord : shadowShader->a_texCoord;
+
     for (int i = i0 - di ; i < i0 + di + 1; ++i)
     {
         if (i < 0 || i > heightfieldSize-2)
@@ -1987,8 +2020,8 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
         {
             if (j < 0 || j > heightfieldSize-2)
                 continue;
-            
-            RenderTerrainQuad(*mHeightfield, i, j, shadowShader->a_position, shadowShader->a_texCoord);
+
+            RenderTerrainQuad(*mHeightfield, i, j, a_position, a_texCoord);
         }
     }
 

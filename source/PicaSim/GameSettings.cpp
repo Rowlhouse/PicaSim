@@ -230,7 +230,7 @@ Options::Options() :
     mStereoSeparation(0.1f),
 #ifdef PICASIM_VR_SUPPORT
     mEnableVR(false),
-    mVRDesktopMode(VR_DESKTOP_LEFT_EYE),
+    mVRDesktopMode(VR_DESKTOP_NORMAL_VIEW),
     mVRMSAASamples(8),
     mVRPanoramaDepth(true),
 #endif

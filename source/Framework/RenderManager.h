@@ -130,9 +130,11 @@ public:
     void SetShadowStrength(float shadowStrength) {mShadowStrength = shadowStrength;}
     void SetShadowDecayHeight(float shadowDecayHeight) {mShadowDecayHeight = shadowDecayHeight;}
     void SetShadowSizeScale(float shadowSizeScale) {mShadowSizeScale = shadowSizeScale;}
+    void SetShadowBlur(float shadowBlur) {mShadowBlur = shadowBlur;}
     float GetShadowStrength() const {return mShadowStrength;}
     float GetShadowDecayHeight() const {return mShadowDecayHeight;}
     float GetShadowSizeScale() const {return mShadowSizeScale;}
+    float GetShadowBlur() const {return mShadowBlur;}
 
     void SetLightingDirection(const Vector3& direction) {mLightingDirection = direction;}
     void SetLightingDirection(float bearing, float elevation);
@@ -194,6 +196,7 @@ private:
     float   mShadowStrength;
     float   mShadowDecayHeight;
     float   mShadowSizeScale;
+    float   mShadowBlur;
 
     bool    mEnableStereoscopy;
     float   mStereoSeparation;

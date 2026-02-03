@@ -8,7 +8,8 @@
   diffuseLightR="0.95"
   diffuseLightG="0.95"
   diffuseLightB="0.95"
-  shadowStrength="0.2"
-  shadowDecayHeight = "10.0f"
-  shadowSizeScale = "1.0f"
+  shadowStrength="0.05"
+  shadowDecayHeight = "10.0"
+  shadowSizeScale = "1.0"
+  shadowBlur = "3.0"
 />

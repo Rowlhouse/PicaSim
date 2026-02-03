@@ -37,7 +37,7 @@ public:
     void SetWireframe(bool enable) {mWireframe = enable;}
     bool GetWireframe() const {return mWireframe;}
 
-    void SetVisible(bool visible) {mVisible = visible;}
+    void SetVisible(bool visible);
     void SetShadowVisible(bool shadowVisible) {mShadowVisible = shadowVisible;}
 
     const std::string& GetTextureFile() const {return mTextureFile;}
@@ -51,8 +51,8 @@ private:
     Vector3        mExtents;
     std::string    mTextureFile;
     float          mMass;
-    bool           mRenderEnabled;
-    bool           mShadowsEnabled;
+    const bool     mRenderEnabled;
+    const bool     mShadowsEnabled;
     bool           mVisible;
     bool           mShadowVisible;
 
