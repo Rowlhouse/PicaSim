@@ -6,6 +6,7 @@
 #include "RenderObject.h"
 
 #include <vector>
+#include <glm/glm.hpp>
 
 class Skybox : public RenderObject
 {
@@ -48,7 +49,7 @@ private:
 
     void DrawSide(Side side, int mvpLoc) const;
     void DrawSideVRParallax(Side side, const class SkyboxVRParallaxShader* shader,
-                            float parallaxDirX, float parallaxDirY) const;
+                            const glm::vec3& eyeRightLocal) const;
 
     typedef std::vector<Texture*> Textures;
     Textures mTextures[NUM_SIDES];

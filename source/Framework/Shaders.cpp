@@ -435,7 +435,7 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform float u_nearPlane;
     uniform float u_farPlane;
     uniform vec2 u_screenSize;      // screen width and height
-    uniform vec2 u_parallaxDir;     // direction of parallax in UV space
+    uniform vec3 u_eyeRightLocal;   // eye separation direction in face-local coords (x=forward)
     uniform float u_tileScale;      // numPerSide - scales parallax for tile coordinates
     uniform vec2 u_tileOffset;      // tile translation offset (y, z components)
     uniform vec2 u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
@@ -464,33 +464,35 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         // observer.
 
         // For sky pixels (at or near far plane), no parallax (sky is at infinity)
-        float parallaxMagnitude = 0.0;
+        vec2 uvOffset = vec2(0.0);
         if (depthSample < 0.9999)
         {
-            // Base parallax angle (radians, for small angles)
-            float parallaxAngle = (u_ipd * 0.5) / linearDepth * u_eyeOffset;
-
-            // Convert to UV space: dU/dtheta is exactly 0.5 at the centre of the skybox faces
-            // This increases to 1 at the edges
-            // Also scale by tileScale for tiled panoramas (each tile UV spans 1/numPerSide)
-            parallaxMagnitude = parallaxAngle * 0.5 * u_tileScale;
-
-            // Perspective correction for oblique viewing angles
-            // The UV-to-angle relationship is: tan(θ) = 2*UV - 1, so dUV/dθ = sec²(θ)/2
-            // At face center (θ=0), dUV/dθ = 0.5 (already accounted for above)
-            // At other positions, we need to multiply by sec²(θ) = 1 + tan²(θ)
-            // where θ is the angle in the direction of the UV shift
+            // Skybox position accounting for tile offset
             vec3 skyboxPos;
             skyboxPos.x = v_position.x;
             skyboxPos.y = v_position.y + u_tileOffset.x;
             skyboxPos.z = v_position.z + u_tileOffset.y;
+            float x = skyboxPos.x;
+            float x2 = x * x;
 
+            // Position shift in eye-right direction, projected to skybox distance
+            // parallaxShift = (ipd/2) * eyeOffset * (skyboxDist / objectDist)
+            float parallaxShift = (u_ipd * 0.5) * u_eyeOffset * (x / linearDepth);
+
+            // Compute per-pixel UV shift using Jacobian of UV mapping
+            // UV = (0.5 - y/(2x), 0.5 - z/(2x)) for the front face vertex data
+            // dU = (y·dx - x·dy) / (2x²), dV = (z·dx - x·dz) / (2x²)
+            // where (dx, dy, dz) = u_eyeRightLocal direction
+            float dU = (skyboxPos.y * u_eyeRightLocal.x - x * u_eyeRightLocal.y) / (2.0 * x2);
+            float dV = (skyboxPos.z * u_eyeRightLocal.x - x * u_eyeRightLocal.z) / (2.0 * x2);
+
+            uvOffset = vec2(dU, dV) * parallaxShift * u_tileScale;
+
+            // We need to increase the uv offset away from the face centre to account for the 
+            // fact that the pixel is further away from the viewer. Increase by 1/cos(phi)
             float correction = length(skyboxPos) / skyboxPos.x;
-            parallaxMagnitude *= correction;
+            uvOffset *= correction; 
         }
-
-        // Apply parallax offset in the face-specific direction
-        vec2 uvOffset = u_parallaxDir * parallaxMagnitude;
         vec2 offsetUV = v_texCoord + uvOffset;
 
         // Clamp UV to valid range
@@ -739,7 +741,7 @@ void SkyboxVRParallaxShader::Init()
     u_nearPlane      = getUniformLocation(mShaderProgram, "u_nearPlane");
     u_farPlane       = getUniformLocation(mShaderProgram, "u_farPlane");
     u_screenSize     = getUniformLocation(mShaderProgram, "u_screenSize");
-    u_parallaxDir    = getUniformLocation(mShaderProgram, "u_parallaxDir");
+    u_eyeRightLocal  = getUniformLocation(mShaderProgram, "u_eyeRightLocal");
     u_tileScale      = getUniformLocation(mShaderProgram, "u_tileScale");
     u_tileOffset     = getUniformLocation(mShaderProgram, "u_tileOffset");
     u_tanFovMin      = getUniformLocation(mShaderProgram, "u_tanFovMin");
