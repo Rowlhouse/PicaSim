@@ -51,29 +51,6 @@ const char controllerFragmentShaderStr[] = GLSL(
     }
 );
 
-const char skyboxVertexShaderStr[] = GLSL(
-    precision mediump float;
-    uniform mat4   u_mvpMatrix;
-    attribute vec4 a_position;
-    attribute vec2 a_texCoord;
-    varying lowp vec2 v_texCoord;
-    void main()
-    {
-        gl_Position = u_mvpMatrix * a_position;
-        v_texCoord = a_texCoord;
-    }
-);
-
-const char skyboxFragmentShaderStr[] = GLSL(
-    precision mediump float;
-    varying vec2 v_texCoord;
-    uniform sampler2D u_texture;
-    void main()
-    {
-        gl_FragColor = texture2D(u_texture, v_texCoord);
-    }
-);
-
 const char plainVertexShaderStr[] = GLSL(
     precision mediump float;
     uniform mat4 u_mvpMatrix;
@@ -557,6 +534,30 @@ const char smokeFragmentShaderStr[] = GLSL(
     }
 );
 
+const char skyboxVertexShaderStr[] = GLSL(
+    precision mediump float;
+    uniform mat4   u_mvpMatrix;
+    attribute vec4 a_position;
+    attribute vec2 a_texCoord;
+    varying lowp vec2 v_texCoord;
+    void main()
+    {
+        gl_Position = u_mvpMatrix * a_position;
+        v_texCoord = a_texCoord;
+    }
+);
+
+const char skyboxFragmentShaderStr[] = GLSL(
+    precision mediump float;
+    varying vec2 v_texCoord;
+    uniform sampler2D u_texture;
+    void main()
+    {
+        gl_FragColor = texture2D(u_texture, v_texCoord);
+    }
+);
+
+
 // VR Skybox with depth-based parallax for stereoscopic effect
 const char skyboxVRParallaxVertexShaderStr[] = GLSL(
     precision mediump float;
@@ -589,6 +590,7 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform vec2 u_tileOffset;      // tile translation offset (y, z components)
     uniform vec2 u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
     uniform vec2 u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
+    uniform float u_borderFraction; // border size as fraction of expanded texture (0 if no extension)
 
     void main()
     {
@@ -644,9 +646,15 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
             float correction = length(skyboxPos) / skyboxPos.x;
             uvOffset *= correction; 
         }
-        vec2 offsetUV = v_texCoord + uvOffset;
 
-        // Clamp UV to valid range
+        // Map v_texCoord [0,1] to the inner portion of the expanded texture.
+        // If u_borderFraction = 0, this is identity. If = 0.1, inner area is [0.1, 0.9].
+        vec2 innerUV = u_borderFraction + v_texCoord * (1.0 - 2.0 * u_borderFraction);
+
+        // Apply parallax offset
+        vec2 offsetUV = innerUV + uvOffset;
+
+        // Clamp UV to valid range (can now sample into border region)
         offsetUV = clamp(offsetUV, 0.0, 1.0);
 
         gl_FragColor = texture2D(u_skyboxTexture, offsetUV);
@@ -911,6 +919,7 @@ void SkyboxVRParallaxShader::Init()
     u_tileOffset     = getUniformLocation(mShaderProgram, "u_tileOffset");
     u_tanFovMin      = getUniformLocation(mShaderProgram, "u_tanFovMin");
     u_tanFovMax      = getUniformLocation(mShaderProgram, "u_tanFovMax");
+    u_borderFraction = getUniformLocation(mShaderProgram, "u_borderFraction");
 }
 
 

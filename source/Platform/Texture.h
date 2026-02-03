@@ -58,6 +58,7 @@ public:
         void SetFormat(TextureFormat::Type format) { mFormat = format; }
         void SetWidth(int width) { mWidth = width; }
         void SetHeight(int height) { mHeight = height; }
+        void SetChannels(int channels) { mChannels = channels; }
 
         /**
           * Allocate internal buffer or set external buffer

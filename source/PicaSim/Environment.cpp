@@ -84,7 +84,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     RenderManager::GetInstance().SetShadowSizeScale(shadowSizeScale);
     RenderManager::GetInstance().SetShadowBlur(shadowBlur);
 
-    mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen);
+    mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen, gs.mOptions.mPanoramaExtension);
 
     if (gs.mEnvironmentSettings.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {

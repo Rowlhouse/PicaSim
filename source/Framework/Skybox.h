@@ -14,7 +14,7 @@ public:
     Skybox();
     ~Skybox();
 
-    bool Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, class LoadingScreenHelper* loadingScreen);
+    bool Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, class LoadingScreenHelper* loadingScreen, float panoramaExtension = 0.0f);
     void Terminate();
 
     void RenderUpdate(class Viewport* viewport, int renderLevel) OVERRIDE;
@@ -55,6 +55,7 @@ private:
     Textures mTextures[NUM_SIDES];
     float mOffset;
     float mExtendBelowHorizon;
+    float mPanoramaExtension; // 0.0 = no extension, 0.1 = 10% border from neighbors
     bool mInitialised;
     bool mVRParallaxEnabled;
 };

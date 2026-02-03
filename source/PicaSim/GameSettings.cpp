@@ -310,6 +310,7 @@ Options::Options() :
     mDiffuseLightingScale(1.0f),
     mBasicTextureDetail(9),
     mMaxSkyboxDetail(1),
+    mPanoramaExtension(0.1f),
     mMSAASamples(0),
     mGLVersion(2),
     mEnableSmoke(true),
@@ -461,6 +462,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_DOUBLE_ATTRIBUTE(mDiffuseLightingScale);
     WRITE_ATTRIBUTE(mBasicTextureDetail);
     WRITE_ATTRIBUTE(mMaxSkyboxDetail);
+    WRITE_DOUBLE_ATTRIBUTE(mPanoramaExtension);
     WRITE_ATTRIBUTE(mMSAASamples);
     WRITE_ATTRIBUTE(mGLVersion);
     WRITE_ATTRIBUTE(mEnableSmoke);
@@ -586,6 +588,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mDiffuseLightingScale);
     READ_ATTRIBUTE(mBasicTextureDetail);
     READ_ATTRIBUTE(mMaxSkyboxDetail);
+    READ_ATTRIBUTE(mPanoramaExtension);
     READ_ATTRIBUTE(mMSAASamples);
     READ_ATTRIBUTE(mGLVersion);
     READ_ATTRIBUTE(mEnableSmoke);
@@ -633,6 +636,7 @@ SettingsChangeActions Options::GetSettingsChangeActions(SettingsChangeActions se
     COMPARE_FOR_TERRAIN(mDiffuseLightingScale);
     COMPARE_FOR_TERRAIN(mBasicTextureDetail);
     COMPARE_FOR_TERRAIN(mMaxSkyboxDetail);
+    COMPARE_FOR_TERRAIN(mPanoramaExtension);
     COMPARE_FOR_CHALLENGE(mLimboDifficultyMultiplier);
     COMPARE_FOR_AIRELOAD(mFreeFlightMaxAI);
     return settingsChangeActions;
