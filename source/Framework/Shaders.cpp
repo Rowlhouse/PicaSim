@@ -616,11 +616,13 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         vec2 uvOffset = vec2(0.0);
         if (depthSample < 0.9999)
         {
-            // Skybox position accounting for tile offset
+            // Skybox position accounting for tile offset and scale
+            // The geometry is scaled by 1/numPerSide then translated, so actual position is:
+            // (v_position + u_tileOffset) / u_tileScale
             vec3 skyboxPos;
             skyboxPos.x = v_position.x;
-            skyboxPos.y = v_position.y + u_tileOffset.x;
-            skyboxPos.z = v_position.z + u_tileOffset.y;
+            skyboxPos.y = (v_position.y + u_tileOffset.x) / u_tileScale;
+            skyboxPos.z = (v_position.z + u_tileOffset.y) / u_tileScale;
             float x = skyboxPos.x;
             float x2 = x * x;
 
