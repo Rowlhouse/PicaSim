@@ -147,6 +147,7 @@ public:
     int u_screenSize;      // screen dimensions for depth texture sampling
     int u_parallaxDir;     // direction of parallax in UV space (vec2)
     int u_tileScale;       // numPerSide - scales parallax for tile coordinates
+    int u_tileOffset;      // tile translation offset (y, z)
 };
 
 

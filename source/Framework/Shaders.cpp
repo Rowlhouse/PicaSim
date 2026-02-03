@@ -437,6 +437,7 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform vec2 u_screenSize;      // screen width and height
     uniform vec2 u_parallaxDir;     // direction of parallax in UV space
     uniform float u_tileScale;      // numPerSide - scales parallax for tile coordinates
+    uniform vec2 u_tileOffset;      // tile translation offset (y, z components)
 
     void main()
     {
@@ -463,18 +464,57 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
             // At face center, the view is perpendicular (angle phi = 0)
             // At edges/corners, the view is oblique (phi > 0), reducing parallax effect
             // Correction factor: 1/cos(phi) = length(position) / position.x
-            // All faces use the same vertex data with x = scale (rotations are in MVP matrix)
-            float correction = length(v_position) / v_position.x;
+            // Reconstruct actual skybox position accounting for tile scale and offset
+            // v_position is raw vertex data, we apply the same transform as CPU
+            vec3 skyboxPos;
+            skyboxPos.x = v_position.x;
+            skyboxPos.y = v_position.y + u_tileOffset.x;
+            skyboxPos.z = v_position.z + u_tileOffset.y;
+            float correction = length(skyboxPos) / skyboxPos.x;
             parallaxMagnitude *= correction;
         }
 
         // Apply parallax offset in the face-specific direction
-        vec2 offsetUV = v_texCoord + u_parallaxDir * parallaxMagnitude;
+        vec2 uvOffset = u_parallaxDir * parallaxMagnitude;
+        vec2 offsetUV = v_texCoord + uvOffset;
 
         // Clamp UV to valid range
         offsetUV = clamp(offsetUV, 0.0, 1.0);
 
         gl_FragColor = texture2D(u_skyboxTexture, offsetUV);
+
+        // Debug overrides. Need to reference things to avoid errors!
+        if (false)
+        {
+            if (false)
+            {
+                float g = clamp(linearDepth / 100.0, 0.0, 1.0);
+                gl_FragColor = gl_FragColor * 0.001 + vec4(g + v_texCoord.x * 0.0001, g, g, 1.0);
+            }
+            else
+            {
+                // Debug visualization:
+                // R = original texture (using v_texCoord, no parallax)
+                // G = U offset (scaled for visibility, centered at 0.5)
+                // B = V offset (scaled for visibility, centered at 0.5)
+                vec4 originalColor = texture2D(u_skyboxTexture, v_texCoord);
+                float debugScale = 50.0;  // Scale offsets for visibility
+                if (true)
+                {
+                    float g = length(uvOffset) * debugScale;
+                    gl_FragColor = gl_FragColor * 0.001 + vec4(g, g, g, 1.0);
+                }
+                else
+                {
+                    gl_FragColor = vec4(
+                        originalColor.r,
+                        0.5 + uvOffset.x * debugScale,
+                        0.5 + uvOffset.y * debugScale,
+                        1.0
+                    );
+                }
+            }
+        }
     }
 );
 
@@ -686,6 +726,7 @@ void SkyboxVRParallaxShader::Init()
     u_screenSize     = getUniformLocation(mShaderProgram, "u_screenSize");
     u_parallaxDir    = getUniformLocation(mShaderProgram, "u_parallaxDir");
     u_tileScale      = getUniformLocation(mShaderProgram, "u_tileScale");
+    u_tileOffset     = getUniformLocation(mShaderProgram, "u_tileOffset");
 }
 
 

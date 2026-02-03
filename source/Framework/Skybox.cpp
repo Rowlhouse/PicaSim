@@ -175,7 +175,7 @@ void Skybox::Terminate()
 }
 
 //======================================================================================================================
-// Avoids clipping with the near plane
+// These are the skybox (or tile) vertex positions. When we draw, x is forward. 
 float scale = 100.0f;
 static GLfloat pts[] = {
     scale,  scale,  scale,
@@ -379,6 +379,7 @@ void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
 
                     float y = scale * (numPerSide - (i * 2 + 1.0f));
                     float z = scale * (numPerSide - (j * 2 + 1.0f));
+                    glUniform2f(shader->u_tileOffset, y, z);
                     esPushMatrix();
                     esTranslatef(0.0f, y, z);
                     esSetModelViewProjectionMatrix(shader->u_mvpMatrix);
