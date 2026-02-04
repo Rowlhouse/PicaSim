@@ -39,17 +39,17 @@ static AdjacentFaceInfo GetAdjacentFace(int face, int edge)
     // Returns which face is adjacent and how to sample its edge
     static const AdjacentFaceInfo adjacency[NUM_CUBEMAP_FACES][4] = {
         // UP face: left=LEFT, right=RIGHT, top=BACK, bottom=FRONT
-        {{FACE_LEFT, 2, false, false}, {FACE_RIGHT, 2, false, true}, {FACE_BACK, 2, true, false}, {FACE_FRONT, 2, false, false}},
+        {{FACE_LEFT, 2, false, false}, {FACE_RIGHT, 2, true, true}, {FACE_BACK, 2, true, false}, {FACE_FRONT, 2, false, false}},
         // FRONT face: left=LEFT, right=RIGHT, top=UP, bottom=DOWN
         {{FACE_LEFT, 1, false, false}, {FACE_RIGHT, 0, false, false}, {FACE_UP, 3, false, false}, {FACE_DOWN, 2, false, false}},
         // LEFT face: left=BACK, right=FRONT, top=UP, bottom=DOWN
-        {{FACE_BACK, 1, false, false}, {FACE_FRONT, 0, false, false}, {FACE_UP, 0, false, false}, {FACE_DOWN, 0, false, true}},
+        {{FACE_BACK, 1, false, false}, {FACE_FRONT, 0, false, false}, {FACE_UP, 0, false, false}, {FACE_DOWN, 0, true, true}},
         // BACK face: left=RIGHT, right=LEFT, top=UP, bottom=DOWN
         {{FACE_RIGHT, 1, false, false}, {FACE_LEFT, 0, false, false}, {FACE_UP, 2, true, false}, {FACE_DOWN, 3, true, false}},
         // RIGHT face: left=FRONT, right=BACK, top=UP, bottom=DOWN
-        {{FACE_FRONT, 1, false, false}, {FACE_BACK, 0, false, false}, {FACE_UP, 1, false, true}, {FACE_DOWN, 1, false, false}},
+        {{FACE_FRONT, 1, false, false}, {FACE_BACK, 0, false, false}, {FACE_UP, 1, true, true}, {FACE_DOWN, 1, false, false}},
         // DOWN face: left=LEFT, right=RIGHT, top=FRONT, bottom=BACK
-        {{FACE_LEFT, 3, false, true}, {FACE_RIGHT, 3, false, false}, {FACE_FRONT, 3, false, false}, {FACE_BACK, 3, true, false}},
+        {{FACE_LEFT, 3, true, true}, {FACE_RIGHT, 3, false, false}, {FACE_FRONT, 3, false, false}, {FACE_BACK, 3, true, false}},
     };
     return adjacency[face][edge];
 }
@@ -122,17 +122,17 @@ Image* CreateExpandedTileImage(
                 int adjIdx = -1;
                 switch (adj.edgeToSample)
                 {
-                case 0: // left edge of neighbor - rightmost column of tiles
-                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileY) : tileY) * numPerSide + (numPerSide - 1);
-                    break;
-                case 1: // right edge of neighbor - leftmost column of tiles
+                case 0: // left edge of neighbor - leftmost column of tiles
                     adjIdx = (adj.flipV ? (numPerSide - 1 - tileY) : tileY) * numPerSide + 0;
                     break;
-                case 2: // top edge of neighbor - bottom row of tiles
-                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileY) : tileY);
+                case 1: // right edge of neighbor - rightmost column of tiles
+                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileY) : tileY) * numPerSide + (numPerSide - 1);
                     break;
-                case 3: // bottom edge of neighbor - top row of tiles
+                case 2: // top edge of neighbor - top row of tiles
                     adjIdx = 0 * numPerSide + (adj.flipU ? (numPerSide - 1 - tileY) : tileY);
+                    break;
+                case 3: // bottom edge of neighbor - bottom row of tiles
+                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileY) : tileY);
                     break;
                 }
                 if (adjIdx >= 0 && adjIdx < (int)adjFace.size())
@@ -163,11 +163,11 @@ Image* CreateExpandedTileImage(
                             sampleY = adj.flipV ? (srcHeight - 1 - y) : y;
                             break;
                         case 2: // top edge - sample row near y=0
-                            sampleX = adj.flipV ? (srcWidth - 1 - y) : y;
+                            sampleX = adj.flipU ? (srcWidth - 1 - y) : y;
                             sampleY = borderPixels - 1 - x;
                             break;
                         case 3: // bottom edge - sample row near y=height
-                            sampleX = adj.flipV ? (srcWidth - 1 - y) : y;
+                            sampleX = adj.flipU ? (srcWidth - 1 - y) : y;
                             sampleY = srcHeight - borderPixels + x;
                             break;
                         }
@@ -204,17 +204,17 @@ Image* CreateExpandedTileImage(
                 int adjIdx = -1;
                 switch (adj.edgeToSample)
                 {
-                case 0: // left edge of neighbor - rightmost column of tiles
-                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileY) : tileY) * numPerSide + (numPerSide - 1);
-                    break;
-                case 1: // right edge of neighbor - leftmost column of tiles
+                case 0: // left edge of neighbor - leftmost column of tiles
                     adjIdx = (adj.flipV ? (numPerSide - 1 - tileY) : tileY) * numPerSide + 0;
                     break;
-                case 2: // top edge of neighbor - bottom row of tiles
-                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileY) : tileY);
+                case 1: // right edge of neighbor - rightmost column of tiles
+                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileY) : tileY) * numPerSide + (numPerSide - 1);
                     break;
-                case 3: // bottom edge of neighbor - top row of tiles
+                case 2: // top edge of neighbor - top row of tiles
                     adjIdx = 0 * numPerSide + (adj.flipU ? (numPerSide - 1 - tileY) : tileY);
+                    break;
+                case 3: // bottom edge of neighbor - bottom row of tiles
+                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileY) : tileY);
                     break;
                 }
                 if (adjIdx >= 0 && adjIdx < (int)adjFace.size())
@@ -245,11 +245,11 @@ Image* CreateExpandedTileImage(
                             sampleY = adj.flipV ? (srcHeight - 1 - y) : y;
                             break;
                         case 2: // top edge - sample row near y=0
-                            sampleX = adj.flipV ? (srcWidth - 1 - y) : y;
+                            sampleX = adj.flipU ? (srcWidth - 1 - y) : y;
                             sampleY = x;
                             break;
                         case 3: // bottom edge - sample row near y=height
-                            sampleX = adj.flipV ? (srcWidth - 1 - y) : y;
+                            sampleX = adj.flipU ? (srcWidth - 1 - y) : y;
                             sampleY = srcHeight - 1 - x;
                             break;
                         }
@@ -286,17 +286,17 @@ Image* CreateExpandedTileImage(
                 int adjIdx = -1;
                 switch (adj.edgeToSample)
                 {
-                case 0: // left edge of neighbor - rightmost column of tiles
-                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileX) : tileX) * numPerSide + (numPerSide - 1);
-                    break;
-                case 1: // right edge of neighbor - leftmost column of tiles
+                case 0: // left edge of neighbor - leftmost column of tiles
                     adjIdx = (adj.flipV ? (numPerSide - 1 - tileX) : tileX) * numPerSide + 0;
                     break;
-                case 2: // top edge of neighbor - bottom row of tiles
-                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileX) : tileX);
+                case 1: // right edge of neighbor - rightmost column of tiles
+                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileX) : tileX) * numPerSide + (numPerSide - 1);
                     break;
-                case 3: // bottom edge of neighbor - top row of tiles
+                case 2: // top edge of neighbor - top row of tiles
                     adjIdx = 0 * numPerSide + (adj.flipU ? (numPerSide - 1 - tileX) : tileX);
+                    break;
+                case 3: // bottom edge of neighbor - bottom row of tiles
+                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileX) : tileX);
                     break;
                 }
                 if (adjIdx >= 0 && adjIdx < (int)adjFace.size())
@@ -368,17 +368,17 @@ Image* CreateExpandedTileImage(
                 int adjIdx = -1;
                 switch (adj.edgeToSample)
                 {
-                case 0: // left edge of neighbor - rightmost column of tiles
-                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileX) : tileX) * numPerSide + (numPerSide - 1);
-                    break;
-                case 1: // right edge of neighbor - leftmost column of tiles
+                case 0: // left edge of neighbor - leftmost column of tiles
                     adjIdx = (adj.flipV ? (numPerSide - 1 - tileX) : tileX) * numPerSide + 0;
                     break;
-                case 2: // top edge of neighbor - bottom row of tiles
-                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileX) : tileX);
+                case 1: // right edge of neighbor - rightmost column of tiles
+                    adjIdx = (adj.flipV ? (numPerSide - 1 - tileX) : tileX) * numPerSide + (numPerSide - 1);
                     break;
-                case 3: // bottom edge of neighbor - top row of tiles
+                case 2: // top edge of neighbor - top row of tiles
                     adjIdx = 0 * numPerSide + (adj.flipU ? (numPerSide - 1 - tileX) : tileX);
+                    break;
+                case 3: // bottom edge of neighbor - bottom row of tiles
+                    adjIdx = (numPerSide - 1) * numPerSide + (adj.flipU ? (numPerSide - 1 - tileX) : tileX);
                     break;
                 }
                 if (adjIdx >= 0 && adjIdx < (int)adjFace.size())
