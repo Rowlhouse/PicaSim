@@ -475,6 +475,14 @@ void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
                     float y = scale * (numPerSide - (i * 2 + 1.0f));
                     float z = scale * (numPerSide - (j * 2 + 1.0f));
                     glUniform2f(shader->u_tileOffset, y, z);
+
+                    // Set which edges are at face boundaries (need projective warp)
+                    float isLeftEdge = (i == 0) ? 1.0f : 0.0f;
+                    float isRightEdge = (i == numPerSide - 1) ? 1.0f : 0.0f;
+                    float isTopEdge = (j == 0) ? 1.0f : 0.0f;
+                    float isBottomEdge = (j == numPerSide - 1) ? 1.0f : 0.0f;
+                    glUniform4f(shader->u_tileEdgeFlags, isLeftEdge, isRightEdge, isTopEdge, isBottomEdge);
+
                     esPushMatrix();
                     esTranslatef(0.0f, y, z);
                     esSetModelViewProjectionMatrix(shader->u_mvpMatrix);

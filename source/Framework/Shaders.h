@@ -162,7 +162,8 @@ public:
     int u_tileOffset;      // tile translation offset (y, z)
     int u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
     int u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
-    int u_panoramaExtension; 
+    int u_panoramaExtension;
+    int u_tileEdgeFlags;     // vec4: (isLeftEdge, isRightEdge, isTopEdge, isBottomEdge)
 };
 
 

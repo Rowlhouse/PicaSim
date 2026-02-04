@@ -557,6 +557,7 @@ const char skyboxFragmentShaderStr[] = GLSL(
         // Remap texture coordinates to sample from inner portion of expanded texture
         float borderFraction = u_panoramaExtension / (1.0 + 2.0 * u_panoramaExtension);
         vec2 texCoord = borderFraction + v_texCoord * (1.0 - 2.0 * borderFraction);
+        // texCoord = v_texCoord + 0.00001 * texCoord; // for testing - show the borders
         gl_FragColor = texture2D(u_texture, texCoord);
     }
 );
@@ -578,6 +579,8 @@ const char skyboxVRParallaxVertexShaderStr[] = GLSL(
     }
 );
 
+#if 0
+
 const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     precision mediump float;
     varying vec2 v_texCoord;
@@ -595,6 +598,7 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform vec2 u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
     uniform vec2 u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
     uniform float u_panoramaExtension; 
+    uniform vec4 u_tileEdgeFlags;   // (isLeftEdge, isRightEdge, isTopEdge, isBottomEdge)
 
     void main()
     {
@@ -659,41 +663,128 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         texCoord = borderFraction + texCoord * (1.0 - 2.0 * borderFraction);
 
         gl_FragColor = texture2D(u_skyboxTexture, texCoord);
-
-        // Debug overrides. Need to reference things to avoid errors!
-        if (false)
-        {
-            if (true)
-            {
-                float g = clamp(linearDepth / 30.0, 0.0, 1.0);
-                gl_FragColor = gl_FragColor * 0.001 + vec4(g + v_texCoord.x * 0.0001, g, g, 1.0);
-            }
-            else
-            {
-                // Debug visualization:
-                // R = original texture (using v_texCoord, no parallax)
-                // G = U offset (scaled for visibility, centered at 0.5)
-                // B = V offset (scaled for visibility, centered at 0.5)
-                vec4 originalColor = texture2D(u_skyboxTexture, v_texCoord);
-                float debugScale = 50.0;  // Scale offsets for visibility
-                if (true)
-                {
-                    float g = length(uvOffset) * debugScale;
-                    gl_FragColor = gl_FragColor * 0.001 + vec4(g, g, g, 1.0);
-                }
-                else
-                {
-                    gl_FragColor = vec4(
-                        originalColor.r,
-                        0.5 + uvOffset.x * debugScale,
-                        0.5 + uvOffset.y * debugScale,
-                        1.0
-                    );
-                }
-            }
-        }
+        gl_FragColor += u_tileEdgeFlags * 0.00001
     }
 );
+
+#else
+
+const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
+    precision mediump float;
+    varying vec2 v_texCoord;
+    varying vec3 v_position;
+    uniform sampler2D u_skyboxTexture;
+    uniform sampler2D u_depthTexture;
+    uniform float u_eyeOffset;      // -1.0 for left eye, +1.0 for right eye
+    uniform float u_ipd;            // interpupillary distance in world units
+    uniform float u_nearPlane;
+    uniform float u_farPlane;
+    uniform vec2 u_screenSize;      // screen width and height
+    uniform vec3 u_eyeRightLocal;   // eye separation direction in face-local coords (x=forward)
+    uniform float u_tileScale;      // numPerSide - scales parallax for tile coordinates
+    uniform vec2 u_tileOffset;      // tile translation offset (y, z components)
+    uniform vec2 u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
+    uniform vec2 u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
+    uniform float u_panoramaExtension;
+    uniform vec4 u_tileEdgeFlags;   // (isLeftEdge, isRightEdge, isTopEdge, isBottomEdge)
+
+    void main()
+    {
+        // Sample depth at this fragment's screen position
+        vec2 screenUV = gl_FragCoord.xy / u_screenSize;
+        float depthSample = texture2D(u_depthTexture, screenUV).r;
+
+        // Convert from normalized depth [0,1] to linear depth. This is the perpendicular distance - 
+        // i.e. along the look direction (not the absolute distance).
+        float linearDepth = u_nearPlane * u_farPlane /
+                            (u_farPlane - depthSample * (u_farPlane - u_nearPlane));
+                            
+        // Correct for screen position: linearDepth is perpendicular distance,
+        // but we need actual radial distance for proper parallax.
+        // Map screen UV to view ray direction using FOV tangents.
+        vec2 viewRay = mix(u_tanFovMin, u_tanFovMax, screenUV);
+        float cosAngle = 1.0 / sqrt(1.0 + dot(viewRay, viewRay));
+        linearDepth = linearDepth / cosAngle;
+//        linearDepth = linearDepth / (1 + cosAngle * 0.000001);
+
+        // At this point, if we render distance above a flat ground then we get circles around the 
+        // observer.
+
+        // For sky pixels (at or near far plane), no parallax (sky is at infinity)
+        vec2 uvOffset = vec2(0.0);
+        if (depthSample < 0.9999)
+        {
+            // Skybox position accounting for tile offset and scale
+            // The geometry is scaled by 1/numPerSide then translated, so actual position is:
+            // (v_position + u_tileOffset) / u_tileScale
+            vec3 skyboxPos;
+            skyboxPos.x = v_position.x;
+            skyboxPos.y = (v_position.y + u_tileOffset.x) / u_tileScale;
+            skyboxPos.z = (v_position.z + u_tileOffset.y) / u_tileScale;
+            float x = skyboxPos.x;
+            float x2 = x * x;
+
+            // Position shift in eye-right direction, projected to skybox distance
+            // parallaxShift = (ipd/2) * eyeOffset * (skyboxDist / objectDist)
+            float parallaxShift = (u_ipd * 0.5) * u_eyeOffset * (x / linearDepth);
+
+            // Compute per-pixel UV shift using Jacobian of UV mapping
+            // UV = (0.5 - y/(2x), 0.5 - z/(2x)) for the front face vertex data
+            // dU = (y·dx - x·dy) / (2x²), dV = (z·dx - x·dz) / (2x²)
+            // where (dx, dy, dz) = u_eyeRightLocal direction
+            float dU = (skyboxPos.y * u_eyeRightLocal.x - x * u_eyeRightLocal.y) / (2.0 * x2);
+            float dV = (skyboxPos.z * u_eyeRightLocal.x - x * u_eyeRightLocal.z) / (2.0 * x2);
+
+            uvOffset = vec2(dU, dV) * parallaxShift * u_tileScale;
+
+            // We need to increase the uv offset away from the face centre to account for the 
+            // fact that the pixel is further away from the viewer. Increase by 1/cos(phi)
+            float correction = length(skyboxPos) / skyboxPos.x;
+            uvOffset *= correction; 
+        }
+
+        // Calculate the raw texture coordinate (before border adjustment)
+        vec2 rawUV = v_texCoord + uvOffset;
+
+        // Border stretching: the border pixels were copied as rectangles, but geometrically
+        // they should "fan out" into the corners. We stretch the perpendicular coordinate
+        // away from center (0.5), proportional to how far we are into the border.
+        // Each border adjustment accumulates independently for corners.
+        vec2 adjustedUV = rawUV;
+
+        // Left border: stretch y away from center
+        if (rawUV.x < 0.0 && u_tileEdgeFlags.x > 0.5)
+        {
+            adjustedUV.y += (rawUV.y - 0.5) * 2.0 * (rawUV.x);
+        }
+
+        // Right border: stretch y away from center
+        if (rawUV.x > 1.0 && u_tileEdgeFlags.y > 0.5)
+        {
+            adjustedUV.y += (rawUV.y - 0.5) * 2.0 * (1.0 - rawUV.x);
+        }
+
+        // Top border: stretch x away from center
+        if (rawUV.y < 0.0 && u_tileEdgeFlags.z > 0.5)
+        {
+            adjustedUV.x += (rawUV.x - 0.5) * 2.0 * (rawUV.y);
+        }
+
+        // Bottom border: stretch x away from center
+        if (rawUV.y > 1.0 && u_tileEdgeFlags.w > 0.5)
+        {
+            adjustedUV.x += (rawUV.x - 0.5) * 2.0 * (1.0 - rawUV.y);
+        }
+
+        // Apply border fraction remapping
+        float borderFraction = u_panoramaExtension / (1.0 + 2.0 * u_panoramaExtension);
+        vec2 texCoord = borderFraction + adjustedUV * (1.0 - 2.0 * borderFraction);
+
+        gl_FragColor = texture2D(u_skyboxTexture, texCoord);
+    }
+);
+
+#endif
 
 //======================================================================================================================
 void Shader::Init(const char* vertexShaderStr, const char* fragmentShaderStr)
@@ -922,6 +1013,7 @@ void SkyboxVRParallaxShader::Init()
     u_tanFovMin      = getUniformLocation(mShaderProgram, "u_tanFovMin");
     u_tanFovMax      = getUniformLocation(mShaderProgram, "u_tanFovMax");
     u_panoramaExtension = getUniformLocation(mShaderProgram, "u_panoramaExtension");
+    u_tileEdgeFlags  = getUniformLocation(mShaderProgram, "u_tileEdgeFlags");
 }
 
 
