@@ -15,6 +15,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#define DEBUG_SAVE_EXPANDED_TEXTURES 0
+
 //======================================================================================================================
 // Transform eye separation direction from world space to face-local coordinates
 // side: skybox face (0=UP, 1=FRONT, 2=LEFT, 3=BACK, 4=RIGHT, 5=DOWN)
@@ -149,7 +151,6 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
 
                 if (expandedImage)
                 {
-#define DEBUG_SAVE_EXPANDED_TEXTURES 1
 #if DEBUG_SAVE_EXPANDED_TEXTURES
                     {
                         char debugFilename[256];
@@ -452,7 +453,7 @@ void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
 
     // Set per-face uniforms
     glUniform3f(shader->u_eyeRightLocal, eyeRightLocal.x, eyeRightLocal.y, eyeRightLocal.z);
-    glUniform1f(shader->u_tileScale, (float)numPerSide);
+    glUniform1f(shader->u_tilesPerSide, (float)numPerSide);
     glUniform1f(shader->u_panoramaExtension, mPanoramaExtension);
 
     float imageScale = 1.0f / numPerSide;

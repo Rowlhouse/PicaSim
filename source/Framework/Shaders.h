@@ -158,7 +158,7 @@ public:
     int u_nearPlane, u_farPlane;
     int u_screenSize;      // screen dimensions for depth texture sampling
     int u_eyeRightLocal;   // eye separation direction in face-local coords (vec3)
-    int u_tileScale;       // numPerSide - scales parallax for tile coordinates
+    int u_tilesPerSide;       // numPerSide - scales parallax for tile coordinates
     int u_tileOffset;      // tile translation offset (y, z)
     int u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
     int u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction

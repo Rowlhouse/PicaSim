@@ -105,7 +105,7 @@ for (each tile) {
 ```
 
 The shader receives:
-- `u_tileScale` = numPerSide
+- `u_tilesPerSide` = numPerSide
 - `u_tileOffset` = (y, z) translation values
 - `u_tileEdgeFlags` = which edges of this tile are at face boundaries
 
@@ -121,7 +121,7 @@ uniform float u_ipd;            // Interpupillary distance in world units
 uniform float u_nearPlane, u_farPlane;
 uniform vec2 u_screenSize;
 uniform vec3 u_eyeRightLocal;   // Eye separation direction in face-local coords
-uniform float u_tileScale;      // numPerSide
+uniform float u_tilesPerSide;      // numPerSide
 uniform vec2 u_tileOffset;      // Tile translation (y, z)
 uniform vec2 u_tanFovMin, u_tanFovMax;  // FOV tangents for depth correction
 uniform float u_panoramaExtension;
@@ -152,8 +152,8 @@ For non-sky pixels (depthSample < 0.9999):
 // Reconstruct actual skybox position from tile geometry
 vec3 skyboxPos;
 skyboxPos.x = v_position.x;  // Forward direction (always 'scale')
-skyboxPos.y = (v_position.y + u_tileOffset.x) / u_tileScale;
-skyboxPos.z = (v_position.z + u_tileOffset.y) / u_tileScale;
+skyboxPos.y = (v_position.y + u_tileOffset.x) / u_tilesPerSide;
+skyboxPos.z = (v_position.z + u_tileOffset.y) / u_tilesPerSide;
 
 // Parallax shift: larger for closer objects
 float parallaxShift = (u_ipd * 0.5) * u_eyeOffset * (skyboxPos.x / linearDepth);
@@ -163,7 +163,7 @@ float parallaxShift = (u_ipd * 0.5) * u_eyeOffset * (skyboxPos.x / linearDepth);
 float dU = (skyboxPos.y * u_eyeRightLocal.x - skyboxPos.x * u_eyeRightLocal.y) / (2.0 * x2);
 float dV = (skyboxPos.z * u_eyeRightLocal.x - skyboxPos.x * u_eyeRightLocal.z) / (2.0 * x2);
 
-vec2 uvOffset = vec2(dU, dV) * parallaxShift * u_tileScale;
+vec2 uvOffset = vec2(dU, dV) * parallaxShift * u_tilesPerSide;
 
 // Distance correction: points away from face center are further
 float correction = length(skyboxPos) / skyboxPos.x;
