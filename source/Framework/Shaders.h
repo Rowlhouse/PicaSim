@@ -44,6 +44,7 @@ public:
     void Init() OVERRIDE;
     int u_mvpMatrix, a_position, a_texCoord;
     int u_texture;
+    int u_panoramaExtension;
 };
 
 //======================================================================================================================
@@ -161,7 +162,7 @@ public:
     int u_tileOffset;      // tile translation offset (y, z)
     int u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
     int u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
-    int u_borderFraction;  // border size as fraction of expanded texture (0 if no extension)
+    int u_panoramaExtension; 
 };
 
 

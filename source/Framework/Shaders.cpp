@@ -551,9 +551,13 @@ const char skyboxFragmentShaderStr[] = GLSL(
     precision mediump float;
     varying vec2 v_texCoord;
     uniform sampler2D u_texture;
+    uniform float u_panoramaExtension;
     void main()
     {
-        gl_FragColor = texture2D(u_texture, v_texCoord);
+        // Remap texture coordinates to sample from inner portion of expanded texture
+        float borderFraction = u_panoramaExtension / (1.0 + 2.0 * u_panoramaExtension);
+        vec2 texCoord = borderFraction + v_texCoord * (1.0 - 2.0 * borderFraction);
+        gl_FragColor = texture2D(u_texture, texCoord);
     }
 );
 
@@ -590,7 +594,7 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
     uniform vec2 u_tileOffset;      // tile translation offset (y, z components)
     uniform vec2 u_tanFovMin;       // vec2(tanLeft, tanDown) for depth correction
     uniform vec2 u_tanFovMax;       // vec2(tanRight, tanUp) for depth correction
-    uniform float u_borderFraction; // border size as fraction of expanded texture (0 if no extension)
+    uniform float u_panoramaExtension; 
 
     void main()
     {
@@ -651,7 +655,8 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
         vec2 texCoord = v_texCoord + uvOffset;
 
         // But we do have borders, so shrink it down
-        texCoord = u_borderFraction + texCoord / (1.0 + 2.0 * u_borderFraction);
+        float borderFraction = u_panoramaExtension / (1.0 + 2.0 * u_panoramaExtension);
+        texCoord = borderFraction + texCoord * (1.0 - 2.0 * borderFraction);
 
         gl_FragColor = texture2D(u_skyboxTexture, texCoord);
 
@@ -751,10 +756,11 @@ void ControllerShader::Init()
 void SkyboxShader::Init()
 {
     Shader::Init(skyboxVertexShaderStr, skyboxFragmentShaderStr);
-    u_mvpMatrix  = getUniformLocation(mShaderProgram, "u_mvpMatrix");
-    a_position   = getAttribLocation(mShaderProgram, "a_position");
-    a_texCoord   = getAttribLocation(mShaderProgram, "a_texCoord");
-    u_texture    = getUniformLocation(mShaderProgram, "u_texture");
+    u_mvpMatrix      = getUniformLocation(mShaderProgram, "u_mvpMatrix");
+    a_position       = getAttribLocation(mShaderProgram, "a_position");
+    a_texCoord       = getAttribLocation(mShaderProgram, "a_texCoord");
+    u_texture        = getUniformLocation(mShaderProgram, "u_texture");
+    u_panoramaExtension = getUniformLocation(mShaderProgram, "u_panoramaExtension");
 }
 
 //======================================================================================================================
@@ -915,7 +921,7 @@ void SkyboxVRParallaxShader::Init()
     u_tileOffset     = getUniformLocation(mShaderProgram, "u_tileOffset");
     u_tanFovMin      = getUniformLocation(mShaderProgram, "u_tanFovMin");
     u_tanFovMax      = getUniformLocation(mShaderProgram, "u_tanFovMax");
-    u_borderFraction = getUniformLocation(mShaderProgram, "u_borderFraction");
+    u_panoramaExtension = getUniformLocation(mShaderProgram, "u_panoramaExtension");
 }
 
 

@@ -343,6 +343,7 @@ void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
     {
         skyboxShader->Use();
         glUniform1i(skyboxShader->u_texture, 0);
+        glUniform1f(skyboxShader->u_panoramaExtension, mPanoramaExtension);
     }
 
     Vector3 pos = viewport->GetCamera()->GetPosition();
@@ -452,11 +453,7 @@ void Skybox::DrawSideVRParallax(Side side, const SkyboxVRParallaxShader* shader,
     // Set per-face uniforms
     glUniform3f(shader->u_eyeRightLocal, eyeRightLocal.x, eyeRightLocal.y, eyeRightLocal.z);
     glUniform1f(shader->u_tileScale, (float)numPerSide);
-
-    // Border fraction: convert extension (fraction of original) to fraction of expanded texture
-    // expanded size = 1 + 2*extension, so borderFraction = extension / (1 + 2*extension)
-    float borderFraction = mPanoramaExtension / (1.0f + 2.0f * mPanoramaExtension);
-    glUniform1f(shader->u_borderFraction, borderFraction);
+    glUniform1f(shader->u_panoramaExtension, mPanoramaExtension);
 
     float imageScale = 1.0f / numPerSide;
     esScalef(1.0f, imageScale, imageScale);
