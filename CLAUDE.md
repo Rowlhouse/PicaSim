@@ -34,7 +34,7 @@ PicaSim is a cross-platform R/C flight simulator built with C++. It simulates ra
 
 **Current stack**: SDL2 (window/input), OpenGL (rendering), OpenAL-Soft (audio), GLM (math), Bullet Physics (physics).
 
-**Note**: The project is being migrated from Marmalade SDK (no longer commercially available) to SDL2 + OpenGL. The original `.mkb` build files are preserved for reference.
+**Note**: The project has being migrated from Marmalade SDK (no longer commercially available) to SDL2 + OpenGL.
 
 ## Architecture
 
@@ -166,4 +166,5 @@ PicaSim source is MIT licensed. Third-party components have separate licenses:
 ## Read
  - README.md
  - CODE_STYLE.md
+ - ParallaxPanorma.md
 
