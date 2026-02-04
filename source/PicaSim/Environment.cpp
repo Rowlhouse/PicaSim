@@ -8,12 +8,12 @@
 #include "AeroplanePhysics.h"
 #include "../Platform/S3ECompat.h"
 
-Environment* Environment::mInstance = 0;
+std::unique_ptr<Environment> Environment::mInstance;
 
 //======================================================================================================================
 Environment& Environment::GetInstance()
 {
-    IwAssert(ROWLHOUSE, mInstance != 0);
+    IwAssert(ROWLHOUSE, mInstance != nullptr);
     return *mInstance;
 }
 
@@ -26,7 +26,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     if (loadingScreen) loadingScreen->Update("Loading environment");
 
     IwAssert(ROWLHOUSE, !mInstance);
-    mInstance = new Environment;
+    mInstance.reset(new Environment);
 
     mInstance->mChecksum = 0;
 
@@ -109,7 +109,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     // Initialise wind flow
     mInstance->InitZeroFlowHeightfield(loadingScreen);
 
-    EntityManager::GetInstance().RegisterEntity(mInstance, ENTITY_LEVEL_PRE_PHYSICS);
+    EntityManager::GetInstance().RegisterEntity(mInstance.get(), ENTITY_LEVEL_PRE_PHYSICS);
 
     mInstance->mThermalManager.Init(loadingScreen);
 
@@ -120,22 +120,22 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
         runwayTM.SetTrans(gs.mEnvironmentSettings.mRunwayPosition);
         if (gs.mEnvironmentSettings.mRunwayType == EnvironmentSettings::RUNWAY_RUNWAY)
         {
-            mInstance->mRunway = new Runway(
+            mInstance->mRunway = std::make_unique<Runway>(
                 runwayTM, gs.mEnvironmentSettings.mRunwayLength, gs.mEnvironmentSettings.mRunwayWidth, "SystemData/Textures/Runway.png", Runway::RUNWAY);
         }
         else
         {
-            mInstance->mRunway = new Runway(
+            mInstance->mRunway = std::make_unique<Runway>(
                 runwayTM, gs.mEnvironmentSettings.mRunwayLength, gs.mEnvironmentSettings.mRunwayWidth, "SystemData/Textures/Runway.png", Runway::CIRCLE);
         }
     }
     else
     {
-        mInstance->mRunway = 0;
+        mInstance->mRunway.reset();
     }
 
     // Objects
-    mInstance->mObjectEditingTexture = new Texture;
+    mInstance->mObjectEditingTexture = std::make_unique<Texture>();
     mInstance->mObjectEditingTexture->LoadFromFile("SystemData/Menu/Button.png");
     mInstance->mObjectEditingTexture->SetFormatHW(CIwImage::RGBA_4444);
     mInstance->mObjectEditingTexture->Upload();
@@ -161,14 +161,11 @@ void Environment::Terminate()
     mInstance->mSkybox.Terminate();
     mInstance->mTerrain.Terminate();
 
-    delete mInstance->mRunway;
-    mInstance->mRunway = 0;
+    mInstance->mRunway.reset();
 
-    delete mInstance->mObjectEditingOverlay;
-    mInstance->mObjectEditingOverlay = 0;
+    mInstance->mObjectEditingOverlay.reset();
 
-    delete mInstance->mObjectEditingTexture;
-    mInstance->mObjectEditingTexture = 0;
+    mInstance->mObjectEditingTexture.reset();
 
     // Clear any runtime record of boxes
     ObjectsSettings& os = PicaSim::GetInstance().GetSettings().mObjectsSettings;
@@ -184,15 +181,14 @@ void Environment::Terminate()
         mInstance->mBoxes.erase(mInstance->mBoxes.begin());
     }
 
-    EntityManager::GetInstance().UnregisterEntity(mInstance, ENTITY_LEVEL_PRE_PHYSICS);
+    EntityManager::GetInstance().UnregisterEntity(mInstance.get(), ENTITY_LEVEL_PRE_PHYSICS);
 
-    delete mInstance;
-    mInstance = 0;
+    mInstance.reset();
 
 }
 
 //======================================================================================================================
-Environment::Environment() : mTime(0.0f), mObjectEditingOverlay(0), mRunway(0)
+Environment::Environment() : mTime(0.0f)
 {
 }
 
@@ -256,12 +252,11 @@ void Environment::EntityUpdate(float deltaTime, int entityLevel)
 
     if (gs.mOptions.mEnableObjectEditing && !mObjectEditingOverlay)
     {
-        mObjectEditingOverlay = new ObjectEditingOverlay(gs, mInstance->mObjectEditingTexture, *this);
+        mObjectEditingOverlay = std::make_unique<ObjectEditingOverlay>(gs, mInstance->mObjectEditingTexture.get(), *this);
     }
     else if (!gs.mOptions.mEnableObjectEditing && mObjectEditingOverlay)
     {
-        delete mObjectEditingOverlay;
-        mObjectEditingOverlay = 0;
+        mObjectEditingOverlay.reset();
     }
 
     if (!mObjectEditingOverlay)

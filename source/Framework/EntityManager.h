@@ -8,6 +8,7 @@
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
 
 #include <map>
+#include <memory>
 
 enum EntityLevels
 {
@@ -69,7 +70,7 @@ private:
     /// We register with ourselves in order to update physics
     void EntityUpdate(float deltaTime, int entityLevel) OVERRIDE;
 
-    static EntityManager* mInstance;
+    static std::unique_ptr<EntityManager> mInstance;
 
     /// All the Entities in the game. The first of these will always be the one under user control.
     Entities mEntities; 

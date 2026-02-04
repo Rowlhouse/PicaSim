@@ -165,11 +165,11 @@ HumanController::HumanController(GameSettings& gs)
     float buttonOffset = 1.0f / numButtonSlots;
     float paddingFraction = 0.25f;
     GLubyte alpha = 255;
-    mButtonOverlay[0] = new ButtonOverlay("SystemData/Menu/Button1.png", buttonSize, paddingFraction, 
+    mButtonOverlay[0] = std::make_unique<ButtonOverlay>("SystemData/Menu/Button1.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, 1.0f, 1.0f - 1.0f * buttonOffset, alpha, true, true);
-    mButtonOverlay[1] = new ButtonOverlay("SystemData/Menu/Button2.png", buttonSize, paddingFraction, 
+    mButtonOverlay[1] = std::make_unique<ButtonOverlay>("SystemData/Menu/Button2.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, 1.0f, 1.0f - 2.0f * buttonOffset, alpha, true, true);
-    mButtonOverlay[2] = new ButtonOverlay("SystemData/Menu/Button3.png", buttonSize, paddingFraction, 
+    mButtonOverlay[2] = std::make_unique<ButtonOverlay>("SystemData/Menu/Button3.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_LEFT, ButtonOverlay::ANCHOR_V_TOP, 0.0f, 1.0f - 1.0f * buttonOffset, alpha, true, true);
 }
 
@@ -180,9 +180,9 @@ HumanController::~HumanController()
     EntityManager::GetInstance().UnregisterEntity(this, ENTITY_LEVEL_CONTROL);
     RenderManager::GetInstance().UnregisterRenderOverlayObject(this, 0);
 
-    delete mButtonOverlay[0];
-    delete mButtonOverlay[1];
-    delete mButtonOverlay[2];
+    mButtonOverlay[0].reset();
+    mButtonOverlay[1].reset();
+    mButtonOverlay[2].reset();
 }
 
 //======================================================================================================================

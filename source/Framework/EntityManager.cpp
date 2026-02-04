@@ -7,12 +7,12 @@
 
 #include "BulletCollision/CollisionShapes/btTriangleShape.h"
 
-EntityManager* EntityManager::mInstance = 0;
+std::unique_ptr<EntityManager> EntityManager::mInstance;
 
 //======================================================================================================================
 EntityManager& EntityManager::GetInstance()
 {
-    IwAssert(ROWLHOUSE, mInstance != 0);
+    IwAssert(ROWLHOUSE, mInstance != nullptr);
     return *mInstance;
 }
 
@@ -44,7 +44,7 @@ void EntityManager::Init(const FrameworkSettings& frameworkSettings)
 {
     TRACE_FUNCTION_ONLY(1);
     IwAssert(ROWLHOUSE, !mInstance);
-    mInstance = new EntityManager(frameworkSettings);
+    mInstance.reset(new EntityManager(frameworkSettings));
 
     // Initialise physics SDK
     mInstance->mCollisionConfiguration = new btSoftBodyRigidBodyCollisionConfiguration();
@@ -77,7 +77,7 @@ void EntityManager::Init(const FrameworkSettings& frameworkSettings)
     mInstance->mDynamicsWorld->setGravity(mInstance->mSoftBodyWorldInfo.m_gravity);
 
     // Register for physics
-    mInstance->RegisterEntity(mInstance, ENTITY_LEVEL_LOOP_PHYSICS);
+    mInstance->RegisterEntity(mInstance.get(), ENTITY_LEVEL_LOOP_PHYSICS);
 
     mInstance->mIsFinalIteration = true;
     mInstance->mLeftOverTime = 0.0f;
@@ -91,7 +91,7 @@ void EntityManager::Terminate()
     TRACE_FUNCTION_ONLY(1);
     IwAssert(ROWLHOUSE, mInstance);
 
-    mInstance->UnregisterEntity(mInstance, ENTITY_LEVEL_LOOP_PHYSICS);
+    mInstance->UnregisterEntity(mInstance.get(), ENTITY_LEVEL_LOOP_PHYSICS);
 
     IwAssert(ROWLHOUSE, mInstance->mEntities.empty());
 
@@ -102,8 +102,7 @@ void EntityManager::Terminate()
     delete mInstance->mDispatcher;
     delete mInstance->mCollisionConfiguration;
 
-    delete mInstance;
-    mInstance = 0;
+    mInstance.reset();
 }
 
 //======================================================================================================================

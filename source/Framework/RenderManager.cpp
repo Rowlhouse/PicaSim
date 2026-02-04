@@ -21,13 +21,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #endif
 
-RenderManager* RenderManager::mInstance = 0;
+std::unique_ptr<RenderManager> RenderManager::mInstance;
 
 
 //======================================================================================================================
 RenderManager& RenderManager::GetInstance()
 {
-    IwAssert(ROWLHOUSE, mInstance != 0);
+    IwAssert(ROWLHOUSE, mInstance != nullptr);
     return *mInstance;
 }
 
@@ -46,7 +46,7 @@ void RenderManager::SetLightingDirection(float bearing, float elevation)
 RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
     : mFrameworkSettings(frameworkSettings)
 {
-    mDebugRenderer = new DebugRenderer;
+    mDebugRenderer = std::make_unique<DebugRenderer>();
     mLightingAmbientColour = Vector3(0.3f, 0.3f, 0.3f);
     mLightingDiffuseColour = Vector3(1.0f, 1.0f, 1.0f);
     mShadowStrength = 0.2f;
@@ -68,7 +68,6 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
 
 RenderManager::~RenderManager()
 {
-    delete mDebugRenderer;
 }
 
 
@@ -77,7 +76,7 @@ void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelp
 {
     TRACE_FUNCTION_ONLY(1);
     IwAssert(ROWLHOUSE, !mInstance);
-    mInstance = new RenderManager(frameworkSettings);
+    mInstance.reset(new RenderManager(frameworkSettings));
 
     // Get dimensions from IwGL
     int width =  Platform::GetDisplayWidth();
@@ -111,8 +110,7 @@ void RenderManager::Terminate()
     mInstance->mCameras.clear();
     mInstance->mDebugRenderer->Terminate();
 
-    delete mInstance;
-    mInstance = 0;
+    mInstance.reset();
 }
 
 //======================================================================================================================

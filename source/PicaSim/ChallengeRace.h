@@ -7,6 +7,8 @@
 
 #include "Framework.h"
 
+#include <memory>
+
 //======================================================================================================================
 class ChallengeRace : public Challenge, public RenderGxObject
 {
@@ -29,7 +31,7 @@ private:
     float CalculateScore() const;
     float CalculateHeightMultiplier() const;
 
-    class WindsockOverlay* mGatePointer;
+    std::unique_ptr<class WindsockOverlay> mGatePointer;
 
     typedef std::vector<GatePost> GatePosts;
     GatePosts mGatePosts;

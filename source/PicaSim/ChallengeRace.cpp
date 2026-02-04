@@ -70,7 +70,7 @@ void ChallengeRace::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScree
             gs.mChallengeSettings.mGates[i].mTargetColour2);
     }
 
-    mGatePointer = new WindsockOverlay("SystemData/Menu/GatePointer.png", gs.mOptions.mWindArrowSize * 0.75f, 0.5f, gs.mOptions.mWindArrowSize, 0, 0.0f);
+    mGatePointer = std::make_unique<WindsockOverlay>("SystemData/Menu/GatePointer.png", gs.mOptions.mWindArrowSize * 0.75f, 0.5f, gs.mOptions.mWindArrowSize, 0, 0.0f);
 
     mGotHighScore = false;
 
@@ -100,8 +100,7 @@ void ChallengeRace::Terminate()
         mGatePosts[i].Terminate();
     }
     mGatePosts.clear();
-    delete mGatePointer;
-    mGatePointer = 0;
+    mGatePointer.reset();
 
     if (mSoundChannel != -1)
     {

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cstdio>
 
-AudioManager* AudioManager::mInstance = 0;
+std::unique_ptr<AudioManager> AudioManager::mInstance;
 
 //======================================================================================================================
 static int16 ClipToInt16(int32 sval)
@@ -22,8 +22,8 @@ static int16 ClipToInt16(int32 sval)
 void AudioManager::Init()
 {
     TRACE_FILE_IF(1) TRACE("AudioManager::Init()");
-    IwAssert(ROWLHOUSE, mInstance == 0);
-    mInstance = new AudioManager;
+    IwAssert(ROWLHOUSE, mInstance == nullptr);
+    mInstance.reset(new AudioManager);
 }
 
 //======================================================================================================================
@@ -31,8 +31,7 @@ void AudioManager::Terminate()
 {
     TRACE_FILE_IF(1) TRACE("AudioManager::Terminate()");
     IwAssert(ROWLHOUSE, mInstance);
-    delete mInstance;
-    mInstance = 0;
+    mInstance.reset();
 }
 
 //======================================================================================================================
@@ -91,7 +90,7 @@ AudioManager::AudioManager()
 
     // Pre-allocate channels (OpenAL sources)
     mNumAvailableChannels = 32;
-    mChannels = new Channel[mNumAvailableChannels];
+    mChannels = std::make_unique<Channel[]>(mNumAvailableChannels);
 
     for (int i = 0; i < mNumAvailableChannels; ++i)
     {
@@ -124,7 +123,7 @@ AudioManager::~AudioManager()
             alDeleteSources(1, &mChannels[i].mALSource);
         }
     }
-    delete[] mChannels;
+    mChannels.reset();
 
     // Delete all sounds (and their OpenAL buffers)
     for (Sounds::iterator it = mSounds.begin(); it != mSounds.end(); ++it)

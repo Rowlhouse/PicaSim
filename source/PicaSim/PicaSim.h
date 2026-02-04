@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "../Platform/S3ECompat.h"
 
 enum GraphIDs
@@ -66,7 +67,7 @@ public:
 
     static PicaSim& GetInstance() {return *mInstance;}
 
-    static bool IsCreated() {return mInstance != 0;}
+    static bool IsCreated() {return mInstance != nullptr;}
 
     // Returns when it's time to quit
     UpdateResult Update(int64 deltaTimeMs);
@@ -80,8 +81,8 @@ public:
     GameSettings& GetSettings() {return mGameSettings;}
     const GameSettings& GetSettings() const {return mGameSettings;}
 
-    Aeroplane* GetPlayerAeroplane() {return mPlayerAeroplane;}
-    const Aeroplane* GetPlayerAeroplane() const {return mPlayerAeroplane;}
+    Aeroplane* GetPlayerAeroplane() {return mPlayerAeroplane.get();}
+    const Aeroplane* GetPlayerAeroplane() const {return mPlayerAeroplane.get();}
 
     /// This returns the unclamped total timestep delta
     float GetCurrentUpdateDeltaTime() const {return mCurrentDeltaTime;}
@@ -110,8 +111,8 @@ public:
 
     ParticleEngine& GetParticleEngine() {return mParticleEngine;}
 
-    class Challenge* GetChallenge() {return mChallenge;}
-    const class Challenge* GetChallenge() const {return mChallenge;}
+    class Challenge* GetChallenge() {return mChallenge.get();}
+    const class Challenge* GetChallenge() const {return mChallenge.get();}
 
 private:
     typedef std::vector<class BoxObject*> BoxObjects;
@@ -127,36 +128,36 @@ private:
 
     int ShowInGameDialog(float width, float height, const char* title, const char* text, const char* button0, const char* button1 = 0, const char* button2 = 0);
 
-    static PicaSim* mInstance;
+    static std::unique_ptr<PicaSim> mInstance;
 
     Viewport* mViewport;
     Viewport* mZoomViewport;
 
-    class Challenge* mChallenge;
+    std::unique_ptr<class Challenge> mChallenge;
 
     BoxObjects mBoxObjects;
 
-    Aeroplane* mPlayerAeroplane;
-    HumanController* mPlayerController;
+    std::unique_ptr<Aeroplane> mPlayerAeroplane;
+    std::unique_ptr<HumanController> mPlayerController;
 
     Aeroplanes mAeroplanes;
     Aeroplanes mCameraAeroplanes;
     size_t mCameraAeroplaneIndex;
 
-    Observer* mObserver;
+    std::unique_ptr<Observer> mObserver;
     ParticleEngine mParticleEngine;
 
-    class ButtonOverlay* mPauseOverlay;
-    class ButtonOverlay* mHelpOverlay;
-    class ButtonOverlay* mStartMenuOverlay;
-    class ButtonOverlay* mResumeOverlay;
-    class ButtonOverlay* mSettingsMenuOverlay;
-    class ButtonOverlay* mRelaunchOverlay;
-    class ButtonOverlay* mChangeViewOverlay;
-    class ButtonOverlay* mWalkaboutOverlay;
-    class ButtonOverlay* mControllerOverlay;
+    std::unique_ptr<class ButtonOverlay> mPauseOverlay;
+    std::unique_ptr<class ButtonOverlay> mHelpOverlay;
+    std::unique_ptr<class ButtonOverlay> mStartMenuOverlay;
+    std::unique_ptr<class ButtonOverlay> mResumeOverlay;
+    std::unique_ptr<class ButtonOverlay> mSettingsMenuOverlay;
+    std::unique_ptr<class ButtonOverlay> mRelaunchOverlay;
+    std::unique_ptr<class ButtonOverlay> mChangeViewOverlay;
+    std::unique_ptr<class ButtonOverlay> mWalkaboutOverlay;
+    std::unique_ptr<class ButtonOverlay> mControllerOverlay;
 
-    class WindsockOverlay* mWindsockOverlay;
+    std::unique_ptr<class WindsockOverlay> mWindsockOverlay;
 
     bool mShouldExit;
     Mode mMode;
@@ -175,7 +176,7 @@ private:
     AudioManager::Sound* mSound;
     AudioManager::SoundChannel mSoundChannel;
 
-    class ConnectionListener* mConnectionListener;
+    std::unique_ptr<class ConnectionListener> mConnectionListener;
 
     // For when using the joystick
     bool mPrevJoystickRelaunch;

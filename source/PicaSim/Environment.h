@@ -8,6 +8,7 @@
 #include "Runway.h"
 
 #include <set>
+#include <memory>
 
 class ObjectEditingOverlay;
 class Runway;
@@ -33,6 +34,8 @@ public:
     static bool Init(LoadingScreenHelper* loadingScreen);
 
     static void Terminate();
+
+    ~Environment();
 
     static Terrain& GetTerrain() {return mInstance->mTerrain;}
 
@@ -68,7 +71,7 @@ public:
 
     float GetSurfaceRoughness(const Vector3& pos) const;
 
-    const Runway* GetRunway() const {return mRunway;}
+    const Runway* GetRunway() const {return mRunway.get();}
 
     void ResetTime() {mTime = 0.0f;}
 
@@ -80,25 +83,24 @@ private:
     friend class ObjectEditingOverlay;
 
     Environment();
-    ~Environment();
 
     float GetZeroWindHeightAt(int i, int j) const;
     Vector3 GetZeroWindPosAt(int i, int j) const;
 
     void UpdateWind(float deltaTime);
-    static Environment* mInstance;
+    static std::unique_ptr<Environment> mInstance;
 
     const char* GetEditModeString() const;
 
     Terrain mTerrain;
-    Runway* mRunway;
+    std::unique_ptr<Runway> mRunway;
 
-    ObjectEditingOverlay* mObjectEditingOverlay;
+    std::unique_ptr<ObjectEditingOverlay> mObjectEditingOverlay;
 
     typedef std::set<class BoxObject*> Boxes;
     Boxes mBoxes;
 
-    Texture* mObjectEditingTexture;
+    std::unique_ptr<Texture> mObjectEditingTexture;
 
     ThermalManager mThermalManager;
 

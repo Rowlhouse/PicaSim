@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 // OpenAL headers
 #include <AL/al.h>
@@ -38,6 +39,8 @@ public:
     static bool IsAvailable() { return mInstance != nullptr; }
 
     static AudioManager& GetInstance() {IwAssert(ROWLHOUSE, mInstance); return *mInstance;}
+
+    ~AudioManager();
 
     void Update(float dt);
 
@@ -118,14 +121,13 @@ private:
     typedef std::vector<Sound*> Sounds;
 
     AudioManager();
-    ~AudioManager();
 
     Sounds::iterator FindLoadedSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop);
 
     /// Updates the derived quantities based on the listener and channel pos etc
     void UpdateChannel(SoundChannel soundChannel, float deltaTime);
 
-    static AudioManager* mInstance;
+    static std::unique_ptr<AudioManager> mInstance;
 
     /// Recreate OpenAL sources after device switch
     void RecreateALSources();
@@ -146,7 +148,7 @@ private:
 
     /// Details on the channels available
     int mNumAvailableChannels;
-    Channel* mChannels;
+    std::unique_ptr<Channel[]> mChannels;
 
     /// All the loaded sounds. On the heap so that push_back doesn't invalidate
     /// references to already loaded sounds.

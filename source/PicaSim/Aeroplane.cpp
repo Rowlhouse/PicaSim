@@ -21,8 +21,8 @@ Aeroplane::Aeroplane(Controller& controller)
     : mController(&controller)
 {
     mIncomingConnection = nullptr;
-    mGraphics = new AeroplaneGraphics;
-    mPhysics = new AeroplanePhysics;
+    mGraphics = std::make_unique<AeroplaneGraphics>();
+    mPhysics = std::make_unique<AeroplanePhysics>();
     mFlightTime = 0.0f;
     mLookYaw = mLookPitch = mLookYawRate = mLookPitchRate = 0.0f;
     mCrashFlags = 0;
@@ -34,8 +34,6 @@ Aeroplane::Aeroplane(Controller& controller)
 Aeroplane::~Aeroplane()
 {
     PicaSim::GetInstance().RemoveAeroplane(this);
-    delete mGraphics;
-    delete mPhysics;
 }
 
 //======================================================================================================================
@@ -153,7 +151,7 @@ void Aeroplane::Init(const AeroplaneSettings& as,
         mTugControllerSetting.mAeroplaneFile = mAeroplaneSettings.mTugName;
         mTugControllerSetting.mIncludeInCameraViews = false;
         mTugControllerSetting.mEnableDebugDraw = false;
-        mTugController = new AIControllerTug(mTugControllerSetting, tugModifiers, 0);
+        mTugController = std::make_unique<AIControllerTug>(mTugControllerSetting, tugModifiers, 0);
         mTugController->Init(loadingScreen);
 
         AeroplaneSettings tas = mTugController->GetAeroplane()->GetAeroplaneSettings();
@@ -176,7 +174,7 @@ void Aeroplane::Init(const AeroplaneSettings& as,
     }
     else
     {
-        mTugController = 0;
+        mTugController.reset();
     }
 
     if (basicLaunchPos)
@@ -462,8 +460,7 @@ void Aeroplane::Terminate()
     if (mTugController)
     {
         mTugController->Terminate();
-        delete mTugController;
-        mTugController = 0;
+        mTugController.reset();
     }
 
     mPhysics->Terminate();

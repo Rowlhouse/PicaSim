@@ -32,27 +32,15 @@
 
 float numButtonSlots = 8.0f;
 
-PicaSim* PicaSim::mInstance = 0;
+std::unique_ptr<PicaSim> PicaSim::mInstance;
 
 //======================================================================================================================
 PicaSim::PicaSim(GameSettings& gameSettings)
     : mCurrentDeltaTime(0.0f), mGameSettings(gameSettings)
 {
-    mObserver = 0;
-    mPauseOverlay = 0;
-    mResumeOverlay = 0;
-    mRelaunchOverlay = 0;
-    mChangeViewOverlay = 0;
-    mWalkaboutOverlay = 0;
-    mSettingsMenuOverlay = 0;
-    mHelpOverlay = 0;
-    mStartMenuOverlay = 0;
-    mControllerOverlay = 0;
     mControllerOverlayTextOpacity = 1.0f;
-    mWindsockOverlay = 0;
     mSound = 0;
     mSoundChannel = -1;
-    mChallenge = 0;
     mUpdateCounter = 0;
     mTimeSinceEnabled = 0.0f;
 }
@@ -63,7 +51,7 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
     const ChallengeSettings& cs = gameSettings.mChallengeSettings;
     TRACE_FILE_IF(1) TRACE("PicaSim::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 
-    mInstance = new PicaSim(gameSettings);
+    mInstance.reset(new PicaSim(gameSettings));
 
     // TODO make a single Framework::Init
 
@@ -79,23 +67,22 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
     {
     case ChallengeSettings::CHALLENGE_FREEFLY:
         {
-            ChallengeFreeFly* challengeFreeFly = new ChallengeFreeFly();
-            mInstance->mChallenge = challengeFreeFly;
+            mInstance->mChallenge = std::make_unique<ChallengeFreeFly>();
         }
         break;
     case ChallengeSettings::CHALLENGE_RACE:
         {
-            mInstance->mChallenge = new ChallengeRace(gameSettings);
+            mInstance->mChallenge = std::make_unique<ChallengeRace>(gameSettings);
         }
         break;
     case ChallengeSettings::CHALLENGE_LIMBO:
         {
-            mInstance->mChallenge = new ChallengeLimbo(gameSettings);
+            mInstance->mChallenge = std::make_unique<ChallengeLimbo>(gameSettings);
         }
         break;
     case ChallengeSettings::CHALLENGE_DURATION:
         {
-            mInstance->mChallenge = new ChallengeDuration(gameSettings);
+            mInstance->mChallenge = std::make_unique<ChallengeDuration>(gameSettings);
         }
         break;
     default:
@@ -136,16 +123,16 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
     }
 
     // Create an aeroplane
-    mInstance->mPlayerController = new HumanController(mInstance->mGameSettings);
-    mInstance->mPlayerAeroplane = new Aeroplane(*mInstance->mPlayerController);
-    mInstance->mPlayerController->SetAeroplane(mInstance->mPlayerAeroplane);
+    mInstance->mPlayerController = std::make_unique<HumanController>(mInstance->mGameSettings);
+    mInstance->mPlayerAeroplane = std::make_unique<Aeroplane>(*mInstance->mPlayerController);
+    mInstance->mPlayerController->SetAeroplane(mInstance->mPlayerAeroplane.get());
     mInstance->mCameraAeroplaneIndex = 0;
-    mInstance->mCameraAeroplanes.push_back(mInstance->mPlayerAeroplane);
+    mInstance->mCameraAeroplanes.push_back(mInstance->mPlayerAeroplane.get());
 
     // Create an observer
-    mInstance->mObserver = new Observer;
+    mInstance->mObserver = std::make_unique<Observer>();
 //  mInstance->mObserver->Init(Environment::GetInstance().GetObservationPoint(), aeroplane);
-    mInstance->mObserver->Init(mInstance->mGameSettings.mEnvironmentSettings.mObserverPosition, mInstance->mPlayerAeroplane);
+    mInstance->mObserver->Init(mInstance->mGameSettings.mEnvironmentSettings.mObserverPosition, mInstance->mPlayerAeroplane.get());
 
     // Move/initialise the aeroplane so it's next to the observer
     Vector3 observerPosition = mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans();;
@@ -177,27 +164,27 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
 
     // Overlays for when running / paused
     GLubyte alpha = 255;
-    mInstance->mPauseOverlay = new ButtonOverlay("SystemData/Menu/PlayerPause.png", buttonSize, paddingFraction,
+    mInstance->mPauseOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/PlayerPause.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, 1.0f, 1.0f,
         mInstance->mGameSettings.mOptions.mPauseButtonOpacity, false, false);
-    mInstance->mControllerOverlay = new ButtonOverlay("SystemData/Menu/Joystick.png", buttonSize, 1.0f,
+    mInstance->mControllerOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/Joystick.png", buttonSize, 1.0f,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, buttonOffset*7, 1.0f, 0, false, true);
-    mInstance->mStartMenuOverlay = new ButtonOverlay("SystemData/Menu/Stop.png", buttonSize, paddingFraction,
+    mInstance->mStartMenuOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/Stop.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_LEFT, ButtonOverlay::ANCHOR_V_TOP, 0.0f, 1.0f, alpha, false, false);
-    mInstance->mHelpOverlay = new ButtonOverlay("SystemData/Menu/Help.png", buttonSize, paddingFraction,
+    mInstance->mHelpOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/Help.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_LEFT, ButtonOverlay::ANCHOR_V_TOP, buttonOffset*1, 1.0f, alpha, false, false);
-    mInstance->mWalkaboutOverlay = new ButtonOverlay("SystemData/Menu/AgtMember.png", buttonSize, paddingFraction,
+    mInstance->mWalkaboutOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/AgtMember.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, buttonOffset*3, 1.0f, alpha, false, false);
-    mInstance->mChangeViewOverlay = new ButtonOverlay("SystemData/Menu/Find.png", buttonSize, paddingFraction,
+    mInstance->mChangeViewOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/Find.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, buttonOffset*4, 1.0f, alpha, false, false);
-    mInstance->mSettingsMenuOverlay = new ButtonOverlay("SystemData/Menu/Utilities.png", buttonSize, paddingFraction,
+    mInstance->mSettingsMenuOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/Utilities.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, buttonOffset*5, 1.0f, alpha, false, false);
-    mInstance->mRelaunchOverlay = new ButtonOverlay("SystemData/Menu/PlayerRew.png", buttonSize, paddingFraction,
+    mInstance->mRelaunchOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/PlayerRew.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, buttonOffset*7, 1.0f, alpha, false, false);
-    mInstance->mResumeOverlay = new ButtonOverlay("SystemData/Menu/PlayerPlay.png", buttonSize, paddingFraction,
+    mInstance->mResumeOverlay = std::make_unique<ButtonOverlay>("SystemData/Menu/PlayerPlay.png", buttonSize, paddingFraction,
         ButtonOverlay::ANCHOR_H_RIGHT, ButtonOverlay::ANCHOR_V_TOP, buttonOffset*8, 1.0f, alpha, false, false);
 
-    mInstance->mWindsockOverlay = new WindsockOverlay("SystemData/Menu/Windsock.png",
+    mInstance->mWindsockOverlay = std::make_unique<WindsockOverlay>("SystemData/Menu/Windsock.png",
         mInstance->mGameSettings.mOptions.mWindArrowSize, 0.5f,
         mInstance->mGameSettings.mOptions.mWindArrowSize, 0, 0.0f);
 
@@ -211,7 +198,7 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
 
     if (loadingScreen) loadingScreen->Update("Wind sound");
 
-    mInstance->mChallenge->Init(mInstance->mPlayerAeroplane, loadingScreen);
+    mInstance->mChallenge->Init(mInstance->mPlayerAeroplane.get(), loadingScreen);
 
     mInstance->mShouldExit = false;
 
@@ -232,12 +219,8 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
 
   if (gameSettings.mOptions.mEnableSocketController)
   {
-    mInstance->mConnectionListener = new ConnectionListener();
+    mInstance->mConnectionListener = std::make_unique<ConnectionListener>();
     mInstance->mConnectionListener->Init();
-  }
-  else
-  {
-      mInstance->mConnectionListener = 0;
   }
     return true;
 }
@@ -253,8 +236,7 @@ void PicaSim::Terminate()
         if (mInstance->mConnectionListener)
         {
             mInstance->mConnectionListener->Terminate();
-            delete mInstance->mConnectionListener;
-            mInstance->mConnectionListener = 0;
+            mInstance->mConnectionListener.reset();
         }
 
         while (!mInstance->mBoxObjects.empty())
@@ -267,46 +249,32 @@ void PicaSim::Terminate()
         if (mInstance->mPlayerAeroplane)
         {
             mInstance->mPlayerAeroplane->Terminate();
-            delete mInstance->mPlayerAeroplane;
-            mInstance->mPlayerAeroplane = 0;
+            mInstance->mPlayerAeroplane.reset();
         }
         if (mInstance->mPlayerController)
         {
-            delete mInstance->mPlayerController;
-            mInstance->mPlayerController = 0;
+            mInstance->mPlayerController.reset();
         }
         if (mInstance->mObserver)
         {
             mInstance->mObserver->Terminate();
-            delete mInstance->mObserver;
-            mInstance->mObserver = 0;
+            mInstance->mObserver.reset();
         }
 
         mInstance->mChallenge->Terminate();
-        delete mInstance->mChallenge;
-        mInstance->mChallenge = 0;
+        mInstance->mChallenge.reset();
 
-        delete mInstance->mPauseOverlay;
-        mInstance->mPauseOverlay = 0;
-        delete mInstance->mResumeOverlay;
-        mInstance->mResumeOverlay = 0;
-        delete mInstance->mRelaunchOverlay;
-        mInstance->mRelaunchOverlay = 0;
-        delete mInstance->mChangeViewOverlay;
-        mInstance->mChangeViewOverlay = 0;
-        delete mInstance->mWalkaboutOverlay;
-        mInstance->mWalkaboutOverlay = 0;
-        delete mInstance->mSettingsMenuOverlay;
-        mInstance->mSettingsMenuOverlay = 0;
-        delete mInstance->mStartMenuOverlay;
-        mInstance->mStartMenuOverlay = 0;
-        delete mInstance->mHelpOverlay;
-        mInstance->mHelpOverlay = 0;
-        delete mInstance->mControllerOverlay;
-        mInstance->mControllerOverlay = 0;
+        mInstance->mPauseOverlay.reset();
+        mInstance->mResumeOverlay.reset();
+        mInstance->mRelaunchOverlay.reset();
+        mInstance->mChangeViewOverlay.reset();
+        mInstance->mWalkaboutOverlay.reset();
+        mInstance->mSettingsMenuOverlay.reset();
+        mInstance->mStartMenuOverlay.reset();
+        mInstance->mHelpOverlay.reset();
+        mInstance->mControllerOverlay.reset();
 
-        delete mInstance->mWindsockOverlay;
-        mInstance->mWindsockOverlay = 0;
+        mInstance->mWindsockOverlay.reset();
 
         mInstance->mParticleEngine.Terminate();
     }
@@ -320,8 +288,7 @@ void PicaSim::Terminate()
     if (mInstance->mSound)
         AudioManager::GetInstance().UnloadSound(mInstance->mSound);
 
-    delete mInstance;
-    mInstance = 0;
+    mInstance.reset();
 }
 
 //======================================================================================================================
@@ -360,7 +327,7 @@ void PicaSim::HandleMode()
         {
             mViewport->GetCamera()->SetUserData((void*) CAMERA_GROUND);
             mViewport->GetCamera()->SetVROrientationMode(Camera::VROrientationMode::Override);
-            mViewport->GetCamera()->SetCameraTransform(mObserver);
+            mViewport->GetCamera()->SetCameraTransform(mObserver.get());
             if (mGameSettings.mOptions.mGroundViewFollow)
                 mViewport->GetCamera()->SetCameraTarget(cameraAeroplane);
             else
@@ -379,7 +346,7 @@ void PicaSim::HandleMode()
                 else
                     mZoomViewport->Resize(0.0f, 1.0f - zoomSize, zoomSize, zoomSize);
                 // Configure the zoom camera to look at the aeroplane from the observer
-                mZoomViewport->GetCamera()->SetCameraTransform(mInstance->mObserver);
+                mZoomViewport->GetCamera()->SetCameraTransform(mInstance->mObserver.get());
                 mZoomViewport->GetCamera()->SetCameraTarget(cameraAeroplane);
                 mZoomViewport->GetCamera()->SetAutoZoom(1.0f, 2.0f * cameraAeroplane->GetGraphics()->GetRenderBoundingRadius());
                 if (mGameSettings.mOptions.mOnlyPlaneInZoomView)
@@ -412,7 +379,7 @@ void PicaSim::HandleMode()
         {
             mViewport->GetCamera()->SetUserData((void*) CAMERA_GROUND);
             mViewport->GetCamera()->SetVROrientationMode(Camera::VROrientationMode::Override);
-            mViewport->GetCamera()->SetCameraTransform(mObserver);
+            mViewport->GetCamera()->SetCameraTransform(mObserver.get());
             mViewport->GetCamera()->SetCameraTarget(0);
             mViewport->GetCamera()->SetVerticalFOV(DegreesToRadians(mGameSettings.mOptions.mGroundViewFieldOfView));
             mViewport->GetCamera()->DisableAutoZoom();
@@ -721,7 +688,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
                 &mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans(), loadingScreen);
             // Reset any challenge
             mChallenge->Terminate();
-            mChallenge->Init(mPlayerAeroplane, loadingScreen);
+            mChallenge->Init(mPlayerAeroplane.get(), loadingScreen);
             actions.mReloadAeroplane = false;
         }
 
@@ -754,7 +721,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             if (mGameSettings.mChallengeSettings.mChallengeMode != ChallengeSettings::CHALLENGE_FREEFLY)
                 mPlayerAeroplane->Launch(mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans());
             mChallenge->Terminate();
-            mChallenge->Init(mPlayerAeroplane, loadingScreen);
+            mChallenge->Init(mPlayerAeroplane.get(), loadingScreen);
         }
 
         if (actions.mReloadAI)
@@ -762,7 +729,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             if (!mGameSettings.mAIControllersSettings.mAIControllers.empty() && !loadingScreen)
                 loadingScreen = new LoadingScreen("Loading AI", mGameSettings, false, true, mGameSettings.mAIControllersSettings.mAIControllers.size() > 1);
             mChallenge->Terminate();
-            mChallenge->Init(mPlayerAeroplane, loadingScreen);
+            mChallenge->Init(mPlayerAeroplane.get(), loadingScreen);
             actions.mResetAI = false;
         }
 

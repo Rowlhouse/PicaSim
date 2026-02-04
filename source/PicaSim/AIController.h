@@ -7,6 +7,7 @@
 #include "Framework.h"
 
 #include <vector>
+#include <memory>
 
 //======================================================================================================================
 class AIController : public Controller, public Entity
@@ -21,8 +22,8 @@ public:
 
     virtual void Relaunched() = 0;
 
-    const Aeroplane* GetAeroplane() const {return mAeroplane;}
-    Aeroplane* GetAeroplane() {return mAeroplane;}
+    const Aeroplane* GetAeroplane() const {return mAeroplane.get();}
+    Aeroplane* GetAeroplane() {return mAeroplane.get();}
 
     float GetControl(Channel channel) const
     {
@@ -32,7 +33,7 @@ public:
 
 protected:
     float mOutputControls[MAX_CHANNELS];
-    Aeroplane* mAeroplane;
+    std::unique_ptr<Aeroplane> mAeroplane;
     size_t mAIControllerIndex;
 };
 

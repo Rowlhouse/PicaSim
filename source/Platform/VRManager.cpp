@@ -13,7 +13,7 @@
 //======================================================================================================================
 // Static member initialization
 //======================================================================================================================
-VRManager* VRManager::mInstance = nullptr;
+std::unique_ptr<VRManager> VRManager::mInstance;
 
 //======================================================================================================================
 // Singleton access
@@ -26,12 +26,11 @@ bool VRManager::Init()
         return true;
     }
 
-    mInstance = new VRManager();
+    mInstance.reset(new VRManager());
     if (!mInstance->InitializeRuntime())
     {
         TRACE_FILE_IF(1) TRACE("VRManager::Init - Failed to initialize VR runtime");
-        delete mInstance;
-        mInstance = nullptr;
+        mInstance.reset();
         return false;
     }
 
@@ -45,8 +44,7 @@ void VRManager::Terminate()
     if (mInstance)
     {
         mInstance->ShutdownRuntime();
-        delete mInstance;
-        mInstance = nullptr;
+        mInstance.reset();
         TRACE_FILE_IF(1) TRACE("VRManager::Terminate - Shutdown complete");
     }
 }
@@ -103,7 +101,7 @@ VRManager::~VRManager()
 //======================================================================================================================
 bool VRManager::InitializeRuntime()
 {
-    mRuntime = CreateVRRuntime();
+    mRuntime.reset(CreateVRRuntime());
     if (!mRuntime)
     {
         TRACE_FILE_IF(1) TRACE("VRManager::InitializeRuntime - No VR runtime available");
@@ -113,8 +111,7 @@ bool VRManager::InitializeRuntime()
     if (!mRuntime->Initialize())
     {
         TRACE_FILE_IF(1) TRACE("VRManager::InitializeRuntime - Failed to initialize runtime");
-        delete mRuntime;
-        mRuntime = nullptr;
+        mRuntime.reset();
         return false;
     }
 
@@ -135,8 +132,7 @@ void VRManager::ShutdownRuntime()
     if (mRuntime)
     {
         mRuntime->Shutdown();
-        delete mRuntime;
-        mRuntime = nullptr;
+        mRuntime.reset();
     }
 }
 

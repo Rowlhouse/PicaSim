@@ -2,6 +2,7 @@
 #define SHADERMANAGER_H
 
 #include <vector>
+#include <memory>
 
 class LoadingScreenHelper;
 class Shader;
@@ -39,8 +40,8 @@ public:
 
 private:
     ShaderManager(LoadingScreenHelper* loadingScreen);
-    static ShaderManager* mInstance;
-    Shader* mShaders[NUM_SHADERS];
+    static std::unique_ptr<ShaderManager> mInstance;
+    std::unique_ptr<Shader> mShaders[NUM_SHADERS];
 };
 
 

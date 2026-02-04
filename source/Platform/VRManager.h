@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <string>
+#include <memory>
 
 // Forward declarations
 struct SDL_Window;
@@ -154,16 +155,17 @@ public:
     // Runtime access
     //----------------------------------------------------------------------------------------------------------------------
 
-    VRRuntime* GetRuntime() { return mRuntime; }
-    const VRRuntime* GetRuntime() const { return mRuntime; }
+    VRRuntime* GetRuntime() { return mRuntime.get(); }
+    const VRRuntime* GetRuntime() const { return mRuntime.get(); }
 
     // Get runtime/headset info for display
     const char* GetRuntimeName() const;
     const char* GetSystemName() const;
 
+    ~VRManager();
+
 private:
     VRManager();
-    ~VRManager();
 
     // Non-copyable
     VRManager(const VRManager&) = delete;
@@ -176,9 +178,9 @@ private:
     bool CreateEyeFramebuffers();
     void DestroyEyeFramebuffers();
 
-    static VRManager* mInstance;
+    static std::unique_ptr<VRManager> mInstance;
 
-    VRRuntime* mRuntime;
+    std::unique_ptr<VRRuntime> mRuntime;
     bool mVREnabled;
     bool mInVRFrame;
     int mMSAASamples;  // MSAA samples for VR swapchains

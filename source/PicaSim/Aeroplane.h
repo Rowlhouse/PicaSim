@@ -5,6 +5,7 @@
 #include "GameSettings.h"
 #include "Rope.h"
 #include <string>
+#include <memory>
 
 class AeroplaneGraphics;
 class AeroplanePhysics;
@@ -51,11 +52,11 @@ public:
         float&         targetRadius,
         float&         closestDistanceToCamera) const OVERRIDE;
 
-    AeroplaneGraphics* GetGraphics() {return mGraphics;}
-    const AeroplaneGraphics* GetGraphics() const {return mGraphics;}
+    AeroplaneGraphics* GetGraphics() {return mGraphics.get();}
+    const AeroplaneGraphics* GetGraphics() const {return mGraphics.get();}
 
-    AeroplanePhysics* GetPhysics() {return mPhysics;}
-    const AeroplanePhysics* GetPhysics() const {return mPhysics;}
+    AeroplanePhysics* GetPhysics() {return mPhysics.get();}
+    const AeroplanePhysics* GetPhysics() const {return mPhysics.get();}
 
     void SetController(Controller* controller) {mController = controller;}
     const Controller& GetController() const {return *mController;}
@@ -75,7 +76,7 @@ public:
     LaunchMode GetLaunchMode() const {return mLaunchMode;}
     void SetLaunchMode(LaunchMode launchMode) {mLaunchMode = launchMode;}
 
-    const AIControllerTug* GetTugController() const {return mTugController;}
+    const AIControllerTug* GetTugController() const {return mTugController.get();}
 
     int GetDebugAerofoilIndex() const {return mDebugAerofoilIndex;}
     void IncrementDebugAerofoilIndex() const {++mDebugAerofoilIndex;}
@@ -110,8 +111,8 @@ private:
 
     AeroplaneSettings  mAeroplaneSettings;
 
-    AeroplaneGraphics* mGraphics;
-    AeroplanePhysics*  mPhysics;
+    std::unique_ptr<AeroplaneGraphics> mGraphics;
+    std::unique_ptr<AeroplanePhysics>  mPhysics;
 
     Rope    mBungeeRope;
     Vector3 mBungeeEnd;
@@ -125,7 +126,7 @@ private:
     IncomingConnection* mIncomingConnection;
 
     AIControllersSettings::AIControllerSetting mTugControllerSetting;
-    AIControllerTug* mTugController;
+    std::unique_ptr<AIControllerTug> mTugController;
 
     uint32 mChecksum;
 

@@ -6,6 +6,8 @@
 
 #include "Framework.h"
 
+#include <memory>
+
 class HumanController : public Controller, public Entity, public RenderOverlayObject
 {
 public:
@@ -44,7 +46,7 @@ private:
     float mProcessedInputControls[ControllerSettings::CONTROLLER_NUM_CONTROLS];
 
     enum {NUM_BUTTONS = 3};
-    ButtonOverlay* mButtonOverlay[NUM_BUTTONS];
+    std::unique_ptr<ButtonOverlay> mButtonOverlay[NUM_BUTTONS];
 
     float mRightStickX; // -1 to 1
     float mRightStickY;

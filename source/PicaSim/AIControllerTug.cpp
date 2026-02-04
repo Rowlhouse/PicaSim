@@ -67,7 +67,7 @@ bool AIControllerTug::Init(LoadingScreenHelper* loadingScreen)
     as.mSizeScale *= mAeroplaneModifiers.mSizeScale;
     as.mMassScale *= mAeroplaneModifiers.mMassScale;
 
-    mAeroplane = new Aeroplane(*this);
+    mAeroplane = std::make_unique<Aeroplane>(*this);
     Vector3 launchPos = GetLaunchPos();
     mAeroplane->Init(as, &launchPos, loadingScreen);
 
@@ -108,12 +108,12 @@ void AIControllerTug::Terminate()
 {
     TRACE_METHOD_ONLY(1);
     EntityManager::GetInstance().UnregisterEntity(this, ENTITY_LEVEL_CONTROL);
-    PicaSim::GetInstance().RemoveCameraTarget(mAeroplane);
+    PicaSim::GetInstance().RemoveCameraTarget(mAeroplane.get());
 
     if (mAeroplane)
     {
         mAeroplane->Terminate();
-        delete mAeroplane;
+        mAeroplane.reset();
     }
 }
 
@@ -189,7 +189,7 @@ void AIControllerTug::EntityUpdate(float deltaTime, int entityLevel)
     const float altitude = fabsf(pos.z -  Environment::GetInstance().GetTerrain().GetTerrainHeightFast(pos.x, pos.y, true));
 
     // Update the camera target status if necessary
-    PicaSim::GetInstance().AddRemoveCameraTarget(mAeroplane, aics.mIncludeInCameraViews && mAIControllerSetting.mIncludeInCameraViews);
+    PicaSim::GetInstance().AddRemoveCameraTarget(mAeroplane.get(), aics.mIncludeInCameraViews && mAIControllerSetting.mIncludeInCameraViews);
 
     mWaypointTimer -= deltaTime;
 
@@ -255,8 +255,8 @@ void AIControllerTug::EntityUpdate(float deltaTime, int entityLevel)
         RenderManager::GetInstance().GetDebugRenderer().DrawArrow(pos, pos + horDeltaToTarget.GetNormalised() * arrowLength, Vector3(0, 0, 0));
 
         if (
-            PicaSim::GetInstance().GetMainViewport().GetCamera()->GetCameraTarget() == mAeroplane ||
-            PicaSim::GetInstance().GetMainViewport().GetCamera()->GetCameraTransform() == mAeroplane
+            PicaSim::GetInstance().GetMainViewport().GetCamera()->GetCameraTarget() == mAeroplane.get() ||
+            PicaSim::GetInstance().GetMainViewport().GetCamera()->GetCameraTransform() == mAeroplane.get()
             )
         {
             char txt[256];

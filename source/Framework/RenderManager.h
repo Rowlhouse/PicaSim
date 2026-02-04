@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 
 #ifdef PICASIM_VR_SUPPORT
 struct VRFrameInfo;
@@ -64,6 +65,8 @@ public:
 
     /// Destroys the singleton. Note that any created viewports and cameras will be destroyed
     static void Terminate();
+
+    ~RenderManager();
 
     /// realDeltaTime is the real time since the last render update. gameDeltaTime is the game time - 
     /// i.e. zero when paused, and scaled according to time scale - so for effects that should follow slow mo.
@@ -174,12 +177,11 @@ private:
     typedef std::vector<Camera*>    Cameras;
 
     RenderManager(FrameworkSettings& frameworkSettings);
-    ~RenderManager();
 
     void RenderFPS();
     void SetupLighting();
 
-    static RenderManager* mInstance;
+    static std::unique_ptr<RenderManager> mInstance;
 
     Viewports mViewports;
     Cameras mCameras;
@@ -188,7 +190,7 @@ private:
     RenderOverlayObjects mRenderOverlayObjects;
     ShadowCasterObjects mShadowCasterObjects;
 
-    DebugRenderer* mDebugRenderer;
+    std::unique_ptr<DebugRenderer> mDebugRenderer;
 
     Vector3 mLightingDiffuseColour;
     Vector3 mLightingAmbientColour;
