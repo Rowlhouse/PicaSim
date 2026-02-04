@@ -618,6 +618,9 @@ void SettingsMenu::RenderOptions1Tab()
 
                     // VR Panorama Depth - stereoscopic parallax for panoramic sceneries
                     SettingsWidgets::Checkbox(TXT(PS_VRPANORAMADEPTH), options.mVRPanoramaDepth);
+
+                    // VR Panorama Extension - border expansion for tiled panoramas (helps with parallax sampling)
+                    SettingsWidgets::SliderFloat(TXT(PS_VRPANORAMAEXTENSION), options.mVRPanoramaExtension, 0.0f, 0.1f);
                 }
             }
             else

@@ -11,6 +11,8 @@ cmake-build-*/
 data/UserData/
 data/UserSettings/
 data/trace.txt
+data/*.png
+data/*.jpg
 
 # Visual Studio
 .vs/

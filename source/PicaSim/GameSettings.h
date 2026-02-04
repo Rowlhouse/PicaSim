@@ -289,6 +289,7 @@ struct Options : public Settings
 
     // VR panorama depth settings - for stereoscopic parallax in panoramic sceneries
     bool  mVRPanoramaDepth;       // Enable depth-based parallax for panorama skybox
+    float mVRPanoramaExtension;   // Border expansion for tiled panoramas (0=off, 0.1=10% border)
 #endif
 
     float mMaxNearClipDistance;
@@ -405,7 +406,6 @@ struct Options : public Settings
     float mDiffuseLightingScale;
     int mBasicTextureDetail; /// texture size is 2^mBasicTextureDetail
     int mMaxSkyboxDetail;
-    float mPanoramaExtension; /// Border expansion for VR parallax (0=off, 0.1=10% border)
     int mMSAASamples; /// 0=off, 2=2x, 4=4x, 8=8x - requires restart
     int mGLVersion; /// 1=OpenGL 1.x (fixed function), 2=OpenGL 2.x (shaders) - requires restart
 

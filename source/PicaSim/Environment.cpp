@@ -84,7 +84,11 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     RenderManager::GetInstance().SetShadowSizeScale(shadowSizeScale);
     RenderManager::GetInstance().SetShadowBlur(shadowBlur);
 
-    mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen, gs.mOptions.mPanoramaExtension);
+#ifdef PICASIM_VR_SUPPORT
+    mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen, gs.mOptions.mVRPanoramaExtension);
+#else
+    mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen, 0.0f);
+#endif
 
     if (gs.mEnvironmentSettings.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {

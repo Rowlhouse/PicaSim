@@ -646,6 +646,7 @@ enum PicaString
     PS_STATUS,
     PS_VRNOTAVAILABLE,
     PS_VRPANORAMADEPTH,
+    PS_VRPANORAMAEXTENSION,
 
 // Additional settings strings
     PS_ORIENTATION,

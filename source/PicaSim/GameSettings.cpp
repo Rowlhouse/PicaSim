@@ -233,6 +233,7 @@ Options::Options() :
     mVRDesktopMode(VR_DESKTOP_NORMAL_VIEW),
     mVRMSAASamples(8),
     mVRPanoramaDepth(true),
+    mVRPanoramaExtension(0.0f),
 #endif
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
@@ -310,7 +311,6 @@ Options::Options() :
     mDiffuseLightingScale(1.0f),
     mBasicTextureDetail(9),
     mMaxSkyboxDetail(1),
-    mPanoramaExtension(0.1f),
     mMSAASamples(0),
     mGLVersion(2),
     mEnableSmoke(true),
@@ -374,6 +374,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_ATTRIBUTE(mVRMSAASamples);
     element->SetAttribute("mVRAudioDevice", mVRAudioDevice.c_str());
     WRITE_ATTRIBUTE(mVRPanoramaDepth);
+    WRITE_DOUBLE_ATTRIBUTE(mVRPanoramaExtension);
 #endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
@@ -462,7 +463,6 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_DOUBLE_ATTRIBUTE(mDiffuseLightingScale);
     WRITE_ATTRIBUTE(mBasicTextureDetail);
     WRITE_ATTRIBUTE(mMaxSkyboxDetail);
-    WRITE_DOUBLE_ATTRIBUTE(mPanoramaExtension);
     WRITE_ATTRIBUTE(mMSAASamples);
     WRITE_ATTRIBUTE(mGLVersion);
     WRITE_ATTRIBUTE(mEnableSmoke);
@@ -588,7 +588,6 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mDiffuseLightingScale);
     READ_ATTRIBUTE(mBasicTextureDetail);
     READ_ATTRIBUTE(mMaxSkyboxDetail);
-    READ_ATTRIBUTE(mPanoramaExtension);
     READ_ATTRIBUTE(mMSAASamples);
     READ_ATTRIBUTE(mGLVersion);
     READ_ATTRIBUTE(mEnableSmoke);
@@ -603,6 +602,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
         READ_ATTRIBUTE(mVRMSAASamples);
         READ_ATTRIBUTE(mVRAudioDevice);
         READ_ATTRIBUTE(mVRPanoramaDepth);
+        READ_ATTRIBUTE(mVRPanoramaExtension);
 #endif
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);
@@ -636,7 +636,9 @@ SettingsChangeActions Options::GetSettingsChangeActions(SettingsChangeActions se
     COMPARE_FOR_TERRAIN(mDiffuseLightingScale);
     COMPARE_FOR_TERRAIN(mBasicTextureDetail);
     COMPARE_FOR_TERRAIN(mMaxSkyboxDetail);
-    COMPARE_FOR_TERRAIN(mPanoramaExtension);
+#ifdef PICASIM_VR_SUPPORT
+    COMPARE_FOR_TERRAIN(mVRPanoramaExtension);
+#endif
     COMPARE_FOR_CHALLENGE(mLimboDifficultyMultiplier);
     COMPARE_FOR_AIRELOAD(mFreeFlightMaxAI);
     return settingsChangeActions;

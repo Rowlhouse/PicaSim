@@ -647,17 +647,13 @@ const char skyboxVRParallaxFragmentShaderStr[] = GLSL(
             uvOffset *= correction; 
         }
 
-        // Map v_texCoord [0,1] to the inner portion of the expanded texture.
-        // If u_borderFraction = 0, this is identity. If = 0.1, inner area is [0.1, 0.9].
-        vec2 innerUV = u_borderFraction + v_texCoord * (1.0 - 2.0 * u_borderFraction);
+        // Calculate the texture coordinate if we didn't have borders
+        vec2 texCoord = v_texCoord + uvOffset;
 
-        // Apply parallax offset
-        vec2 offsetUV = innerUV + uvOffset;
+        // But we do have borders, so shrink it down
+        texCoord = u_borderFraction + texCoord / (1.0 + 2.0 * u_borderFraction);
 
-        // Clamp UV to valid range (can now sample into border region)
-        offsetUV = clamp(offsetUV, 0.0, 1.0);
-
-        gl_FragColor = texture2D(u_skyboxTexture, offsetUV);
+        gl_FragColor = texture2D(u_skyboxTexture, texCoord);
 
         // Debug overrides. Need to reference things to avoid errors!
         if (false)
