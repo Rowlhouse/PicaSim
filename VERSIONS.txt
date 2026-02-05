@@ -7,6 +7,7 @@ Version 1.2.0
 - Reduce glider launch speeds
 - Remove support for OpenGL 1
 - Remove support for stereoscopic display (it was a poor substitute for VR)
+- Fix crash with circular runways but not a control-line plane
 
 Version 1.1.0
 - VR support (tested on Oculus Rift)
