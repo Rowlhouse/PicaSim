@@ -306,6 +306,9 @@ void Runway::RenderUpdate(class Viewport* viewport, int renderLevel)
         }
     }
 
+    if (mPoints.empty())
+        return;
+
     // Render
     esPushMatrix();
 

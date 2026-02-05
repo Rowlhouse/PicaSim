@@ -35,7 +35,7 @@
  mThermalExpansionOverLifespan="2.0"
  mRunwayType="0"
  mRunwayPosition.x="-15"
- mRunwayPosition.y="25"
+ mRunwayPosition.y="5"
  mRunwayPosition.z="0.05"
  mRunwayAngle="45"
  mRunwayLength="100"
