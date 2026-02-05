@@ -42,6 +42,8 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "cleaninstall"; Description: "Clean install (remove previous installation files first)"; GroupDescription: "Installation options:"; Flags: unchecked
+Name: "cleanuserdata"; Description: "Delete user data and settings during install"; GroupDescription: "Installation options:"; Flags: unchecked
 
 [Files]
 ; Install all files from the versioned dist directory
@@ -55,3 +57,42 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssInstall then
+  begin
+    // Clean install: remove previous installation files if task selected
+    if WizardIsTaskSelected('cleaninstall') then
+    begin
+      DelTree(ExpandConstant('{app}'), True, True, True);
+    end;
+    // Delete user data and settings if task selected
+    if WizardIsTaskSelected('cleanuserdata') then
+    begin
+      DelTree(ExpandConstant('{userappdata}\Rowlhouse\PicaSim'), True, True, True);
+      RemoveDir(ExpandConstant('{userappdata}\Rowlhouse'));
+    end;
+  end;
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  UserDataPath: String;
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+    UserDataPath := ExpandConstant('{userappdata}\Rowlhouse\PicaSim');
+    if DirExists(UserDataPath) then
+    begin
+      if MsgBox('Do you want to delete your user data and settings?' + #13#10 + #13#10 +
+                'Location: ' + UserDataPath, mbConfirmation, MB_YESNO) = IDYES then
+      begin
+        DelTree(UserDataPath, True, True, True);
+        // Also try to remove parent Rowlhouse folder if empty
+        RemoveDir(ExpandConstant('{userappdata}\Rowlhouse'));
+      end;
+    end;
+  end;
+end;
