@@ -657,6 +657,26 @@ float VRManager::GetTotalYawOffset() const
 }
 
 //======================================================================================================================
+// Audio device auto-detection
+//======================================================================================================================
+std::string VRManager::AutoDetectVRAudioDevice()
+{
+    if (!mVRAudioDevice.empty())
+        return mVRAudioDevice;  // Already configured
+
+    if (!AudioManager::IsAvailable())
+        return "";
+
+    std::string autoDevice = AudioManager::GetInstance().FindMatchingVRAudioDevice(GetSystemName());
+    if (!autoDevice.empty())
+    {
+        mVRAudioDevice = autoDevice;
+        TRACE_FILE_IF(1) TRACE("Auto-detected VR audio device: %s", autoDevice.c_str());
+    }
+    return autoDevice;
+}
+
+//======================================================================================================================
 // Runtime info
 //======================================================================================================================
 const char* VRManager::GetRuntimeName() const

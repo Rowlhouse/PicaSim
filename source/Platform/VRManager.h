@@ -45,6 +45,9 @@ public:
     // Set the audio device to use when VR session is focused (empty = no switch)
     void SetVRAudioDevice(const std::string& deviceName) { mVRAudioDevice = deviceName; }
 
+    // Auto-detect VR audio device if not configured. Returns the detected device name, or empty if none found.
+    std::string AutoDetectVRAudioDevice();
+
     // Enable VR mode. Returns true if VR was successfully enabled.
     bool EnableVR();
 

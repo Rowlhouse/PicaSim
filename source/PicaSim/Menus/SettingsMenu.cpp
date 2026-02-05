@@ -512,6 +512,14 @@ void SettingsMenu::RenderOptions1Tab()
                     {
                         VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
                         VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
+
+                        // Auto-detect VR audio device if not configured
+                        std::string autoDevice = VRManager::GetInstance().AutoDetectVRAudioDevice();
+                        if (!autoDevice.empty() && options.mVRAudioDevice.empty())
+                        {
+                            options.mVRAudioDevice = autoDevice;
+                        }
+
                         VRManager::GetInstance().EnableVR();
                     }
                     else
@@ -565,12 +573,10 @@ void SettingsMenu::RenderOptions1Tab()
                             // Auto-select a matching device if none is configured
                             if (options.mVRAudioDevice.empty())
                             {
-                                std::string autoDevice = AudioManager::GetInstance().FindMatchingVRAudioDevice(
-                                    VRManager::GetInstance().GetSystemName());
+                                std::string autoDevice = VRManager::GetInstance().AutoDetectVRAudioDevice();
                                 if (!autoDevice.empty())
                                 {
                                     options.mVRAudioDevice = autoDevice;
-                                    VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
                                 }
                             }
 

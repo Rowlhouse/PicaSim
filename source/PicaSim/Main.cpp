@@ -324,6 +324,14 @@ int main()
         {
             VRManager::GetInstance().SetMSAASamples(gameSettings.mOptions.mVRMSAASamples);
             VRManager::GetInstance().SetVRAudioDevice(gameSettings.mOptions.mVRAudioDevice);
+
+            // Auto-detect VR audio device if not configured
+            std::string autoDevice = VRManager::GetInstance().AutoDetectVRAudioDevice();
+            if (!autoDevice.empty() && gameSettings.mOptions.mVRAudioDevice.empty())
+            {
+                gameSettings.mOptions.mVRAudioDevice = autoDevice;
+            }
+
             VRManager::GetInstance().EnableVR();
         }
 
