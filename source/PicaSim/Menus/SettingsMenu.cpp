@@ -551,76 +551,79 @@ void SettingsMenu::RenderOptions1Tab()
                     if (SettingsWidgets::Combo(TXT(PS_VRDESKTOP), vrDesktopIndex, vrDesktopDescs, 6))
                         options.mVRDesktopMode = (Options::VRDesktopMode)vrDesktopIndex;
 
-                    // VR Anti-aliasing
-                    static const char* vrMsaaDescs[] = { TXT(PS_NONE), TXT(PS_ANTIALIASING_2X), TXT(PS_ANTIALIASING_4X), TXT(PS_ANTIALIASING_8X) };
-                    static const int vrMsaaValues[] = { 0, 2, 4, 8 };
-                    int vrMsaaIndex = 0;
-                    for (int i = 0; i < 4; ++i)
+                    if (advanced)
                     {
-                        if (vrMsaaValues[i] == options.mVRMSAASamples)
+                        // VR Anti-aliasing
+                        static const char* vrMsaaDescs[] = { TXT(PS_NONE), TXT(PS_ANTIALIASING_2X), TXT(PS_ANTIALIASING_4X), TXT(PS_ANTIALIASING_8X) };
+                        static const int vrMsaaValues[] = { 0, 2, 4, 8 };
+                        int vrMsaaIndex = 0;
+                        for (int i = 0; i < 4; ++i)
                         {
-                            vrMsaaIndex = i;
-                            break;
-                        }
-                    }
-                    if (SettingsWidgets::Combo(TXT(PS_VRANTIALIASING), vrMsaaIndex, vrMsaaDescs, 4))
-                    {
-                        options.mVRMSAASamples = vrMsaaValues[vrMsaaIndex];
-                        // Restart VR to apply new MSAA setting
-                        VRManager::GetInstance().DisableVR();
-                        VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
-                        VRManager::GetInstance().EnableVR();
-                    }
-
-                    // VR Audio device selection
-                    auto audioDevices = AudioManager::GetInstance().EnumerateAudioDevices();
-                    if (!audioDevices.empty())
-                    {
-                        // Auto-select a matching device if none is configured
-                        if (options.mVRAudioDevice.empty())
-                        {
-                            std::string autoDevice = AudioManager::GetInstance().FindMatchingVRAudioDevice(
-                                VRManager::GetInstance().GetSystemName());
-                            if (!autoDevice.empty())
+                            if (vrMsaaValues[i] == options.mVRMSAASamples)
                             {
-                                options.mVRAudioDevice = autoDevice;
+                                vrMsaaIndex = i;
+                                break;
+                            }
+                        }
+                        if (SettingsWidgets::Combo(TXT(PS_VRANTIALIASING), vrMsaaIndex, vrMsaaDescs, 4))
+                        {
+                            options.mVRMSAASamples = vrMsaaValues[vrMsaaIndex];
+                            // Restart VR to apply new MSAA setting
+                            VRManager::GetInstance().DisableVR();
+                            VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
+                            VRManager::GetInstance().EnableVR();
+                        }
+
+                        // VR Audio device selection
+                        auto audioDevices = AudioManager::GetInstance().EnumerateAudioDevices();
+                        if (!audioDevices.empty())
+                        {
+                            // Auto-select a matching device if none is configured
+                            if (options.mVRAudioDevice.empty())
+                            {
+                                std::string autoDevice = AudioManager::GetInstance().FindMatchingVRAudioDevice(
+                                    VRManager::GetInstance().GetSystemName());
+                                if (!autoDevice.empty())
+                                {
+                                    options.mVRAudioDevice = autoDevice;
+                                    VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
+                                }
+                            }
+
+                            // Build list with "None" option first
+                            std::vector<std::string> deviceNames;
+                            deviceNames.push_back(TXT(PS_NONEUSEDEFAULT));
+                            for (const auto& dev : audioDevices)
+                                deviceNames.push_back(dev);
+
+                            // Find current selection
+                            int audioDeviceIndex = 0;
+                            for (size_t i = 0; i < audioDevices.size(); ++i)
+                            {
+                                if (audioDevices[i] == options.mVRAudioDevice)
+                                {
+                                    audioDeviceIndex = (int)(i + 1);  // +1 because "None" is at index 0
+                                    break;
+                                }
+                            }
+
+                            if (SettingsWidgets::Combo(TXT(PS_VRAUDIO), audioDeviceIndex, deviceNames))
+                            {
+                                if (audioDeviceIndex == 0)
+                                    options.mVRAudioDevice.clear();
+                                else
+                                    options.mVRAudioDevice = audioDevices[audioDeviceIndex - 1];
+                                // Update VRManager with new device
                                 VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
                             }
                         }
 
-                        // Build list with "None" option first
-                        std::vector<std::string> deviceNames;
-                        deviceNames.push_back(TXT(PS_NONEUSEDEFAULT));
-                        for (const auto& dev : audioDevices)
-                            deviceNames.push_back(dev);
+                        // VR Panorama Depth - stereoscopic parallax for panoramic sceneries
+                        SettingsWidgets::Checkbox(TXT(PS_VRPANORAMADEPTH), options.mVRPanoramaDepth);
 
-                        // Find current selection
-                        int audioDeviceIndex = 0;
-                        for (size_t i = 0; i < audioDevices.size(); ++i)
-                        {
-                            if (audioDevices[i] == options.mVRAudioDevice)
-                            {
-                                audioDeviceIndex = (int)(i + 1);  // +1 because "None" is at index 0
-                                break;
-                            }
-                        }
-
-                        if (SettingsWidgets::Combo(TXT(PS_VRAUDIO), audioDeviceIndex, deviceNames))
-                        {
-                            if (audioDeviceIndex == 0)
-                                options.mVRAudioDevice.clear();
-                            else
-                                options.mVRAudioDevice = audioDevices[audioDeviceIndex - 1];
-                            // Update VRManager with new device
-                            VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
-                        }
+                        // VR Panorama Extension - border expansion for tiled panoramas (helps with parallax sampling)
+                        SettingsWidgets::SliderFloat(TXT(PS_VRPANORAMAEXTENSION), options.mVRPanoramaExtension, 0.0f, 0.1f);
                     }
-
-                    // VR Panorama Depth - stereoscopic parallax for panoramic sceneries
-                    SettingsWidgets::Checkbox(TXT(PS_VRPANORAMADEPTH), options.mVRPanoramaDepth);
-
-                    // VR Panorama Extension - border expansion for tiled panoramas (helps with parallax sampling)
-                    SettingsWidgets::SliderFloat(TXT(PS_VRPANORAMAEXTENSION), options.mVRPanoramaExtension, 0.0f, 0.1f);
                 }
             }
             else

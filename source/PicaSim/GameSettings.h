@@ -269,7 +269,6 @@ struct Options : public Settings
     bool mEnableStereoscopy;
     float mStereoSeparation;
 
-#ifdef PICASIM_VR_SUPPORT
     // VR desktop window display mode
     enum VRDesktopMode
     {
@@ -290,7 +289,6 @@ struct Options : public Settings
     // VR panorama depth settings - for stereoscopic parallax in panoramic sceneries
     bool  mVRPanoramaDepth;       // Enable depth-based parallax for panorama skybox
     float mVRPanoramaExtension;   // Border expansion for tiled panoramas (0=off, 0.1=10% border)
-#endif
 
     float mMaxNearClipDistance;
     bool  mSeparateSpecular;

@@ -55,7 +55,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     {
         // tidy up and return failure
         const Language language = PicaSim::GetInstance().GetSettings().mOptions.mLanguage;
-        ShowDialog("PicaSim", "Failed to load environment - please load one of the scenery presets and try again", TXT(PS_OK));
+        ShowDialog("PicaSim", TXT(PS_FAILEDTOLOADENVIRONMENT), TXT(PS_OK));
         return false;
     }
 
@@ -84,11 +84,9 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
     RenderManager::GetInstance().SetShadowSizeScale(shadowSizeScale);
     RenderManager::GetInstance().SetShadowBlur(shadowBlur);
 
-#ifdef PICASIM_VR_SUPPORT
-    mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen, gs.mOptions.mVRPanoramaExtension);
-#else
-    mInstance->mSkybox.Init(skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen, 0.0f);
-#endif
+    mInstance->mSkybox.Init(
+        skyboxName.c_str(), gs.mOptions.m16BitTextures, gs.mOptions.mMaxSkyboxDetail, loadingScreen, 
+        gs.mOptions.mEnableVR ? gs.mOptions.mVRPanoramaExtension : 0.0f);
 
     if (gs.mEnvironmentSettings.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {

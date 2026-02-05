@@ -36,7 +36,7 @@ void InitStringsDE(const char** txt)
   txt[PS_INVERT] = "Invertieren";
   txt[PS_AUTO] = "Auto";
   txt[PS_GAMEPADDETECTED] = "Gamepad erkannt. In Einstellungen aktivieren.";
-  txt[PS_WHATSNEW] = "Welcome to PicaSim!";
+  txt[PS_WHATSNEW] = "Willkommen bei PicaSim!";
   txt[PS_FREEFLY] = "Freies Fliegen";
   txt[PS_CHALLENGE] = "Herausforderung";
   txt[PS_SELECTAEROPLANE] = "Flugzeug";
@@ -677,8 +677,8 @@ void InitStringsDE(const char** txt)
   txt[PS_TIPS11] = "Aktivieren Sie den 'Rundgang'-Modus in 3D-Szenen und nutzen Sie die Geh-Taste bei Pause zum Verschieben des Startpunkts";
   txt[PS_TIPS12] = "Kreisende Habichte zeigen Thermikbereiche an, aber achten Sie besser auf das Heben der Flügelspitze oder Nase des Seglers";
   txt[PS_TIPS13] = "Echte R/C-Flugzeuge zu fliegen macht noch mehr Spaß!";
-  txt[PS_TIPS14] = "Folgen Sie PicaSim auf Facebook oder Google+, um über Updates und Pläne informiert zu werden";
-  txt[PS_TIPS15] = "Die Vollversion von PicaSim enthält zusätzliche Flugzeuge, Landschaften und Herausforderungen";
+  txt[PS_TIPS14] = "Folgen Sie PicaSim auf Facebook, um über Updates und Pläne informiert zu werden";
+  txt[PS_TIPS15] = "Es gibt ein Forum für PicaSim auf Tapatalk";
   txt[PS_TIPS16] = "Fügen Sie KI-gesteuerte Flugzeuge in Einstellungen»KI-Steuerungen hinzu. Begrenzen Sie die Anzahl in Einstellungen»Optionen 2";
   txt[PS_LOADING] = "Lädt...";
   txt[PS_RACETIP] = "%s\n\nDie weissen Pfeile zeigen in die Richtung der nächsten Kontrollpunkte.";
@@ -701,7 +701,7 @@ void InitStringsDE(const char** txt)
   txt[PS_AILERONSANDELEVATOR] = "Quer- und Hoehenruder";
   txt[PS_FLYINGINFO] = "Fliegen";
   txt[PS_QUITANDHELPTEXT] = "Wenn auf Pause, druecke X um zum Hauptmenue zu kommen, und druecke ? um Hilfe zu bekommen. \n\nWaehrend des Fliegens kann man per Knopfdruck bei einigen Flugzeugen die Kontrolleinstellungen veraendern (zB Auftriebsklappen hoch/runter) oder die Seil-/Zugwinde loesen.";
-  txt[PS_CAMERAANDSETTINGSTEXT] = "Wenn auf Pause, kannst du ueber das Zahnrad zu den Einstellungen gelangen. \n\nMit dem Auge kannst du die Kamera/Perspektive wechseln (nur in 3D moeglich) allows you to change the camera/viewpoint.";
+  txt[PS_CAMERAANDSETTINGSTEXT] = "Wenn auf Pause, kannst du ueber das Zahnrad zu den Einstellungen gelangen. \n\nMit dem Auge kannst du die Kamera/Perspektive wechseln (nur in 3D moeglich).";
   txt[PS_RESETANDPLAYTEXT] = "Drueck auf den Start/Pausenknopf um die Simuation zu starten/unterbrechen. \n\nBenutze den Ruecklaufpfeil um erneut zu starten. \n\nZusatzknoepfe 1 und 2 sind fuer Rauch.";
   txt[PS_THROTTLEANDRUDDERTEXT] = "Abhaengig vom Fugzeugtyp, kannst du entweder mit der Steuerung links/rechts das Querruder oder hoch/runter den Auftrieb oder die Bremse kontrollieren. \n\nZweikanalflieger haben diese Einstellung nicht.";
   txt[PS_WINDDIRECTIONTEXT] = "Besteht Wind, zeigt der blaue Wind dir Richtung an. \n\nGgf warden einige Zahlen angezeigt fuer Basisinformationen wie zB Hoehe und Geschwindigkeit.";
@@ -723,12 +723,13 @@ void InitStringsDE(const char** txt)
   txt[PS_STATUS] = "Status";
   txt[PS_VRNOTAVAILABLE] = "VR nicht verfügbar - kein Headset erkannt";
   txt[PS_VRPANORAMADEPTH] = "VR-Panoramatiefe";
-  txt[PS_VRPANORAMAEXTENSION] = "VR Panorama Extension";
+  txt[PS_VRPANORAMAEXTENSION] = "VR Panorama Erweiterung";
   txt[PS_ORIENTATION] = "Ausrichtung";
   txt[PS_SMOKESOURCE] = "Rauchquelle %d";
   txt[PS_NAME] = "Name";
   txt[PS_BUTTONMAPPINGS] = "Tastenzuordnungen";
   txt[PS_USERFILES] = "Benutzerdateien:";
   txt[PS_NOFILESFOUND] = "Keine Dateien gefunden";
+  txt[PS_FAILEDTOLOADENVIRONMENT] = "Umgebung konnte nicht geladen werden - bitte laden Sie eine der Landschaftsvoreinstellungen und versuchen Sie es erneut";
 }
 

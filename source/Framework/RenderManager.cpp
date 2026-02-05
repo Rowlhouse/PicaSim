@@ -66,10 +66,10 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
     SetLightingDirection(lightBearing, lightElevation);
 }
 
+//======================================================================================================================
 RenderManager::~RenderManager()
 {
 }
-
 
 //======================================================================================================================
 void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelper* loadingScreen)

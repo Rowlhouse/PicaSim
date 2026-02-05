@@ -657,6 +657,7 @@ enum PicaString
 // File menu strings
     PS_USERFILES,
     PS_NOFILESFOUND,
+    PS_FAILEDTOLOADENVIRONMENT,
 
 // That's all
     PS_NUM_STRINGS,

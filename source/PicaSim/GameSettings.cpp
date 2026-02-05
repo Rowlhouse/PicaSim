@@ -228,13 +228,11 @@ Options::Options() :
     mZoomViewSize(0.2f),
     mEnableStereoscopy(false),
     mStereoSeparation(0.1f),
-#ifdef PICASIM_VR_SUPPORT
     mEnableVR(false),
     mVRDesktopMode(VR_DESKTOP_NORMAL_VIEW),
-    mVRMSAASamples(8),
+    mVRMSAASamples(4),
     mVRPanoramaDepth(true),
-    mVRPanoramaExtension(0.0f),
-#endif
+    mVRPanoramaExtension(0.025f),
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
     mWindArrowSize(0.12f),
@@ -310,7 +308,7 @@ Options::Options() :
     mAmbientLightingScale(1.0f),
     mDiffuseLightingScale(1.0f),
     mBasicTextureDetail(9),
-    mMaxSkyboxDetail(1),
+    mMaxSkyboxDetail(2),
     mMSAASamples(0),
     mGLVersion(2),
     mEnableSmoke(true),
@@ -368,14 +366,12 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_DOUBLE_ATTRIBUTE(mZoomViewSize);
     WRITE_ATTRIBUTE(mEnableStereoscopy);
     WRITE_DOUBLE_ATTRIBUTE(mStereoSeparation);
-#ifdef PICASIM_VR_SUPPORT
     WRITE_ATTRIBUTE(mEnableVR);
     WRITE_ATTRIBUTE(mVRDesktopMode);
     WRITE_ATTRIBUTE(mVRMSAASamples);
     element->SetAttribute("mVRAudioDevice", mVRAudioDevice.c_str());
     WRITE_ATTRIBUTE(mVRPanoramaDepth);
     WRITE_DOUBLE_ATTRIBUTE(mVRPanoramaExtension);
-#endif
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
     WRITE_ATTRIBUTE(mFreeFlightDisplaySpeed);
@@ -518,6 +514,14 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mSmokeOnlyInMainView);
     READ_ATTRIBUTE(mZoomViewSize);
     READ_ATTRIBUTE(mStereoSeparation);
+
+    READ_ATTRIBUTE(mEnableVR);
+    READ_ENUM_ATTRIBUTE(mVRDesktopMode);
+    READ_ATTRIBUTE(mVRMSAASamples);
+    READ_ATTRIBUTE(mVRAudioDevice);
+    READ_ATTRIBUTE(mVRPanoramaDepth);
+    READ_ATTRIBUTE(mVRPanoramaExtension);
+
     READ_ATTRIBUTE(mWindArrowSize);
     READ_ATTRIBUTE(mFreeFlightDisplayTime);
     READ_ATTRIBUTE(mFreeFlightDisplaySpeed);
@@ -595,15 +599,8 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 
     if (readAll)
     {
+        // These things are "ephemeral" - e.g. debugging, that you wouldn't want to persist between sessions
         READ_ATTRIBUTE(mEnableStereoscopy);
-#ifdef PICASIM_VR_SUPPORT
-        READ_ATTRIBUTE(mEnableVR);
-        READ_ENUM_ATTRIBUTE(mVRDesktopMode);
-        READ_ATTRIBUTE(mVRMSAASamples);
-        READ_ATTRIBUTE(mVRAudioDevice);
-        READ_ATTRIBUTE(mVRPanoramaDepth);
-        READ_ATTRIBUTE(mVRPanoramaExtension);
-#endif
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);
         READ_ATTRIBUTE(mTerrainWireframe);
@@ -637,6 +634,7 @@ SettingsChangeActions Options::GetSettingsChangeActions(SettingsChangeActions se
     COMPARE_FOR_TERRAIN(mBasicTextureDetail);
     COMPARE_FOR_TERRAIN(mMaxSkyboxDetail);
 #ifdef PICASIM_VR_SUPPORT
+    COMPARE_FOR_TERRAIN(mEnableVR);
     COMPARE_FOR_TERRAIN(mVRPanoramaExtension);
 #endif
     COMPARE_FOR_CHALLENGE(mLimboDifficultyMultiplier);

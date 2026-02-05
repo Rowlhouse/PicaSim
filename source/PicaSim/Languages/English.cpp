@@ -771,8 +771,8 @@ void InitStringsEN(const char** txt)
   txt[PS_TIPS11] = "Enable 'walkabout' mode in 3D scenes, and use the walk button when paused to move the launch point and wind direction";
   txt[PS_TIPS12] = "Circling hawks indicate areas of thermal lift, but it is actually better to watch for the glider's wing tip or nose to lift";
   txt[PS_TIPS13] = "Flying real R/C planes is even more fun!";
-  txt[PS_TIPS14] = "Like/follow PicaSim on Facebook or Google+ to get notified of updates and plans";
-  txt[PS_TIPS15] = "The full version of PicaSim contains additional planes, sceneries and challenges";
+  txt[PS_TIPS14] = "Like/follow PicaSim on Facebook to get notified of updates and plans";
+  txt[PS_TIPS15] = "There is a forum for PicaSim on Tapatalk";
   txt[PS_TIPS16] = "Add AI controlled planes in Settings»AI Controllers. Limit the maximum number in Settings»Options 2";
   txt[PS_LOADING] = "Loading...";
   txt[PS_RACETIP] = "%s\n\nThe white arrow points to the next checkpoint.";
@@ -824,5 +824,6 @@ void InitStringsEN(const char** txt)
   txt[PS_BUTTONMAPPINGS] = "Button Mappings";
   txt[PS_USERFILES] = "User files:";
   txt[PS_NOFILESFOUND] = "No files found";
+  txt[PS_FAILEDTOLOADENVIRONMENT] = "Failed to load environment - please load one of the scenery presets and try again";
 }
 

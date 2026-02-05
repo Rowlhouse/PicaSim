@@ -34,7 +34,7 @@ void InitStringsFR(const char** txt)
   txt[PS_INVERT] = "Inverser";
   txt[PS_AUTO] = "Auto";
   txt[PS_GAMEPADDETECTED] = "Manette détectée. Activez-la dans les réglages pour l'utiliser.";
-  txt[PS_WHATSNEW] = "Welcome to PicaSim!";
+  txt[PS_WHATSNEW] = "Bienvenue sur PicaSim!";
   txt[PS_FREEFLY] = "Vol Libre";
   txt[PS_CHALLENGE] = "Défi";
   txt[PS_SELECTAEROPLANE] = "Planeur";
@@ -713,13 +713,13 @@ void InitStringsFR(const char** txt)
   txt[PS_TIPS11] = "Activez le mode 'positionpilote' dans les scènes 3D, et utilisez le bouton marche en pause pour déplacer le point de lancement et la direction du vent";
   txt[PS_TIPS12] = "Les buses en cercle indiquent des zones d'ascendance thermique, mais il est préférable de surveiller le bout d'aile ou le nez du planeur qui se lève";
   txt[PS_TIPS13] = "Piloter de vrais avions R/C est encore plus amusant !";
-  txt[PS_TIPS14] = "Suivez PicaSim sur Facebook ou Google+ pour être informé des mises à jour et des projets";
-  txt[PS_TIPS15] = "La version complète de PicaSim contient des avions, scènes et défis supplémentaires";
+  txt[PS_TIPS14] = "Suivez PicaSim sur Facebook pour être informé des mises à jour et des projets";
+  txt[PS_TIPS15] = "Il existe un forum pour PicaSim sur Tapatalk";
   txt[PS_TIPS16] = "Ajoutez des avions contrôlés par l'IA dans Réglages»Contrôleurs IA. Limitez le nombre maximum dans Réglages»Options 2";
   txt[PS_LOADING] = "Chargement...";
-  txt[PS_RACETIP] = "%s\n\nThe white arrow points to the next checkpoint.";
+  txt[PS_RACETIP] = "%s\n\nLa flèche blanche indique le prochain point de passage.";
   txt[PS_LIMBOTIP] = "%s\n\nAjuster difficulté/score multiples dans Réglages»Mode";
-  txt[PS_DURATIONTIP] = "%s\n\nLook for thermals and land close to the launch point.";
+  txt[PS_DURATIONTIP] = "%s\n\nRecherchez les thermiques et atterrissez près du point de lancement.";
   txt[PS_TRAINERGLIDERTIP] = "Bouton play pour décoller, bouton Pause/Retour pour repartir du début. Utiliser les controles pour "
     "commander profondeur et dérive, Faire voler le planeur en avant de la pente. Consulter le site Web "
     "pour des astuces et conseils de vol si vous n'arrivez pas à rester en l'air!";
@@ -736,13 +736,13 @@ void InitStringsFR(const char** txt)
   txt[PS_WINDDIRECTION] = "Direction du vent";
   txt[PS_AILERONSANDELEVATOR] = "Ailerons et elevator";
   txt[PS_FLYINGINFO] = "Voler";
-  txt[PS_QUITANDHELPTEXT] = "When paused press X to go back to the main menu, and press ? to get this help. \n\nWhen flying, some planes have buttons that are used to switch between controller configurations (e.g. flaps up/down), and tow/winch cable release.";
-  txt[PS_CAMERAANDSETTINGSTEXT] = "When paused, the cog allows you to access the settings. \n\nThe eye (only available if it's a 3D environment) allows you to change the camera/viewpoint.";
-  txt[PS_RESETANDPLAYTEXT] = "Press the play/pause buttons to start and stop the simulation. \n\nUse the rewind arrow next to it to relaunch. \n\nOptional buttons 1 and 2 are for smoke.";
-  txt[PS_THROTTLEANDRUDDERTEXT] = "Depending on the plane type, move the controller left/right to control rudder, and up/down to control either the throttle or brakes. \n\nTwo-channel gliders won't have this control.";
-  txt[PS_WINDDIRECTIONTEXT] = "If there's some wind, the blue arrow shows its direction. \n\nThere may be some numbers giving basic flight info like speed and height too.";
-  txt[PS_AILERONSANDELEVATORTEXT] = "By default, move the controller left/right to control ailerons (steering), and up/down to control elevator (descend/climb). \n\nR/C pilots: The transmitter mode can changed in the Settings»Options panel.";
-  txt[PS_FLYINGINFOTEXT] = "It takes some time and effort to learn to fly - just as it would flying a real R/C plane. \n\nFor more guidance, use the help button back in the main menu.";
+  txt[PS_QUITANDHELPTEXT] = "En pause, appuyez sur X pour revenir au menu principal, et sur ? pour obtenir cette aide. \n\nEn vol, certains avions ont des boutons pour basculer entre les configurations de contrôle (ex.: volets haut/bas) et pour larguer le câble de remorquage/treuil.";
+  txt[PS_CAMERAANDSETTINGSTEXT] = "En pause, l'engrenage permet d'accéder aux paramètres. \n\nL'œil (disponible uniquement en environnement 3D) permet de changer la caméra/point de vue.";
+  txt[PS_RESETANDPLAYTEXT] = "Appuyez sur les boutons lecture/pause pour démarrer et arrêter la simulation. \n\nUtilisez la flèche de retour à côté pour relancer. \n\nLes boutons optionnels 1 et 2 sont pour la fumée.";
+  txt[PS_THROTTLEANDRUDDERTEXT] = "Selon le type d'avion, déplacez le contrôleur gauche/droite pour contrôler la dérive, et haut/bas pour contrôler les gaz ou les freins. \n\nLes planeurs à deux voies n'auront pas ce contrôle.";
+  txt[PS_WINDDIRECTIONTEXT] = "S'il y a du vent, la flèche bleue indique sa direction. \n\nDes chiffres peuvent aussi afficher des informations de vol de base comme la vitesse et l'altitude.";
+  txt[PS_AILERONSANDELEVATORTEXT] = "Par défaut, déplacez le contrôleur gauche/droite pour contrôler les ailerons (direction), et haut/bas pour contrôler la profondeur (descendre/monter). \n\nPilotes R/C: Le mode émetteur peut être changé dans le panneau Paramètres»Options.";
+  txt[PS_FLYINGINFOTEXT] = "Apprendre à voler demande du temps et de la pratique - tout comme piloter un vrai avion R/C. \n\nPour plus de conseils, utilisez le bouton d'aide dans le menu principal.";
   txt[PS_VRHEADSET] = "Casque VR";
   txt[PS_ENABLEVRMODE] = "Activer mode VR";
   txt[PS_HEADSET] = "Casque";
@@ -759,12 +759,13 @@ void InitStringsFR(const char** txt)
   txt[PS_STATUS] = "Statut";
   txt[PS_VRNOTAVAILABLE] = "VR non disponible - aucun casque détecté";
   txt[PS_VRPANORAMADEPTH] = "Profondeur panorama VR";
-  txt[PS_VRPANORAMAEXTENSION] = "VR Panorama Extension";
+  txt[PS_VRPANORAMAEXTENSION] = "Extension Panorama VR";
   txt[PS_ORIENTATION] = "Orientation";
   txt[PS_SMOKESOURCE] = "Source fumée %d";
   txt[PS_NAME] = "Nom";
   txt[PS_BUTTONMAPPINGS] = "Assignation des boutons";
   txt[PS_USERFILES] = "Fichiers utilisateur:";
   txt[PS_NOFILESFOUND] = "Aucun fichier trouvé";
+  txt[PS_FAILEDTOLOADENVIRONMENT] = "Échec du chargement de l'environnement - veuillez charger un des paramètres de décor prédéfinis et réessayer";
 }
 
