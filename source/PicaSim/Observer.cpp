@@ -253,7 +253,6 @@ void Observer::RenderUpdate(Viewport* viewport, int renderLevel)
 
     if (mRenderModel.IsCreated())
     {
-        EnableLighting enableLighting;
         glDisable(GL_BLEND);
 
         Transform TM = mTM;

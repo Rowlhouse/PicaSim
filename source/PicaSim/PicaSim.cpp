@@ -1111,9 +1111,6 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         mPlayerAeroplane->Launch(mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans());
     }
 
-    RenderManager::GetInstance().EnableStereoscopy(mGameSettings.mOptions.mEnableStereoscopy);
-    RenderManager::GetInstance().SetStereoSeparation(mGameSettings.mOptions.mStereoSeparation);
-
     RenderManager::GetInstance().Update(mCurrentDeltaTime, gameDeltaTime);
 
     Transform cameraTM;
@@ -1129,6 +1126,10 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 
     // Draw everything
 #ifdef PICASIM_VR_SUPPORT
+    // Track VR camera transform for audio (captured before desktop rendering can overwrite it)
+    Transform vrListenerTM;
+    bool hasVRListenerTM = false;
+
     // Use IsVRReady() to check if headset is active, not just IsVREnabled()
     // This allows falling back to desktop rendering when headset is removed
     if (VRManager::IsAvailable() && VRManager::GetInstance().IsVRReady())
@@ -1145,6 +1146,10 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             rm.SetVRSkybox(&Environment::getSkybox());
 
             rm.RenderUpdateVR(vrFrameInfo);
+
+            // Capture VR camera transform for audio BEFORE desktop rendering can overwrite it
+            vrListenerTM = mViewport->GetCamera()->GetTransform();
+            hasVRListenerTM = true;
 
             // Handle desktop window display based on VR desktop mode
             switch (mGameSettings.mOptions.mVRDesktopMode)
@@ -1221,7 +1226,20 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // Audio
     AudioManager::GetInstance().SetVolume(mGameSettings.mOptions.mVolumeScale);
     Vector3 cameraVelocity(0,0,0);
-    AudioManager::GetInstance().SetTransformAndVelocity(cameraTM, cameraVelocity);
+
+    Transform listenerTM = cameraTM;  // Default to desktop camera
+
+#ifdef PICASIM_VR_SUPPORT
+    // When VR is active, use the VR camera transform that was captured after VR rendering
+    // (before desktop rendering could overwrite it)
+    // This ensures 3D audio matches what the user sees in the headset
+    if (hasVRListenerTM)
+    {
+        listenerTM = vrListenerTM;
+    }
+#endif
+
+    AudioManager::GetInstance().SetTransformAndVelocity(listenerTM, cameraVelocity);
     AudioManager::GetInstance().Update(deltaTime);
 
     // Wind sound

@@ -78,9 +78,6 @@ void InitStringsFR(const char** txt)
   txt[PS_GROUNDVIEWYAWOFFSET] = "Décalage lacet vue sol";
   txt[PS_GROUNDVIEWPITCHOFFSET] = "Décalage tangage vue sol";
   txt[PS_AEROPLANEFIELDOFVIEW] = "Angle/Vue depuis modèle";
-  txt[PS_STEREOSCOPY] = "Stéréoscopie";
-  txt[PS_STEREOSEPARATION] = "Séparation stéréo";
-  txt[PS_STEREOINFO] = "Valeur +ve pour 3D normal, -ve pour technique yeux croisés";
   txt[PS_WALKABOUTSETTINGS] = "Réglages positionpilote";
   txt[PS_ENABLEWALKABOUTBUTTON] = "Activer bouton positionpilote";
   txt[PS_ENABLEOBJECTEDITING] = "Activer édition objets";

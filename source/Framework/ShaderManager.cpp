@@ -37,15 +37,12 @@ ShaderManager::ShaderManager(LoadingScreenHelper* loadingScreen)
     mShaders[SHADER_SHADOW_BLUR]                   = std::make_unique<ShadowBlurShader>();
     mShaders[SHADER_SMOKE]                         = std::make_unique<SmokeShader>();
 
-    if (gGLVersion > 1)
+    if (loadingScreen)
+        loadingScreen->Update("Compiling shaders");
+    for (int i = 0 ; i != NUM_SHADERS ; ++i)
     {
-        if (loadingScreen)
-            loadingScreen->Update("Compiling shaders");
-        for (int i = 0 ; i != NUM_SHADERS ; ++i)
-        {
-            mShaders[i]->Init();
-            IwAssert(ROWLHOUSE, mShaders[i]->mShaderProgram > 0);
-        }
+        mShaders[i]->Init();
+        IwAssert(ROWLHOUSE, mShaders[i]->mShaderProgram > 0);
     }
 }
 

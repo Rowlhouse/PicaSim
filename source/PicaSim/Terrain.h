@@ -65,6 +65,7 @@ private:
 
     void RenderPlain(class Viewport* viewport);
     void RenderHeightfield(class Viewport* viewport);
+    void RenderTerrainWireframe(class Viewport* viewport);
 
     void CalculateLightmapTexture(unsigned int size, float gamma, const char* basicTexture, Vector3& plainColour, class LoadingScreenHelper* loadingScreen);
 

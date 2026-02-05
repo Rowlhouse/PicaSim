@@ -142,9 +142,6 @@ public:
     void SetLightingDirection(const Vector3& direction) {mLightingDirection = direction;}
     void SetLightingDirection(float bearing, float elevation);
 
-    void EnableStereoscopy(bool enable) {mEnableStereoscopy = enable;}
-    void SetStereoSeparation(float separation) {mStereoSeparation = separation;}
-
 #ifdef PICASIM_VR_SUPPORT
     // VR mirror window display mode
     enum VRMirrorMode
@@ -200,8 +197,6 @@ private:
     float   mShadowSizeScale;
     float   mShadowBlur;
 
-    bool    mEnableStereoscopy;
-    float   mStereoSeparation;
     bool    mUseMultiLights;
 
 #ifdef PICASIM_VR_SUPPORT

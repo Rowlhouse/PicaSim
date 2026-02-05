@@ -181,10 +181,7 @@ int main()
     InitMemoryOverrunCheck();
     MEMTEST();
 
-    // Read GL version setting early (before renderer initialization)
     std::string settingsPath = Platform::GetUserSettingsPath() + "settings.xml";
-    gGLVersion = ReadGLVersionFromSettings(settingsPath.c_str());
-    TRACE_FILE_IF(1) TRACE("GL version from settings: %d", gGLVersion);
 
 #if 0
     s3eGLRegister(S3E_GL_SUSPEND, suspendCallback, 0);
@@ -321,6 +318,14 @@ int main()
         gameSettings.mStatistics.mNumDepthBits = depthBits;
 
         ShaderManager::Init(initialLoadingScreen);
+
+        // Initialize VR if it was enabled in saved settings
+        if (VRManager::IsAvailable() && gameSettings.mOptions.mEnableVR)
+        {
+            VRManager::GetInstance().SetMSAASamples(gameSettings.mOptions.mVRMSAASamples);
+            VRManager::GetInstance().SetVRAudioDevice(gameSettings.mOptions.mVRAudioDevice);
+            VRManager::GetInstance().EnableVR();
+        }
 
         // Cache the thumbnails
         TRACE_FILE_IF(1) TRACE("Caching thumbnails");

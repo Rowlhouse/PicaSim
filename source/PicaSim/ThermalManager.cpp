@@ -334,8 +334,6 @@ void ThermalManager::RenderUpdate(class Viewport* viewport, int renderLevel)
 
     if (gs.mOptions.mMaxMarkersPerThermal > 0)
     {
-        EnableLighting enableLighting;
-
         ShaderProgramModelInfo shaderInfo;
 
         for (int i = 0 ; i != NUM_LODS ; ++i)

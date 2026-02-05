@@ -1,10 +1,12 @@
 Version 1.2.0
-- Support parallax mapping in VR
+- Support parallax mapping in VR for panoramic scenes
 - Add the Bedlam model (thanks Richard West)
 - Add an indoor version of the Spitfire
 - Add the Sopwith Pup
 - Soft shadows
 - Reduce glider launch speeds
+- Remove support for OpenGL 1
+- Remove support for stereoscopic display (it was a poor substitute for VR)
 
 Version 1.1.0
 - VR support (tested on Oculus Rift)

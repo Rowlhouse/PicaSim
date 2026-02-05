@@ -217,28 +217,14 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     const SmokeShader* smokeShader = (SmokeShader*) ShaderManager::GetInstance().GetShader(SHADER_SMOKE);
-    if (gGLVersion == 1)
-    {
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glEnable(GL_TEXTURE_2D);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    smokeShader->Use();
+    glUniform1i(smokeShader->u_texture, 0);
 
-        glActiveTexture(GL_TEXTURE0);
-        glVertexPointer(3, GL_FLOAT, 0, &pts[0]);
-        glTexCoordPointer(2, GL_FLOAT, 0, &uvs[0]);
-    }
-    else
-    {
-        smokeShader->Use();
-        glUniform1i(smokeShader->u_texture, 0);
+    glEnableVertexAttribArray(smokeShader->a_position);
+    glEnableVertexAttribArray(smokeShader->a_texCoord);
 
-        glEnableVertexAttribArray(smokeShader->a_position);
-        glEnableVertexAttribArray(smokeShader->a_texCoord);
-
-        glVertexAttribPointer(smokeShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
-        glVertexAttribPointer(smokeShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
-    }
+    glVertexAttribPointer(smokeShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glVertexAttribPointer(smokeShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
 
     const Transform cameraTM = viewport->GetCamera()->GetTransform();
     const Vector3 lookDir = cameraTM.RowX();
@@ -262,10 +248,7 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
         float size = particle.mInitialSize + (particle.mFinalSize - particle.mInitialSize) * frac;
 
         float alpha = particle.mInitialAlpha * (1.0f - frac);
-        if (gGLVersion == 1)
-            glColor4f(particle.mColour.x, particle.mColour.y, particle.mColour.z, alpha);
-        else
-            glUniform4f(smokeShader->u_colour, particle.mColour.x, particle.mColour.y, particle.mColour.z, alpha);
+        glUniform4f(smokeShader->u_colour, particle.mColour.x, particle.mColour.y, particle.mColour.z, alpha);
 
         esPushMatrix();
         esTranslatef(pos.x, pos.y, pos.z);
@@ -277,17 +260,8 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
         esPopMatrix();
     }
 
-    if (gGLVersion == 1)
-    {
-        glDisable(GL_TEXTURE_2D);
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    }
-    else
-    {
-        glDisableVertexAttribArray(smokeShader->a_position);
-        glDisableVertexAttribArray(smokeShader->a_texCoord);
-    }
+    glDisableVertexAttribArray(smokeShader->a_position);
+    glDisableVertexAttribArray(smokeShader->a_texCoord);
 
 #if 0
     for (ParticleList::iterator it = mParticles.begin(); it != mParticles.end(); ++it)

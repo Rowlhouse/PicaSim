@@ -78,9 +78,6 @@ void InitStringsPT(const char** txt)
   txt[PS_GROUNDVIEWYAWOFFSET] = "Desvio direcional na vista de solo";
   txt[PS_GROUNDVIEWPITCHOFFSET] = "Desvio de inclinação na vista de solo";
   txt[PS_AEROPLANEFIELDOFVIEW] = "Campo de visão do modelo";
-  txt[PS_STEREOSCOPY] = "Estereoscopia";
-  txt[PS_STEREOSEPARATION] = "Separação estéreo";
-  txt[PS_STEREOINFO] = "Valor +ve para 3D normal, -ve para técnica de olhos cruzados";
   txt[PS_WALKABOUTSETTINGS] = "Definições caminhada";
   txt[PS_ENABLEWALKABOUTBUTTON] = "Activar botão caminhada";
   txt[PS_ENABLEOBJECTEDITING] = "Ativar edição de objetos";

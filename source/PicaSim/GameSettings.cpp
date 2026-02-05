@@ -226,8 +226,6 @@ Options::Options() :
     mOnlyPlaneInZoomView(false),
     mSmokeOnlyInMainView(true),
     mZoomViewSize(0.2f),
-    mEnableStereoscopy(false),
-    mStereoSeparation(0.1f),
     mEnableVR(false),
     mVRDesktopMode(VR_DESKTOP_NORMAL_VIEW),
     mVRMSAASamples(4),
@@ -364,8 +362,6 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_ATTRIBUTE(mOnlyPlaneInZoomView);
     WRITE_ATTRIBUTE(mSmokeOnlyInMainView);
     WRITE_DOUBLE_ATTRIBUTE(mZoomViewSize);
-    WRITE_ATTRIBUTE(mEnableStereoscopy);
-    WRITE_DOUBLE_ATTRIBUTE(mStereoSeparation);
     WRITE_ATTRIBUTE(mEnableVR);
     WRITE_ATTRIBUTE(mVRDesktopMode);
     WRITE_ATTRIBUTE(mVRMSAASamples);
@@ -513,7 +509,6 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mOnlyPlaneInZoomView);
     READ_ATTRIBUTE(mSmokeOnlyInMainView);
     READ_ATTRIBUTE(mZoomViewSize);
-    READ_ATTRIBUTE(mStereoSeparation);
 
     READ_ATTRIBUTE(mEnableVR);
     READ_ENUM_ATTRIBUTE(mVRDesktopMode);
@@ -600,7 +595,6 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     if (readAll)
     {
         // These things are "ephemeral" - e.g. debugging, that you wouldn't want to persist between sessions
-        READ_ATTRIBUTE(mEnableStereoscopy);
         READ_ATTRIBUTE(mStallMarkers);
         READ_ATTRIBUTE(mEnableObjectEditing);
         READ_ATTRIBUTE(mTerrainWireframe);

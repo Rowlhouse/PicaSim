@@ -80,9 +80,6 @@ void InitStringsDE(const char** txt)
   txt[PS_GROUNDVIEWYAWOFFSET] = "Gier-Versatz in Bodenansicht";
   txt[PS_GROUNDVIEWPITCHOFFSET] = "Nick-Versatz in Bodenansicht";
   txt[PS_AEROPLANEFIELDOFVIEW] = "Flugzeug Blickfeld";
-  txt[PS_STEREOSCOPY] = "Stereoskopie";
-  txt[PS_STEREOSEPARATION] = "Stereo-Trennung";
-  txt[PS_STEREOINFO] = "+Wert für normales 3D, -Wert für Kreuzblick";
   txt[PS_WALKABOUTSETTINGS] = "Rundgang Einstellungen";
   txt[PS_ENABLEWALKABOUTBUTTON] = "Rundgangaktivierung";
   txt[PS_ENABLEOBJECTEDITING] = "Objektbearbeitung aktivieren";

@@ -196,55 +196,28 @@ void ButtonOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displayC
         x0, y1, 0,
     };
 
-    int mvpLoc = -1;
+    const OverlayShader* overlayShader = (OverlayShader*) ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
+    overlayShader->Use();
 
-    if (gGLVersion == 1)
-    {
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glVertexPointer(3, GL_FLOAT, 0, pts);
-        glTexCoordPointer(2, GL_FLOAT, 0, uvs);
+    // Get the variable locations
+    glUniform1i(overlayShader->u_texture, 0);
 
-        glColor4ub(mColour[0], mColour[1], mColour[2], (GLubyte) (mAlpha * 255));
-    }
-    else
-    {
-        const OverlayShader* overlayShader = (OverlayShader*) ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
-        overlayShader->Use();
+    glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glEnableVertexAttribArray(overlayShader->a_position);
 
-        // Get the variable locations
-        glUniform1i(overlayShader->u_texture, 0);
+    glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
+    glEnableVertexAttribArray(overlayShader->a_texCoord);
 
-        glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
-        glEnableVertexAttribArray(overlayShader->a_position);
-
-        glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
-        glEnableVertexAttribArray(overlayShader->a_texCoord);
-
-        glUniform4f(overlayShader->u_colour, mColour[0]/255.0f, mColour[1]/255.0f, mColour[2]/255.0f, mAlpha);
-        esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
-    }
+    glUniform4f(overlayShader->u_colour, mColour[0]/255.0f, mColour[1]/255.0f, mColour[2]/255.0f, mAlpha);
+    esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture->mHWID);
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-    if (gGLVersion == 1)
-    {
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisable(GL_TEXTURE_2D);
-    }
-    else
-    {
-        const OverlayShader* overlayShader = (OverlayShader*) ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
-        glDisableVertexAttribArray(overlayShader->a_position);
-        glDisableVertexAttribArray(overlayShader->a_texCoord);
-    }
+    glDisableVertexAttribArray(overlayShader->a_position);
+    glDisableVertexAttribArray(overlayShader->a_texCoord);
 }
 
 //======================================================================================================================

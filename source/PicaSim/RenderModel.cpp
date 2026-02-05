@@ -538,18 +538,6 @@ void RenderModel::Render(const Vector4* colour, bool forceColour, bool separateS
     if (!IsCreated())
         return;
 
-    // To get specular to be applied to textured models in GL1 we have to render the model twice - 
-    // the first time without specular, and the second time over the top. This is because ES 1 
-    // does the lighting and then multiplies the result by the texture colour. This means a black texture kills specular.
-
-    GLVec4 specularColour;
-    if (gGLVersion == 1 && separateSpecular)
-    {
-        GLfloat zeros[] = {0, 0, 0, 0};
-        glGetLightfv(GL_LIGHT0, GL_SPECULAR, specularColour);
-        glLightfv(GL_LIGHT0, GL_SPECULAR, zeros);
-    }
-
     Vector4 col(1, 1, 1, 0);
 
     int index = 0;
@@ -582,41 +570,6 @@ void RenderModel::Render(const Vector4* colour, bool forceColour, bool separateS
             glDepthMask(GL_TRUE);
         }
         esPopMatrix();
-    }
-
-    if (gGLVersion == 1 && separateSpecular)
-    {
-        glLightfv(GL_LIGHT0, GL_SPECULAR, specularColour);
-    }
-
-
-    if (gGLVersion == 1 && separateSpecular)
-    {
-        mDoingSeparateSpecularPass = true;
-        glDisable(GL_LIGHT1);
-        glDisable(GL_LIGHT2);
-        glDisable(GL_LIGHT3);
-        glDisable(GL_LIGHT4);
-
-        GLfloat zeros[] = {0, 0, 0, 0};
-        GLVec4 diffuseColour;
-        GLVec4 ambientColour;
-        glGetLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseColour);
-        glGetLightfv(GL_LIGHT0, GL_AMBIENT, ambientColour);
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, zeros);
-        glLightfv(GL_LIGHT0, GL_AMBIENT, zeros);
-
-        Vector4 col(1.0f, 1.0f, 1.0f, -1.0f);
-        Render(&col, true, false);
-
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseColour);
-        glLightfv(GL_LIGHT0, GL_AMBIENT, ambientColour);
-
-        glEnable(GL_LIGHT1);
-        glEnable(GL_LIGHT2);
-        glEnable(GL_LIGHT3);
-        glEnable(GL_LIGHT4);
-        mDoingSeparateSpecularPass = false;
     }
 }
 
@@ -672,71 +625,40 @@ bool RenderModel::PartRenderPre(const Vector4* colour, bool forceColour, ShaderP
     float specularAmount2 = 0.5f;
     float specularExponent2 = 20.0f;
 
-    if (gGLVersion == 1)
+    if (texture)
     {
-        if (texture)
-        {
-            glEnable(GL_TEXTURE_2D);
-            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        }
-        else
-        {
-            glDisable(GL_TEXTURE_2D);
-            if (!colour)
-                glEnableClientState(GL_COLOR_ARRAY);
-            else
-                glColor4f(colour->x, colour->y, colour->z, colour->w);
-        }
+        texturedModelShader->Use();
 
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_NORMAL_ARRAY);
+        shaderInfo.colourLoc = texturedModelShader->a_colour;
+        shaderInfo.mvpLoc = texturedModelShader->u_mvpMatrix;
+        shaderInfo.normalMatrixLoc = texturedModelShader->u_normalMatrix;
 
-        GLfloat s[] = {specularAmount1, specularAmount1, specularAmount1, 1.0f};
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, s);
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, specularExponent1); // smooth surface = large numbers = small highlights
+        positionLoc = texturedModelShader->a_position;
+        normalLoc = texturedModelShader->a_normal;
+        texCoordLoc = texturedModelShader->a_texCoord;
 
-        // Overwrites the actual material for ambient and diffuse, front and back (no glColorMaterial in ogl es)
-        if (!forceColour)
-            glEnable(GL_COLOR_MATERIAL);
+        lightShaderInfo = &texturedModelShader->lightShaderInfo;
+
+        glUniform1i(texturedModelShader->u_texture, 0);
+        glUniform1f(texturedModelShader->u_texBias, -0.5f);
+        glUniform1f(texturedModelShader->u_specularAmount, specularAmount2);
+        glUniform1f(texturedModelShader->u_specularExponent, specularExponent2);
     }
     else
     {
-        if (texture)
-        {
-            texturedModelShader->Use();
+        modelShader->Use();
 
-            shaderInfo.colourLoc = texturedModelShader->a_colour;
-            shaderInfo.mvpLoc = texturedModelShader->u_mvpMatrix;
-            shaderInfo.normalMatrixLoc = texturedModelShader->u_normalMatrix;
+        shaderInfo.colourLoc = modelShader->a_colour;
+        shaderInfo.mvpLoc = modelShader->u_mvpMatrix;
+        shaderInfo.normalMatrixLoc = modelShader->u_normalMatrix;
 
-            positionLoc = texturedModelShader->a_position;
-            normalLoc = texturedModelShader->a_normal;
-            texCoordLoc = texturedModelShader->a_texCoord;
+        positionLoc = modelShader->a_position;
+        normalLoc = modelShader->a_normal;
 
-            lightShaderInfo = &texturedModelShader->lightShaderInfo;
+        lightShaderInfo = &modelShader->lightShaderInfo;
 
-            glUniform1i(texturedModelShader->u_texture, 0);
-            glUniform1f(texturedModelShader->u_texBias, -0.5f);
-            glUniform1f(texturedModelShader->u_specularAmount, specularAmount2);
-            glUniform1f(texturedModelShader->u_specularExponent, specularExponent2);
-        }
-        else
-        {
-            modelShader->Use();
-
-            shaderInfo.colourLoc = modelShader->a_colour;
-            shaderInfo.mvpLoc = modelShader->u_mvpMatrix;
-            shaderInfo.normalMatrixLoc = modelShader->u_normalMatrix;
-
-            positionLoc = modelShader->a_position;
-            normalLoc = modelShader->a_normal;
-
-            lightShaderInfo = &modelShader->lightShaderInfo;
-
-            glUniform1f(modelShader->u_specularAmount, specularAmount2);
-            glUniform1f(modelShader->u_specularExponent, specularExponent2);
-        }
+        glUniform1f(modelShader->u_specularAmount, specularAmount2);
+        glUniform1f(modelShader->u_specularExponent, specularExponent2);
     }
 
     if (texture)
@@ -760,65 +682,47 @@ bool RenderModel::PartRenderPre(const Vector4* colour, bool forceColour, ShaderP
         start = 0;
     }
 
-    if (gGLVersion == 1)
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) start);
+    glEnableVertexAttribArray(positionLoc);
+
+    if (forceColour)
     {
-        glVertexPointer(3, GL_FLOAT, elementSize, (GLvoid*) start);
-        glNormalPointer(GL_FLOAT, elementSize, (GLvoid*) (start + sizeof(Vector3)));
-        if (texture)
-        {
-            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            glTexCoordPointer(2, GL_FLOAT, elementSize, (GLvoid*) (start + sizeof(Vector3) + sizeof(Vector3)));
-        }
-        else
-        {
-            if (!colour)
-                glColorPointer(4, GL_FLOAT, elementSize, (GLvoid*) (start + sizeof(Vector3) + sizeof(Vector3)));
-        }
+        glDisableVertexAttribArray(normalLoc);
+        glVertexAttrib3f(modelShader->a_normal, 0, 0, 0.0f);
     }
     else
     {
-        glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) start);
-        glEnableVertexAttribArray(positionLoc);
+        glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) (start + sizeof(Vector3)));
+        glEnableVertexAttribArray(normalLoc);
+    }
 
-        if (forceColour)
-        {
-            glDisableVertexAttribArray(normalLoc);
-            glVertexAttrib3f(modelShader->a_normal, 0, 0, 0.0f);
-        }
-        else
-        {
-            glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) (start + sizeof(Vector3)));
-            glEnableVertexAttribArray(normalLoc);
-        }
+    if (texture)
+    {
+        glDisableVertexAttribArray(shaderInfo.colourLoc);
+        glVertexAttrib4f(shaderInfo.colourLoc, 1.0f, 1.0f, 1.0f, 1.0f);
 
-        if (texture)
+        glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) (start + sizeof(Vector3) + sizeof(Vector3)));
+        glEnableVertexAttribArray(texCoordLoc);
+    }
+    else
+    {
+        if (!colour && shaderInfo.colourLoc != -1)
         {
-            glDisableVertexAttribArray(shaderInfo.colourLoc);
-            glVertexAttrib4f(shaderInfo.colourLoc, 1.0f, 1.0f, 1.0f, 1.0f);
-
-            glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) (start + sizeof(Vector3) + sizeof(Vector3)));
-            glEnableVertexAttribArray(texCoordLoc);
+            glVertexAttribPointer(shaderInfo.colourLoc, 4, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) (start + sizeof(Vector3) + sizeof(Vector3)));
+            glEnableVertexAttribArray(shaderInfo.colourLoc);
         }
-        else
+    }
+    esSetLighting(*lightShaderInfo);
+    if (forceColour)
+    {
+        for (int i = 0 ; i != 5 ; ++i)
         {
-            if (!colour && shaderInfo.colourLoc != -1)
-            {
-                glVertexAttribPointer(shaderInfo.colourLoc, 4, GL_FLOAT, GL_FALSE, elementSize, (GLvoid*) (start + sizeof(Vector3) + sizeof(Vector3)));
-                glEnableVertexAttribArray(shaderInfo.colourLoc);
-            }
-        }
-        esSetLighting(*lightShaderInfo);
-        if (forceColour)
-        {
-            for (int i = 0 ; i != 5 ; ++i)
-            {
-                if (i == 0)
-                    glUniform4f((*lightShaderInfo)[i].u_lightAmbientColour, 1.0f, 1.0f, 1.0f, 1.0f);
-                else
-                    glUniform4f((*lightShaderInfo)[i].u_lightAmbientColour, 0.0f, 0.0f, 0.0f, 1.0f);
-                glUniform4f((*lightShaderInfo)[i].u_lightDiffuseColour, 0.0f, 0.0f, 0.0f, 1.0f);
-                glUniform4f((*lightShaderInfo)[i].u_lightSpecularColour, 0.0f, 0.0f, 0.0f, 1.0f);
-            }
+            if (i == 0)
+                glUniform4f((*lightShaderInfo)[i].u_lightAmbientColour, 1.0f, 1.0f, 1.0f, 1.0f);
+            else
+                glUniform4f((*lightShaderInfo)[i].u_lightAmbientColour, 0.0f, 0.0f, 0.0f, 1.0f);
+            glUniform4f((*lightShaderInfo)[i].u_lightDiffuseColour, 0.0f, 0.0f, 0.0f, 1.0f);
+            glUniform4f((*lightShaderInfo)[i].u_lightSpecularColour, 0.0f, 0.0f, 0.0f, 1.0f);
         }
     }
     return true;
@@ -831,15 +735,8 @@ void RenderModel::PartRender(const Vector4* colour, bool forceColour, ShaderProg
 
     if (colour)
     {
-        if (gGLVersion == 1)
-        {
-            glColor4f(colour->x, colour->y, colour->z, colour->w);
-        }
-        else
-        {
-            glVertexAttrib4fv(shaderInfo.colourLoc, &colour->x);
-            glDisableVertexAttribArray(shaderInfo.colourLoc);
-        }
+        glVertexAttrib4fv(shaderInfo.colourLoc, &colour->x);
+        glDisableVertexAttribArray(shaderInfo.colourLoc);
     }
     esSetModelViewProjectionAndNormalMatrix(shaderInfo.mvpLoc, shaderInfo.normalMatrixLoc);
     if (component.mTexture)
@@ -855,36 +752,25 @@ void RenderModel::PartRenderPost(const Vector4* colour, bool forceColour, int co
 
     Texture* texture = forceColour ? 0 : component.mTexture;
 
-    if (gGLVersion == 1)
-    {
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_NORMAL_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisable(GL_TEXTURE_2D);
-    }
-    else // gGLVersion == 2
-    {
-        // Get shader attribute locations (safe to call glDisableVertexAttribArray on any location)
-        const TexturedModelShader* texturedModelShader =
-            (TexturedModelShader*) ShaderManager::GetInstance().GetShader(SHADER_TEXTUREDMODEL);
-        const ModelShader* modelShader =
-            (ModelShader*) ShaderManager::GetInstance().GetShader(SHADER_MODEL);
+    // Get shader attribute locations (safe to call glDisableVertexAttribArray on any location)
+    const TexturedModelShader* texturedModelShader =
+        (TexturedModelShader*) ShaderManager::GetInstance().GetShader(SHADER_TEXTUREDMODEL);
+    const ModelShader* modelShader =
+        (ModelShader*) ShaderManager::GetInstance().GetShader(SHADER_MODEL);
 
-        // Disable textured model shader attributes
-        glDisableVertexAttribArray(texturedModelShader->a_position);
-        glDisableVertexAttribArray(texturedModelShader->a_normal);
-        glDisableVertexAttribArray(texturedModelShader->a_texCoord);
-        glDisableVertexAttribArray(texturedModelShader->a_colour);
+    // Disable textured model shader attributes
+    glDisableVertexAttribArray(texturedModelShader->a_position);
+    glDisableVertexAttribArray(texturedModelShader->a_normal);
+    glDisableVertexAttribArray(texturedModelShader->a_texCoord);
+    glDisableVertexAttribArray(texturedModelShader->a_colour);
 
-        // Disable non-textured model shader attributes (may overlap, but safe)
-        glDisableVertexAttribArray(modelShader->a_position);
-        glDisableVertexAttribArray(modelShader->a_normal);
-        glDisableVertexAttribArray(modelShader->a_colour);
+    // Disable non-textured model shader attributes (may overlap, but safe)
+    glDisableVertexAttribArray(modelShader->a_position);
+    glDisableVertexAttribArray(modelShader->a_normal);
+    glDisableVertexAttribArray(modelShader->a_colour);
 
-        // Unbind shader program
-        glUseProgram(0);
-    }
+    // Unbind shader program
+    glUseProgram(0);
 
     if (texture)
     {

@@ -309,7 +309,6 @@ void Runway::RenderUpdate(class Viewport* viewport, int renderLevel)
     // Render
     esPushMatrix();
 
-    EnableLighting enableLighting;
     FrontFaceCW CW;
     EnableCullFace enableCullFace(GL_BACK);
     EnableBlend enableBlend;
@@ -321,55 +320,27 @@ void Runway::RenderUpdate(class Viewport* viewport, int renderLevel)
 
     float specularAmount = 0.0f;
     float specularExponent = 100.0f;
-    if (gGLVersion == 1)
-    {
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glEnable(GL_TEXTURE_2D);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    texturedModelShader->Use();
 
-        GLfloat s[] = {specularAmount, specularAmount, specularAmount, 1.0f};
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, s);
-        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, specularExponent); // smooth surface = large numbers = small highlights
+    glUniform1i(texturedModelShader->u_texture, 0);
+    glUniform1f(texturedModelShader->u_texBias, -0.5f);
+    glUniform1f(texturedModelShader->u_specularExponent, specularExponent);
+    glUniform1f(texturedModelShader->u_specularAmount, specularAmount);
 
-        // Overwrites the actual material for ambient and diffuse, front and back
-        glEnable(GL_COLOR_MATERIAL);
-    }
-    else
-    {
-        texturedModelShader->Use();
+    glEnableVertexAttribArray(texturedModelShader->a_position);
+    glEnableVertexAttribArray(texturedModelShader->a_texCoord);
+    glEnableVertexAttribArray(texturedModelShader->a_colour);
 
-        glUniform1i(texturedModelShader->u_texture, 0);
-        glUniform1f(texturedModelShader->u_texBias, -0.5f);
-        glUniform1f(texturedModelShader->u_specularExponent, specularExponent);
-        glUniform1f(texturedModelShader->u_specularAmount, specularAmount);
+    glDisableVertexAttribArray(texturedModelShader->a_normal);
 
-        glEnableVertexAttribArray(texturedModelShader->a_position);
-        glEnableVertexAttribArray(texturedModelShader->a_texCoord);
-        glEnableVertexAttribArray(texturedModelShader->a_colour);
-
-        glDisableVertexAttribArray(texturedModelShader->a_normal);
-
-        esSetLighting(texturedModelShader->lightShaderInfo);
-    }
+    esSetLighting(texturedModelShader->lightShaderInfo);
 
     glActiveTexture(GL_TEXTURE0);
 
-    if (gGLVersion == 1)
-    {
-        glVertexPointer(3, GL_FLOAT, 0, &mPoints[0].x);
-        glNormal3f(0, 0, 1.0f);
-        glTexCoordPointer(2, GL_FLOAT, 0, &mUVs[0].x);
-        glColorPointer(4, GL_FLOAT, 0, &mColours[0].x);
-    }
-    else
-    {
-        glVertexAttribPointer(texturedModelShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mPoints[0].x);
-        glVertexAttribPointer(texturedModelShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, &mUVs[0].x);
-        glVertexAttribPointer(texturedModelShader->a_colour, 4, GL_FLOAT, GL_FALSE, 0, &mColours[0].x);
-        glVertexAttrib3f(texturedModelShader->a_normal, 0, 0, 1.0f);
-    }
+    glVertexAttribPointer(texturedModelShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mPoints[0].x);
+    glVertexAttribPointer(texturedModelShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, &mUVs[0].x);
+    glVertexAttribPointer(texturedModelShader->a_colour, 4, GL_FLOAT, GL_FALSE, 0, &mColours[0].x);
+    glVertexAttrib3f(texturedModelShader->a_normal, 0, 0, 1.0f);
 
     esSetModelViewProjectionAndNormalMatrix(texturedModelShader->u_mvpMatrix, texturedModelShader->u_normalMatrix);
 
@@ -380,20 +351,9 @@ void Runway::RenderUpdate(class Viewport* viewport, int renderLevel)
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, mPoints.size());
 
-    if (gGLVersion == 1)
-    {
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisable(GL_COLOR_MATERIAL);
-        glDisable(GL_TEXTURE_2D);
-    }
-    else
-    {
-        glDisableVertexAttribArray(texturedModelShader->a_position);
-        glDisableVertexAttribArray(texturedModelShader->a_texCoord);
-        glDisableVertexAttribArray(texturedModelShader->a_colour);
-    }
+    glDisableVertexAttribArray(texturedModelShader->a_position);
+    glDisableVertexAttribArray(texturedModelShader->a_texCoord);
+    glDisableVertexAttribArray(texturedModelShader->a_colour);
 
     if (mTexture.GetFlags() & Texture::UPLOADED_F)
     {

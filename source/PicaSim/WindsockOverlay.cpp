@@ -85,32 +85,17 @@ void WindsockOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
 
     const OverlayShader* overlayShader = (OverlayShader*) ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
 
-    if (gGLVersion == 1)
-    {
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
+    overlayShader->Use();
 
-        glTexCoordPointer(2, GL_FLOAT, 0, uvs);
-        glVertexPointer(3, GL_FLOAT, 0, pts);
+    glUniform1i(overlayShader->u_texture, 0);
 
-        glColor4ub(255,255,255,mAlpha);
-    }
-    else
-    {
-        overlayShader->Use();
+    glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glEnableVertexAttribArray(overlayShader->a_position);
 
-        glUniform1i(overlayShader->u_texture, 0);
+    glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
+    glEnableVertexAttribArray(overlayShader->a_texCoord);
 
-        glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
-        glEnableVertexAttribArray(overlayShader->a_position);
-
-        glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
-        glEnableVertexAttribArray(overlayShader->a_texCoord);
-
-        glUniform4f(overlayShader->u_colour, 1.0f, 1.0f, 1.0f, mAlpha/255.0f);
-    }
+    glUniform4f(overlayShader->u_colour, 1.0f, 1.0f, 1.0f, mAlpha/255.0f);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture.mHWID);
@@ -134,15 +119,6 @@ void WindsockOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
 
     esPopMatrix();
 
-    if (gGLVersion == 1)
-    {
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisable(GL_TEXTURE_2D);
-    }
-    else
-    {
-        glDisableVertexAttribArray(overlayShader->a_position);
-        glDisableVertexAttribArray(overlayShader->a_texCoord);
-    }
+    glDisableVertexAttribArray(overlayShader->a_position);
+    glDisableVertexAttribArray(overlayShader->a_texCoord);
 }

@@ -755,10 +755,7 @@ void HumanController::RenderStick(
         };
 
         // points
-        if (gGLVersion == 1)
-            glVertexPointer(3, GL_FLOAT, 0, pts);
-        else
-            glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+        glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
@@ -775,10 +772,7 @@ void HumanController::RenderStick(
             x, bottomY, 0,
         };
 
-        if (gGLVersion == 1)
-            glVertexPointer(3, GL_FLOAT, 0, pts);
-        else
-            glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+        glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
         glDrawArrays(GL_LINES, 0, 4);
     }
 }
@@ -808,10 +802,7 @@ void HumanController::RenderController(
             x1, y1, 0,
             x0, y1, 0,
         };
-        if (gGLVersion == 1)
-            glVertexPointer(3, GL_FLOAT, 0, pts);
-        else
-            glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+        glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
         glDrawArrays(GL_LINE_LOOP, 0, 4);
     }
 
@@ -827,10 +818,7 @@ void HumanController::RenderController(
             xMid, y1, 0,
         };
 
-        if (gGLVersion == 1)
-            glVertexPointer(3, GL_FLOAT, 0, pts);
-        else
-            glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+        glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
         glDrawArrays(GL_LINES, 0, 4);
     }
 }
@@ -861,17 +849,9 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
 
     const ControllerShader* controllerShader = (ControllerShader*) ShaderManager::GetInstance().GetShader(SHADER_CONTROLLER);
 
-    if (gGLVersion == 1)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-    }
-    else
-    {
-        controllerShader->Use();
-        glEnableVertexAttribArray(controllerShader->a_position);
-        esSetModelViewProjectionMatrix(controllerShader->u_mvpMatrix);
-    }
+    controllerShader->Use();
+    glEnableVertexAttribArray(controllerShader->a_position);
+    esSetModelViewProjectionMatrix(controllerShader->u_mvpMatrix);
 
     mButtonOverlay[0]->Enable(stickVisibleMask & BUTTON_0 ? true : false);
     mButtonOverlay[1]->Enable(stickVisibleMask & BUTTON_1 ? true : false);
@@ -894,10 +874,7 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
 
     if (controllerColour[3])
     {
-        if (gGLVersion == 1)
-            glColor4f(controllerColour[0], controllerColour[1], controllerColour[2], controllerColour[3]);
-        else
-            glUniform4fv(controllerShader->u_colour, 1, controllerColour);
+        glUniform4fv(controllerShader->u_colour, 1, controllerColour);
         if (stickVisibleMask & STICK_RIGHT)
             RenderController(displayConfig.mLeft + mRightControllerPosX * displayConfig.mWidth,
                 displayConfig.mBottom + mRightControllerPosY * displayConfig.mHeight,
@@ -909,10 +886,7 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
     }
     if (stickColour[3])
     {
-        if (gGLVersion == 1)
-            glColor4f(stickColour[0], stickColour[1], stickColour[2], stickColour[3]);
-        else
-            glUniform4fv(controllerShader->u_colour, 1, stickColour);
+        glUniform4fv(controllerShader->u_colour, 1, stickColour);
         if (stickVisibleMask & STICK_RIGHT)
         {
             RenderStick(displayConfig.mLeft + mRightControllerPosX * displayConfig.mWidth,
@@ -935,20 +909,14 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
     {
         GLfloat trimColour[] = {0.5f, 0.5f, 0.5f, 0.3f};
 
-        if (gGLVersion == 1)
-            glColor4f(trimColour[0], trimColour[1], trimColour[2], trimColour[3]);
-        else
-            glUniform4fv(controllerShader->u_colour, 1, trimColour);
+        glUniform4fv(controllerShader->u_colour, 1, trimColour);
         RenderController(displayConfig.mLeft + 0.5f * displayConfig.mWidth, displayConfig.mBottom + mRightControllerPosY * displayConfig.mHeight, 
             options.mControllerTrimSize * displayConfig.mWidth, mControllerSizeY, Options::CONTROLLER_STYLE_CROSS_AND_BOX, controllerShader);
         RenderStick(displayConfig.mLeft + 0.5f * displayConfig.mWidth, displayConfig.mBottom + mRightControllerPosY * displayConfig.mHeight, false,
             0.0f, mElevatorTrim, options.mControllerTrimSize * displayConfig.mWidth, mControllerSizeY, options.mControllerTrimSize * displayConfig.mWidth, s, controllerShader);
     }
 
-    if (gGLVersion == 1)
-        glDisableClientState(GL_VERTEX_ARRAY);
-    else
-        glDisableVertexAttribArray(controllerShader->a_position);
+    glDisableVertexAttribArray(controllerShader->a_position);
 }
 
 //======================================================================================================================

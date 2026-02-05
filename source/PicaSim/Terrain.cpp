@@ -779,6 +779,8 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_PLAIN);
     // Register for the terrain
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_TERRAIN);
+    // Register for wireframe at RENDER_LEVEL_OBJECTS so it renders after VR parallax skybox
+    RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_OBJECTS);
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_TERRAIN_SHADOW);
 
     Vector3 plainColour(ts.mPlainColourR, ts.mPlainColourG, ts.mPlainColourB);
@@ -878,15 +880,8 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
             TRACE_FILE_IF(1) TRACE("Uploaded shadow texture id %d", mGenericShadowTexture->mHWID);
         }
 
-        if (gGLVersion >= 2)  // OpenGL 2.0+ supports framebuffer objects
-        {
-            int size = 1 << options.mProjectedShadowDetail;
-            mShadowFrameBufferObject = new FrameBufferObject(size, size, GL_RGB, GL_UNSIGNED_BYTE);
-        }
-        else
-        {
-            mShadowFrameBufferObject = 0;
-        }
+        int size = 1 << options.mProjectedShadowDetail;
+        mShadowFrameBufferObject = new FrameBufferObject(size, size, GL_RGB, GL_UNSIGNED_BYTE);
     }
 
 
@@ -1012,6 +1007,7 @@ void Terrain::Terminate()
 
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_PLAIN);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_TERRAIN);
+    RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_TERRAIN_SHADOW);
 
     delete mHeightfield;
@@ -1054,6 +1050,12 @@ void Terrain::RenderUpdate(Viewport* viewport, int renderLevel)
             RenderHeightfield(viewport);
         }
         break;
+    case RENDER_LEVEL_OBJECTS:
+        {
+            // Wireframe renders at RENDER_LEVEL_OBJECTS so it appears after VR parallax skybox
+            RenderTerrainWireframe(viewport);
+        }
+        break;
     case RENDER_LEVEL_TERRAIN_SHADOW:
         {
             if (gs.mOptions.mControlledPlaneShadows || gs.mOptions.mOtherShadows)
@@ -1084,54 +1086,28 @@ void Terrain::RenderPlain(Viewport* viewport)
     if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {
         // Set up the vertex buffer and shader program
-        if (gGLVersion == 1)
-        {
-            glEnableClientState(GL_VERTEX_ARRAY);
-            // Inner plain
-            glVertexPointer(3, GL_FLOAT, 0, &mPlainPts[0]);
-        }
-        else
-        {
-            terrainPanoramaShader->Use();
-            glVertexAttribPointer(terrainPanoramaShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mPlainPts[0]);
-            glEnableVertexAttribArray(terrainPanoramaShader->a_position);
-            esSetModelViewProjectionMatrix(terrainPanoramaShader->u_mvpMatrix);
-        }
+        terrainPanoramaShader->Use();
+        glVertexAttribPointer(terrainPanoramaShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mPlainPts[0]);
+        glEnableVertexAttribArray(terrainPanoramaShader->a_position);
+        esSetModelViewProjectionMatrix(terrainPanoramaShader->u_mvpMatrix);
 
         glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         glDrawArrays(GL_TRIANGLE_FAN, 0, mNumPlainPts);
         // Don't bother with the outer plain
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        if (gGLVersion == 1)
-            glDisableClientState(GL_VERTEX_ARRAY);
     }
     else
     {
         // Set up the vertex buffer and shader program
-        GLuint shaderProgram = -1;
+        plainShader->Use();
 
-        if (gGLVersion == 1)
-        {
-            // Inner plain
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glEnableClientState(GL_COLOR_ARRAY);
+        glVertexAttribPointer(plainShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mPlainPts[0]);
+        glEnableVertexAttribArray(plainShader->a_position);
 
-            glVertexPointer(3, GL_FLOAT, 0, &mPlainPts[0]);
-            glColorPointer(4, GL_FLOAT, 0, &mPlainCols[0]);
+        glVertexAttribPointer(plainShader->a_colour, 4, GL_FLOAT, GL_FALSE, 0, &mPlainCols[0]);
+        glEnableVertexAttribArray(plainShader->a_colour);
 
-        }
-        else
-        {
-            plainShader->Use();
-
-            glVertexAttribPointer(plainShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mPlainPts[0]);
-            glEnableVertexAttribArray(plainShader->a_position);
-
-            glVertexAttribPointer(plainShader->a_colour, 4, GL_FLOAT, GL_FALSE, 0, &mPlainCols[0]);
-            glEnableVertexAttribArray(plainShader->a_colour);
-
-            esSetModelViewProjectionMatrix(plainShader->u_mvpMatrix);
-        }
+        esSetModelViewProjectionMatrix(plainShader->u_mvpMatrix);
 
         const float scaleX = es.mTerrainSettings.mPlainDetailTextureScaleX;
         const float scaleY = es.mTerrainSettings.mPlainDetailTextureScaleY;
@@ -1142,20 +1118,8 @@ void Terrain::RenderPlain(Viewport* viewport)
             float heightfieldRange = mHeightfield->getRange();
 
             glActiveTexture(GL_TEXTURE0);
-            int textureMatrixLoc = -1;
-            if (gGLVersion == 1)
-            {
-                glClientActiveTexture(GL_TEXTURE0);
-                glEnable(GL_TEXTURE_2D);
-                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                glTexCoordPointer(3, GL_FLOAT, 0, &mPlainPts[0]);
-            }
-            else
-            {
-                textureMatrixLoc = plainShader->u_textureMatrix;
-                glUniform1i(plainShader->u_texture, 0);
-            }
+            int textureMatrixLoc = plainShader->u_textureMatrix;
+            glUniform1i(plainShader->u_texture, 0);
 
             glBindTexture(GL_TEXTURE_2D, mDetailTexture.mHWID);
 
@@ -1180,19 +1144,11 @@ void Terrain::RenderPlain(Viewport* viewport)
         // Outer plain
         EnableBlend enableBlend;
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if (gGLVersion == 1)
-        {
-            glVertexPointer(3, GL_FLOAT, 0, &mOuterPlainPts[0]);
-            glColorPointer(4, GL_FLOAT, 0, &mOuterPlainCols[0]);
-        }
-        else
-        {
-            glVertexAttribPointer(plainShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mOuterPlainPts[0]);
-            glEnableVertexAttribArray(plainShader->a_position);
+        glVertexAttribPointer(plainShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mOuterPlainPts[0]);
+        glEnableVertexAttribArray(plainShader->a_position);
 
-            glVertexAttribPointer(plainShader->a_colour, 4, GL_FLOAT, GL_FALSE, 0, &mOuterPlainCols[0]);
-            glEnableVertexAttribArray(plainShader->a_colour);
-        }
+        glVertexAttribPointer(plainShader->a_colour, 4, GL_FLOAT, GL_FALSE, 0, &mOuterPlainCols[0]);
+        glEnableVertexAttribArray(plainShader->a_colour);
 
         if (mDetailTexture.GetFlags() & Texture::UPLOADED_F)
         {
@@ -1200,18 +1156,7 @@ void Terrain::RenderPlain(Viewport* viewport)
 
             glActiveTexture(GL_TEXTURE0);
             int textureMatrix = -1;
-            if (gGLVersion == 1)
-            {
-                glClientActiveTexture(GL_TEXTURE0);
-                glEnable(GL_TEXTURE_2D);
-                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                glTexCoordPointer(3, GL_FLOAT, 0, &mOuterPlainPts[0]);
-            }
-            else
-            {
-                glUniform1i(plainShader->u_texture, 0);
-            }
+            glUniform1i(plainShader->u_texture, 0);
             glBindTexture(GL_TEXTURE_2D, mDetailTexture.mHWID);
 
             // Use the x/y positions as texture coordinates, after scaling
@@ -1226,23 +1171,11 @@ void Terrain::RenderPlain(Viewport* viewport)
 
         if (mDetailTexture.GetFlags() & Texture::UPLOADED_F)
         {
-            if (gGLVersion == 1)
-            {
-                glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-                glDisable(GL_TEXTURE_2D);
-            }
-
             esMatrixMode( GL_TEXTURE );
             esPopMatrix();
             esMatrixMode( GL_MODELVIEW );
         }
 #endif
-        // Tidy up
-        if (gGLVersion == 1)
-        {
-            glDisableClientState(GL_VERTEX_ARRAY);
-            glDisableClientState(GL_COLOR_ARRAY);
-        }
     }
 }
 
@@ -1358,33 +1291,24 @@ void Terrain::RenderHeightfield(Viewport* viewport)
     int texture0Loc = -1;
     int texture1Loc = -1;
 
-    if (gGLVersion == 1)
+    TRACE_FILE_IF(3) TRACE("Setting up shaders", num);
+    if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {
-        TRACE_FILE_IF(3) TRACE("Setting up vertex buffer", num);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_FLOAT, 0, (GLvoid*) start);
+        terrainPanoramaShader->Use();
+        glVertexAttribPointer(terrainPanoramaShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) start);
+        glEnableVertexAttribArray(terrainPanoramaShader->a_position);
+        esSetModelViewProjectionMatrix(terrainPanoramaShader->u_mvpMatrix);
     }
     else
     {
-        TRACE_FILE_IF(3) TRACE("Setting up shaders", num);
-        if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
-        {
-            terrainPanoramaShader->Use();
-            glVertexAttribPointer(terrainPanoramaShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) start);
-            glEnableVertexAttribArray(terrainPanoramaShader->a_position);
-            esSetModelViewProjectionMatrix(terrainPanoramaShader->u_mvpMatrix);
-        }
-        else
-        {
-            textureMatrix0Loc = terrainShader->u_textureMatrix0;
-            textureMatrix1Loc = terrainShader->u_textureMatrix1;
-            texture0Loc = terrainShader->u_texture0;
-            texture1Loc = terrainShader->u_texture1;
-            terrainShader->Use();
-            glVertexAttribPointer(terrainShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) start);
-            glEnableVertexAttribArray(terrainShader->a_position);
-            esSetModelViewProjectionMatrix(terrainShader->u_mvpMatrix);
-        }
+        textureMatrix0Loc = terrainShader->u_textureMatrix0;
+        textureMatrix1Loc = terrainShader->u_textureMatrix1;
+        texture0Loc = terrainShader->u_texture0;
+        texture1Loc = terrainShader->u_texture1;
+        terrainShader->Use();
+        glVertexAttribPointer(terrainShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) start);
+        glEnableVertexAttribArray(terrainShader->a_position);
+        esSetModelViewProjectionMatrix(terrainShader->u_mvpMatrix);
     }
 
     if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
@@ -1398,9 +1322,6 @@ void Terrain::RenderHeightfield(Viewport* viewport)
     {
         GLint textureUnit = GL_TEXTURE0;
         GLint maxTextureUnits = 8;
-        if (gGLVersion == 1)
-            glGetIntegerv(GL_MAX_TEXTURE_UNITS, &maxTextureUnits);
-        //maxTextureUnits = 0;
         GLint maxTextureUnit = GL_TEXTURE0 + maxTextureUnits;
 
         // Basic texture
@@ -1411,19 +1332,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         {
             TRACE_FILE_IF(3) TRACE("Setting up basic texture");
             glActiveTexture(textureUnit);
-            if (gGLVersion == 1)
-            {
-                glClientActiveTexture(textureUnit);
-                glEnable(GL_TEXTURE_2D);
-                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-                glTexCoordPointer(3, GL_FLOAT, 0, (GLvoid*) start);
-            }
-            else
-            {
-                glUniform1i(texture0Loc, textureUnit - GL_TEXTURE0);
-            }
+            glUniform1i(texture0Loc, textureUnit - GL_TEXTURE0);
 
             glBindTexture(GL_TEXTURE_2D, mHeightfieldTexture.mHWID);
 
@@ -1457,19 +1366,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         {
             TRACE_FILE_IF(3) TRACE("Setting up detail texture");
             glActiveTexture(textureUnit);
-            int textureMatrix = -1;
-            if (gGLVersion == 1)
-            {
-                glClientActiveTexture(textureUnit);
-                glEnable(GL_TEXTURE_2D);
-                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                glTexCoordPointer(3, GL_FLOAT, 0, (GLvoid*) start);
-            }
-            else
-            {
-                glUniform1i(texture1Loc, textureUnit - GL_TEXTURE0);
-            }
+            glUniform1i(texture1Loc, textureUnit - GL_TEXTURE0);
 
             glBindTexture(GL_TEXTURE_2D, mDetailTexture.mHWID);
             // Use the x/y positions as texture coordinates, after scaling
@@ -1502,18 +1399,10 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         TRACE_FILE_IF(3) TRACE("Clearing up", num);
         textureUnit = GL_TEXTURE0;
         if (
-            textureUnit < maxTextureUnit && 
+            textureUnit < maxTextureUnit &&
             mHeightfieldTexture.GetFlags() & Texture::UPLOADED_F
             )
         {
-            if (gGLVersion == 1)
-            {
-                glActiveTexture(textureUnit);
-                glClientActiveTexture(textureUnit);
-                glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-                glDisable(GL_TEXTURE_2D);
-            }
-
             esMatrixMode( GL_TEXTURE );
             esPopMatrix();
             esMatrixMode( GL_MODELVIEW );
@@ -1522,18 +1411,10 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         }
 
         if (
-            textureUnit < maxTextureUnit && 
+            textureUnit < maxTextureUnit &&
             mDetailTexture.GetFlags() & Texture::UPLOADED_F
             )
         {
-            if (gGLVersion == 1)
-            {
-                glActiveTexture(textureUnit);
-                glClientActiveTexture(textureUnit);
-                glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-                glDisable(GL_TEXTURE_2D);
-                glClientActiveTexture(GL_TEXTURE0);
-            }
             esMatrixMode( GL_TEXTURE );
             esPopMatrix();
             esMatrixMode( GL_MODELVIEW );
@@ -1547,62 +1428,58 @@ void Terrain::RenderHeightfield(Viewport* viewport)
     if (mTerrainVertexBuffer)
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    if (gGLVersion == 1)
-    {
-        if (gs.mOptions.mTerrainWireframe)
-        {
-            glColor4f(1, 1, 1, 1);
-
-            glDrawArrays(GL_LINE_STRIP, 0, num);
-
-            glVertexPointer(3, GL_FLOAT, 6 * 4, &savedPoints[0]);
-            glDrawArrays(GL_LINE_STRIP, 0, num / 2);
-
-            glVertexPointer(3, GL_FLOAT, 6 * 4, &savedPoints[1]);
-            glDrawArrays(GL_LINE_STRIP, 0, num / 2);
-        }
-    }
-    else  // gGLVersion == 2
-    {
-        if (gs.mOptions.mTerrainWireframe)
-        {
-            // Re-bind VBO if we have one
-            if (mTerrainVertexBuffer)
-                glBindBuffer(GL_ARRAY_BUFFER, mTerrainVertexBuffer);
-
-            // Use ControllerShader (has uniform color)
-            const ControllerShader* controllerShader = (ControllerShader*)ShaderManager::GetInstance().GetShader(SHADER_CONTROLLER);
-            controllerShader->Use();
-            esSetModelViewProjectionMatrix(controllerShader->u_mvpMatrix);
-            glUniform4f(controllerShader->u_colour, 1.0f, 1.0f, 1.0f, 1.0f);  // White
-
-            // Set up position attribute
-            glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0,
-                mTerrainVertexBuffer ? (GLvoid*)0 : &savedPoints[0]);
-            glEnableVertexAttribArray(controllerShader->a_position);
-
-            // Draw wireframe
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, num);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-            glDisableVertexAttribArray(controllerShader->a_position);
-
-            if (mTerrainVertexBuffer)
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
-        }
-    }
-
-    if (gGLVersion == 1)
-        glDisableClientState(GL_VERTEX_ARRAY);
+    if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
+        glDisableVertexAttribArray(terrainPanoramaShader->a_position);
     else
-    {
-        if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
-            glDisableVertexAttribArray(terrainPanoramaShader->a_position);
-        else
-            glDisableVertexAttribArray(terrainShader->a_position);
-    }
+        glDisableVertexAttribArray(terrainShader->a_position);
     TRACE_FILE_IF(2) TRACE("Finished RenderHeightfield");
+}
+
+//======================================================================================================================
+void Terrain::RenderTerrainWireframe(Viewport* viewport)
+{
+    TRACE_METHOD_ONLY(2);
+    const GameSettings& gs = PicaSim::GetInstance().GetSettings();
+
+    if (!gs.mOptions.mTerrainWireframe)
+        return;
+
+    if (!mHeightfield)
+        return;
+
+    const Heightfield::HeightfieldRuntime::SavedPoints& savedPoints = mHeightfield->getSavedPoints();
+    unsigned num = savedPoints.size();
+    if (num == 0)
+        return;
+
+    // Bind VBO if we have one
+    if (mTerrainVertexBuffer)
+        glBindBuffer(GL_ARRAY_BUFFER, mTerrainVertexBuffer);
+
+    // Use ControllerShader (has uniform color)
+    const ControllerShader* controllerShader = (ControllerShader*)ShaderManager::GetInstance().GetShader(SHADER_CONTROLLER);
+    controllerShader->Use();
+    esSetModelViewProjectionMatrix(controllerShader->u_mvpMatrix);
+    glUniform4f(controllerShader->u_colour, 1.0f, 1.0f, 1.0f, 1.0f);  // White
+
+    // Set up position attribute
+    glVertexAttribPointer(controllerShader->a_position, 3, GL_FLOAT, GL_FALSE, 0,
+        mTerrainVertexBuffer ? (GLvoid*)0 : &savedPoints[0]);
+    glEnableVertexAttribArray(controllerShader->a_position);
+
+    // Draw wireframe - use GL_LEQUAL so equal depths pass (needed for VR)
+    glDepthFunc(GL_LEQUAL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, num);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDepthFunc(GL_LESS);
+
+    glDisableVertexAttribArray(controllerShader->a_position);
+
+    if (mTerrainVertexBuffer)
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    TRACE_FILE_IF(2) TRACE("Finished RenderTerrainWireframe");
 }
 
 //======================================================================================================================
@@ -1632,17 +1509,9 @@ void RenderTerrainQuad(Heightfield::HeightfieldRuntime& heightfield, int i, int 
     if (pts[2].z < plainHeight) pts[2].z = plainHeight;
     if (pts[3].z < plainHeight) pts[3].z = plainHeight;
 
-    if (gGLVersion == 1)
-    {
-        glVertexPointer(3, GL_FLOAT, 0, &pts[0]);
-        glTexCoordPointer(3, GL_FLOAT, 0, &pts[0]);
-    }
-    else
-    {
-        glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, pts);
-        glVertexAttribPointer(texCoordLoc, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glVertexAttribPointer(texCoordLoc, 3, GL_FLOAT, GL_FALSE, 0, pts);
 
-    }
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
@@ -1881,25 +1750,13 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
 
     // Determine whether to use blur shader for projected shadows
     float shadowBlur = RenderManager::GetInstance().GetShadowBlur();
-    bool useBlurShader = (shadowBlur > 0.001f) && !useBlob && (gGLVersion >= 2);
+    bool useBlurShader = (shadowBlur > 0.001f) && !useBlob;
 
     const ShadowShader* shadowShader = (ShadowShader*) ShaderManager::GetInstance().GetShader(SHADER_SHADOW);
     const ShadowBlurShader* shadowBlurShader = useBlurShader ?
         (ShadowBlurShader*) ShaderManager::GetInstance().GetShader(SHADER_SHADOW_BLUR) : nullptr;
 
-    if (gGLVersion == 1)
-    {
-        glEnable(GL_TEXTURE_2D);
-        if (useBlob)
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        else
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glColor4f(1,1,1,shadowAmount);
-        glClientActiveTexture(GL_TEXTURE0);
-    }
-    else if (useBlurShader)
+    if (useBlurShader)
     {
         shadowBlurShader->Use();
         glUniform1i(shadowBlurShader->u_texture, 0);
@@ -2023,13 +1880,6 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
 
             RenderTerrainQuad(*mHeightfield, i, j, a_position, a_texCoord);
         }
-    }
-
-    if (gGLVersion == 1)
-    {
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisable(GL_TEXTURE_2D);
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

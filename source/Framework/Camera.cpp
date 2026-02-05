@@ -90,9 +90,6 @@ void Camera::UpdateFrustumPlanes()
 
     esMatrixMultiply(mvpMatrix, mvMatrix, pMatrix);
 
-    //if (gGLVersion == 2)
-    //  esMatrixTranspose(mvpMatrix, mvpMatrix);
-
     float* mvp = &mvpMatrix[0][0];
 
     // Right clipping plane.

@@ -21,8 +21,6 @@
 #endif
 #endif
 
-extern int gGLVersion;
-
 typedef GLfloat GLMat44[4][4];
 typedef GLfloat GLMat33[3][3];
 typedef GLfloat GLVec4[4];
@@ -214,11 +212,7 @@ void LookAt(
     GLfloat centerx, GLfloat centery, GLfloat centerz,
     GLfloat upx, GLfloat upy, GLfloat upz);
 
-// Natural lighting state is off
-struct EnableLighting {
-    EnableLighting() {if (gGLVersion == 1) glEnable(GL_LIGHTING);}
-    ~EnableLighting() {if (gGLVersion == 1) glDisable(GL_LIGHTING);}
-};
+// RAII helpers for GL state management
 
 struct EnableBlend {
     EnableBlend() {glEnable(GL_BLEND);}
@@ -233,16 +227,6 @@ struct DisableDepthMask {
 struct DisableDepthTest {
     DisableDepthTest() {glDisable(GL_DEPTH_TEST);}
     ~DisableDepthTest() {glEnable(GL_DEPTH_TEST);}
-};
-
-struct EnableNormalScaling {
-    EnableNormalScaling() {if (gGLVersion == 1) glEnable(GL_RESCALE_NORMAL);}
-    ~EnableNormalScaling() {if (gGLVersion == 1) glDisable(GL_RESCALE_NORMAL);}
-};
-
-struct EnableNormalNormalisation {
-    EnableNormalNormalisation() {if (gGLVersion == 1) glEnable(GL_NORMALIZE);}
-    ~EnableNormalNormalisation() {if (gGLVersion == 1) glDisable(GL_NORMALIZE);}
 };
 
 struct EnableCullFace {
@@ -295,63 +279,5 @@ void OffsetColour(float col[4], float offset);
 
 // Convert Vector3 (0-1 RGB) to Colour class
 Colour ConvertToColour(const Vector3& colour);
-
-//==============================================================================
-// OpenGL ES 1.x Compatibility Layer
-// These functions/macros provide compatibility for code written for OpenGL ES 1.x
-//==============================================================================
-
-#ifdef _WIN32
-// Desktop OpenGL uses double versions - provide float wrappers
-inline void glFrustumf(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
-{
-        glFrustum((GLdouble)left, (GLdouble)right, (GLdouble)bottom, (GLdouble)top, (GLdouble)zNear, (GLdouble)zFar);
-}
-
-inline void glOrthof(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
-{
-        glOrtho((GLdouble)left, (GLdouble)right, (GLdouble)bottom, (GLdouble)top, (GLdouble)zNear, (GLdouble)zFar);
-}
-
-// OpenGL ES 1.x OES extension function mappings for framebuffers
-// These are the same as the standard GL_ARB_framebuffer_object extensions
-#ifndef GL_FRAMEBUFFER_OES
-#define GL_FRAMEBUFFER_OES GL_FRAMEBUFFER
-#define GL_RENDERBUFFER_OES GL_RENDERBUFFER
-#define GL_DEPTH_COMPONENT16_OES GL_DEPTH_COMPONENT16
-#define GL_COLOR_ATTACHMENT0_OES GL_COLOR_ATTACHMENT0
-#define GL_DEPTH_ATTACHMENT_OES GL_DEPTH_ATTACHMENT
-#define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE
-#endif
-
-// OES function mappings
-#ifndef glGenFramebuffersOES
-#define glGenFramebuffersOES glGenFramebuffers
-#define glDeleteFramebuffersOES glDeleteFramebuffers
-#define glBindFramebufferOES glBindFramebuffer
-#define glFramebufferTexture2DOES glFramebufferTexture2D
-#define glFramebufferRenderbufferOES glFramebufferRenderbuffer
-#define glCheckFramebufferStatusOES glCheckFramebufferStatus
-#define glGenRenderbuffersOES glGenRenderbuffers
-#define glDeleteRenderbuffersOES glDeleteRenderbuffers
-#define glBindRenderbufferOES glBindRenderbuffer
-#define glRenderbufferStorageOES glRenderbufferStorage
-#endif
-
-#endif // _WIN32
-
-// OpenGL ES 1.x fixed-function compatibility stubs (for GL 2.0 path)
-// When gGLVersion == 1, these functions are called. On desktop, they may not exist.
-#ifndef GL_RESCALE_NORMAL
-#define GL_RESCALE_NORMAL 0x803A
-#endif
-
-#ifndef GL_LUMINANCE
-#define GL_LUMINANCE 0x1909
-#endif
-
-#ifndef GL_LUMINANCE_ALPHA
-#define GL_LUMINANCE_ALPHA 0x190A
-#endif
 
 #endif

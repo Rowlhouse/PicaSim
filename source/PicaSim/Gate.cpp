@@ -75,7 +75,6 @@ void GatePost::RenderUpdate(Viewport* viewport, int renderLevel)
     if (mRenderModel->IsCreated())
     {
         const Options& options = PicaSim::GetInstance().GetSettings().mOptions;
-        EnableLighting enableLighting;
         glDisable(GL_BLEND);
 
         Transform TM = mTM;
@@ -200,7 +199,6 @@ void PhysicalGate::RenderUpdate(Viewport* viewport, int renderLevel)
     if (mRenderModel.IsCreated())
     {
         const Options& options = PicaSim::GetInstance().GetSettings().mOptions;
-        EnableLighting enableLighting;
         glDisable(GL_BLEND);
 
         Vector4 colour = mColour * (1.0f - mBlendAmount) + mBlendColour * mBlendAmount;

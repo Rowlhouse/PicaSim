@@ -525,19 +525,10 @@ void FontRenderer::DrawCharacter(char c, float x, float y)
         x0, y1, 0,
     };
 
-    if (gGLVersion == 1)
-    {
-        glVertexPointer(3, GL_FLOAT, 0, pts);
-        glTexCoordPointer(2, GL_FLOAT, 0, uvs);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    }
-    else
-    {
-        const OverlayShader* overlayShader = (OverlayShader*)ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
-        glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
-        glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    }
+    const OverlayShader* overlayShader = (OverlayShader*)ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
+    glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
+    glVertexAttribPointer(overlayShader->a_texCoord, 2, GL_FLOAT, GL_FALSE, 0, uvs);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 //======================================================================================================================
@@ -589,25 +580,13 @@ void FontRenderer::RenderText(const char* text)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    if (gGLVersion == 1)
-    {
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glColor4ub(r, g, b, a);
-    }
-    else
-    {
-        const OverlayShader* overlayShader = (OverlayShader*)ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
-        overlayShader->Use();
-        glUniform1i(overlayShader->u_texture, 0);
-        glEnableVertexAttribArray(overlayShader->a_position);
-        glEnableVertexAttribArray(overlayShader->a_texCoord);
-        glUniform4f(overlayShader->u_colour, r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
-        esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
-    }
+    const OverlayShader* overlayShader = (OverlayShader*)ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
+    overlayShader->Use();
+    glUniform1i(overlayShader->u_texture, 0);
+    glEnableVertexAttribArray(overlayShader->a_position);
+    glEnableVertexAttribArray(overlayShader->a_texCoord);
+    glUniform4f(overlayShader->u_colour, r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+    esSetModelViewProjectionMatrix(overlayShader->u_mvpMatrix);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTextureID);
@@ -627,16 +606,6 @@ void FontRenderer::RenderText(const char* text)
     // Restore state
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    if (gGLVersion == 1)
-    {
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisable(GL_TEXTURE_2D);
-    }
-    else
-    {
-        const OverlayShader* overlayShader = (OverlayShader*)ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
-        glDisableVertexAttribArray(overlayShader->a_position);
-        glDisableVertexAttribArray(overlayShader->a_texCoord);
-    }
+    glDisableVertexAttribArray(overlayShader->a_position);
+    glDisableVertexAttribArray(overlayShader->a_texCoord);
 }

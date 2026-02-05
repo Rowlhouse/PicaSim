@@ -53,8 +53,6 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
     mShadowDecayHeight = 40.0f;
     mShadowSizeScale = 1.3f;
     mShadowBlur = 0.0f;
-    mEnableStereoscopy = false;
-    mStereoSeparation = 0.0f;
 
 #ifdef PICASIM_VR_SUPPORT
     mVRSkybox = nullptr;
@@ -136,29 +134,7 @@ void RenderManager::SetupLighting()
     GLfloat ambientColour[]  = {mLightingAmbientColour.x, mLightingAmbientColour.y, mLightingAmbientColour.z, 1.0f};
     GLfloat specularColour[] = {mLightingDiffuseColour.x, mLightingDiffuseColour.y, mLightingDiffuseColour.z, 1.0f};
 
-    // Jitter the light position otherwise OpenGL/Marmalade doesn't register it has changed - 
-    // even though it has if the modelview matrix has changed!
-    float t = gGLVersion == 1 ? 0.001f * rand()/float(RAND_MAX) : 0.0f;
-    GLfloat lightPos[] = {-mLightingDirection.x + t, -mLightingDirection.y, -mLightingDirection.z, 0.0f};
-
-    // set the light position (especially) after setting the viewpoint,
-    // so that it is fixed
-    if (gGLVersion == 1)
-    {
-        glEnable(GL_LIGHTING);
-
-        GLint numLights = 1;
-        glGetIntegerv(GL_MAX_LIGHTS, &numLights);
-        for (int i = 0 ; i != numLights ; ++i)
-            glDisable(GL_LIGHT0 + i);
-
-        glEnable(GL_LIGHT0);
-        if (mFrameworkSettings.mUseMultiLights)
-        {
-            for (int i = 1 ; i != 5 ; ++i)
-                glEnable(GL_LIGHT0 + i);
-        }
-    }
+    GLfloat lightPos[] = {-mLightingDirection.x, -mLightingDirection.y, -mLightingDirection.z, 0.0f};
     esSetLightPos(GL_LIGHT0, lightPos);
     esSetLightDiffuseColour(GL_LIGHT0, diffuseColour);
     esSetLightSpecularColour(GL_LIGHT0, specularColour);
@@ -170,7 +146,7 @@ void RenderManager::SetupLighting()
         for (int i = 1 ; i != 4 ; ++i)
         {
             float angle = ( i / 3.0f) * TWO_PI;
-            GLfloat pos[] = {sinf(angle), cosf(angle), -0.2f + t, 0.0f};
+            GLfloat pos[] = {sinf(angle), cosf(angle), -0.2f, 0.0f};
             esSetLightPos(GL_LIGHT0+i, pos);
             esSetLightDiffuseColour(GL_LIGHT0+i, sideAmbient);
             esSetLightAmbientColour(GL_LIGHT0+i, zeros);
@@ -179,7 +155,7 @@ void RenderManager::SetupLighting()
         {
             float topScale = 0.9f;
             GLfloat topAmbient[]= {ambientColour[0] * topScale, ambientColour[1] * topScale, ambientColour[2] * topScale, 1.0f};
-            GLfloat pos[] = {0.0f + t, 0.0f, 1.0f, 0.0f};
+            GLfloat pos[] = {0.0f, 0.0f, 1.0f, 0.0f};
             esSetLightPos(GL_LIGHT4, pos);
             esSetLightDiffuseColour(GL_LIGHT4, topAmbient);
             esSetLightAmbientColour(GL_LIGHT4, zeros);
@@ -198,64 +174,17 @@ void RenderManager::SetupLighting()
         }
     }
 
-    if (gGLVersion == 1)
-    {
-        glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 0.0f);
-        glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180.0f);
-        glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
-        glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.0f);
-        glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0f);
-        if (mFrameworkSettings.mUseMultiLights)
-        {
-            for (int i = 1 ; i != 5 ; ++i)
-            {
-                glLightf(GL_LIGHT0+i, GL_SPOT_EXPONENT, 0.0f);
-                glLightf(GL_LIGHT0+i, GL_SPOT_CUTOFF, 180.0f);
-                glLightf(GL_LIGHT0+i, GL_CONSTANT_ATTENUATION, 1.0f);
-                glLightf(GL_LIGHT0+i, GL_LINEAR_ATTENUATION, 0.0f);
-                glLightf(GL_LIGHT0+i, GL_QUADRATIC_ATTENUATION, 0.0f);
-            }
-        }
-
-        // disable the default global ambient light
-        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, zeros);
-        glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 0.0f);
-
-        // Disable lighting by default
-        glDisable(GL_LIGHTING);
-        glDisable(GL_COLOR_MATERIAL); // Fixes colour on aeroplane
-    }
 }
 
-DisplayConfig GetDisplayConfig(int screenWidth, int screenHeight, int viewpointIndex, int numViewpoints)
+DisplayConfig GetDisplayConfig(int screenWidth, int screenHeight)
 {
     DisplayConfig result;
-    if (numViewpoints == 1)
-    {
-        result.mLeft = 0;
-        result.mBottom = 0;
-        result.mWidth = screenWidth;
-        result.mHeight = screenHeight;
-        result.mViewpointIndex = 0;
-    }
-    else
-    {
-        result.mWidth = screenWidth / numViewpoints;
-        result.mHeight = screenHeight;
-        result.mLeft = (viewpointIndex * screenWidth)/numViewpoints;
-        result.mBottom = 0;
-        result.mViewpointIndex = viewpointIndex;
-    }
+    result.mLeft = 0;
+    result.mBottom = 0;
+    result.mWidth = screenWidth;
+    result.mHeight = screenHeight;
+    result.mViewpointIndex = 0;
     return result;
-}
-
-//======================================================================================================================
-Vector3 CalculateCameraOffset(const Camera& camera, const DisplayConfig& displayConfig, int numViewpoints, float stereoSeparation)
-{
-    if (numViewpoints == 1)
-        return Vector3(0,0,0);
-    Vector3 leftDir = camera.GetTransform().RowY();
-    return displayConfig.mViewpointIndex ? leftDir * (-0.5f * stereoSeparation) : leftDir * (0.5f * stereoSeparation);
 }
 
 //======================================================================================================================
@@ -270,118 +199,94 @@ void RenderManager::RenderUpdate()
     glFrontFace(GL_CCW);
     glDisable(GL_CULL_FACE);
 
-    if (gGLVersion == 1)
-    {
-        glShadeModel(GL_SMOOTH);
-
-#ifdef FOG_ENABLED
-        glEnable(GL_FOG);
-        GLfloat fogColour[4] = {0.5f, 0.5f, 0.5f, 1.0f};
-        glFogfv(GL_FOG_COLOR, fogColour);
-        glFogf(GL_FOG_START, 0.0f);
-        glFogf(GL_FOG_END, 400.0f);
-#else
-        glDisable(GL_FOG);
-#endif
-    }
-
     int w =  mFrameworkSettings.mScreenWidth;
     int h  = mFrameworkSettings.mScreenHeight;
 
-    int numViewpoints = mEnableStereoscopy ? 2 : 1;
+    DisplayConfig displayConfig = GetDisplayConfig(w, h);
 
-    for (int iViewpoint = 0 ; iViewpoint != numViewpoints ; ++iViewpoint)
+    for (Viewports::iterator iViewport = mViewports.begin() ; iViewport != mViewports.end() ; ++iViewport)
     {
-        DisplayConfig displayConfig = GetDisplayConfig(w, h, iViewpoint, numViewpoints);
-        for (Viewports::iterator iViewport = mViewports.begin() ; iViewport != mViewports.end() ; ++iViewport)
+        // Viewport
+        Viewport* viewport = *iViewport;
+        if (!viewport->GetEnabled())
+            continue;
+
+        esMatrixMode( GL_TEXTURE );
+        esLoadIdentity();
+
+        esMatrixMode( GL_PROJECTION );
+        esLoadIdentity();
+
+        esMatrixMode( GL_MODELVIEW );
+        esLoadIdentity();
+
+        // This sets up the viewport and clears it
+        viewport->SetupViewport(displayConfig);
+
+        // Camera
+        Camera& camera = *viewport->GetCamera();
+        float aspectRatio = viewport->GetAspectRatio();
+
+        // This changes to GL_PROJECTION, calls glFrustumf
+        camera.SetupCameraProjection(aspectRatio);
+
+        // Changes to GL_MODELVIEW, calls lookat
+        camera.SetupCameraView(Vector3(0, 0, 0));
+
+        // Changes to GL_MODELVIEW, sets lighting position etc
+        SetupLighting();
+
+        for (RenderObjects::iterator it = mRenderObjects.begin() ; it != mRenderObjects.end() ; ++it)
         {
-            // Viewport
-            Viewport* viewport = *iViewport;
-            if (!viewport->GetEnabled())
+            RenderObject* renderObject = it->second;
+            if (!viewport->GetShouldRenderObject(renderObject))
                 continue;
 
-            esMatrixMode( GL_TEXTURE );
-            esLoadIdentity();
+            const Transform& tm = renderObject->GetTM();
+            float radius = renderObject->GetRenderBoundingRadius();
+            if (!camera.isSpherePartlyInFrustum(tm.GetTrans(), radius))
+                continue;
 
-            esMatrixMode( GL_PROJECTION );
-            esLoadIdentity();
-
-            esMatrixMode( GL_MODELVIEW );
-            esLoadIdentity();
-
-            // This sets up the viewport and clears it
-            viewport->SetupViewport(displayConfig);
-
-            // Camera
-            Camera& camera = *viewport->GetCamera();
-            float aspectRatio = viewport->GetAspectRatio();
-
-            // This changes to GL_PROJECTION, calls glFrustumf
-            camera.SetupCameraProjection(aspectRatio);
-
-            // Changes to GL_MODELVIEW, calls lookat
-            Vector3 cameraOffset = CalculateCameraOffset(camera, displayConfig, numViewpoints, mStereoSeparation);
-            camera.SetupCameraView(cameraOffset);
-
-            // Changes to GL_MODELVIEW, sets lighting position etc
-            SetupLighting();
-
-            for (RenderObjects::iterator it = mRenderObjects.begin() ; it != mRenderObjects.end() ; ++it)
-            {
-                RenderObject* renderObject = it->second;
-                if (!viewport->GetShouldRenderObject(renderObject))
-                    continue;
-
-                const Transform& tm = renderObject->GetTM();
-                float radius = renderObject->GetRenderBoundingRadius();
-                if (!camera.isSpherePartlyInFrustum(tm.GetTrans(), radius))
-                    continue;
-
-                int renderLevel = it->first;
-                renderObject->RenderUpdate(viewport, renderLevel);
-            }
-        }
-
-        {
-            DisableFog disableFog;
-
-            // Now the overlay - over the whole screen.
-            glViewport( displayConfig.mLeft, displayConfig.mBottom, displayConfig.mWidth, displayConfig.mHeight );
-
-            esMatrixMode(GL_PROJECTION);
-            esLoadIdentity();
-            esOrthof(
-                float(displayConfig.mLeft), 
-                float(displayConfig.mWidth + displayConfig.mLeft), 
-                float(displayConfig.mBottom), 
-                float(displayConfig.mHeight + displayConfig.mBottom), 
-                1.0f, -1.0f);
-
-            esMatrixMode(GL_MODELVIEW);
-            esLoadIdentity();
-
-            for (RenderOverlayObjects::iterator it = mRenderOverlayObjects.begin() ; it != mRenderOverlayObjects.end() ; ++it)
-            {
-                (it->second)->RenderOverlayUpdate(it->first, displayConfig);
-            }
+            int renderLevel = it->first;
+            renderObject->RenderUpdate(viewport, renderLevel);
         }
     }
 
-    for (int iViewpoint = 0 ; iViewpoint != numViewpoints ; ++iViewpoint)
     {
-        DisplayConfig displayConfig = GetDisplayConfig(w, h, iViewpoint, numViewpoints);
-        // IwGx rendering
-        if (!mRenderGxObjects.empty())
+        DisableFog disableFog;
+
+        // Now the overlay - over the whole screen.
+        glViewport( displayConfig.mLeft, displayConfig.mBottom, displayConfig.mWidth, displayConfig.mHeight );
+
+        esMatrixMode(GL_PROJECTION);
+        esLoadIdentity();
+        esOrthof(
+            float(displayConfig.mLeft),
+            float(displayConfig.mWidth + displayConfig.mLeft),
+            float(displayConfig.mBottom),
+            float(displayConfig.mHeight + displayConfig.mBottom),
+            1.0f, -1.0f);
+
+        esMatrixMode(GL_MODELVIEW);
+        esLoadIdentity();
+
+        for (RenderOverlayObjects::iterator it = mRenderOverlayObjects.begin() ; it != mRenderOverlayObjects.end() ; ++it)
         {
-            PrepareForIwGx(false);
+            (it->second)->RenderOverlayUpdate(it->first, displayConfig);
+        }
+    }
 
-            DisableDepthMask disableDepthMask;
-            DisableDepthTest disableDepthTest;
+    // IwGx rendering
+    if (!mRenderGxObjects.empty())
+    {
+        PrepareForIwGx(false);
 
-            for (RenderGxObjects::iterator it = mRenderGxObjects.begin() ; it != mRenderGxObjects.end() ; ++it)
-            {
-                (it->second)->GxRender(it->first, displayConfig);
-            }
+        DisableDepthMask disableDepthMask;
+        DisableDepthTest disableDepthTest;
+
+        for (RenderGxObjects::iterator it = mRenderGxObjects.begin() ; it != mRenderGxObjects.end() ; ++it)
+        {
+            (it->second)->GxRender(it->first, displayConfig);
         }
     }
 
@@ -420,100 +325,80 @@ void RenderManager::RenderWithoutSwap()
     glFrontFace(GL_CCW);
     glDisable(GL_CULL_FACE);
 
-    if (gGLVersion == 1)
-    {
-        glShadeModel(GL_SMOOTH);
-
-#ifdef FOG_ENABLED
-        glEnable(GL_FOG);
-        GLfloat fogColour[4] = {0.5f, 0.5f, 0.5f, 1.0f};
-        glFogfv(GL_FOG_COLOR, fogColour);
-        glFogf(GL_FOG_START, 0.0f);
-        glFogf(GL_FOG_END, 400.0f);
-#else
-        glDisable(GL_FOG);
-#endif
-    }
-
     int w =  mFrameworkSettings.mScreenWidth;
     int h  = mFrameworkSettings.mScreenHeight;
 
-    int numViewpoints = mEnableStereoscopy ? 2 : 1;
+    DisplayConfig displayConfig = GetDisplayConfig(w, h);
 
-    for (int iViewpoint = 0 ; iViewpoint != numViewpoints ; ++iViewpoint)
+    for (Viewports::iterator iViewport = mViewports.begin() ; iViewport != mViewports.end() ; ++iViewport)
     {
-        DisplayConfig displayConfig = GetDisplayConfig(w, h, iViewpoint, numViewpoints);
-        for (Viewports::iterator iViewport = mViewports.begin() ; iViewport != mViewports.end() ; ++iViewport)
+        // Viewport
+        Viewport* viewport = *iViewport;
+        if (!viewport->GetEnabled())
+            continue;
+
+        esMatrixMode( GL_TEXTURE );
+        esLoadIdentity();
+
+        esMatrixMode( GL_PROJECTION );
+        esLoadIdentity();
+
+        esMatrixMode( GL_MODELVIEW );
+        esLoadIdentity();
+
+        // This sets up the viewport and clears it
+        viewport->SetupViewport(displayConfig);
+
+        // Camera
+        Camera& camera = *viewport->GetCamera();
+        float aspectRatio = viewport->GetAspectRatio();
+
+        // This changes to GL_PROJECTION, calls glFrustumf
+        camera.SetupCameraProjection(aspectRatio);
+
+        // Changes to GL_MODELVIEW, calls lookat
+        camera.SetupCameraView(Vector3(0, 0, 0));
+
+        // Changes to GL_MODELVIEW, sets lighting position etc
+        SetupLighting();
+
+        for (RenderObjects::iterator it = mRenderObjects.begin() ; it != mRenderObjects.end() ; ++it)
         {
-            // Viewport
-            Viewport* viewport = *iViewport;
-            if (!viewport->GetEnabled())
+            RenderObject* renderObject = it->second;
+            if (!viewport->GetShouldRenderObject(renderObject))
                 continue;
 
-            esMatrixMode( GL_TEXTURE );
-            esLoadIdentity();
+            const Transform& tm = renderObject->GetTM();
+            float radius = renderObject->GetRenderBoundingRadius();
+            if (!camera.isSpherePartlyInFrustum(tm.GetTrans(), radius))
+                continue;
 
-            esMatrixMode( GL_PROJECTION );
-            esLoadIdentity();
-
-            esMatrixMode( GL_MODELVIEW );
-            esLoadIdentity();
-
-            // This sets up the viewport and clears it
-            viewport->SetupViewport(displayConfig);
-
-            // Camera
-            Camera& camera = *viewport->GetCamera();
-            float aspectRatio = viewport->GetAspectRatio();
-
-            // This changes to GL_PROJECTION, calls glFrustumf
-            camera.SetupCameraProjection(aspectRatio);
-
-            // Changes to GL_MODELVIEW, calls lookat
-            Vector3 cameraOffset = CalculateCameraOffset(camera, displayConfig, numViewpoints, mStereoSeparation);
-            camera.SetupCameraView(cameraOffset);
-
-            // Changes to GL_MODELVIEW, sets lighting position etc
-            SetupLighting();
-
-            for (RenderObjects::iterator it = mRenderObjects.begin() ; it != mRenderObjects.end() ; ++it)
-            {
-                RenderObject* renderObject = it->second;
-                if (!viewport->GetShouldRenderObject(renderObject))
-                    continue;
-
-                const Transform& tm = renderObject->GetTM();
-                float radius = renderObject->GetRenderBoundingRadius();
-                if (!camera.isSpherePartlyInFrustum(tm.GetTrans(), radius))
-                    continue;
-
-                int renderLevel = it->first;
-                renderObject->RenderUpdate(viewport, renderLevel);
-            }
+            int renderLevel = it->first;
+            renderObject->RenderUpdate(viewport, renderLevel);
         }
+    }
 
+    {
+        DisableFog disableFog;
+
+        // Now the overlay - over the whole screen.
+        glViewport( displayConfig.mLeft, displayConfig.mBottom, displayConfig.mWidth, displayConfig.mHeight );
+
+        esMatrixMode(GL_PROJECTION);
+        esLoadIdentity();
+        esOrthof(
+            float(displayConfig.mLeft),
+            float(displayConfig.mWidth + displayConfig.mLeft),
+            float(displayConfig.mBottom),
+            float(displayConfig.mHeight + displayConfig.mBottom),
+            1.0f, -1.0f);
+
+        esMatrixMode(GL_MODELVIEW);
+        esLoadIdentity();
+
+        for (RenderOverlayObjects::iterator it = mRenderOverlayObjects.begin() ; it != mRenderOverlayObjects.end() ; ++it)
         {
-            DisableFog disableFog;
-
-            // Now the overlay - over the whole screen.
-            glViewport( displayConfig.mLeft, displayConfig.mBottom, displayConfig.mWidth, displayConfig.mHeight );
-
-            esMatrixMode(GL_PROJECTION);
-            esLoadIdentity();
-            esOrthof(
-                float(displayConfig.mLeft),
-                float(displayConfig.mWidth + displayConfig.mLeft),
-                float(displayConfig.mBottom),
-                float(displayConfig.mHeight + displayConfig.mBottom),
-                1.0f, -1.0f);
-
-            esMatrixMode(GL_MODELVIEW);
-            esLoadIdentity();
-
-            for (RenderOverlayObjects::iterator it = mRenderOverlayObjects.begin() ; it != mRenderOverlayObjects.end() ; ++it)
-            {
-                (it->second)->RenderOverlayUpdate(it->first, displayConfig);
-            }
+            (it->second)->RenderOverlayUpdate(it->first, displayConfig);
         }
     }
     // Note: This method does NOT render GxRender objects or swap buffers
@@ -741,12 +626,6 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
     glEnable(GL_DEPTH_TEST);
     glFrontFace(GL_CCW);
     glDisable(GL_CULL_FACE);
-
-    if (gGLVersion == 1)
-    {
-        glShadeModel(GL_SMOOTH);
-        glDisable(GL_FOG);
-    }
 
     // DEBUG: Force reset critical GL state before VR rendering
     glDepthMask(GL_TRUE);

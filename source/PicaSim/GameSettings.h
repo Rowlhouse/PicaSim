@@ -266,9 +266,6 @@ struct Options : public Settings
     bool mSmokeOnlyInMainView;
     float mZoomViewSize;
 
-    bool mEnableStereoscopy;
-    float mStereoSeparation;
-
     // VR desktop window display mode
     enum VRDesktopMode
     {

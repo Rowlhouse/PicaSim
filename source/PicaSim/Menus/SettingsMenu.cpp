@@ -493,19 +493,6 @@ void SettingsMenu::RenderOptions1Tab()
     }
     SettingsWidgets::EndSettingsBlock();
 
-    // Stereoscopy (advanced only)
-    if (advanced)
-    {
-        SettingsWidgets::SectionHeader(TXT(PS_STEREOSCOPY));
-        SettingsWidgets::BeginSettingsBlock();
-        {
-            SettingsWidgets::Checkbox(TXT(PS_ENABLE), options.mEnableStereoscopy);
-            SettingsWidgets::SliderFloat(TXT(PS_STEREOSEPARATION), options.mStereoSeparation, -1.0f, 1.0f, "%.3f m");
-            SettingsWidgets::InfoLabel(TXT(PS_STEREOINFO), "");
-        }
-        SettingsWidgets::EndSettingsBlock();
-    }
-
 #ifdef PICASIM_VR_SUPPORT
     // VR Headset settings
     {
@@ -525,10 +512,7 @@ void SettingsMenu::RenderOptions1Tab()
                     {
                         VRManager::GetInstance().SetMSAASamples(options.mVRMSAASamples);
                         VRManager::GetInstance().SetVRAudioDevice(options.mVRAudioDevice);
-                        if (!VRManager::GetInstance().EnableVR())
-                        {
-                            options.mEnableVR = false;
-                        }
+                        VRManager::GetInstance().EnableVR();
                     }
                     else
                     {

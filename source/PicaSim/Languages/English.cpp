@@ -78,9 +78,6 @@ void InitStringsEN(const char** txt)
   txt[PS_GROUNDVIEWYAWOFFSET] = "Yaw offset in ground view";
   txt[PS_GROUNDVIEWPITCHOFFSET] = "Pitch offset in ground view";
   txt[PS_AEROPLANEFIELDOFVIEW] = "Aeroplane field of view";
-  txt[PS_STEREOSCOPY] = "Stereoscopy";
-  txt[PS_STEREOSEPARATION] = "Stereo separation";
-  txt[PS_STEREOINFO] = "+ve value for normal 3D, -ve for cross-eyes technique";
   txt[PS_WALKABOUTSETTINGS] = "Walkabout settings";
   txt[PS_ENABLEWALKABOUTBUTTON] = "Enable walkabout button";
   txt[PS_ENABLEOBJECTEDITING] = "Enable object editing";
