@@ -2,7 +2,7 @@
 
 This contains the complete source, including (custom) dependencies, for PicaSim flight simulator: https://rowlhouse.co.uk/PicaSim/ 
 
-It also contains a few tools and pieces of infrastructure that will be needed to build and deploy to Windows, Android and iOS etc (not all platforms supported yet)
+It also contains tools and build infrastructure for Windows and Android (iOS is not yet supported).
 
 I have tried to make sure that credit/licences etc are indicated correctly - please let me know of any errors so that I can correct them.
 
@@ -17,6 +17,7 @@ User settings and custom content are stored in platform-specific locations (not 
 | Windows | `%APPDATA%\Rowlhouse\PicaSim\` |
 | Linux | `~/.local/share/Rowlhouse/PicaSim/` |
 | macOS | `~/Library/Application Support/Rowlhouse/PicaSim/` |
+| Android | Internal app storage (managed automatically) |
 
 Within this directory:
 - `UserSettings/` - User preferences and saved configurations (settings.xml, custom controllers, etc.)
@@ -68,19 +69,22 @@ Within this directory:
 
 ## Build System
 
-The project now uses CMake with vcpkg for dependency management.
+The project uses CMake with dependencies built from git submodules. vcpkg is used only for glad and OpenXR on desktop.
 
 ### Prerequisites (Windows)
 
 - **Visual Studio 2022** (Community edition is free) - provides MSVC compiler and MSBuild
 - **CMake 3.20+** - install standalone or use the one bundled with Visual Studio
-- **Git** - for cloning the repo and vcpkg bootstrap
-- **vcpkg** - dependency manager (see setup below)
+- **Git** - for cloning the repo and submodules
+- **vcpkg** - provides glad and OpenXR (see setup below)
 
-#### vcpkg Setup (one-time)
+#### First-time Setup
 
 ```bash
-# Clone vcpkg
+# Initialise git submodules (SDL2, SDL2_net, OpenAL-Soft, GLM, imgui, stb)
+git submodule update --init --recursive
+
+# Clone vcpkg (provides glad and OpenXR)
 git clone https://github.com/microsoft/vcpkg.git C:/vcpkg
 C:/vcpkg/bootstrap-vcpkg.bat
 
@@ -88,16 +92,21 @@ C:/vcpkg/bootstrap-vcpkg.bat
 setx VCPKG_ROOT C:/vcpkg
 ```
 
-### Dependencies (auto-downloaded by vcpkg)
+### Dependencies
 
-- SDL2
-- SDL2_net
-- OpenAL-Soft
-- GLM
-- glad
-- imgui
+Most dependencies are built from source via git submodules in `third_party/`:
 
-These are defined in `vcpkg.json`. When CMake configures the project, vcpkg automatically downloads, builds, and installs all dependencies into `build/<preset>/vcpkg_installed/`.
+- **SDL2** - windowing, input, platform abstraction
+- **SDL2_net** - networking
+- **OpenAL-Soft** - 3D positional audio
+- **GLM** - math library
+- **imgui** - UI (docking branch)
+- **stb** - image loading
+
+vcpkg provides desktop-only packages (defined in `vcpkg.json`):
+
+- **glad** - OpenGL loader
+- **OpenXR** - VR support (optional)
 
 ### Compiling
 
@@ -246,38 +255,43 @@ adb logcat -s SDL:* PicaSim:* OpenAL:*
 
 ```
 PicaSim2/
-├── build/                    # Build output (gitignored, can be cleaned)
+├── android/                  # Android Gradle project
+├── build/                    # Build output (gitignored)
 │   └── windows-x64/          # One dir per platform (contains .sln)
-│       ├── Debug/
-│       │   └── PicaSim.exe
-│       └── Release/
-│           └── PicaSim.exe
 ├── data/                     # Working directory for running
 │   ├── SystemData/           # Read-only game assets (committed)
 │   ├── SystemSettings/       # Read-only presets (committed)
 │   └── Menus/                # Menu assets (committed)
-└── source/                   # Source code
+├── resources/                # App icons and related assets
+├── source/                   # Source code
+│   ├── Framework/            # Reusable engine components
+│   ├── PicaSim/              # Application code
+│   ├── Platform/             # Platform abstraction (SDL2, Android, VR)
+│   ├── Heightfield/          # Terrain rendering
+│   ├── bullet-2.81/          # Physics (Bullet)
+│   └── tinyxml/              # XML parsing
+├── third_party/              # Git submodules (SDL2, OpenAL-Soft, etc.)
+└── tools/                    # Build/asset helper scripts
 ```
 
 ### Compilation Defines
 
 - `BT_NO_PROFILE` - Disables Bullet physics profiling
 
-# Notes on the licence 
+# Notes on the licence
 
-PicaSim's licence only covers PicaSim source code and some of the data it uses.
+PicaSim is licensed under the **PolyForm Noncommercial License 1.0.0** (see LICENSE.txt). This licence covers PicaSim source code and some of the data it uses.
 
-The third party packages and assets will have their own licences which need to be abided by.
+Third party packages and assets have their own licences which need to be abided by.
 
 These are covered by PicaSim's licence:
 
 Under Source
 - Framework: Contains fairly generic code on which PicaSim is built
 - Heightfield: Runtime refinement for rendering a heightfield, based on a paper by Lindstrom + Pascucci. It was good in its day, but I would not recommend it now!
-- Joystick: Marmalade extension for reading joysticks under Windows
 - MapTrace: Stand-alone helper application for creating a heightfield by tracing contours (very old!)
 - PicaSim: All the application code
-- ProcessUI: Stand-alone helper application for processing the UI bitmaps
+- Platform: Platform abstraction layer (SDL2, Android, VR)
 
 Under Data
 - Menus and Fonts contain UI resources
@@ -288,15 +302,20 @@ Under Data
 The following need to be treated differently:
 
 Under Data
-- Images and model files come from various sources (ranging from having been created by me, to provided by others) have been authorised for use with PicaSim
+- Images and model files come from various sources (ranging from having been created by me, to provided by others) and have been authorised for use with PicaSim
 - They can therefore be used in direct derivatives of PicaSim
 - You will need to request permissions directly from me/the original author to use them in another project.
 
 These are not covered by PicaSim's licence - they have their own:
 
 Under Source
-- Gamepad: Marmalade extension written by Gleb Lebedev for gamepads on Android
-- bullet-2.81: Bullet physics library (source is under the zlib licence). THere may be some modifications from the original.
-- dpi: Marmalade extension for handling screen resolution/DPI
+- bullet-2.81: Bullet physics library (source is under the zlib licence). There may be some modifications from the original.
 - tinyxml: Under the zlib licence
+
+Under third_party (git submodules)
+- SDL2, SDL2_net: zlib licence
+- OpenAL-Soft: LGPL licence
+- GLM: MIT licence
+- imgui: MIT licence
+- stb: MIT/public domain
 

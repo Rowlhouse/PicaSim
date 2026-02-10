@@ -4,23 +4,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Claude's goal
 
-The goal for Claude is to port this entire project away from Marmalade, so that I can build, run and ultimately re-release it on Windows, Android and iOS.
+The goal for Claude is to help develop PicaSim across Windows, Android and iOS.
+
+The original project has been ported from Marmalade SDK to SDL2 + OpenGL. Windows and Android ports are complete. iOS is not yet started.
 
 The original project is owned by me, so I have all rights to do this.
 
-The intention is to not change any existing behaviour significantly. There will be cosmetic changes to elements that were handled by Marmalade - e.g. the UI system.
-
-I have placed referenced images of PicaSim running under Windows here: ReferenceMaterial/ScreenshotsOfPicaSim
-
-I have placed the Marmalade SDK installer here, in case it is useful as a reference: ReferenceMaterial/Marmalade-8.6
-
-There is documentation for a slightly older version of Marmalade here: ReferenceMaterial\Marmalade-6.3_SDKDocumentation.chm
+The intention is to not change any existing behaviour significantly.
 
 ## Building
 
-Always use CMake presets:
+Always use CMake presets for desktop:
 - Debug: `cmake --build --preset windows-x64-debug`
 - Release: `cmake --build --preset windows-x64-release`
+
+For Android:
+- `cd android && gradlew.bat assembleDebug`
 
 Always build in debug when building automatically, if just asked to "build". Requests to build in release will always be explicit.
 
@@ -32,9 +31,9 @@ Never volunteer to commit changes. Only create commits when explicitly requested
 
 PicaSim is a cross-platform R/C flight simulator built with C++. It simulates radio-controlled aircraft with realistic physics, multiple aircraft types (40+), and various environments. The project targets Windows, Android, and iOS.
 
-**Current stack**: SDL2 (window/input), OpenGL (rendering), OpenAL-Soft (audio), GLM (math), Bullet Physics (physics).
+**Current stack**: SDL2 (window/input), OpenGL/GLES2 (rendering), OpenAL-Soft (audio), GLM (math), Bullet Physics (physics), Dear ImGui (UI).
 
-**Note**: The project has being migrated from Marmalade SDK (no longer commercially available) to SDL2 + OpenGL.
+**Note**: The project was migrated from Marmalade SDK (no longer commercially available) to SDL2 + OpenGL. Most dependencies are built from git submodules in `third_party/`; vcpkg provides only glad and OpenXR on desktop.
 
 ## Architecture
 
@@ -70,6 +69,9 @@ PicaSim is a cross-platform R/C flight simulator built with C++. It simulates ra
 - `S3ECompat.h` - Marmalade API compatibility shims (SDL2 implementations)
 - `Input.cpp/h` - Unified input handling (keyboard, mouse, touch, gamepad)
 - `imgui_impl_sdl2.cpp/h` - ImGui SDL2 backend
+- `AndroidAssets.cpp/h` - APK asset extraction to internal storage
+- `VRManager.cpp/h`, `OpenXRRuntime.cpp/h` - VR support via OpenXR
+- `FontRenderer.cpp/h` - Bitmap font rendering for in-game overlay text
 
 ### Physics
 
@@ -107,64 +109,61 @@ All configuration uses XML parsed via tinyxml (`source/tinyxml/`).
 
 ## Migration Status
 
-The Windows desktop port is **complete**. Only mobile platforms (Android/iOS) remain.
+The Windows desktop port and Android port are **complete**. iOS remains to be done.
 
 ### Completed
 
-**Build System**
-- CMake with vcpkg dependency management
-- Platform detection for Windows, macOS, Linux, Android, iOS
-
-**Graphics (OpenGL)**
-- SDL2 window creation and OpenGL context
-- Full rendering pipeline via glad + OpenGL
-- ShaderManager, FrameBufferObject, skybox, particles
+**Windows Desktop**
+- CMake with git submodules + vcpkg (glad, OpenXR)
+- SDL2 window creation and OpenGL context via glad
+- Full rendering pipeline: ShaderManager, FrameBufferObject, skybox, particles
 - Math types (GLM replacing CIwFVec3/CIwFMat/etc.)
+- VR support via OpenXR
+
+**Android**
+- Gradle 8.5 + CMake build, APK packaging with bundled assets
+- GLES2 rendering (shader-based, no fixed-function pipeline)
+- Asset extraction from APK to internal storage on first launch
+- DPI-aware UI scaling, drag-to-scroll, safe area insets
+- Supported ABIs: arm64-v8a, x86_64
 
 **Audio (OpenAL-Soft)**
 - Complete 3D positional audio with distance attenuation
 - 32 sound channels with proper source management
 - Doppler effect, volume ramping, frequency scaling
-- Listener position/velocity tracking
 
 **UI (Dear ImGui)**
 - All menus migrated from IwUI to ImGui
 - SDL2 platform backend (`source/Platform/imgui_impl_sdl2.cpp`)
 - Unified style system with font scaling
 - Bitmap font renderer for in-game overlay text
+- Scrollable tab strips for mobile
 
 **Input (SDL2)**
-- Keyboard: arrow keys, number keys, function keys, modifiers
-- Mouse/Touch: pointer position and multi-touch events
-- Gamepad: SDL2 game controller API, Xbox controllers detected
+- Keyboard, mouse/touch, gamepad (SDL2 game controller API)
 
 **Networking (SDL2_net)**
 - TCP server on port 7777 for remote aircraft control
-- Text-based protocol for control commands and telemetry
-- Non-blocking I/O via socket sets
-
-**Other**
-- Timer functions (SDL_GetTicks64)
-- File I/O via C stdio
-- Data organization (run from data/ directory)
 
 ### To Do
 
-**Mobile Platform Support**
-- Android: needs JNI bindings, SDL2 app glue, lifecycle callbacks
-- iOS: needs view controller, SDL2 integration
+**iOS**
+- Needs view controller, SDL2 integration, GLES2 rendering
 - SDL2 handles most cross-platform work; mainly needs app scaffolding
 
 ## Licensing
 
-PicaSim source is MIT licensed. Third-party components have separate licenses:
+PicaSim source is licensed under the **PolyForm Noncommercial License 1.0.0**. Third-party components have separate licenses:
 - Bullet Physics: zlib license
 - tinyxml: zlib license
-- Gamepad extension: by Gleb Lebedev
+- SDL2, SDL2_net: zlib license
+- OpenAL-Soft: LGPL
+- GLM, imgui: MIT license
+- stb: MIT/public domain
 - 3D models and images: authorized for PicaSim derivatives only; other uses require permission
 
 ## Read
  - README.md
  - CODE_STYLE.md
- - ParallaxPanorma.md
+ - ParallaxPanorama.md
 

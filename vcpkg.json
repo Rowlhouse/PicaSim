@@ -3,8 +3,8 @@
   "name": "picasim",
   "version": "1.0.0",
   "description": "PicaSim R/C Flight Simulator",
-  "homepage": "https://github.com/example/picasim",
-  "license": "MIT",
+  "homepage": "https://rowlhouse.co.uk/PicaSim/",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "dependencies": [
     "glad",
     "openxr-loader"
