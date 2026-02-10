@@ -6,6 +6,7 @@ Version 1.3.0
 - Logging level can be set/loaded from the settings
 - Add shadow blur multiplier setting
 - Most library dependencies are pulled in through git sub-modules
+- Add a night-time skybox (Qwantani Moon)
 
 Version 1.2.0
 - Support parallax mapping in VR for panoramic scenes
