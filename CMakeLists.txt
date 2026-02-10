@@ -371,6 +371,7 @@ if(ANDROID)
             COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate_asset_manifest.py
                 ${CMAKE_SOURCE_DIR}/data
                 ${CMAKE_SOURCE_DIR}/data/assets_manifest.txt
+                ${CMAKE_SOURCE_DIR}/packaging_excludes.txt
             COMMENT "Generating asset manifest for Android"
         )
     endif()
@@ -406,23 +407,69 @@ if(NOT ANDROID)
         RUNTIME DESTINATION .
     )
 
-    # Install data directories
+    # Parse packaging_excludes.txt for install rules
+    set(_excludes_file "${CMAKE_SOURCE_DIR}/packaging_excludes.txt")
+    set(_sd_excludes "")
+    set(_ss_excludes "")
+    set(_xml_only_dirs "")
+    if(EXISTS ${_excludes_file})
+        file(STRINGS ${_excludes_file} _exclude_lines)
+        foreach(_line IN LISTS _exclude_lines)
+            # Skip comments and blank lines
+            string(STRIP "${_line}" _line)
+            if(_line STREQUAL "" OR _line MATCHES "^#")
+                continue()
+            endif()
+            # xml-only: prefix
+            if(_line MATCHES "^xml-only:(.*)")
+                list(APPEND _xml_only_dirs "${CMAKE_MATCH_1}")
+                continue()
+            endif()
+            # Plain path exclusion - route to correct install command
+            if(_line MATCHES "^SystemData/(.*)")
+                set(_pattern "${CMAKE_MATCH_1}")
+                string(REPLACE "." "\\." _pattern "${_pattern}")
+                if(_line MATCHES "\\.[a-zA-Z]+$")
+                    string(APPEND _pattern "$")
+                endif()
+                list(APPEND _sd_excludes REGEX "${_pattern}" EXCLUDE)
+            elseif(_line MATCHES "^SystemSettings/(.*)")
+                set(_pattern "${CMAKE_MATCH_1}")
+                string(REPLACE "." "\\." _pattern "${_pattern}")
+                if(_line MATCHES "\\.[a-zA-Z]+$")
+                    string(APPEND _pattern "$")
+                endif()
+                list(APPEND _ss_excludes REGEX "${_pattern}" EXCLUDE)
+            endif()
+        endforeach()
+    endif()
+
+    # Install SystemData (with exclusions and xml-only dirs fully excluded here)
+    set(_sd_full_excludes ${_sd_excludes})
+    foreach(_xo IN LISTS _xml_only_dirs)
+        if(_xo MATCHES "^SystemData/(.*)")
+            list(APPEND _sd_full_excludes REGEX "${CMAKE_MATCH_1}" EXCLUDE)
+        endif()
+    endforeach()
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData
         DESTINATION .
-        REGEX "Aeroplanes/Ahi" EXCLUDE
-        REGEX "Aeroplanes/TestWing" EXCLUDE
-        REGEX "Aerofoils" EXCLUDE
+        ${_sd_full_excludes}
     )
-    # Aerofoils - only include XML files
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData/Aerofoils
-        DESTINATION SystemData
-        FILES_MATCHING PATTERN "*.xml"
-    )
+    # Re-install xml-only dirs with FILES_MATCHING
+    foreach(_xo IN LISTS _xml_only_dirs)
+        if(_xo MATCHES "^SystemData/(.*)")
+            set(_xo_subdir "${CMAKE_MATCH_1}")
+            install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData/${_xo_subdir}
+                DESTINATION SystemData
+                FILES_MATCHING PATTERN "*.xml"
+            )
+        endif()
+    endforeach()
+
+    # Install SystemSettings (with exclusions)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemSettings
         DESTINATION .
-        REGEX "Environment/Flat\\.xml$" EXCLUDE
-        REGEX "Aeroplane/TestWing" EXCLUDE
-        REGEX "Aeroplane/Ahi" EXCLUDE
+        ${_ss_excludes}
     )
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Menus
         DESTINATION .

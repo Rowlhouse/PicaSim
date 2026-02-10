@@ -12,4 +12,6 @@ Keep docs up to date!
 - Show menus in VR
 
 ## Mobile
-- Pack the correct set of planes etc
+- Icon - not circle in square
+- Text input (when saving)
+- Increase double-tap time

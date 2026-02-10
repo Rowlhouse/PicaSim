@@ -1,0 +1,17 @@
+# Packaging exclusions - shared between CMake install and Android manifest.
+# See CMakeLists.txt install rules and tools/generate_asset_manifest.py.
+#
+# Plain paths: exclude that directory or file (and everything under it).
+# xml-only: prefix: only keep *.xml files, exclude everything else.
+
+# Test/dev aircraft
+SystemData/Aeroplanes/Ahi
+SystemData/Aeroplanes/TestWing
+SystemSettings/Aeroplane/Ahi
+SystemSettings/Aeroplane/TestWing
+
+# Unused environment
+SystemSettings/Environment/Flat.xml
+
+# Aerofoil reference images (keep only XML profiles)
+xml-only:SystemData/Aerofoils
