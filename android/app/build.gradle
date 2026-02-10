@@ -64,6 +64,17 @@ android {
     }
 }
 
+// Regenerate asset manifest before every build so new/removed data files
+// are always picked up (the manifest drives extraction on first launch).
+task generateAssetManifest(type: Exec) {
+    def projectRoot = file("${projectDir}/../..")
+    commandLine 'python', "${projectRoot}/tools/generate_asset_manifest.py",
+            "${projectRoot}/data",
+            "${projectRoot}/data/assets_manifest.txt",
+            "${projectRoot}/packaging_excludes.txt"
+}
+preBuild.dependsOn generateAssetManifest
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }

@@ -177,6 +177,9 @@ bool ExtractIfNeeded()
     std::string basePath = std::string(internalPath) + "/data";
     LOGI("Asset extraction base path: %s", basePath.c_str());
 
+#ifdef _DEBUG
+    LOGI("Debug build: always re-extracting assets");
+#else
     if (!NeedsExtraction(basePath))
     {
         LOGI("Assets already extracted and up to date");
@@ -188,6 +191,7 @@ bool ExtractIfNeeded()
         }
         return true;
     }
+#endif
 
     LOGI("Extracting assets from APK...");
     MakeDirectoryRecursive(basePath);

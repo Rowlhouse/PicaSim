@@ -363,19 +363,7 @@ if(NOT ANDROID)
     )
 endif()
 
-# Generate asset manifest for Android APK asset extraction
-if(ANDROID)
-    find_package(Python3 COMPONENTS Interpreter QUIET)
-    if(Python3_FOUND)
-        add_custom_command(TARGET PicaSim PRE_BUILD
-            COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate_asset_manifest.py
-                ${CMAKE_SOURCE_DIR}/data
-                ${CMAKE_SOURCE_DIR}/data/assets_manifest.txt
-                ${CMAKE_SOURCE_DIR}/packaging_excludes.txt
-            COMMENT "Generating asset manifest for Android"
-        )
-    endif()
-endif()
+
 
 # --------------------------------------------------------------------------
 # Run target (convenience for running from data directory)
