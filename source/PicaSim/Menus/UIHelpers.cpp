@@ -334,7 +334,7 @@ void NotifyMenuTransition()
 //======================================================================================================================
 bool IsInputMuted()
 {
-    return (SDL_GetTicks64() - sMenuTransitionTime) < 200;
+    return (SDL_GetTicks64() - sMenuTransitionTime) < 300;
 }
 
 } // namespace UIHelpers

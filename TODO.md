@@ -4,14 +4,14 @@ Keep docs up to date!
 
 ## General
 
-- split other tabs better, especially options 1/2. Graphics, info, debugging, etc
+- Split other tabs better, especially options 1/2. Graphics, info, debugging, etc
 - Navigate menus  with game controllers
+- Improve ground texture
+- Flight dynamics
+- Turbulence
 
 ## VR
 - VR settings in their own tab
 - Show menus in VR
 
 ## Mobile
-- Icon - not circle in square
-- Text input (when saving)
-- Increase double-tap time

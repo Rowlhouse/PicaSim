@@ -751,12 +751,9 @@ void InitStringsEN(const char** txt)
 "Please note that whilst I've tried to set up the models to fly realistically, I make no claims that "
 "they actually achieve this goal. The only way to discover this is to go out and fly the real thing, "
 "which I urge you to do!";
-  txt[PS_LICENCETEXT] = "PicaSim is available from me in the following versions:\n\n"
-"Free: The simulator and assets (including planes and sceneries etc) may be distributed according to the Creative Commons Attribution-NonCommercial-NoDerivs licence.\n\n"
-"Paid: This version or its derivatives may only be distributed with my explicit authorisation.\n\n"
-"If you wish to share content that you have created then you must do so separately from the PicaSim distribution.\n\n"
-"The assets in PicaSim may be distributed according to the Creative Commons Attribution-NonCommercial licence (i.e. you may modify and distribute them, so long as you credit the source).\n\n"
-"It is quite easy to distribute content for PicaSim by placing it in the UserData and UserSettings. See the website and ask on the forum for more details.";
+  txt[PS_LICENCETEXT] = "PicaSim is Copyright (c) 2026 Danny Chapman and released "
+"under the PolyForm Noncommercial License 1.0.0.\n\n"
+"See https://github.com/Rowlhouse/PicaSim";
   txt[PS_TIPS1] = "Visit the PicaSim website for help, including tips on how to fly!";
   txt[PS_TIPS2] = "Use gentle controls - with small inputs most planes will almost fly on their own";
   txt[PS_TIPS3] = "Use the button in the corner when flying to switch between normal/acrobatic/thermal etc modes (when available)";

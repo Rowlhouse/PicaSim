@@ -131,13 +131,13 @@ Texture* GetCachedTexture(std::string path, bool convertTo16Bit)
 //======================================================================================================================
 void OpenWebsite(const GameSettings& gameSettings)
 {
-    s3eOSExecExecute("http://www.rowlhouse.co.uk/PicaSim", false);
+    Platform::OpenURL("http://www.rowlhouse.co.uk/PicaSim");
 }
 
 //======================================================================================================================
 void NewVersion()
 {
-    s3eOSExecExecute("http://www.rowlhouse.co.uk/PicaSim/download.html", false);
+    Platform::OpenURL("http://www.rowlhouse.co.uk/PicaSim/download.html");
 }
 
 

@@ -2,7 +2,7 @@ PicaSim
 
 Copyright (c) 2026 Danny Chapman
 
-# PolyForm Noncommercial License 1.0.0 ((https://www.rowlhouse.co.uk/PicaSim)
+# PolyForm Noncommercial License 1.0.0 (https://www.rowlhouse.co.uk/PicaSim)
 
 <https://polyformproject.org/licenses/noncommercial/1.0.0>
 

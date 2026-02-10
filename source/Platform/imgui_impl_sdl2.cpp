@@ -831,6 +831,16 @@ void ImGui_ImplSDL2_NewFrame()
                 io.AddMousePosEvent(-FLT_MAX, -FLT_MAX);
         }
 
+        // On mobile platforms, show/hide the soft keyboard based on whether ImGui wants text input.
+        // This was removed from the upstream backend in 2023-04-06 (#6306) because SDL_StartTextInput()
+        // has IME side effects on desktop, but on mobile it's required to bring up the on-screen keyboard.
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS)
+        if (io.WantTextInput && !SDL_IsTextInputActive())
+                SDL_StartTextInput();
+        else if (!io.WantTextInput && SDL_IsTextInputActive())
+                SDL_StopTextInput();
+#endif
+
         ImGui_ImplSDL2_UpdateMouseData();
         ImGui_ImplSDL2_UpdateMouseCursor();
 
