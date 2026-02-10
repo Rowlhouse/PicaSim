@@ -49,7 +49,7 @@ ShaderManager::ShaderManager(LoadingScreenHelper* loadingScreen)
 //======================================================================================================================
 void ShaderManager::Init(LoadingScreenHelper* loadingScreen)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     IwAssert(ROWLHOUSE, !mInstance);
     mInstance.reset(new ShaderManager(loadingScreen));
 }
@@ -57,7 +57,7 @@ void ShaderManager::Init(LoadingScreenHelper* loadingScreen)
 //======================================================================================================================
 void ShaderManager::Terminate()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     IwAssert(ROWLHOUSE, mInstance);
 
     for (int i = 0 ; i != NUM_SHADERS ; ++i)

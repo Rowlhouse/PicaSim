@@ -5,7 +5,7 @@
 //======================================================================================================================
 Rope::Rope() : mColour(1,1,1,0.1f)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_OBJECTS);
 
 }
@@ -13,14 +13,14 @@ Rope::Rope() : mColour(1,1,1,0.1f)
 //======================================================================================================================
 Rope::~Rope()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
 }
 
 //======================================================================================================================
 void Rope::RenderUpdate(class Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     size_t numPoints = mPoints.size();
 
     if (numPoints < 2)
@@ -31,6 +31,8 @@ void Rope::RenderUpdate(class Viewport* viewport, int renderLevel)
     const SimpleShader* simpleShader = (SimpleShader*) ShaderManager::GetInstance().GetShader(SHADER_SIMPLE);
 
     simpleShader->Use();
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     // Get the variable locations
     glVertexAttribPointer(simpleShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, &mPoints[0].x);

@@ -126,7 +126,7 @@ void Wing::Init(
     TiXmlHandle& aerodynamicsHandle, 
     Aeroplane* aeroplane, uint32& checksum)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mAeroplane = aeroplane;
     const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
 
@@ -262,7 +262,7 @@ void Wing::Init(
 //======================================================================================================================
 void Wing::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     while (!mAerofoils.empty())
     {
         Aerofoil* aerofoil = mAerofoils.back();

@@ -28,6 +28,11 @@
 #include "../Platform/VRManager.h"
 #include "../Platform/VRRuntime.h"
 #include <glad/glad.h>
+#include "Menus/UIHelpers.h"
+#include <imgui.h>
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
+void IwGxSwapBuffers();
 #endif
 
 float numButtonSlots = 8.0f;
@@ -49,7 +54,7 @@ PicaSim::PicaSim(GameSettings& gameSettings)
 bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScreen)
 {
     const ChallengeSettings& cs = gameSettings.mChallengeSettings;
-    TRACE_FILE_IF(1) TRACE("PicaSim::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("PicaSim::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 
     mInstance.reset(new PicaSim(gameSettings));
 
@@ -86,7 +91,7 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
         }
         break;
     default:
-        TRACE_FILE_IF(1) TRACE("Unable to load challenge type %d", gameSettings.mChallengeSettings.mChallengeMode);
+        TRACE_FILE_IF(ONCE_1) TRACE("Unable to load challenge type %d", gameSettings.mChallengeSettings.mChallengeMode);
         break;
     }
 
@@ -194,7 +199,7 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
     if (mInstance->mSoundChannel != -1)
         AudioManager::GetInstance().StartSoundOnChannel(mInstance->mSoundChannel, mInstance->mSound, true);
     else
-        TRACE_FILE_IF(1) TRACE("Unable to allocate sound channel for wind");
+        TRACE_FILE_IF(ONCE_1) TRACE("Unable to allocate sound channel for wind");
 
     if (loadingScreen) loadingScreen->Update("Wind sound");
 
@@ -228,7 +233,7 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
 //======================================================================================================================
 void PicaSim::Terminate()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     Environment::Terminate();
 
     if (mInstance)
@@ -384,6 +389,8 @@ void PicaSim::HandleMode()
             mViewport->GetCamera()->SetVerticalFOV(DegreesToRadians(mGameSettings.mOptions.mGroundViewFieldOfView));
             mViewport->GetCamera()->DisableAutoZoom();
         }
+        break;
+    default:
         break;
     }
 
@@ -642,11 +649,11 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // Help
     if (mHelpOverlay->IsPressed())
     {
-        TRACE_FILE_IF(1) TRACE("Detected help button press");
+        TRACE_FILE_IF(ONCE_1) TRACE("Detected help button press");
 #if 0
         AudioManager::GetInstance().SetAllChannelsToZeroVolume();
         DisplayHelpMenu(mGameSettings, true);
-        TRACE_FILE_IF(1) TRACE("Return from help");
+        TRACE_FILE_IF(ONCE_1) TRACE("Return from help");
         mTimeSinceEnabled = 0.0f;
         mChallenge->ReinitOverlays();
         mStartMenuOverlay->ForceDisable();
@@ -659,19 +666,19 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // Check for menu button
     if (mSettingsMenuOverlay->IsPressed())
     {
-        TRACE_FILE_IF(1) TRACE("Detected settings button press");
+        TRACE_FILE_IF(ONCE_1) TRACE("Detected settings button press");
 
         AudioManager::GetInstance().SetAllChannelsToZeroVolume();
         SettingsChangeActions actions;
         DisplaySettingsMenu(mGameSettings, actions);
 
-        TRACE_FILE_IF(1) TRACE("Return from settings");
+        TRACE_FILE_IF(ONCE_1) TRACE("Return from settings");
 
         LoadingScreen* loadingScreen = 0;
 
         if (actions.mReloadTerrain)
         {
-            TRACE_FILE_IF(1) TRACE("Reloading terrain");
+            TRACE_FILE_IF(ONCE_1) TRACE("Reloading terrain");
             if (!loadingScreen)
                 loadingScreen = new LoadingScreen("Loading", mGameSettings, true, true, true);
             Environment::Terminate();
@@ -683,10 +690,13 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             mObserver->SetTransform(tm);
 
             mPlayerAeroplane->Terminate();
+
+            Vector3 launchPos = mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans();
             mPlayerAeroplane->Init(
                 mGameSettings.mAeroplaneSettings,
-                &mInstance->mObserver->GetCameraTransform((void*) 0).GetTrans(), loadingScreen);
-            // Reset any challenge
+                &launchPos, loadingScreen);
+
+                // Reset any challenge
             mChallenge->Terminate();
             mChallenge->Init(mPlayerAeroplane.get(), loadingScreen);
             actions.mReloadAeroplane = false;
@@ -694,7 +704,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 
         if (actions.mReloadAeroplane)
         {
-            TRACE_FILE_IF(1) TRACE("Reloading aeroplane");
+            TRACE_FILE_IF(ONCE_1) TRACE("Reloading aeroplane");
             if (!loadingScreen)
                 loadingScreen = new LoadingScreen("Loading", mGameSettings, true, true, true);
             mPlayerAeroplane->Terminate();
@@ -710,7 +720,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
 
         if (actions.mRecalcWind)
         {
-            TRACE_FILE_IF(1) TRACE("Recalculating wind");
+            TRACE_FILE_IF(ONCE_1) TRACE("Recalculating wind");
           if (!loadingScreen)
                 loadingScreen = new LoadingScreen("Loading", mGameSettings, false, true, false);
             Environment::GetInstance().InitZeroFlowHeightfield(loadingScreen);
@@ -772,7 +782,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // L to reload the plane
     if ((Input::GetInstance().GetKeyState(SDLK_l) & KEY_STATE_PRESSED))
     {
-        TRACE_FILE_IF(1) TRACE("Reloading aeroplane - manual prompt");
+        TRACE_FILE_IF(ONCE_1) TRACE("Reloading aeroplane - manual prompt");
         // This is needed to prevent a white screen with textured models
         LoadingScreen loadingScreen("Loading", mGameSettings, true, true, true);
         mPlayerAeroplane->Terminate();
@@ -792,8 +802,8 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
         CheckForQuitRequest()
         )
     {
-        TRACE_FILE_IF(1) TRACE("Returning to start screen");
-        TRACE_FILE_IF(1) TRACE("Saving settings");
+        TRACE_FILE_IF(ONCE_1) TRACE("Returning to start screen");
+        TRACE_FILE_IF(ONCE_1) TRACE("Saving settings");
         mGameSettings.SaveToFile((Platform::GetUserSettingsPath() + "settings.xml").c_str());
         // Clear pressed states to prevent click bleed-through to start menu
         Input::GetInstance().ClearPressedStates();
@@ -1118,6 +1128,11 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // Adjust the clipping
     GLint depthBits = 0;
     glGetIntegerv( GL_DEPTH_BITS, &depthBits);
+    static bool loggedDepthBits = false;
+    if (!loggedDepthBits) {
+        TRACE("Depth buffer bits: %d", depthBits);
+        loggedDepthBits = true;
+    }
     float cameraTerrainZ = Environment::GetInstance().GetTerrain().GetTerrainHeight(cameraTM.GetTrans().x, cameraTM.GetTrans().y, false);
     float cameraHeight = cameraTM.GetTrans().z - cameraTerrainZ;
     float maxClipDist = depthBits < 24 ? 1.0f : 0.1f;
@@ -1155,11 +1170,22 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             switch (mGameSettings.mOptions.mVRDesktopMode)
             {
             case Options::VR_DESKTOP_NOTHING:
-                // Just clear the desktop window to black
+            {
+                // Clear the desktop window to black
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                // Render "VR Headset in use" message centered on screen
+                ImGui_ImplOpenGL3_NewFrame();
+                ImGui_ImplSDL2_NewFrame();
+                ImGui::NewFrame();
+                UIHelpers::DrawCenteredText(GetPS(PS_MIRROR_TEXT, mGameSettings.mOptions.mLanguage), 0.5f, UIHelpers::Colors::LightGray, 1.5f);
+                UIHelpers::DrawCenteredText(GetPS(PS_MIRROR_SETTINGS, mGameSettings.mOptions.mLanguage), 0.6f, UIHelpers::Colors::LightGray, 1.0f);
+                ImGui::Render();
+                ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+                IwGxSwapBuffers();
                 break;
+            }
             case Options::VR_DESKTOP_LEFT_EYE:
                 // Show left eye view in desktop window
                 RenderManager::GetInstance().RenderMirrorWindow(RenderManager::VR_MIRROR_LEFT_EYE);
@@ -1281,7 +1307,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // Save settings after at least one successful update
     if (mUpdateCounter++ == 4)
     {
-        TRACE_FILE_IF(1) TRACE("Saving settings");
+        TRACE_FILE_IF(ONCE_1) TRACE("Saving settings");
         mGameSettings.SaveToFile((Platform::GetUserSettingsPath() + "settings.xml").c_str());
     }
     mTimeSinceEnabled += mCurrentDeltaTime;

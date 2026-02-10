@@ -1,5 +1,9 @@
 #include "Input.h"
 #include "Window.h"
+#include "S3ECompat.h"
+// Defined in AudioManager.cpp - avoids pulling in OpenAL headers
+extern void PauseAudioDevice();
+extern void ResumeAudioDevice();
 #include <cstring>
 #include <cstdio>
 
@@ -48,8 +52,8 @@ Input::~Input()
 
 Input& Input::GetInstance()
 {
-    static Input instance;
-    return instance;
+    IwAssert(ROWLHOUSE, gInput != nullptr);
+    return *gInput;
 }
 
 bool Input::Init()
@@ -102,7 +106,6 @@ bool Input::Init()
     OpenGamepads();
     OpenJoysticks();
 
-    gInput = this;
     return true;
 }
 
@@ -880,6 +883,11 @@ bool CheckForQuitRequest()
     return gQuitRequested;
 }
 
+void ResetQuitRequest()
+{
+    gQuitRequested = false;
+}
+
 void PollEvents()
 {
     // Mark start of new input frame
@@ -897,7 +905,27 @@ void PollEvents()
         case SDL_QUIT:
             gQuitRequested = true;
             break;
+#if defined(PICASIM_ANDROID) || defined(__ANDROID__)
+        case SDL_APP_WILLENTERBACKGROUND:
+            PauseAudioDevice();
+            break;
+        case SDL_APP_DIDENTERFOREGROUND:
+            ResumeAudioDevice();
+            break;
+#endif
         case SDL_KEYDOWN:
+#if defined(PICASIM_ANDROID) || defined(__ANDROID__)
+            // Android back button -> treat as Escape
+            if (event.key.keysym.sym == SDLK_AC_BACK)
+            {
+                // Synthesize an escape key event
+                SDL_Event escEvent = event;
+                escEvent.key.keysym.sym = SDLK_ESCAPE;
+                escEvent.key.keysym.scancode = SDL_SCANCODE_ESCAPE;
+                Input::GetInstance().ProcessEvent(escEvent);
+                break;
+            }
+#else
             // F11 or Alt+Enter toggles fullscreen globally
             // F key also toggles fullscreen, but only when not typing in a text input field
             if (event.key.keysym.sym == SDLK_F11 ||
@@ -907,6 +935,7 @@ void PollEvents()
                 if (gWindow)
                     gWindow->SetFullscreen(!gWindow->IsFullscreen());
             }
+#endif
             // Pass to input system
             Input::GetInstance().ProcessEvent(event);
             break;

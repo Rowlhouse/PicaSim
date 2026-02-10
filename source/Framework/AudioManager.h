@@ -42,6 +42,9 @@ public:
 
     ~AudioManager();
 
+    void PauseDevice();
+    void ResumeDevice();
+
     void Update(float dt);
 
     /// Sets the position of the listener

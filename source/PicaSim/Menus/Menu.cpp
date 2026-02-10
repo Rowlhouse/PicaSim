@@ -102,7 +102,7 @@ Texture* GetCachedTexture(std::string path, bool convertTo16Bit)
     TextureMap::iterator it = sTextureMap->find(pathLower);
     if (it == sTextureMap->end())
     {
-        TRACE_FILE_IF(1) TRACE("Loading texture %s", path.c_str());
+        TRACE_FILE_IF(ONCE_2) TRACE("Loading texture %s", path.c_str());
         Texture* texture = new Texture;
         texture->LoadFromFile(path.c_str());
         if (texture->GetWidth() > 0 && texture->GetHeight() > 0)
@@ -116,7 +116,7 @@ Texture* GetCachedTexture(std::string path, bool convertTo16Bit)
         }
         else
         {
-            TRACE_FILE_IF(1) TRACE("Failed to load texture %s", path.c_str());
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to load texture %s", path.c_str());
             delete texture;
             return 0;
         }

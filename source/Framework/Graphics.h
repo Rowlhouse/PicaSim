@@ -21,6 +21,60 @@
 #endif
 #endif
 
+// Legacy OpenGL constants used by the software matrix stack (es* functions)
+// and lighting wrappers. These are NOT passed to actual GL calls on GLES2 -
+// they are just used as enum identifiers in our custom emulation code.
+#if defined(PS_PLATFORM_ANDROID) || defined(PS_PLATFORM_IOS)
+#ifndef GL_MODELVIEW
+#define GL_MODELVIEW   0x1700
+#endif
+#ifndef GL_PROJECTION
+#define GL_PROJECTION  0x1701
+#endif
+#ifndef GL_LIGHT0
+#define GL_LIGHT0      0x4000
+#endif
+#ifndef GL_LIGHT1
+#define GL_LIGHT1      0x4001
+#endif
+#ifndef GL_LIGHT2
+#define GL_LIGHT2      0x4002
+#endif
+#ifndef GL_LIGHT3
+#define GL_LIGHT3      0x4003
+#endif
+#ifndef GL_LIGHT4
+#define GL_LIGHT4      0x4004
+#endif
+#ifndef GL_LIGHT5
+#define GL_LIGHT5      0x4005
+#endif
+#ifndef GL_LIGHT6
+#define GL_LIGHT6      0x4006
+#endif
+#ifndef GL_LIGHT7
+#define GL_LIGHT7      0x4007
+#endif
+#ifndef GL_COLOR_MATERIAL
+#define GL_COLOR_MATERIAL 0x0B57
+#endif
+#ifndef GL_ALPHA_TEST
+#define GL_ALPHA_TEST  0x0BC0
+#endif
+#ifndef GL_CLAMP
+#define GL_CLAMP       0x2900
+#endif
+#ifndef GL_LINE
+#define GL_LINE        0x1B01
+#endif
+#ifndef GL_FILL
+#define GL_FILL        0x1B02
+#endif
+#ifndef GL_FRONT_AND_BACK
+#define GL_FRONT_AND_BACK 0x0408
+#endif
+#endif // PS_PLATFORM_ANDROID || PS_PLATFORM_IOS
+
 typedef GLfloat GLMat44[4][4];
 typedef GLfloat GLMat33[3][3];
 typedef GLfloat GLVec4[4];
@@ -28,17 +82,12 @@ typedef GLfloat GLVec3[3];
 
 // Note: Texture typedef is now defined in Platform/Texture.h
 
-// Graphics state reset functions (for transitioning between UI and 3D rendering)
-void ResetGraphicsState(bool clear);
-void PrepareForUIRendering(bool clear);
-
 void SaveScreenshot();
 void SaveScreenshotAsTexture(Texture* texture);
 
-// Graphics initialization (now uses SDL2 Window - see Platform/Window.h)
-// Legacy compatibility - these now delegate to Window class
-int eglInit(bool createSurface, int msaaSamples = 0);
-void eglTerm(bool destroySurface);
+// Initialize matrix stacks, light arrays, and font renderer.
+// Call after Window and FontRenderer are created and GL context is ready.
+void eglInit();
 
 inline void ConvertTransformToGLMat44(const Transform& tm, GLMat44& mat44)
 {

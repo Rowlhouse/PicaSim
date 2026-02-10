@@ -173,6 +173,7 @@ void InitStringsDE(const char** txt)
   txt[PS_CONTROLLEDPLANESHADOWS] = "Schatten gesteuertes Flugzeug";
   txt[PS_OTHERSHADOWS] = "Andere Schatten";
   txt[PS_PROJECTEDSHADOWDETAIL] = "Projizierter Schatten Detail";
+  txt[PS_SHADOWBLURMULTIPLIER] = "Schattenunsch\xC3\xA4rfe-Multiplikator";
   txt[PS_BLOB] = "Fleck";
   txt[PS_PROJECTED] = "Projiziert";
   txt[PS_AEROPLANERENDER] = "Flugzeug Darstellung";
@@ -721,6 +722,8 @@ void InitStringsDE(const char** txt)
   txt[PS_VRNOTAVAILABLE] = "VR nicht verfügbar - kein Headset erkannt";
   txt[PS_VRPANORAMADEPTH] = "VR-Panoramatiefe";
   txt[PS_VRPANORAMAEXTENSION] = "VR Panorama Erweiterung";
+  txt[PS_MIRROR_TEXT] = "VR-Headset wird verwendet";
+  txt[PS_MIRROR_SETTINGS] = "VR-Anzeige in Einstellungen spiegeln";
   txt[PS_ORIENTATION] = "Ausrichtung";
   txt[PS_SMOKESOURCE] = "Rauchquelle %d";
   txt[PS_NAME] = "Name";

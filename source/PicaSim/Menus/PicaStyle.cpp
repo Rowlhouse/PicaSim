@@ -111,11 +111,15 @@ void PushStartMenuButtonStyle(float scale)
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, StartMenu::ButtonHovered);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, StartMenu::ButtonActive);
     ImGui::PushStyleColor(ImGuiCol_Text, Common::TextBlack);
+    ImGui::GetFont()->Scale *= 1.25f;
+    ImGui::PushFont(ImGui::GetFont());
 }
 
 //======================================================================================================================
 void PopStartMenuButtonStyle()
 {
+    ImGui::PopFont();
+    ImGui::GetFont()->Scale /= 1.25f;
     ImGui::PopStyleColor(4);
     ImGui::PopStyleVar(2);
 }

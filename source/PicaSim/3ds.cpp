@@ -56,7 +56,7 @@
 
 void CLoad3DS::ShowChunk(tChunk * pChunk)
 {
-    TRACE_FILE_IF(2) TRACE("Chunk %p: id = %04X, len = %08x, read = %d",
+    TRACE_FILE_IF(ONCE_2) TRACE("Chunk %p: id = %04X, len = %08x, read = %d",
                 pChunk, pChunk->ID, pChunk->length, pChunk->bytesRead);
 }
 
@@ -116,7 +116,7 @@ CLoad3DS::~CLoad3DS()
 
 bool CLoad3DS::Import3DS(ThreeDSModel *pModel, const char *strFileName)
 {
-    TRACE_FILE_IF(1) TRACE("CLoad3DS::Import3DS pModel = %p, file = %s", pModel, strFileName);
+    TRACE_FILE_IF(ONCE_1) TRACE("CLoad3DS::Import3DS pModel = %p, file = %s", pModel, strFileName);
     
     // Open the 3DS file
     m_FilePointer = fopen(strFileName, "rb");
@@ -125,7 +125,7 @@ bool CLoad3DS::Import3DS(ThreeDSModel *pModel, const char *strFileName)
     if(!m_FilePointer) 
     {
         IwAssertMsg(ROWLHOUSE, false, ("Failed to open file"));
-        TRACE_FILE_IF(1) TRACE("Unable to find the file: %s!", strFileName);
+        TRACE_FILE_IF(ONCE_1) TRACE("Unable to find the file: %s!", strFileName);
         return false;
     }
     
@@ -142,7 +142,7 @@ bool CLoad3DS::Import3DS(ThreeDSModel *pModel, const char *strFileName)
     // Make sure this is a 3DS file
     if (m_CurrentChunk->ID != PRIMARY)
     {
-        TRACE_FILE_IF(1) TRACE("Unable to load PRIMARY chuck from file: %s!", strFileName);
+        TRACE_FILE_IF(ONCE_1) TRACE("Unable to load PRIMARY chuck from file: %s!", strFileName);
         CleanUp();
         return false;
     }
@@ -188,7 +188,7 @@ void CLoad3DS::CleanUp()
 
 void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
 {
-    TRACE_FILE_IF(2) TRACE("pModel = %p, tChunk = %p", pModel, pPreviousChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("pModel = %p, tChunk = %p", pModel, pPreviousChunk);
     unsigned int version = 0;        // This will hold the file version
     unsigned int num_read;
     unsigned int num_to_read;
@@ -219,7 +219,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
             
             num_to_read = m_CurrentChunk->length - m_CurrentChunk->bytesRead;
             IwAssert(ROWLHOUSE, num_to_read <= BUF_SIZE);
-            TRACE_FILE_IF(2) TRACE("Reading VERSION: %d bytes", num_to_read);
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading VERSION: %d bytes", num_to_read);
             // Read the file version and add the bytes read to our bytesRead variable
             num_read = fread(&buf_union, 1, num_to_read, m_FilePointer);
             IwAssert(ROWLHOUSE, num_read == num_to_read);
@@ -234,7 +234,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
             
             // If the file version is over 3, give a warning that there could be a problem
             if (version > 0x03)
-                TRACE_FILE_IF(1) TRACE("Warning: This 3DS file is over version 3 so it may load incorrectly");
+                TRACE_FILE_IF(ONCE_1) TRACE("Warning: This 3DS file is over version 3 so it may load incorrectly");
             break;
             
         case OBJECTINFO:                        // This holds the version of the mesh
@@ -248,7 +248,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
             
             num_to_read = m_TempChunk->length - m_TempChunk->bytesRead;
             IwAssert(ROWLHOUSE, num_to_read <= BUF_SIZE);
-            TRACE_FILE_IF(2) TRACE("Reading OBJECTINFO: %d bytes", num_to_read);
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading OBJECTINFO: %d bytes", num_to_read);
             // Get the version of the mesh
             num_read = fread(&buf_union, 1, num_to_read, m_FilePointer);
             IwAssert(ROWLHOUSE, num_read == num_to_read);
@@ -269,7 +269,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
             
         case MATERIAL:                     // This holds the material information
             {
-                TRACE_FILE_IF(2) TRACE("Reading a material");
+                TRACE_FILE_IF(ONCE_2) TRACE("Reading a material");
                 // This chunk is the header for the material info chunks
             
                 // Add a empty texture structure to our texture list.  If you
@@ -284,7 +284,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
             break;
             
         case OBJECT:                    // This holds the name of the object being read
-            TRACE_FILE_IF(2) TRACE("Reading an object");
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading an object");
             
             // This chunk is the header for the object info chunks.  It also
             // holds the name of the object.
@@ -320,7 +320,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
             // If we didn't care about a chunk, then we get here.  We still
             // need to read past the unknown or ignored chunk and add the
             // bytes read to the byte counter.
-            TRACE_FILE_IF(2) TRACE("ProcessNextChunk - Ignoring chunk ID %x", m_CurrentChunk->ID);
+            TRACE_FILE_IF(ONCE_2) TRACE("ProcessNextChunk - Ignoring chunk ID %x", m_CurrentChunk->ID);
             num_read = fread(&buffer[0], 1, m_CurrentChunk->length - m_CurrentChunk->bytesRead, m_FilePointer);
             m_CurrentChunk->bytesRead += num_read;
             IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
@@ -346,7 +346,7 @@ void CLoad3DS::ProcessNextChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
 
 void CLoad3DS::ProcessNextObjectChunk(ThreeDSModel *pModel, ThreeDSObject *pObject, tChunk *pPreviousChunk)
 {
-    TRACE_FILE_IF(2) TRACE("ProcessNextObjectChunk - pModel = %p, pObject = %p, chunk = %p",
+    TRACE_FILE_IF(ONCE_2) TRACE("ProcessNextObjectChunk - pModel = %p, pObject = %p, chunk = %p",
         pModel, pObject, pPreviousChunk);
     unsigned num_read;
     std::vector<int> buffer(BUF_SIZE); // This is used to read past unwanted data
@@ -366,22 +366,22 @@ void CLoad3DS::ProcessNextObjectChunk(ThreeDSModel *pModel, ThreeDSObject *pObje
         case OBJECT_MESH:                    // This lets us know that we are reading a new object
             
             // We found a new object, so let's read in it's info using recursion
-            TRACE_FILE_IF(2) TRACE("Reading a mesh");
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading a mesh");
             ProcessNextObjectChunk(pModel, pObject, m_CurrentChunk);
             break;
             
         case OBJECT_VERTICES:                // This is the objects vertices
-            TRACE_FILE_IF(2) TRACE("Reading vertices");
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading vertices");
             ReadVertices(pObject, m_CurrentChunk);
             break;
             
         case OBJECT_FACES:                    // This is the objects face information
-            TRACE_FILE_IF(2) TRACE("Reading faces");
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading faces");
             ReadVertexIndices(pObject, m_CurrentChunk);
             break;
             
         case OBJECT_MATERIAL:                // This holds the material name that the object has
-            TRACE_FILE_IF(2) TRACE("Reading material");
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading material");
             
             // This chunk holds the name of the material that the object has
             // assigned to it.  This could either be just a color or a
@@ -397,7 +397,7 @@ void CLoad3DS::ProcessNextObjectChunk(ThreeDSModel *pModel, ThreeDSObject *pObje
             break;
             
         case OBJECT_UV:        // This holds the UV texture coordinates for the object
-            TRACE_FILE_IF(2) TRACE("Reading UV");
+            TRACE_FILE_IF(ONCE_2) TRACE("Reading UV");
             
             // This chunk holds all of the UV coordinates for our object.
             // Let's read them in.
@@ -407,7 +407,7 @@ void CLoad3DS::ProcessNextObjectChunk(ThreeDSModel *pModel, ThreeDSObject *pObje
         default:  
             
             // Read past the ignored or unknown chunks
-            TRACE_FILE_IF(2) TRACE("Ignoring chunk ID %x", m_CurrentChunk->ID);
+            TRACE_FILE_IF(ONCE_2) TRACE("Ignoring chunk ID %x", m_CurrentChunk->ID);
             num_read = fread(&buffer[0], 1, m_CurrentChunk->length - m_CurrentChunk->bytesRead, m_FilePointer);
             m_CurrentChunk->bytesRead += num_read;
             IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
@@ -433,7 +433,7 @@ void CLoad3DS::ProcessNextObjectChunk(ThreeDSModel *pModel, ThreeDSObject *pObje
 
 void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousChunk)
 {
-    TRACE_FILE_IF(2) TRACE("ProcessNextMaterialChunk: pModel = %p, chunk = %p", pModel, pPreviousChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("ProcessNextMaterialChunk: pModel = %p, chunk = %p", pModel, pPreviousChunk);
     unsigned num_read, num_to_read;
     std::vector<int> buffer(BUF_SIZE); // This is used to read past unwanted data
 
@@ -457,28 +457,28 @@ void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousC
             num_to_read = m_CurrentChunk->length - m_CurrentChunk->bytesRead;
             IwAssert(ROWLHOUSE, num_to_read <= 255);
             m_CurrentChunk->bytesRead += fread(material->strName, 1, num_to_read, m_FilePointer);
-            TRACE_FILE_IF(2) TRACE("Loading material %s", material->strName);
+            TRACE_FILE_IF(ONCE_2) TRACE("Loading material %s", material->strName);
             break;
             
         case MATAMBIENT:             // This holds the R G B color of our object
             ReadColorChunk(material->ambientColor, m_CurrentChunk);
-            TRACE_FILE_IF(2) TRACE("Ambient = %d %d %d %d", material->ambientColor[0], material->ambientColor[1], material->ambientColor[2], material->ambientColor[3]);
+            TRACE_FILE_IF(ONCE_2) TRACE("Ambient = %d %d %d %d", material->ambientColor[0], material->ambientColor[1], material->ambientColor[2], material->ambientColor[3]);
             break;
             
         case MATDIFFUSE:             // This holds the R G B color of our object
             ReadColorChunk(material->diffuseColor, m_CurrentChunk);
-            TRACE_FILE_IF(2) TRACE("Diffuse = %d %d %d %d", material->diffuseColor[0], material->diffuseColor[1], material->diffuseColor[2], material->diffuseColor[3]);
+            TRACE_FILE_IF(ONCE_2) TRACE("Diffuse = %d %d %d %d", material->diffuseColor[0], material->diffuseColor[1], material->diffuseColor[2], material->diffuseColor[3]);
             break;
             
         case MATSPECULAR:             // This holds the R G B color of our object
             ReadColorChunk(material->specularColor, m_CurrentChunk);
-            TRACE_FILE_IF(2) TRACE("Specular = %d %d %d %d", material->specularColor[0], material->specularColor[1], material->specularColor[2], material->specularColor[3]);
+            TRACE_FILE_IF(ONCE_2) TRACE("Specular = %d %d %d %d", material->specularColor[0], material->specularColor[1], material->specularColor[2], material->specularColor[3]);
             break;
             
         case MATMAP:                // This is the header for the texture info
             
             // Proceed to read in the material information
-            TRACE_FILE_IF(2) TRACE("Processing next material");
+            TRACE_FILE_IF(ONCE_2) TRACE("Processing next material");
             ProcessNextMaterialChunk(pModel, m_CurrentChunk);
             break;
             
@@ -488,7 +488,7 @@ void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousC
             num_to_read = m_CurrentChunk->length - m_CurrentChunk->bytesRead;
             IwAssert(ROWLHOUSE, num_to_read <= 255);
             m_CurrentChunk->bytesRead += fread(material->strFile, 1, num_to_read, m_FilePointer);
-            TRACE_FILE_IF(2) TRACE("Texture file name = %s", material->strFile);
+            TRACE_FILE_IF(ONCE_2) TRACE("Texture file name = %s", material->strFile);
             break;
             
         default:        
@@ -496,7 +496,7 @@ void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousC
             num_read = fread(&buffer[0], 1, m_CurrentChunk->length - m_CurrentChunk->bytesRead, m_FilePointer);
             m_CurrentChunk->bytesRead += num_read;
             IwAssert(ROWLHOUSE, num_read <= BUF_SIZE);
-            TRACE_FILE_IF(2) TRACE("ProcessNextMaterialChunk - Ignoring chunk ID %x", m_CurrentChunk->ID);
+            TRACE_FILE_IF(ONCE_2) TRACE("ProcessNextMaterialChunk - Ignoring chunk ID %x", m_CurrentChunk->ID);
             break;
         }
         
@@ -520,7 +520,7 @@ void CLoad3DS::ProcessNextMaterialChunk(ThreeDSModel *pModel, tChunk *pPreviousC
 
 void CLoad3DS::ReadChunk(tChunk *pChunk)
 {
-    TRACE_FILE_IF(2) TRACE("chunk = %p", pChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("chunk = %p", pChunk);
     // This reads the chunk ID which is 2 bytes.
     // The chunk ID is like OBJECT or MATERIAL.  It tells what data is
     // able to be read in within the chunks section.  
@@ -548,7 +548,7 @@ void CLoad3DS::ReadChunk(tChunk *pChunk)
 
 int CLoad3DS::GetString(char *pBuffer)
 {
-    TRACE_FILE_IF(2) TRACE("pBuffer = %p", pBuffer);
+    TRACE_FILE_IF(ONCE_2) TRACE("pBuffer = %p", pBuffer);
     int index = 0;
     
     // Read 1 byte of data which is the first letter of the string
@@ -577,7 +577,7 @@ int CLoad3DS::GetString(char *pBuffer)
 void CLoad3DS::ReadColorChunk(GLubyte  color[4],
                               tChunk *pChunk)
 {
-    TRACE_FILE_IF(2) TRACE("color = %p, chunk = %p", color, pChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("color = %p, chunk = %p", color, pChunk);
     unsigned int num_to_read;
       
     // Read the color chunk info
@@ -605,7 +605,7 @@ void CLoad3DS::ReadColorChunk(GLubyte  color[4],
     }
     else
     {
-        TRACE_FILE_IF(2) TRACE("num to read = %d!", num_to_read);
+        TRACE_FILE_IF(ONCE_2) TRACE("num to read = %d!", num_to_read);
         color[0] = 255;
         color[1] = 0;
         color[2] = 0;
@@ -628,7 +628,7 @@ void CLoad3DS::ReadColorChunk(GLubyte  color[4],
 
 void CLoad3DS::ReadVertexIndices(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 {
-    TRACE_FILE_IF(2) TRACE("pObject = %p, chunk = %p", pObject, pPreviousChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("pObject = %p, chunk = %p", pObject, pPreviousChunk);
     unsigned short index = 0;        // This is used to read in the current face index
     
     // In order to read in the vertex indices for the object, we need to
@@ -679,7 +679,7 @@ void CLoad3DS::ReadVertexIndices(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 
 void CLoad3DS::ReadUVCoordinates(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 {
-    TRACE_FILE_IF(2) TRACE("pObject = %p, chunk = %p", pObject, pPreviousChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("pObject = %p, chunk = %p", pObject, pPreviousChunk);
     // In order to read in the UV indices for the object, we need to
     // first read in the amount there are, then read them in.
     
@@ -714,7 +714,7 @@ void CLoad3DS::ReadUVCoordinates(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 
 void CLoad3DS::ReadVertices(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 {
-    TRACE_FILE_IF(2) TRACE("pObject = %p, chunk = %p", pObject, pPreviousChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("pObject = %p, chunk = %p", pObject, pPreviousChunk);
     // Like most chunks, before we read in the actual vertices, we need
     // to find out how many there are to read in.  Once we have that number
     // we then fread() them into our vertice array.
@@ -774,7 +774,7 @@ void CLoad3DS::ReadVertices(ThreeDSObject *pObject, tChunk *pPreviousChunk)
 
 void CLoad3DS::ReadObjectMaterial(ThreeDSModel *pModel, ThreeDSObject *pObject, tChunk *pPreviousChunk)
 {
-    TRACE_FILE_IF(2) TRACE("pModel = %p, pObject = %p, chunk = %p", pModel, pObject, pPreviousChunk);
+    TRACE_FILE_IF(ONCE_2) TRACE("pModel = %p, pObject = %p, chunk = %p", pModel, pObject, pPreviousChunk);
     char strMaterial[255] = {0};     // This is used to hold the objects material name
     unsigned num_read;
     std::vector<int> buffer(BUF_SIZE); // This is used to read past unwanted data
@@ -798,7 +798,7 @@ void CLoad3DS::ReadObjectMaterial(ThreeDSModel *pModel, ThreeDSObject *pObject, 
     // this function.  This is because we need the number of textures.
     // Yes though, we could have just passed in the model and not the
     // object too.
-    TRACE_FILE_IF(2) TRACE("Looking for material = %s", strMaterial);
+    TRACE_FILE_IF(ONCE_2) TRACE("Looking for material = %s", strMaterial);
     
     // Set the ID to -1 to show there is no material for this object
     pObject->materialID = -1;
@@ -834,7 +834,7 @@ void CLoad3DS::ReadObjectMaterial(ThreeDSModel *pModel, ThreeDSObject *pObject, 
 
     if (pObject->materialID == -1)
     {
-        TRACE_FILE_IF(1) TRACE("No material for object %p - wanted %s", pObject, strMaterial);
+        TRACE_FILE_IF(ONCE_1) TRACE("No material for object %p - wanted %s", pObject, strMaterial);
     }
     
     // Read past the rest of the chunk since we don't care about shared
@@ -931,7 +931,7 @@ Vector3 Normalize(Vector3 vNormal)
 
 void CLoad3DS::ComputeNormals(ThreeDSModel *pModel)
 {
-    TRACE_FILE_IF(2) TRACE("pModel = %p", pModel);
+    TRACE_FILE_IF(ONCE_2) TRACE("pModel = %p", pModel);
     Vector3 vVector1, vVector2, vNormal, vPoly[3];
     
     // If there are no objects, we can skip this part

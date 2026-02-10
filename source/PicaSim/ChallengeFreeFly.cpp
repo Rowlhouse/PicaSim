@@ -23,7 +23,7 @@ void ChallengeFreeFly::Relaunched()
 //======================================================================================================================
 void ChallengeFreeFly::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScreen)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mAeroplane = aeroplane;
     RenderManager::GetInstance().RegisterRenderGxObject(this, 0);
     mNeedToCacheText = true;
@@ -101,7 +101,7 @@ void ChallengeFreeFly::Reset()
 //======================================================================================================================
 void ChallengeFreeFly::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderGxObject(this, 0);
 
     while (!mAIControllers.empty())
@@ -239,7 +239,7 @@ const float GetDistance(const Options& options, float distance)
 //======================================================================================================================
 void ChallengeFreeFly::GxRender(int renderLevel, DisplayConfig& displayConfig)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     const Options& options = gs.mOptions;
     if (
@@ -400,6 +400,7 @@ void ChallengeFreeFly::GxRender(int renderLevel, DisplayConfig& displayConfig)
 
         const ControllerShader* shader = (ControllerShader*) ShaderManager::GetInstance().GetShader(SHADER_CONTROLLER);
         shader->Use();
+        glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
         glVertexAttribPointer(shader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
         glEnableVertexAttribArray(shader->a_position);
         glUniform4f(shader->u_colour, c, c, c, a);
@@ -411,7 +412,8 @@ void ChallengeFreeFly::GxRender(int renderLevel, DisplayConfig& displayConfig)
 
     if (gs.mOptions.mDisplayFPS)
     {
-        font.SetRect(displayConfig.mLeft,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)displayConfig.mWidth,fontHeight);
+        int16 fpsInsetX = (int16)Platform::GetSafeAreaInsetX();
+        font.SetRect(displayConfig.mLeft + fpsInsetX,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)(displayConfig.mWidth - 2 * fpsInsetX),fontHeight);
         font.SetAlignmentHor(FONT_ALIGN_RIGHT);
         sprintf(txt, "%ld", std::lround(gs.mStatistics.mSmoothedFPS));
         font.SetColourABGR(0xff00ffff);

@@ -11,7 +11,7 @@
 //======================================================================================================================
 Runway::Runway(const Transform& tm, float length, float width, const char* textureFile, Mode mode)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_1);
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_OBJECTS);
 
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
@@ -29,7 +29,7 @@ Runway::Runway(const Transform& tm, float length, float width, const char* textu
         if (gs.mOptions.m16BitTextures && mTexture.GetWidth() > 512)
             mTexture.SetFormatHW(CIwImage::RGB_565);
         mTexture.Upload();
-        TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", textureFile, mTexture.mHWID);
+        TRACE_FILE_IF(ONCE_1) TRACE("Uploaded texture %s id %d", textureFile, mTexture.mHWID);
 
         if (mTexture.GetFlags() & Texture::UPLOADED_F)
         {
@@ -45,7 +45,7 @@ Runway::Runway(const Transform& tm, float length, float width, const char* textu
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
             mTexture.Upload();
-            TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", textureFile, mTexture.mHWID);
+            TRACE_FILE_IF(ONCE_1) TRACE("Uploaded texture %s id %d", textureFile, mTexture.mHWID);
         }
     }
 
@@ -275,7 +275,7 @@ void Runway::MakeRow(
 //======================================================================================================================
 Runway::~Runway()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_1);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
 }
 
@@ -330,6 +330,8 @@ void Runway::RenderUpdate(class Viewport* viewport, int renderLevel)
     glUniform1f(texturedModelShader->u_specularExponent, specularExponent);
     glUniform1f(texturedModelShader->u_specularAmount, specularAmount);
 
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
+
     glEnableVertexAttribArray(texturedModelShader->a_position);
     glEnableVertexAttribArray(texturedModelShader->a_texCoord);
     glEnableVertexAttribArray(texturedModelShader->a_colour);
@@ -357,12 +359,6 @@ void Runway::RenderUpdate(class Viewport* viewport, int renderLevel)
     glDisableVertexAttribArray(texturedModelShader->a_position);
     glDisableVertexAttribArray(texturedModelShader->a_texCoord);
     glDisableVertexAttribArray(texturedModelShader->a_colour);
-
-    if (mTexture.GetFlags() & Texture::UPLOADED_F)
-    {
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisable(GL_TEXTURE_2D);
-    }
 
     esPopMatrix();
 }

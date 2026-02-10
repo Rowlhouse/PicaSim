@@ -16,7 +16,7 @@ static const float maxLookYawAngle = PI;
 //======================================================================================================================
 void Observer::Init(const Vector3& point, CameraTarget* target)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
 
     mCameraOffset = Vector3(0,0,observerHeight);
@@ -41,7 +41,7 @@ void Observer::Init(const Vector3& point, CameraTarget* target)
 //======================================================================================================================
 void Observer::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     EntityManager::GetInstance().UnregisterEntity(this, ENTITY_LEVEL_PRE_PHYSICS);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
     mRenderModel.Terminate();
@@ -194,7 +194,7 @@ void Observer::EntityUpdate(float deltaTime, int entityLevel)
 //======================================================================================================================
 void Observer::RenderUpdate(Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const Options& options = PicaSim::GetInstance().GetSettings().mOptions;
 
     mSkyGrid.Enable(false);

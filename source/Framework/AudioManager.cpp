@@ -5,8 +5,22 @@
 #include <cstring>
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 
 std::unique_ptr<AudioManager> AudioManager::mInstance;
+
+// Free functions callable from Platform code without pulling in OpenAL headers
+void PauseAudioDevice()
+{
+    if (AudioManager::IsAvailable())
+        AudioManager::GetInstance().PauseDevice();
+}
+
+void ResumeAudioDevice()
+{
+    if (AudioManager::IsAvailable())
+        AudioManager::GetInstance().ResumeDevice();
+}
 
 //======================================================================================================================
 static int16 ClipToInt16(int32 sval)
@@ -21,7 +35,7 @@ static int16 ClipToInt16(int32 sval)
 //======================================================================================================================
 void AudioManager::Init()
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::Init()");
+    TRACE_FILE_IF(ONCE_1) TRACE("AudioManager::Init()");
     IwAssert(ROWLHOUSE, mInstance == nullptr);
     mInstance.reset(new AudioManager);
 }
@@ -29,7 +43,7 @@ void AudioManager::Init()
 //======================================================================================================================
 void AudioManager::Terminate()
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::Terminate()");
+    TRACE_FILE_IF(ONCE_1) TRACE("AudioManager::Terminate()");
     IwAssert(ROWLHOUSE, mInstance);
     mInstance.reset();
 }
@@ -50,14 +64,19 @@ AudioManager::AudioManager()
     if (defaultDeviceName)
     {
         mDefaultDeviceName = defaultDeviceName;
-        TRACE_FILE_IF(1) TRACE("Default audio device: %s", defaultDeviceName);
+        TRACE_FILE_IF(ONCE_1) TRACE("Default audio device: %s", defaultDeviceName);
     }
+
+#ifdef PICASIM_ANDROID
+    // Point OpenAL-Soft to our config file (CWD is the extracted assets directory)
+    setenv("ALSOFT_CONF", "alsoft.conf", 1);
+#endif
 
     // Open default audio device
     mALDevice = alcOpenDevice(nullptr);
     if (!mALDevice)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to open OpenAL device");
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to open OpenAL device");
         return;
     }
 
@@ -72,7 +91,7 @@ AudioManager::AudioManager()
     mALContext = alcCreateContext(mALDevice, nullptr);
     if (!mALContext)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to create OpenAL context");
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to create OpenAL context");
         alcCloseDevice(mALDevice);
         mALDevice = nullptr;
         return;
@@ -98,7 +117,7 @@ AudioManager::AudioManager()
         ALenum error = alGetError();
         if (error != AL_NO_ERROR)
         {
-            TRACE_FILE_IF(1) TRACE("Failed to create OpenAL source %d, error %d", i, error);
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to create OpenAL source %d, error %d", i, error);
             mNumAvailableChannels = i;
             break;
         }
@@ -107,7 +126,7 @@ AudioManager::AudioManager()
         mChannels[i].mVolumeScale = 0.0f;
     }
 
-    TRACE_FILE_IF(1) TRACE("AudioManager initialized with %d channels", mNumAvailableChannels);
+    TRACE_FILE_IF(ONCE_1) TRACE("AudioManager initialized with %d channels", mNumAvailableChannels);
 }
 
 //======================================================================================================================
@@ -141,6 +160,30 @@ AudioManager::~AudioManager()
     if (mALDevice)
     {
         alcCloseDevice(mALDevice);
+    }
+}
+
+//======================================================================================================================
+void AudioManager::PauseDevice()
+{
+    if (mALDevice)
+    {
+        auto pauseFunc = reinterpret_cast<void(*)(ALCdevice*)>(
+            alcGetProcAddress(mALDevice, "alcDevicePauseSOFT"));
+        if (pauseFunc)
+            pauseFunc(mALDevice);
+    }
+}
+
+//======================================================================================================================
+void AudioManager::ResumeDevice()
+{
+    if (mALDevice)
+    {
+        auto resumeFunc = reinterpret_cast<void(*)(ALCdevice*)>(
+            alcGetProcAddress(mALDevice, "alcDeviceResumeSOFT"));
+        if (resumeFunc)
+            resumeFunc(mALDevice);
     }
 }
 
@@ -206,14 +249,14 @@ void AudioManager::UpdateChannel(SoundChannel soundChannel, float deltaTime)
         alSource3f(channel.mALSource, AL_VELOCITY, vel.x, vel.y, vel.z);
     }
 
-    TRACE_FILE_IF(4) TRACE("AudioManager::UpdateChannel(%d): vol = %f, freq = %f",
+    TRACE_FILE_IF(FRAME_1) TRACE("AudioManager::UpdateChannel(%d): vol = %f, freq = %f",
         soundChannel, channel.mVolumeScale, channel.mFrequencyScale);
 }
 
 //======================================================================================================================
 void AudioManager::SetAllChannelsToZeroVolume()
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::SetAllChannelsToZeroVolume()");
+    TRACE_FILE_IF(ONCE_2) TRACE("AudioManager::SetAllChannelsToZeroVolume()");
     for (int i = 0; i < mNumAvailableChannels; ++i)
     {
         SetChannelTargetVolumeScale(i, 0.0f);
@@ -223,7 +266,7 @@ void AudioManager::SetAllChannelsToZeroVolume()
 //======================================================================================================================
 void AudioManager::StopAllChannels()
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::StopAllChannels()");
+    TRACE_FILE_IF(ONCE_2) TRACE("AudioManager::StopAllChannels()");
     for (int i = 0; i < mNumAvailableChannels; ++i)
     {
         ReleaseSoundChannel(i);
@@ -253,7 +296,7 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     , mSoundSamples(0)
     , mALBuffer(0)
 {
-    TRACE_FILE_IF(1) TRACE("Sound::Sound(%s) = %p", soundFile, this);
+    TRACE_FILE_IF(ONCE_2) TRACE("Sound::Sound(%s) = %p", soundFile, this);
     strncpy(mName, soundFile, sizeof(mName) / sizeof(mName[0]));
     mName[sizeof(mName) - 1] = '\0';
     mSampleFrequency = sampleFrequency;
@@ -265,7 +308,7 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     FILE* file = fopen(soundFile, "rb");
     if (!file)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to open sound file: %s", soundFile);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to open sound file: %s", soundFile);
         return;
     }
 
@@ -273,7 +316,7 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     long fileNumBytes = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    TRACE_FILE_IF(1) TRACE("Reading sound file - %ld bytes", fileNumBytes);
+    TRACE_FILE_IF(ONCE_2) TRACE("Reading sound file - %ld bytes", fileNumBytes);
     mSoundSamples = (int)(fileNumBytes / 2); // reading 16 bit values
     mSoundData = new int16[mSoundSamples];
 
@@ -282,7 +325,7 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
 
     if (bytesRead != (size_t)fileNumBytes)
     {
-        TRACE_FILE_IF(1) TRACE("Error reading sound file: %s", soundFile);
+        TRACE_FILE_IF(ONCE_1) TRACE("Error reading sound file: %s", soundFile);
         delete[] mSoundData;
         mSoundData = nullptr;
         mSoundSamples = 0;
@@ -314,7 +357,7 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     ALenum error = alGetError();
     if (error != AL_NO_ERROR)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to create OpenAL buffer, error %d", error);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to create OpenAL buffer, error %d", error);
         delete[] mSoundData;
         mSoundData = nullptr;
         mSoundSamples = 0;
@@ -329,7 +372,7 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     error = alGetError();
     if (error != AL_NO_ERROR)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to upload audio data to OpenAL buffer, error %d", error);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to upload audio data to OpenAL buffer, error %d", error);
         alDeleteBuffers(1, &mALBuffer);
         mALBuffer = 0;
         delete[] mSoundData;
@@ -338,14 +381,14 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
         return;
     }
 
-    TRACE_FILE_IF(1) TRACE("Created OpenAL buffer %u for %s (%d samples, %d Hz, %s)",
+    TRACE_FILE_IF(ONCE_2) TRACE("Created OpenAL buffer %u for %s (%d samples, %d Hz, %s)",
         mALBuffer, soundFile, mSoundSamples, sampleFrequency, stereo ? "stereo" : "mono");
 }
 
 //======================================================================================================================
 AudioManager::Sound::~Sound()
 {
-    TRACE_FILE_IF(1) TRACE("Sound::~Sound()");
+    TRACE_FILE_IF(ONCE_2) TRACE("Sound::~Sound()");
     if (mALBuffer != 0)
     {
         alDeleteBuffers(1, &mALBuffer);
@@ -356,7 +399,7 @@ AudioManager::Sound::~Sound()
 //======================================================================================================================
 AudioManager::Sounds::iterator AudioManager::FindLoadedSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop)
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::FindLoadedSound %s", soundFile);
+    TRACE_FILE_IF(ONCE_3) TRACE("AudioManager::FindLoadedSound %s", soundFile);
     for (Sounds::iterator it = mSounds.begin(); it != mSounds.end(); ++it)
     {
         Sound* sound = *it;
@@ -365,18 +408,18 @@ AudioManager::Sounds::iterator AudioManager::FindLoadedSound(const char* soundFi
                 stereo == sound->mStereo &&
                 loop == sound->mLoop)
         {
-            TRACE_FILE_IF(1) TRACE("Found sound");
+            TRACE_FILE_IF(ONCE_3) TRACE("Found sound");
             return it;
         }
     }
-    TRACE_FILE_IF(1) TRACE("Didn't find already loaded sound");
+    TRACE_FILE_IF(ONCE_3) TRACE("Didn't find already loaded sound");
     return mSounds.end();
 }
 
 //======================================================================================================================
 AudioManager::Sound* AudioManager::LoadSound(const char* soundFile, int sampleFrequency, bool stereo, bool loop, bool normalise)
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::LoadSound %s", soundFile);
+    TRACE_FILE_IF(ONCE_2) TRACE("AudioManager::LoadSound %s", soundFile);
     Sounds::iterator it = FindLoadedSound(soundFile, sampleFrequency, stereo, loop);
 
     if (it != mSounds.end())
@@ -426,7 +469,7 @@ void AudioManager::UnloadSound(Sound* sound)
 //======================================================================================================================
 AudioManager::SoundChannel AudioManager::AllocateSoundChannel(float soundSourceRadius, bool use3D)
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::AllocateSoundChannel");
+    TRACE_FILE_IF(ONCE_2) TRACE("AudioManager::AllocateSoundChannel");
 
     // Find a free channel
     SoundChannel soundChannel = -1;
@@ -440,7 +483,7 @@ AudioManager::SoundChannel AudioManager::AllocateSoundChannel(float soundSourceR
     }
     if (soundChannel == -1)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to get a sound channel");
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to get a sound channel");
         return -1;
     }
     IwAssert(ROWLHOUSE, soundChannel < mNumAvailableChannels);
@@ -480,18 +523,18 @@ AudioManager::SoundChannel AudioManager::AllocateSoundChannel(float soundSourceR
     alSourcef(source, AL_GAIN, 0.0f);
     alSourcef(source, AL_PITCH, 1.0f);
 
-    TRACE_FILE_IF(1) TRACE("Allocated sound channel %d", soundChannel);
+    TRACE_FILE_IF(ONCE_2) TRACE("Allocated sound channel %d", soundChannel);
     return soundChannel;
 }
 
 //======================================================================================================================
 void AudioManager::ReleaseSoundChannel(AudioManager::SoundChannel soundChannel)
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::ReleaseSoundChannel(%d)", soundChannel);
+    TRACE_FILE_IF(ONCE_2) TRACE("AudioManager::ReleaseSoundChannel(%d)", soundChannel);
 
     if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     {
-        TRACE_FILE_IF(1) TRACE("WARNING: ReleaseSoundChannel called with invalid channel %d", soundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("WARNING: ReleaseSoundChannel called with invalid channel %d", soundChannel);
         return;
     }
 
@@ -506,7 +549,7 @@ void AudioManager::ReleaseSoundChannel(AudioManager::SoundChannel soundChannel)
     }
     else
     {
-        TRACE_FILE_IF(1) TRACE("Channel not in use");
+        TRACE_FILE_IF(ONCE_3) TRACE("Channel not in use");
     }
 }
 
@@ -515,10 +558,10 @@ void AudioManager::StartSoundOnChannel(SoundChannel soundChannel, Sound* sound, 
 {
     if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     {
-        TRACE_FILE_IF(1) TRACE("WARNING: StartSoundOnChannel called with invalid channel %d", soundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("WARNING: StartSoundOnChannel called with invalid channel %d", soundChannel);
         return;
     }
-    TRACE_FILE_IF(1) TRACE("AudioManager::StartSoundOnChannel(%d, %s) sound = %p",
+    TRACE_FILE_IF(ONCE_2) TRACE("AudioManager::StartSoundOnChannel(%d, %s) sound = %p",
         soundChannel, sound->mName, sound);
     IwAssert(ROWLHOUSE, soundChannel >= 0);
 
@@ -551,7 +594,7 @@ void AudioManager::PauseSoundOnChannel(SoundChannel soundChannel)
 {
     if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     {
-        TRACE_FILE_IF(1) TRACE("WARNING: PauseSoundOnChannel called with invalid channel %d", soundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("WARNING: PauseSoundOnChannel called with invalid channel %d", soundChannel);
         return;
     }
     alSourcePause(mChannels[soundChannel].mALSource);
@@ -573,7 +616,7 @@ void AudioManager::SetChannelPositionAndVelocity(SoundChannel soundChannel, cons
 {
     if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     {
-        TRACE_FILE_IF(1) TRACE("WARNING: SetChannelPositionAndVelocity called with invalid channel %d", soundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("WARNING: SetChannelPositionAndVelocity called with invalid channel %d", soundChannel);
         return;
     }
     Channel& channel = mChannels[soundChannel];
@@ -587,7 +630,7 @@ void AudioManager::SetChannelFrequencyScale(SoundChannel soundChannel, float fre
 {
     if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     {
-        TRACE_FILE_IF(1) TRACE("WARNING: SetChannelFrequencyScale called with invalid channel %d", soundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("WARNING: SetChannelFrequencyScale called with invalid channel %d", soundChannel);
         return;
     }
     freqScale = Maximum(freqScale, 0.1f);
@@ -600,7 +643,7 @@ void AudioManager::SetChannelVolumeScale(SoundChannel soundChannel, float volSca
 {
     if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     {
-        TRACE_FILE_IF(1) TRACE("WARNING: SetChannelVolumeScale called with invalid channel %d", soundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("WARNING: SetChannelVolumeScale called with invalid channel %d", soundChannel);
         return;
     }
     volScale = Maximum(volScale, 0.0f);
@@ -616,7 +659,7 @@ void AudioManager::SetChannelTargetVolumeScale(SoundChannel soundChannel, float 
 {
     if (soundChannel < 0 || soundChannel >= mNumAvailableChannels)
     {
-        TRACE_FILE_IF(1) TRACE("WARNING: SetChannelTargetVolumeScale called with invalid channel %d", soundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("WARNING: SetChannelTargetVolumeScale called with invalid channel %d", soundChannel);
         return;
     }
     volScale = Maximum(volScale, 0.0f);
@@ -662,7 +705,7 @@ std::vector<std::string> AudioManager::EnumerateAudioDevices()
         }
     }
 
-    TRACE_FILE_IF(1) TRACE("Audio device enumeration not supported");
+    TRACE_FILE_IF(ONCE_1) TRACE("Audio device enumeration not supported");
     return devices;
 }
 
@@ -677,7 +720,7 @@ void AudioManager::RecreateALSources()
         ALenum error = alGetError();
         if (error != AL_NO_ERROR)
         {
-            TRACE_FILE_IF(1) TRACE("Failed to recreate OpenAL source %d, error %d", i, error);
+            TRACE_FILE_IF(ONCE_2) TRACE("Failed to recreate OpenAL source %d, error %d", i, error);
         }
     }
 }
@@ -686,7 +729,7 @@ void AudioManager::RecreateALSources()
 void AudioManager::DeleteALBuffers()
 {
     // Delete all OpenAL buffers before device switch
-    TRACE_FILE_IF(1) TRACE("Deleting %d sound buffers...", (int)mSounds.size());
+    TRACE_FILE_IF(ONCE_2) TRACE("Deleting %d sound buffers...", (int)mSounds.size());
     for (Sound* sound : mSounds)
     {
         if (sound->mALBuffer != 0)
@@ -701,12 +744,12 @@ void AudioManager::DeleteALBuffers()
 void AudioManager::RecreateALBuffers()
 {
     // Recreate all OpenAL buffers using stored sound data
-    TRACE_FILE_IF(1) TRACE("Recreating %d sound buffers...", (int)mSounds.size());
+    TRACE_FILE_IF(ONCE_2) TRACE("Recreating %d sound buffers...", (int)mSounds.size());
     for (Sound* sound : mSounds)
     {
         if (sound->mSoundData == nullptr || sound->mSoundSamples == 0)
         {
-            TRACE_FILE_IF(1) TRACE("  Skipping %s - no sound data", sound->mName);
+            TRACE_FILE_IF(ONCE_3) TRACE("  Skipping %s - no sound data", sound->mName);
             continue;
         }
 
@@ -715,7 +758,7 @@ void AudioManager::RecreateALBuffers()
         ALenum error = alGetError();
         if (error != AL_NO_ERROR)
         {
-            TRACE_FILE_IF(1) TRACE("  Failed to create buffer for %s, error %d", sound->mName, error);
+            TRACE_FILE_IF(ONCE_1) TRACE("  Failed to create buffer for %s, error %d", sound->mName, error);
             sound->mALBuffer = 0;
             continue;
         }
@@ -729,31 +772,31 @@ void AudioManager::RecreateALBuffers()
         error = alGetError();
         if (error != AL_NO_ERROR)
         {
-            TRACE_FILE_IF(1) TRACE("  Failed to upload data for %s, error %d", sound->mName, error);
+            TRACE_FILE_IF(ONCE_1) TRACE("  Failed to upload data for %s, error %d", sound->mName, error);
             alDeleteBuffers(1, &sound->mALBuffer);
             sound->mALBuffer = 0;
             continue;
         }
 
-        TRACE_FILE_IF(1) TRACE("  Recreated buffer %u for %s", sound->mALBuffer, sound->mName);
+        TRACE_FILE_IF(ONCE_2) TRACE("  Recreated buffer %u for %s", sound->mALBuffer, sound->mName);
     }
 }
 
 //======================================================================================================================
 bool AudioManager::SwitchAudioDevice(const char* deviceName)
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::SwitchAudioDevice(%s) - current: %s",
+    TRACE_FILE_IF(ONCE_1) TRACE("AudioManager::SwitchAudioDevice(%s) - current: %s",
         deviceName ? deviceName : "default", mCurrentDeviceName.c_str());
 
     // Check if already using this device
     if (deviceName && mCurrentDeviceName == deviceName)
     {
-        TRACE_FILE_IF(1) TRACE("Already using device: %s", deviceName);
+        TRACE_FILE_IF(ONCE_1) TRACE("Already using device: %s", deviceName);
         return true;
     }
     if (!deviceName && mCurrentDeviceName == mDefaultDeviceName)
     {
-        TRACE_FILE_IF(1) TRACE("Already using default device");
+        TRACE_FILE_IF(ONCE_1) TRACE("Already using default device");
         return true;
     }
 
@@ -773,7 +816,7 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
     };
     std::vector<ChannelState> savedChannels(mNumAvailableChannels);
 
-    TRACE_FILE_IF(1) TRACE("Saving state of %d channels...", mNumAvailableChannels);
+    TRACE_FILE_IF(ONCE_2) TRACE("Saving state of %d channels...", mNumAvailableChannels);
     int activeCount = 0;
     for (int i = 0; i < mNumAvailableChannels; ++i)
     {
@@ -799,13 +842,13 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
             activeCount++;
         }
     }
-    TRACE_FILE_IF(1) TRACE("Saved %d active channels", activeCount);
+    TRACE_FILE_IF(ONCE_2) TRACE("Saved %d active channels", activeCount);
 
-    TRACE_FILE_IF(1) TRACE("Stopping all channels...");
+    TRACE_FILE_IF(ONCE_2) TRACE("Stopping all channels...");
     // Stop all playing sounds
     StopAllChannels();
 
-    TRACE_FILE_IF(1) TRACE("Deleting %d sources...", mNumAvailableChannels);
+    TRACE_FILE_IF(ONCE_2) TRACE("Deleting %d sources...", mNumAvailableChannels);
     // Delete all sources (must be done before destroying context)
     for (int i = 0; i < mNumAvailableChannels; ++i)
     {
@@ -820,7 +863,7 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
     DeleteALBuffers();
 
     // Destroy context
-    TRACE_FILE_IF(1) TRACE("Destroying context...");
+    TRACE_FILE_IF(ONCE_2) TRACE("Destroying context...");
     if (mALContext)
     {
         alcMakeContextCurrent(nullptr);
@@ -829,40 +872,40 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
     }
 
     // Close current device
-    TRACE_FILE_IF(1) TRACE("Closing device...");
+    TRACE_FILE_IF(ONCE_2) TRACE("Closing device...");
     if (mALDevice)
     {
         if (!alcCloseDevice(mALDevice))
         {
-            TRACE_FILE_IF(1) TRACE("WARNING: alcCloseDevice failed!");
+            TRACE_FILE_IF(ONCE_1) TRACE("WARNING: alcCloseDevice failed!");
         }
         mALDevice = nullptr;
     }
 
     // Open new device
-    TRACE_FILE_IF(1) TRACE("Opening device: %s", deviceName ? deviceName : "(default)");
+    TRACE_FILE_IF(ONCE_2) TRACE("Opening device: %s", deviceName ? deviceName : "(default)");
     mALDevice = alcOpenDevice(deviceName);
     if (!mALDevice)
     {
         ALCenum err = alcGetError(nullptr);
-        TRACE_FILE_IF(1) TRACE("Failed to open audio device: %s, error: %d", deviceName ? deviceName : "default", err);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to open audio device: %s, error: %d", deviceName ? deviceName : "default", err);
         // Try to fall back to default
         if (deviceName)
         {
-            TRACE_FILE_IF(1) TRACE("Trying fallback to default device...");
+            TRACE_FILE_IF(ONCE_1) TRACE("Trying fallback to default device...");
             mALDevice = alcOpenDevice(nullptr);
             if (mALDevice)
             {
-                TRACE_FILE_IF(1) TRACE("Fell back to default audio device");
+                TRACE_FILE_IF(ONCE_1) TRACE("Fell back to default audio device");
             }
         }
         if (!mALDevice)
         {
-            TRACE_FILE_IF(1) TRACE("Failed to open any audio device!");
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to open any audio device!");
             return false;
         }
     }
-    TRACE_FILE_IF(1) TRACE("Device opened successfully");
+    TRACE_FILE_IF(ONCE_2) TRACE("Device opened successfully");
 
     // Store current device name (use full name if available)
     const ALCchar* actualDeviceName = nullptr;
@@ -877,16 +920,16 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
     if (actualDeviceName)
     {
         mCurrentDeviceName = actualDeviceName;
-        TRACE_FILE_IF(1) TRACE("Now using audio device: %s", actualDeviceName);
+        TRACE_FILE_IF(ONCE_1) TRACE("Now using audio device: %s", actualDeviceName);
     }
 
     // Create new context
-    TRACE_FILE_IF(1) TRACE("Creating context...");
+    TRACE_FILE_IF(ONCE_2) TRACE("Creating context...");
     mALContext = alcCreateContext(mALDevice, nullptr);
     if (!mALContext)
     {
         ALCenum err = alcGetError(mALDevice);
-        TRACE_FILE_IF(1) TRACE("Failed to create OpenAL context, error: %d", err);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to create OpenAL context, error: %d", err);
         alcCloseDevice(mALDevice);
         mALDevice = nullptr;
         return false;
@@ -894,9 +937,9 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
     if (!alcMakeContextCurrent(mALContext))
     {
         ALCenum err = alcGetError(mALDevice);
-        TRACE_FILE_IF(1) TRACE("Failed to make context current, error: %d", err);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to make context current, error: %d", err);
     }
-    TRACE_FILE_IF(1) TRACE("Context created and made current");
+    TRACE_FILE_IF(ONCE_2) TRACE("Context created and made current");
 
     // Reconfigure audio settings
     alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
@@ -904,14 +947,14 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
     alDopplerFactor(1.0f);
 
     // Recreate all sources
-    TRACE_FILE_IF(1) TRACE("Recreating %d sources...", mNumAvailableChannels);
+    TRACE_FILE_IF(ONCE_2) TRACE("Recreating %d sources...", mNumAvailableChannels);
     RecreateALSources();
 
     // Recreate all buffers with the stored sound data
     RecreateALBuffers();
 
     // Restore channel states and restart sounds
-    TRACE_FILE_IF(1) TRACE("Restoring %d channel states...", mNumAvailableChannels);
+    TRACE_FILE_IF(ONCE_2) TRACE("Restoring %d channel states...", mNumAvailableChannels);
     int restoredCount = 0;
     for (int i = 0; i < mNumAvailableChannels; ++i)
     {
@@ -922,7 +965,7 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
         // Check that the sound's buffer was successfully recreated
         if (state.sound->mALBuffer == 0)
         {
-            TRACE_FILE_IF(1) TRACE("  Channel %d: skipping - sound buffer not available", i);
+            TRACE_FILE_IF(ONCE_3) TRACE("  Channel %d: skipping - sound buffer not available", i);
             continue;
         }
 
@@ -964,11 +1007,11 @@ bool AudioManager::SwitchAudioDevice(const char* deviceName)
         alSourcePlay(source);
 
         restoredCount++;
-        TRACE_FILE_IF(1) TRACE("  Channel %d: restored sound %s", i, state.sound->mName);
+        TRACE_FILE_IF(ONCE_2) TRACE("  Channel %d: restored sound %s", i, state.sound->mName);
     }
-    TRACE_FILE_IF(1) TRACE("Restored %d active channels", restoredCount);
+    TRACE_FILE_IF(ONCE_2) TRACE("Restored %d active channels", restoredCount);
 
-    TRACE_FILE_IF(1) TRACE("Audio device switch complete - now using: %s", mCurrentDeviceName.c_str());
+    TRACE_FILE_IF(ONCE_2) TRACE("Audio device switch complete - now using: %s", mCurrentDeviceName.c_str());
     return true;
 }
 
@@ -1040,7 +1083,7 @@ std::string AudioManager::FindMatchingVRAudioDevice(const char* headsetSystemNam
 //======================================================================================================================
 bool AudioManager::SwitchToDefaultAudio()
 {
-    TRACE_FILE_IF(1) TRACE("AudioManager::SwitchToDefaultAudio()");
+    TRACE_FILE_IF(ONCE_1) TRACE("AudioManager::SwitchToDefaultAudio()");
 
     if (mDefaultDeviceName.empty())
     {

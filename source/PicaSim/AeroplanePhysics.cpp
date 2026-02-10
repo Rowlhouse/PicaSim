@@ -117,7 +117,7 @@ void* PicaSimVehicleRaycaster::castRay(const btVector3& from,const btVector3& to
 //======================================================================================================================
 void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, uint32& checksum)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mAeroplane = aeroplane;
     const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
 
@@ -372,7 +372,7 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
             extraMass / (origMass + extraMass);
         mMass += extraMass;
 
-        TRACE("CG x position is %5.3f %5.3f %5.3f\n", principal.getOrigin().getX(), principal.getOrigin().getY(), principal.getOrigin().getZ());
+        TRACE("CG x position is %5.3f %5.3f %5.3f", principal.getOrigin().getX(), principal.getOrigin().getY(), principal.getOrigin().getZ());
 
 #if 1
         btTransform invPrincipal = principal.inverse();
@@ -405,12 +405,12 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
             delete shape;
         }
 
-        TRACE("Original convex shape has %d points\n", collidingPoints.size());
+        TRACE("Original convex shape has %d points", collidingPoints.size());
         btConvexHullShape originalShape(&collidingPoints[0].x(), collidingPoints.size());
         btShapeHull hull(&originalShape);
         hull.buildHull(2.2f * margin);
 
-        TRACE("Making convex shape with %d points\n", hull.numVertices());
+        TRACE("Making convex shape with %d points", hull.numVertices());
         btConvexHullShape* convexShape = new btConvexHullShape(&hull.getVertexPointer()->x(), hull.numVertices());
         convexShape->setMargin(margin * 1.0f); // Margin goes _out_
         btTransform tm = TransformToBulletTransform(mInvCoMOffset);
@@ -442,7 +442,7 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
     EntityManager::GetInstance().GetDynamicsWorld().addRigidBody(mRigidBody);
 
     // Create the vehicle
-    TRACE_FILE_IF(1) TRACE("AeroplanePhysics::Init Vehicle");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplanePhysics::Init Vehicle");
     btRaycastVehicle::btVehicleTuning vehicleTuning;
 
     const btCollisionShape* vehicleCollision = mRigidBody->getCollisionShape();
@@ -473,7 +473,7 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
 //======================================================================================================================
 void AeroplanePhysics::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     if (mRopeSoftBody)
     {

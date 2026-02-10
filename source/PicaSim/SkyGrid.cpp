@@ -9,7 +9,7 @@
 //======================================================================================================================
 void SkyGrid::Init()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_2);
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_OBJECTS);
     mType = SPHERE;
     mDistance = -1.0f;
@@ -18,14 +18,14 @@ void SkyGrid::Init()
 //======================================================================================================================
 void SkyGrid::Terminate()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
 }
 
 //======================================================================================================================
 void SkyGrid::RenderUpdate(class Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     if (!mEnable)
         return;
 
@@ -46,6 +46,8 @@ void SkyGrid::RenderUpdate(class Viewport* viewport, int renderLevel)
     esMultMatrixf(&glTM[0][0]);
 
     esSetModelViewProjectionMatrix(simpleShader->u_mvpMatrix);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     // First the lines
     size_t numLinePts = mLinePoints.size();

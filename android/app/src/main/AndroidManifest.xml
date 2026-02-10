@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- OpenGL ES 2.0 -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
+    <!-- Network access for multiplayer -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Vibration for haptic feedback -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Game controller support -->
+    <uses-feature android:name="android.hardware.gamepad" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:hasCode="true"
+        android:hardwareAccelerated="true">
+
+        <activity
+            android:name=".PicaSimActivity"
+            android:label="@string/app_name"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|uiMode"
+            android:screenOrientation="sensorLandscape"
+            android:exported="true"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- SDLActivity metadata -->
+            <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0" />
+        </activity>
+    </application>
+
+</manifest>

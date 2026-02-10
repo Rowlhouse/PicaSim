@@ -22,6 +22,9 @@ enum FontAlignVer
 class FontRenderer
 {
 public:
+    FontRenderer();
+    ~FontRenderer();
+
     static FontRenderer& GetInstance();
 
     // Initialize font renderer - call after OpenGL context is ready
@@ -38,7 +41,7 @@ public:
     void SetColourABGR(uint32_t abgr);
 
     // Get font info
-    uint16_t GetFontHeight() const { return mCharHeight; }
+    uint16_t GetFontHeight() const;
     uint32_t GetColour() const { return mColour; }
     uint32_t GetColourABGR() const;
 
@@ -46,12 +49,12 @@ public:
     void RenderText(const char* text);
 
 private:
-    FontRenderer();
-    ~FontRenderer();
-
     // Disable copy
     FontRenderer(const FontRenderer&) = delete;
     FontRenderer& operator=(const FontRenderer&) = delete;
+
+    // Display scale factor for resolution-independent text
+    float GetDisplayScale() const;
 
     // Generate font texture from TTF file
     bool GenerateFontTexture(const char* ttfPath, int fontSize);
@@ -88,3 +91,6 @@ private:
 
     bool mInitialized;
 };
+
+// Global FontRenderer instance pointer (set in main())
+extern FontRenderer* gFontRenderer;

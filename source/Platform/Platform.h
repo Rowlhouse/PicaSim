@@ -45,19 +45,21 @@
                         #define PICASIM_MACOS 1
                 #endif
         #endif
+#elif defined(PICASIM_ANDROID) || defined(__ANDROID__)
+        // Note: Android check must come before Linux because __linux__ is also
+        // defined on Android NDK.
+        #define PICASIM_PLATFORM_NAME "Android"
+        #define PICASIM_MOBILE 1
+        #define PS_PLATFORM_ANDROID 1
+        #ifndef PICASIM_ANDROID
+                #define PICASIM_ANDROID 1
+        #endif
 #elif defined(PICASIM_LINUX) || defined(__linux__)
         #define PICASIM_PLATFORM_NAME "Linux"
         #define PICASIM_DESKTOP 1
         #define PS_PLATFORM_LINUX 1
         #ifndef PICASIM_LINUX
                 #define PICASIM_LINUX 1
-        #endif
-#elif defined(PICASIM_ANDROID) || defined(__ANDROID__)
-        #define PICASIM_PLATFORM_NAME "Android"
-        #define PICASIM_MOBILE 1
-        #define PS_PLATFORM_ANDROID 1
-        #ifndef PICASIM_ANDROID
-                #define PICASIM_ANDROID 1
         #endif
 #else
         // Default to desktop if no platform detected
@@ -134,6 +136,9 @@ int GetDisplayWidth();
 int GetDisplayHeight();
 float GetScreenDPI();
 float GetDisplayScale();  // For HiDPI displays
+float GetSurfaceDiagonalInches();  // Physical screen diagonal in inches
+float GetSafeAreaInsetX();  // Left/right inset in pixels for mobile cutouts (0 on desktop)
+float GetSafeAreaInsetY();  // Top/bottom inset in pixels for mobile rounded corners (0 on desktop)
 
 // --------------------------------------------------------------------------
 // Application lifecycle

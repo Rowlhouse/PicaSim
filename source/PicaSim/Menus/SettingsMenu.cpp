@@ -10,6 +10,7 @@
 #include "PicaDialog.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
+#include "../../Framework/Trace.h"
 #include "Platform.h"
 #include "HelpersXML.h"
 #include "tinyxml.h"
@@ -19,6 +20,8 @@
 #include "../../Framework/AudioManager.h"
 #endif
 
+#include "ScrollHelper.h"
+#include "ScrollableTabStrip.h"
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
@@ -26,8 +29,6 @@
 // Forward declarations from Graphics.cpp
 void IwGxClear();
 void IwGxSwapBuffers();
-void PrepareForIwGx(bool fullscreen);
-void RecoverFromIwGx(bool clear);
 
 // Forward declaration from Helpers.cpp
 Texture* GetCachedTexture(std::string path, bool convertTo16Bit);
@@ -157,6 +158,9 @@ private:
 
     // Smoke color HSV values (for color editing)
     Vector3 mSmokeHSVs[AeroplaneSettings::MAX_NUM_SMOKES_PER_PLANE];
+
+    ScrollHelper mScrollHelper;
+    ScrollableTabStrip mTabStrip;
 };
 
 //======================================================================================================================
@@ -164,6 +168,8 @@ SettingsMenu::SettingsMenu(GameSettings& gameSettings)
     : mGameSettings(gameSettings)
     , mStatus(SETTINGS_UNSET)
 {
+    UIHelpers::NotifyMenuTransition();
+
     // Reset scroll positions for all tabs when menu opens
     for (int i = 0; i < TAB_NUM_TABS; ++i)
         mResetScroll[i] = true;
@@ -193,10 +199,19 @@ SettingsStatus SettingsMenu::Update()
     // Update input state
     UpdateJoystick(mGameSettings.mOptions.mJoystickID);
 
+    int savedTab = sSelectedTab;
+
     IwGxClear();
     Render();
     IwGxSwapBuffers();
     PollEvents();
+
+    // Suppress stale input from the previous menu's touch/click events
+    if (UIHelpers::IsInputMuted())
+    {
+        mStatus = SETTINGS_UNSET;
+        sSelectedTab = savedTab;
+    }
 
     return mStatus;
 }
@@ -204,8 +219,6 @@ SettingsStatus SettingsMenu::Update()
 //======================================================================================================================
 void SettingsMenu::RenderContent()
 {
-    int width = Platform::GetDisplayWidth();
-    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
     Language language = mGameSettings.mOptions.mLanguage;
 
@@ -219,11 +232,10 @@ void SettingsMenu::RenderContent()
     // Unified settings style
     PicaStyle::PushSettingsStyle();
 
-    // Full-screen window
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2((float)width, (float)height));
-    ImGui::Begin("SettingsMenu", nullptr,
+    // Full-screen window with safe area insets
+    ImVec2 winSize = UIHelpers::BeginFullscreenWindow("SettingsMenu",
         ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+    float height = winSize.y;
 
     float buttonH = 32.0f * scale;
     float padding = ImGui::GetStyle().WindowPadding.y;
@@ -235,65 +247,37 @@ void SettingsMenu::RenderContent()
     }
     ImGui::SameLine();
 
-    // Tab bar
-    float fontSize = ImGui::GetFontSize();
-    float tabPaddingY = (buttonH - fontSize) * 0.5f;
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f * scale, tabPaddingY));
+    // Build tab labels dynamically (joystick tab is conditional)
+    const char* tabLabels[TAB_NUM_TABS];
+    int tabIndices[TAB_NUM_TABS];
+    int tabCount = 0;
 
-    if (ImGui::BeginTabBar("SettingsTabs", ImGuiTabBarFlags_FittingPolicyScroll))
+    tabLabels[tabCount] = TXT(PS_OPTIONS1);      tabIndices[tabCount] = TAB_OPTIONS1;      tabCount++;
+    tabLabels[tabCount] = TXT(PS_OPTIONS2);      tabIndices[tabCount] = TAB_OPTIONS2;      tabCount++;
+    tabLabels[tabCount] = TXT(PS_AEROPLANE);     tabIndices[tabCount] = TAB_AEROPLANE;     tabCount++;
+    tabLabels[tabCount] = TXT(PS_SCENERY);       tabIndices[tabCount] = TAB_SCENERY;       tabCount++;
+    tabLabels[tabCount] = TXT(PS_OBJECTS);       tabIndices[tabCount] = TAB_OBJECTS;        tabCount++;
+    tabLabels[tabCount] = TXT(PS_LIGHTING);      tabIndices[tabCount] = TAB_LIGHTING;      tabCount++;
+    tabLabels[tabCount] = TXT(PS_AICONTROLLERS); tabIndices[tabCount] = TAB_AICONTROLLERS;  tabCount++;
+    tabLabels[tabCount] = TXT(PS_CONTROLLER);    tabIndices[tabCount] = TAB_CONTROLLER;    tabCount++;
+    if (ShowJoystickInGame(mGameSettings))
     {
-        if (ImGui::BeginTabItem(TXT(PS_OPTIONS1)))
-        {
-            sSelectedTab = TAB_OPTIONS1;
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem(TXT(PS_OPTIONS2)))
-        {
-            sSelectedTab = TAB_OPTIONS2;
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem(TXT(PS_AEROPLANE)))
-        {
-            sSelectedTab = TAB_AEROPLANE;
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem(TXT(PS_SCENERY)))
-        {
-            sSelectedTab = TAB_SCENERY;
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem(TXT(PS_OBJECTS)))
-        {
-            sSelectedTab = TAB_OBJECTS;
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem(TXT(PS_LIGHTING)))
-        {
-            sSelectedTab = TAB_LIGHTING;
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem(TXT(PS_AICONTROLLERS)))
-        {
-            sSelectedTab = TAB_AICONTROLLERS;
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem(TXT(PS_CONTROLLER)))
-        {
-            sSelectedTab = TAB_CONTROLLER;
-            ImGui::EndTabItem();
-        }
-        // Only show joystick tab if joystick is available
-        if (ShowJoystickInGame(mGameSettings))
-        {
-            if (ImGui::BeginTabItem(TXT(PS_JOYSTICK)))
-            {
-                sSelectedTab = TAB_JOYSTICK;
-                ImGui::EndTabItem();
-            }
-        }
-        ImGui::EndTabBar();
+        tabLabels[tabCount] = TXT(PS_JOYSTICK);  tabIndices[tabCount] = TAB_JOYSTICK;      tabCount++;
     }
-    ImGui::PopStyleVar();
+
+    // Map sSelectedTab to strip index for rendering
+    int stripIndex = 0;
+    for (int i = 0; i < tabCount; ++i)
+    {
+        if (tabIndices[i] == sSelectedTab)
+        {
+            stripIndex = i;
+            break;
+        }
+    }
+
+    mTabStrip.Render("SettingsTabs", tabLabels, tabCount, stripIndex, buttonH);
+    sSelectedTab = tabIndices[stripIndex];
 
     // === SCROLLABLE CONTENT AREA ===
     float topY = ImGui::GetCursorPosY();
@@ -308,11 +292,13 @@ void SettingsMenu::RenderContent()
     };
 
     ImGui::BeginChild(tabContentIds[sSelectedTab], ImVec2(-1, contentHeight), true);
+    mScrollHelper.ApplyDragScroll(tabContentIds[sSelectedTab]);
 
     // Reset scroll position for this tab if menu was just opened
     if (mResetScroll[sSelectedTab])
     {
         ImGui::SetScrollY(0.0f);
+        mScrollHelper.ResetScroll(tabContentIds[sSelectedTab]);
         mResetScroll[sSelectedTab] = false;
     }
 
@@ -791,6 +777,7 @@ void SettingsMenu::RenderOptions1Tab()
                 options.mOtherShadows = (Options::ShadowType)otherShadow;
 
             SettingsWidgets::SliderInt(TXT(PS_PROJECTEDSHADOWDETAIL), options.mProjectedShadowDetail, 7, 10);
+            SettingsWidgets::SliderFloat(TXT(PS_SHADOWBLURMULTIPLIER), options.mShadowBlurMultiplier, 0.0f, 2.0f);
             SettingsWidgets::Checkbox(TXT(PS_USE16BIT), options.m16BitTextures);
             SettingsWidgets::Checkbox(TXT(PS_SEPARATESPECULAR), options.mSeparateSpecular);
             SettingsWidgets::SliderFloat(TXT(PS_AMBIENTLIGHTINGSCALE), options.mAmbientLightingScale, 0.0f, 5.0f);
@@ -813,22 +800,18 @@ void SettingsMenu::RenderOptions1Tab()
             if (SettingsWidgets::Combo(TXT(PS_ANTIALIASING), msaaIndex, msaaDescs, 4))
                 options.mMSAASamples = msaaValues[msaaIndex];
             SettingsWidgets::InfoText(TXT(PS_REQUIRESRESTART));
-
-            // OpenGL version - requires restart
-            static const char* glVersionDescs[] = { "OpenGL 1.x (Fixed Function)", "OpenGL 2.x (Shaders)" };
-            int glVersionIndex = options.mGLVersion - 1;  // Convert 1,2 to 0,1
-            if (glVersionIndex < 0) glVersionIndex = 1;
-            if (glVersionIndex > 1) glVersionIndex = 1;
-            if (SettingsWidgets::Combo("GL Version", glVersionIndex, glVersionDescs, 2))
-                options.mGLVersion = glVersionIndex + 1;  // Convert 0,1 back to 1,2
-            SettingsWidgets::InfoText(TXT(PS_REQUIRESRESTART));
         }
         SettingsWidgets::EndSettingsBlock();
 
-        // Clear all settings button
+        // Misc settings
         SettingsWidgets::SectionHeader(TXT(PS_MISCSETTINGS));
         SettingsWidgets::BeginSettingsBlock();
         {
+            if (advanced)
+            {
+                if (SettingsWidgets::SliderInt("Log Level", options.mFrameworkSettings.mLogLevel, 1, 9))
+                    SetTraceLevel(options.mFrameworkSettings.mLogLevel);
+            }
             if (SettingsWidgets::Button(TXT(PS_CLEARALLSAVEDSETTINGSANDEXIT)))
             {
                 mStatus = SETTINGS_CLEARALLSAVEDSETTINGSANDEXIT;
@@ -2338,10 +2321,9 @@ void SettingsMenu::RenderJoystickTab()
 //=====================================================================================================================
 void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& actions)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
 
     AudioManager::GetInstance().SetAllChannelsToZeroVolume();
-    PrepareForIwGx(false);
 
     GameSettings origSettings = gameSettings;
     SettingsStatus settingsStatus = SETTINGS_UNSET;
@@ -2361,7 +2343,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
 
                 if (CheckForQuitRequest())
                 {
-                    RecoverFromIwGx(false);
+
                     return;
                 }
 
@@ -2370,7 +2352,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                     (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
                 {
                     actions = gameSettings.GetSettingsChangeActions(actions, origSettings);
-                    RecoverFromIwGx(false);
+
                     return;
                 }
 
@@ -2384,8 +2366,8 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                         TXT(PS_YES), TXT(PS_NO), nullptr, bgCallback) == 0)
                     {
                         // Delete the main settings file (from user-writable location)
-                        std::error_code ec;
-                        std::filesystem::remove(Platform::GetUserSettingsPath() + "settings.xml", ec);
+                        std::string settingsFile = Platform::GetUserSettingsPath() + "settings.xml";
+                        ::remove(settingsFile.c_str());
 
                         // Exit the application
                         exit(0);
@@ -2424,7 +2406,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_LOADOPTIONS), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Loading Options %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Loading Options %s", file.c_str());
                 gameSettings.mOptions.LoadFromFile(file);
                 gameSettings.mStatistics.mLoadedOptions = true;
             }
@@ -2435,7 +2417,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userOptions.c_str(), ".xml", TXT(PS_SAVEOPTIONS));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving Options %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving Options %s", file.c_str());
                 gameSettings.mOptions.SaveToFile(file);
             }
         }
@@ -2453,7 +2435,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userEnvironment.c_str(), ".xml", TXT(PS_SAVESCENERY));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving Environment %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving Environment %s", file.c_str());
                 gameSettings.mEnvironmentSettings.SaveToFile(file);
             }
         }
@@ -2468,7 +2450,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_LOADOBJECTS), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Loading Objects %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Loading Objects %s", file.c_str());
                 gameSettings.mObjectsSettings.LoadFromFile(file);
             }
         }
@@ -2478,7 +2460,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userObjects.c_str(), ".xml", TXT(PS_SAVEOBJECTS));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving Objects %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving Objects %s", file.c_str());
                 gameSettings.mObjectsSettings.SaveToFile(file);
             }
         }
@@ -2493,7 +2475,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_LOADLIGHTING), 0, 0, TXT(PS_BACK), NULL, FILEMENUTYPE_LIGHTING);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Loading Lighting %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Loading Lighting %s", file.c_str());
                 gameSettings.mLightingSettings.LoadFromFile(file);
             }
         }
@@ -2503,7 +2485,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userLighting.c_str(), ".xml", TXT(PS_SAVELIGHTING));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving Lighting %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving Lighting %s", file.c_str());
                 gameSettings.mLightingSettings.SaveToFile(file);
             }
         }
@@ -2518,7 +2500,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_LOADCONTROLLER), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Loading Controller %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Loading Controller %s", file.c_str());
                 gameSettings.mControllerSettings.LoadFromFile(file);
             }
         }
@@ -2528,7 +2510,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userController.c_str(), ".xml", TXT(PS_SAVECONTROLLER));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving Controller %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving Controller %s", file.c_str());
                 gameSettings.mControllerSettings.SaveToFile(file);
             }
         }
@@ -2543,7 +2525,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_LOADJOYSTICK), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Loading Joystick %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Loading Joystick %s", file.c_str());
                 gameSettings.mJoystickSettings.LoadFromFile(file);
             }
         }
@@ -2553,7 +2535,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userJoystick.c_str(), ".xml", TXT(PS_SAVEJOYSTICK));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving Joystick %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving Joystick %s", file.c_str());
                 gameSettings.mJoystickSettings.SaveToFile(file);
             }
         }
@@ -2571,7 +2553,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userAeroplane.c_str(), ".xml", TXT(PS_SAVEAEROPLANE));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving Aeroplane %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving Aeroplane %s", file.c_str());
                 gameSettings.mAeroplaneSettings.SaveToFile(file);
             }
         }
@@ -2586,7 +2568,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_LOADAICONTROLLERS), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Loading AI Controllers %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Loading AI Controllers %s", file.c_str());
                 gameSettings.mAIControllersSettings.LoadFromFile(file);
             }
         }
@@ -2596,7 +2578,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
             FileMenuSave(file, gameSettings, userAIControllers.c_str(), ".xml", TXT(PS_SAVEAICONTROLLERS));
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Saving AI Controllers %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Saving AI Controllers %s", file.c_str());
                 gameSettings.mAIControllersSettings.SaveToFile(file);
             }
         }
@@ -2640,7 +2622,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_SELECTPANORAMA), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Selected Panorama %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Selected Panorama %s", file.c_str());
                 gameSettings.mEnvironmentSettings.mTerrainSettings.mPanoramaName = file;
             }
         }
@@ -2651,7 +2633,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_SELECTTERRAINFILE), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Selected terrain file %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Selected terrain file %s", file.c_str());
                 gameSettings.mEnvironmentSettings.mTerrainSettings.mFileTerrainName = file;
             }
         }
@@ -2662,7 +2644,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_SELECTPREFERREDCONTROLLER), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Selected preferred controller %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Selected preferred controller %s", file.c_str());
                 gameSettings.mAeroplaneSettings.mPreferredController = file;
             }
         }
@@ -2673,7 +2655,7 @@ void DisplaySettingsMenu(GameSettings& gameSettings, SettingsChangeActions& acti
                 TXT(PS_SELECTOBJECTSSETTINGS), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Selected objects settings %s", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Selected objects settings %s", file.c_str());
                 gameSettings.mEnvironmentSettings.mObjectsSettingsFile = file;
             }
         }

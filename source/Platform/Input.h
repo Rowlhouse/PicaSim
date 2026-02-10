@@ -74,6 +74,9 @@ typedef void (*TouchMotionCallback)(int touchId, int x, int y, void* userData);
 class Input
 {
 public:
+    Input();
+    ~Input();
+
     static Input& GetInstance();
 
     // Initialize/shutdown
@@ -218,8 +221,6 @@ public:
     float GetAccelZ() const { return mAccelZ; }
 
 private:
-    Input();
-    ~Input();
     Input(const Input&) = delete;
     Input& operator=(const Input&) = delete;
 

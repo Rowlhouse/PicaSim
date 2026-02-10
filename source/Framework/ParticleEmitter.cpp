@@ -50,44 +50,6 @@ void Particle::Update(float dt, float E, float dampingTime)
 }
 
 //======================================================================================================================
-void Particle::Draw(const float* rotationMatrix)
-{
-    esPushMatrix();
-    esTranslatef(mPos.x, mPos.y, mPos.z);
-    esMultMatrixf(&rotationMatrix[0]); // TODO move this up to the caller
-    esRotatef(mRotation, 1.0f, 0.0f, 0.0f);
-
-    float frac = 1.0f - mTimeLeft/mLifetime;
-
-    float size = mInitialSize + (mFinalSize - mInitialSize) * frac;
-    float alpha = mInitialAlpha * (mTimeLeft/mLifetime);
-
-    float s2 = size * 0.5f;
-
-    GLfloat pts[] = {
-        0, s2, -s2,
-        0, -s2, -s2,
-        0, -s2, s2,
-        0, s2, s2,
-    };
-
-    GLfloat uvs[] = {
-        0, 1,
-        1, 1,
-        1, 0,
-        0, 0,
-    };
-
-    glVertexPointer(3, GL_FLOAT, 0, pts);
-    glTexCoordPointer(2, GL_FLOAT, 0, uvs);
-    glColor4f(mColour.x, mColour.y, mColour.z, alpha);
-
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-    esPopMatrix();
-}
-
-//======================================================================================================================
 ParticleEmitter::ParticleEmitter(
     int            maxNumParticles,
     const Vector3& emitterPos,
@@ -120,7 +82,7 @@ ParticleEmitter::ParticleEmitter(
     mDead(false),
     mViewportToUse(0)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_TERRAIN_SHADOW+1);
 }
 
@@ -203,7 +165,7 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
     if (mParticles.empty())
         return;
 
-    if (!mTexture || !mTexture->GetFlags() & Texture::UPLOADED_F)
+    if (!mTexture || !(mTexture->GetFlags() & Texture::UPLOADED_F))
         return;
 
     if (mViewportToUse && mViewportToUse != viewport)
@@ -219,6 +181,8 @@ void ParticleEmitter::RenderUpdate(class Viewport* viewport, int renderLevel)
     const SmokeShader* smokeShader = (SmokeShader*) ShaderManager::GetInstance().GetShader(SHADER_SMOKE);
     smokeShader->Use();
     glUniform1i(smokeShader->u_texture, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     glEnableVertexAttribArray(smokeShader->a_position);
     glEnableVertexAttribArray(smokeShader->a_texCoord);

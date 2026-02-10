@@ -21,7 +21,7 @@ ThermalManager::ThermalManager() : mRandom(time(0))
 //======================================================================================================================
 void ThermalManager::Init(LoadingScreenHelper* loadingScreen)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mPreviousDensity = -1.0f;
 
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_OBJECTS);
@@ -40,7 +40,7 @@ void ThermalManager::Init(LoadingScreenHelper* loadingScreen)
 //======================================================================================================================
 void ThermalManager::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
 
     mRenderModel[0].Terminate();
@@ -430,7 +430,9 @@ void ThermalManager::RenderUpdate(class Viewport* viewport, int renderLevel)
             }
         }
 
+#if !defined(PS_PLATFORM_ANDROID) && !defined(PS_PLATFORM_IOS)
         glDisable(GL_COLOR_MATERIAL);
+#endif
     }
 
     if (gs.mOptions.mDrawThermalWindField)

@@ -53,32 +53,118 @@ add_compile_definitions(
     $<$<CONFIG:Release>:NDEBUG>
 )
 
-# Find required packages
-# SDL2
-find_package(SDL2 CONFIG REQUIRED)
-find_package(SDL2_net CONFIG QUIET)
+# --------------------------------------------------------------------------
+# Dependencies: built from third_party/ submodules on all platforms.
+# vcpkg provides only GLAD (Windows) and OpenXR (optional VR, Windows).
+# --------------------------------------------------------------------------
 
-# VR Support (optional, requires OpenXR)
-option(PICASIM_ENABLE_VR "Enable VR headset support (requires OpenXR)" ON)
-if(PICASIM_ENABLE_VR)
-    find_package(OpenXR CONFIG REQUIRED)
-    add_compile_definitions(PICASIM_VR_SUPPORT=1)
-    message(STATUS "VR support: ENABLED")
-else()
-    message(STATUS "VR support: DISABLED (use -DPICASIM_ENABLE_VR=ON to enable)")
+# Verify submodules are initialized
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/third_party/SDL2/CMakeLists.txt)
+    message(FATAL_ERROR "Git submodules not initialized. Run: git submodule update --init")
 endif()
 
-# GLM for math types
-find_package(glm CONFIG REQUIRED)
+# --- Platform-specific build options ---
+if(ANDROID)
+    # Force VR off on Android
+    set(PICASIM_ENABLE_VR OFF CACHE BOOL "" FORCE)
 
-# OpenAL for audio
-find_package(OpenAL CONFIG REQUIRED)
+    # 16KB page size alignment required for Android 15+ (API 35)
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384")
 
-# OpenGL
-find_package(OpenGL REQUIRED)
+    # Android: shared libraries (required for JNI System.loadLibrary)
+    set(SDL_SHARED ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+    set(LIBTYPE "SHARED" CACHE STRING "" FORCE)
+    set(ALSOFT_BACKEND_OPENSL ON CACHE BOOL "" FORCE)
+else()
+    # Desktop: static libraries (no DLL management)
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    set(LIBTYPE "STATIC" CACHE STRING "" FORCE)
+endif()
+
+# --- Common build options ---
+set(SDL_TEST OFF CACHE BOOL "" FORCE)
+set(ALSOFT_UTILS OFF CACHE BOOL "" FORCE)
+set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
+set(ALSOFT_INSTALL_CONFIG OFF CACHE BOOL "" FORCE)
+set(ALSOFT_INSTALL_HRTF_DATA OFF CACHE BOOL "" FORCE)
+set(ALSOFT_INSTALL_AMBDEC_PRESETS OFF CACHE BOOL "" FORCE)
+set(GLM_BUILD_LIBRARY OFF CACHE BOOL "" FORCE)
+set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLM_BUILD_INSTALL OFF CACHE BOOL "" FORCE)
+
+# --- Build dependencies from submodules ---
+add_subdirectory(third_party/SDL2)
+add_subdirectory(third_party/openal-soft)
+add_subdirectory(third_party/glm)
+
+# Convenience variable for SDL2 target (shared on Android, static on desktop)
+if(ANDROID)
+    set(SDL2_LIB SDL2)
+else()
+    set(SDL2_LIB SDL2-static)
+endif()
+
+# SDL2_net: manual build (avoids its CMakeLists.txt find_package(SDL2) issues)
+add_library(SDL2_net STATIC
+    third_party/SDL2_net/SDLnet.c
+    third_party/SDL2_net/SDLnetTCP.c
+    third_party/SDL2_net/SDLnetUDP.c
+    third_party/SDL2_net/SDLnetselect.c
+)
+target_include_directories(SDL2_net PUBLIC third_party/SDL2_net)
+target_link_libraries(SDL2_net PUBLIC ${SDL2_LIB})
+if(WIN32)
+    target_link_libraries(SDL2_net PRIVATE ws2_32 iphlpapi)
+endif()
+
+# stb (header-only)
+set(STB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
+
+# Dear ImGui (manual static build)
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
+add_library(imgui_lib STATIC
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+)
+target_include_directories(imgui_lib PUBLIC
+    ${IMGUI_DIR}
+    ${IMGUI_DIR}/backends
+)
+if(ANDROID)
+    target_compile_definitions(imgui_lib PUBLIC IMGUI_IMPL_OPENGL_ES2)
+    target_link_libraries(imgui_lib PUBLIC GLESv2 ${SDL2_LIB})
+else()
+    target_link_libraries(imgui_lib PUBLIC ${SDL2_LIB})
+endif()
+add_library(imgui::imgui ALIAS imgui_lib)
+
+# --- Desktop-only packages (vcpkg) ---
+if(NOT ANDROID)
+    find_package(OpenGL REQUIRED)
+
+    if(WIN32)
+        find_package(glad CONFIG REQUIRED)
+    endif()
+
+    # VR Support (optional, requires OpenXR)
+    option(PICASIM_ENABLE_VR "Enable VR headset support (requires OpenXR)" ON)
+    if(PICASIM_ENABLE_VR)
+        find_package(OpenXR CONFIG REQUIRED)
+        add_compile_definitions(PICASIM_VR_SUPPORT=1)
+        message(STATUS "VR support: ENABLED")
+    else()
+        message(STATUS "VR support: DISABLED (use -DPICASIM_ENABLE_VR=ON to enable)")
+    endif()
+endif()
 
 # --------------------------------------------------------------------------
-# Third-party libraries
+# Third-party libraries (always built from source)
 # --------------------------------------------------------------------------
 
 # TinyXML (compiled from source)
@@ -100,17 +186,10 @@ file(GLOB_RECURSE BULLET_SOURCES
 add_library(BulletPhysics STATIC ${BULLET_SOURCES})
 target_include_directories(BulletPhysics PUBLIC ${BULLET_SOURCE_DIR})
 target_compile_definitions(BulletPhysics PRIVATE BT_NO_PROFILE)
-
-# stb libraries (header-only, via vcpkg)
-find_path(STB_INCLUDE_DIRS "stb_image.h")
-
-# GLAD for OpenGL function loading on Windows
-if(WIN32)
-    find_package(glad CONFIG REQUIRED)
+if(NOT MSVC)
+    # Suppress warnings in third-party Bullet code
+    target_compile_options(BulletPhysics PRIVATE -w)
 endif()
-
-# Dear ImGui
-find_package(imgui CONFIG REQUIRED)
 
 # --------------------------------------------------------------------------
 # Framework library
@@ -119,6 +198,10 @@ file(GLOB FRAMEWORK_SOURCES CONFIGURE_DEPENDS source/Framework/*.cpp)
 file(GLOB FRAMEWORK_HEADERS CONFIGURE_DEPENDS source/Framework/*.h)
 
 add_library(Framework STATIC ${FRAMEWORK_SOURCES} ${FRAMEWORK_HEADERS})
+if(NOT MSVC)
+    # Suppress dangling-else warnings from TRACE macros
+    target_compile_options(Framework PRIVATE -Wno-dangling-else)
+endif()
 target_include_directories(Framework PUBLIC
     source/Framework
     source/tinyxml
@@ -132,16 +215,18 @@ target_link_libraries(Framework PUBLIC
     tinyxml
     Platform
     BulletPhysics
-    glm::glm
-    OpenGL::GL
+    glm::glm-header-only
     imgui::imgui
+    OpenAL::OpenAL
 )
-if(WIN32)
-    target_link_libraries(Framework PUBLIC glad::glad)
+if(ANDROID)
+    target_link_libraries(Framework PUBLIC GLESv2)
+else()
+    target_link_libraries(Framework PUBLIC OpenGL::GL)
+    if(WIN32)
+        target_link_libraries(Framework PUBLIC glad::glad)
+    endif()
 endif()
-
-# Link OpenAL for AudioManager
-target_link_libraries(Framework PUBLIC OpenAL::OpenAL)
 
 # --------------------------------------------------------------------------
 # Heightfield library
@@ -164,22 +249,24 @@ target_include_directories(Platform PUBLIC
     ${STB_INCLUDE_DIRS}
     ${BULLET_SOURCE_DIR}
 )
+
 target_link_libraries(Platform PUBLIC
-    SDL2::SDL2
-    glm::glm
-    OpenGL::GL
+    ${SDL2_LIB}
+    glm::glm-header-only
     imgui::imgui
+    OpenAL::OpenAL
 )
-
-# Platform-specific libraries
-if(WIN32)
-    target_link_libraries(Platform PUBLIC glad::glad)
-    target_link_libraries(Platform PRIVATE shlwapi)
-endif()
-
-# VR support (OpenXR)
-if(PICASIM_ENABLE_VR)
-    target_link_libraries(Platform PUBLIC OpenXR::openxr_loader)
+if(ANDROID)
+    target_link_libraries(Platform PUBLIC GLESv2 EGL log android)
+else()
+    target_link_libraries(Platform PUBLIC OpenGL::GL)
+    if(WIN32)
+        target_link_libraries(Platform PUBLIC glad::glad)
+        target_link_libraries(Platform PRIVATE shlwapi)
+    endif()
+    if(PICASIM_ENABLE_VR)
+        target_link_libraries(Platform PUBLIC OpenXR::openxr_loader)
+    endif()
 endif()
 
 # --------------------------------------------------------------------------
@@ -191,14 +278,34 @@ file(GLOB PICASIM_LANGUAGE_SOURCES CONFIGURE_DEPENDS source/PicaSim/Languages/*.
 file(GLOB PICASIM_MENU_SOURCES CONFIGURE_DEPENDS source/PicaSim/Menus/*.cpp)
 
 # --------------------------------------------------------------------------
-# Main executable
+# Main target
 # --------------------------------------------------------------------------
-add_executable(PicaSim
-    ${PICASIM_SOURCES}
-    ${PICASIM_HEADERS}
-    ${PICASIM_LANGUAGE_SOURCES}
-    ${PICASIM_MENU_SOURCES}
-)
+if(ANDROID)
+    # Android: build as shared library loaded by SDLActivity via JNI
+    add_library(PicaSim SHARED
+        ${PICASIM_SOURCES}
+        ${PICASIM_HEADERS}
+        ${PICASIM_LANGUAGE_SOURCES}
+        ${PICASIM_MENU_SOURCES}
+    )
+else()
+    set(WIN32_RESOURCES "")
+    if(WIN32)
+        set(WIN32_RESOURCES ${CMAKE_SOURCE_DIR}/resources/PicaSim.rc)
+    endif()
+    add_executable(PicaSim
+        ${PICASIM_SOURCES}
+        ${PICASIM_HEADERS}
+        ${PICASIM_LANGUAGE_SOURCES}
+        ${PICASIM_MENU_SOURCES}
+        ${WIN32_RESOURCES}
+    )
+endif()
+
+if(NOT MSVC)
+    # Suppress dangling-else warnings from TRACE macros
+    target_compile_options(PicaSim PRIVATE -Wno-dangling-else)
+endif()
 
 target_include_directories(PicaSim PRIVATE
     source/PicaSim
@@ -210,8 +317,11 @@ target_include_directories(PicaSim PRIVATE
     source/Platform
 )
 
-# Define SDL_MAIN_HANDLED so SDL doesn't redefine main to SDL_main
-target_compile_definitions(PicaSim PRIVATE SDL_MAIN_HANDLED)
+if(NOT ANDROID)
+    # Define SDL_MAIN_HANDLED so SDL doesn't redefine main to SDL_main
+    # On Android, SDL must own main() for proper JNI lifecycle
+    target_compile_definitions(PicaSim PRIVATE SDL_MAIN_HANDLED)
+endif()
 
 # Link libraries
 target_link_libraries(PicaSim PRIVATE
@@ -219,34 +329,19 @@ target_link_libraries(PicaSim PRIVATE
     Heightfield
     Platform
     tinyxml
-    SDL2::SDL2
-    glm::glm
-    OpenGL::GL
+    ${SDL2_LIB}
+    glm::glm-header-only
+    BulletPhysics
+    OpenAL::OpenAL
+    SDL2_net
 )
-
-# Link Bullet Physics
-if(TARGET Bullet3Common)
-    # CMake-built Bullet
-    target_link_libraries(PicaSim PRIVATE
-        BulletDynamics
-        BulletCollision
-        BulletSoftBody
-        LinearMath
-    )
+if(ANDROID)
+    target_link_libraries(PicaSim PRIVATE SDL2main GLESv2 EGL log android)
 else()
-    # Manual Bullet build
-    target_link_libraries(PicaSim PRIVATE BulletPhysics)
+    target_link_libraries(PicaSim PRIVATE OpenGL::GL)
 endif()
 
 target_include_directories(PicaSim PRIVATE ${BULLET_SOURCE_DIR})
-
-# Link SDL2_net if available
-if(TARGET SDL2_net::SDL2_net)
-    target_link_libraries(PicaSim PRIVATE SDL2_net::SDL2_net)
-endif()
-
-# Link OpenAL
-target_link_libraries(PicaSim PRIVATE OpenAL::OpenAL)
 
 # Windows-specific settings
 if(WIN32)
@@ -256,87 +351,100 @@ if(WIN32)
         WIN32_EXECUTABLE FALSE
     )
 
-    # Copy SDL2 DLLs to output directory
-    add_custom_command(TARGET PicaSim POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:SDL2::SDL2>
-            $<TARGET_FILE_DIR:PicaSim>
-    )
 endif()
 
 # Copy VERSIONS.txt to data directory for runtime access
-add_custom_command(TARGET PicaSim POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_SOURCE_DIR}/VERSIONS.txt
-        ${CMAKE_SOURCE_DIR}/data/VERSIONS.txt
-    COMMENT "Copying VERSIONS.txt to data directory"
-)
+if(NOT ANDROID)
+    add_custom_command(TARGET PicaSim POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_SOURCE_DIR}/VERSIONS.txt
+            ${CMAKE_SOURCE_DIR}/data/VERSIONS.txt
+        COMMENT "Copying VERSIONS.txt to data directory"
+    )
+endif()
+
+# Generate asset manifest for Android APK asset extraction
+if(ANDROID)
+    find_package(Python3 COMPONENTS Interpreter QUIET)
+    if(Python3_FOUND)
+        add_custom_command(TARGET PicaSim PRE_BUILD
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate_asset_manifest.py
+                ${CMAKE_SOURCE_DIR}/data
+                ${CMAKE_SOURCE_DIR}/data/assets_manifest.txt
+            COMMENT "Generating asset manifest for Android"
+        )
+    endif()
+endif()
 
 # --------------------------------------------------------------------------
 # Run target (convenience for running from data directory)
 # --------------------------------------------------------------------------
-add_custom_target(run
-    COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR}/data
-            $<TARGET_FILE:PicaSim>
-    DEPENDS PicaSim
-    COMMENT "Running PicaSim from data directory"
-    USES_TERMINAL
-)
+if(NOT ANDROID)
+    add_custom_target(run
+        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_SOURCE_DIR}/data
+                $<TARGET_FILE:PicaSim>
+        DEPENDS PicaSim
+        COMMENT "Running PicaSim from data directory"
+        USES_TERMINAL
+    )
+endif()
 
 # --------------------------------------------------------------------------
 # Install rules (for release packaging)
 # --------------------------------------------------------------------------
-# Always install to dist/<version_dir> (e.g., dist/PicaSim-1_0_0)
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist/${PICASIM_VERSION_DIR}" CACHE PATH "" FORCE)
+if(NOT ANDROID)
+    # Always install to dist/<version_dir> (e.g., dist/PicaSim-1_0_0)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist/${PICASIM_VERSION_DIR}" CACHE PATH "" FORCE)
 
-# Clean the install directory first to prevent stale files
-install(CODE "
-    message(STATUS \"Cleaning install directory: \${CMAKE_INSTALL_PREFIX}\")
-    file(REMOVE_RECURSE \"\${CMAKE_INSTALL_PREFIX}\")
-")
+    # Clean the install directory first to prevent stale files
+    install(CODE "
+        message(STATUS \"Cleaning install directory: \${CMAKE_INSTALL_PREFIX}\")
+        file(REMOVE_RECURSE \"\${CMAKE_INSTALL_PREFIX}\")
+    ")
 
-install(TARGETS PicaSim
-    RUNTIME DESTINATION .
-)
+    install(TARGETS PicaSim
+        RUNTIME DESTINATION .
+    )
 
-# Install data directories
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData
-    DESTINATION .
-    REGEX "Aeroplanes/Ahi" EXCLUDE
-    REGEX "Aeroplanes/TestWing" EXCLUDE
-    REGEX "Aerofoils" EXCLUDE
-)
-# Aerofoils - only include XML files
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData/Aerofoils
-    DESTINATION SystemData
-    FILES_MATCHING PATTERN "*.xml"
-)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemSettings
-    DESTINATION .
-    REGEX "Environment/Flat\\.xml$" EXCLUDE
-    REGEX "Aeroplane/TestWing" EXCLUDE
-    REGEX "Aeroplane/Ahi" EXCLUDE
-)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Menus
-    DESTINATION .
-)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Fonts
-    DESTINATION .
-)
-
-# Install LICENSE and VERSIONS files
-install(FILES
-    ${CMAKE_SOURCE_DIR}/LICENSE.txt
-    ${CMAKE_SOURCE_DIR}/VERSIONS.txt
-    DESTINATION .
-)
-
-# Install DLLs on Windows - copy all from vcpkg bin directory
-if(WIN32)
-    file(GLOB VCPKG_DLLS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/*.dll")
-    install(FILES ${VCPKG_DLLS}
+    # Install data directories
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData
+        DESTINATION .
+        REGEX "Aeroplanes/Ahi" EXCLUDE
+        REGEX "Aeroplanes/TestWing" EXCLUDE
+        REGEX "Aerofoils" EXCLUDE
+    )
+    # Aerofoils - only include XML files
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemData/Aerofoils
+        DESTINATION SystemData
+        FILES_MATCHING PATTERN "*.xml"
+    )
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/SystemSettings
+        DESTINATION .
+        REGEX "Environment/Flat\\.xml$" EXCLUDE
+        REGEX "Aeroplane/TestWing" EXCLUDE
+        REGEX "Aeroplane/Ahi" EXCLUDE
+    )
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Menus
         DESTINATION .
     )
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/Fonts
+        DESTINATION .
+    )
+
+    # Install LICENSE and VERSIONS files
+    install(FILES
+        ${CMAKE_SOURCE_DIR}/LICENSE.txt
+        ${CMAKE_SOURCE_DIR}/VERSIONS.txt
+        DESTINATION .
+    )
+
+    # Install vcpkg DLLs on Windows (GLAD, OpenXR)
+    if(WIN32)
+        file(GLOB VCPKG_DLLS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/*.dll")
+        install(FILES ${VCPKG_DLLS}
+            DESTINATION .
+        )
+    endif()
 endif()
 
 # --------------------------------------------------------------------------

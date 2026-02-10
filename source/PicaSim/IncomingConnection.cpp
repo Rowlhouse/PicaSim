@@ -41,13 +41,13 @@ void IncomingConnection::HandleAgent(Tokens& tokens)
     tokens.pop_back();
 
     mCurrentAgent = atoi(t1.c_str());
-    TRACE("Agent = %d\n", mCurrentAgent);
+    TRACE("Agent = %d", mCurrentAgent);
 }
 
 //======================================================================================================================
 void IncomingConnection::HandleTakeControl(Tokens& tokens)
 {
-    TRACE("Take control of agent %d\n", mCurrentAgent);
+    TRACE("Take control of agent %d", mCurrentAgent);
     Aeroplane* aeroplane = PicaSim::GetInstance().GetAeroplane((size_t) mCurrentAgent);
     if (aeroplane)
     {
@@ -56,7 +56,7 @@ void IncomingConnection::HandleTakeControl(Tokens& tokens)
     }
     else
     {
-        TRACE("Can't find aeroplane %d\n", mCurrentAgent);
+        TRACE("Can't find aeroplane %d", mCurrentAgent);
     }
 }
 
@@ -72,14 +72,14 @@ void IncomingConnection::HandleCamera(Tokens& tokens)
     tokens.pop_back();
 
     int cameraMode = atoi(t1.c_str());
-    TRACE("Camera mode = %d\n", cameraMode);
+    TRACE("Camera mode = %d", cameraMode);
     PicaSim::GetInstance().SetMode((PicaSim::Mode) cameraMode);
 }
 
 //======================================================================================================================
 void IncomingConnection::HandleReset(Tokens& tokens)
 {
-    TRACE("Reset agent %d\n", mCurrentAgent);
+    TRACE("Reset agent %d", mCurrentAgent);
     Aeroplane* aeroplane = PicaSim::GetInstance().GetAeroplane((size_t) mCurrentAgent);
     if (aeroplane)
         aeroplane->Launch(aeroplane->GetLastLaunchPosition());
@@ -88,7 +88,7 @@ void IncomingConnection::HandleReset(Tokens& tokens)
 //======================================================================================================================
 void IncomingConnection::HandleReleaseControl(Tokens& tokens)
 {
-    TRACE("Release control of agent %d\n", mCurrentAgent);
+    TRACE("Release control of agent %d", mCurrentAgent);
     NetworkController& nc = mNetworkControllers[mCurrentAgent];
     nc.ReleaseControl();
 }
@@ -108,7 +108,7 @@ void IncomingConnection::HandleControl(Tokens& tokens)
 
     int channel = atoi(t1.c_str());
     float control = (float) atof(t2.c_str());
-    TRACE("Control channel %d = %f\n", channel, control);
+    TRACE("Control channel %d = %f", channel, control);
 
     NetworkController& nc = mNetworkControllers[mCurrentAgent];
     nc.SetControl((Controller::Channel) channel, control);
@@ -128,12 +128,12 @@ void IncomingConnection::HandleRequestTelemetry(Tokens& tokens)
     Aeroplane* aeroplane = PicaSim::GetInstance().GetAeroplane((size_t) mCurrentAgent);
     if (!aeroplane)
     {
-        TRACE("No current aeroplane\n");
+        TRACE("No current aeroplane");
         return;
     }
 
     float dt = (float) atof(t1.c_str());
-    TRACE("RequestTelemetry %f\n", dt);
+    TRACE("RequestTelemetry %f", dt);
 
     aeroplane->SetIncomingConnection(this);
     TelemetryRequest& req = mTelemetryRequests[mCurrentAgent];
@@ -151,17 +151,17 @@ void IncomingConnection::HandleMessage(Tokens& tokens)
 
         if (t == "exit")
         {
-            TRACE("Exit\n");
+            TRACE("Exit");
             exit(0);
         }
         else if (t == "pause")
         {
-            TRACE("Pause\n");
+            TRACE("Pause");
             PicaSim::GetInstance().SetStatus(PicaSim::STATUS_PAUSED);
         }
         else if (t == "unpause")
         {
-            TRACE("Unpause\n");
+            TRACE("Unpause");
             PicaSim::GetInstance().SetStatus(PicaSim::STATUS_FLYING);
         }
         else if (t == "agent")
@@ -194,7 +194,7 @@ void IncomingConnection::HandleMessage(Tokens& tokens)
         }
         else
         {
-            TRACE("Unhandled token %s\n", t.c_str());
+            TRACE("Unhandled token %s", t.c_str());
         }
     }
 }
@@ -315,7 +315,7 @@ IncomingConnection::UpdateResult IncomingConnection::Update(SDLNet_SocketSet soc
         std::string msg;
         if (!Receive(mSocket, socketSet, msg))
         {
-            TRACE("Error reading - closing connection\n");
+            TRACE("Error reading - closing connection");
             return CONNECTION_CLOSED;
         }
 
@@ -333,7 +333,7 @@ void IncomingConnection::SendAgentMessages(const Aeroplane* aeroplane, float dt)
 {
     if (!mSocket)
     {
-        TRACE("No socket\n");
+        TRACE("No socket");
         return;
     }
     size_t num = PicaSim::GetInstance().GetNumAeroplanes();
@@ -345,7 +345,7 @@ void IncomingConnection::SendAgentMessages(const Aeroplane* aeroplane, float dt)
     }
     if (agentID == (int)num)
     {
-        TRACE("Can't find agent for %p\n", aeroplane);
+        TRACE("Can't find agent for %p", aeroplane);
         return;
     }
 
@@ -380,7 +380,7 @@ void IncomingConnection::SendAgentMessages(const Aeroplane* aeroplane, float dt)
 
         if (!Send(mSocket, messageToSend))
         {
-            TRACE("Unable to send message - closing socket\n");
+            TRACE("Unable to send message - closing socket");
             CloseSocket();
             return;
         }

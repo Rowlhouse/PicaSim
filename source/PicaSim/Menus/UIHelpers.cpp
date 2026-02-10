@@ -1,6 +1,8 @@
 #include "UIHelpers.h"
 #include "Texture.h"
 #include "Platform.h"
+#include "Trace.h"
+
 #include "../../Platform/Window.h"
 
 #include "imgui.h"
@@ -8,6 +10,7 @@
 #include "imgui_impl_opengl3.h"
 
 #include <cstdio>
+#include <cmath>
 
 namespace UIHelpers
 {
@@ -15,10 +18,24 @@ namespace UIHelpers
 // Static state
 static ImFont* sFont = nullptr;
 static float sBaseFontSize = 18.0f;  // Base font size at 720p
+static Uint64 sMenuTransitionTime = 0;
 
 //======================================================================================================================
 void Init()
 {
+    // Destroy any stale ImGui state from a previous Android launch
+    // that didn't shut down cleanly. Safe no-op on fresh launch.
+    ImGuiContext* ctx = ImGui::GetCurrentContext();
+    if (ctx != nullptr)
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.BackendRendererUserData != nullptr)
+            ImGui_ImplOpenGL3_Shutdown();
+        if (io.BackendPlatformUserData != nullptr)
+            ImGui_ImplSDL2_Shutdown();
+        ImGui::DestroyContext();
+    }
+
     // Initialize Dear ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -28,7 +45,11 @@ void Init()
     // Setup Platform/Renderer backends
     Window& window = Window::GetInstance();
     ImGui_ImplSDL2_InitForOpenGL(window.GetSDLWindow(), window.GetGLContext());
+#if defined(PICASIM_ANDROID) || defined(PICASIM_IOS)
+    ImGui_ImplOpenGL3_Init("#version 100");
+#else
     ImGui_ImplOpenGL3_Init("#version 130");
+#endif
 
     // Setup style
     ImGui::StyleColorsDark();
@@ -37,9 +58,7 @@ void Init()
     const char* fontPath = "Fonts/FontRegular.ttf";
 
     // Calculate initial font size based on current screen
-    int height = Platform::GetDisplayHeight();
-    float scale = height / 720.0f;
-    if (scale < 1.0f) scale = 1.0f;
+    float scale = GetFontScale();
     float fontSize = sBaseFontSize * scale;
 
     // Custom glyph ranges: basic Latin + Latin Extended + General Punctuation (includes bullet •)
@@ -59,11 +78,12 @@ void Init()
     sFont = io.Fonts->AddFontFromFileTTF(fontPath, fontSize, &fontConfig, glyphRanges);
     if (sFont)
     {
-        printf("UIHelpers: Loaded font from %s at size %.1f with extended glyphs\n", fontPath, fontSize);
+        TRACE_FILE_IF(ONCE_1) TRACE(
+            "UIHelpers: Loaded font from %s at size %.1f with extended glyphs\n", fontPath, fontSize);
     }
     else
     {
-        printf("UIHelpers: Failed to load font from %s, using default\n", fontPath);
+        TRACE_FILE_IF(ONCE_1) TRACE("UIHelpers: Failed to load font from %s, using default\n", fontPath);
         sFont = io.Fonts->AddFontDefault();
     }
 
@@ -86,16 +106,102 @@ void Shutdown()
 //======================================================================================================================
 float GetFontScale()
 {
-    int height = Platform::GetDisplayHeight();
-    float scale = height / 720.0f;
+    // Cache the scale - dimensions don't change on mobile fullscreen,
+    // and this is called 16+ times per frame
+    static int sCachedWidth = 0;
+    static int sCachedHeight = 0;
+    static float sCachedScale = 1.0f;
+
+    int w = Platform::GetDisplayWidth();
+    int h = Platform::GetDisplayHeight();
+
+    if (w == sCachedWidth && h == sCachedHeight)
+        return sCachedScale;
+
+    float scale;
+
+#if defined(PICASIM_MOBILE)
+    // DPI-aware formula for mobile:
+    //   scale = sqrt(targetFontDp * dpiScale / baseFontSize)
+    //
+    // This accounts for double-scaling: font loaded at baseFontSize*scale,
+    // then FontGlobalScale=scale, giving effective text = baseFontSize * scale^2.
+    // So scale^2 = targetFontDp * dpiScale / baseFontSize => targetFontDp dp text.
+    float dpiScale = Platform::GetDisplayScale();
+    float diagonal = Platform::GetSurfaceDiagonalInches();
+
+    // Device classification by physical screen diagonal
+    float targetFontDp;
+    const char* deviceClass;
+    if (diagonal > 0.0f && diagonal < 7.0f)
+    {
+        targetFontDp = 18.0f;  // Phone: Android Material body text standard
+        deviceClass = "Phone";
+    }
+    else if (diagonal >= 7.0f && diagonal <= 11.0f)
+    {
+        targetFontDp = 20.0f;  // Tablet: larger text for medium screens
+        deviceClass = "Tablet";
+    }
+    else
+    {
+        targetFontDp = 24.0f;  // Large/unknown: desktop-equivalent sizing
+        deviceClass = "Large";
+    }
+
+    scale = sqrtf(targetFontDp * dpiScale / sBaseFontSize);
     if (scale < 1.0f) scale = 1.0f;
+
+    // Diagnostic logging (only on first computation or dimension change)
+    TRACE_FILE_IF(ONCE_1) TRACE("UIHelpers: DPI-aware scale: dpi=%.0f dpiScale=%.2f diagonal=%.2f\" "
+           "class=%s targetDp=%.0f scale=%.2f (res=%dx%d)\n",
+           Platform::GetScreenDPI(), dpiScale, diagonal,
+           deviceClass, targetFontDp, scale, w, h);
+#else
+    // Desktop: purely pixel-based (unchanged behaviour)
+    scale = h / 720.0f;
+    if (scale < 1.0f) scale = 1.0f;
+#endif
+
+    sCachedWidth = w;
+    sCachedHeight = h;
+    sCachedScale = scale;
     return scale;
+}
+
+//======================================================================================================================
+ImVec2 BeginFullscreenWindow(const char* name, ImGuiWindowFlags flags)
+{
+    int screenW = Platform::GetDisplayWidth();
+    int screenH = Platform::GetDisplayHeight();
+    float insetX = Platform::GetSafeAreaInsetX();
+    float insetY = Platform::GetSafeAreaInsetY();
+    float winW = (float)screenW - 2 * insetX;
+    float winH = (float)screenH - 2 * insetY;
+    ImGui::SetNextWindowPos(ImVec2(insetX, insetY));
+    ImGui::SetNextWindowSize(ImVec2(winW, winH));
+    ImGui::Begin(name, nullptr, flags);
+    return ImVec2(winW, winH);
 }
 
 //======================================================================================================================
 void ApplyFontScale()
 {
-    ImGui::GetIO().FontGlobalScale = GetFontScale();
+    float scale = GetFontScale();
+    ImGui::GetIO().FontGlobalScale = scale;
+
+    // Scale scrollbar and grab sizes for touch-friendliness.
+    // Applied globally so combo popups and child windows all benefit.
+    ImGuiStyle& style = ImGui::GetStyle();
+#if defined(PICASIM_MOBILE)
+    // Extra 1.5x multiplier on mobile for fat-finger-friendly scrollbars
+    float scrollScale = scale * 1.5f;
+#else
+    float scrollScale = scale;
+#endif
+    style.ScrollbarSize = 14.0f * scrollScale;   // Default 14px
+    style.GrabMinSize = 12.0f * scrollScale;     // Default 12px
+    style.ScrollbarRounding = 9.0f * scrollScale; // Default 9px
 }
 
 //======================================================================================================================
@@ -166,7 +272,11 @@ void DrawCenteredText(const char* text, float verticalPosition, ImU32 color, flo
 
     // Calculate font size: base font size * screen scale * optional extra scale
     float screenScale = GetFontScale();
+    #if IMGUI_VERSION_NUM >= 19200
+    float fontSize = font->LegacySize * screenScale * scale;
+#else
     float fontSize = font->FontSize * screenScale * scale;
+#endif
 
     ImVec2 textSize = font->CalcTextSizeA(fontSize, FLT_MAX, 0.0f, text);
     float textX = (width - textSize.x) * 0.5f;
@@ -215,7 +325,16 @@ bool DrawImageButton(const char* id, Texture* texture, float x, float y, float s
     return clicked;
 }
 
-// NOTE: PushSettingsStyle, PopSettingsStyle, PushStartMenuButtonStyle, PopStartMenuButtonStyle
-// have been moved to PicaStyle.cpp
+//======================================================================================================================
+void NotifyMenuTransition()
+{
+    sMenuTransitionTime = SDL_GetTicks64();
+}
+
+//======================================================================================================================
+bool IsInputMuted()
+{
+    return (SDL_GetTicks64() - sMenuTransitionTime) < 200;
+}
 
 } // namespace UIHelpers

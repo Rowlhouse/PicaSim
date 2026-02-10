@@ -112,4 +112,13 @@ const char* GetVersionString()
     return sVersionString.c_str();
 }
 
+//======================================================================================================================
+void Terminate()
+{
+    sInitialized = false;
+    sAllVersionsText.clear();
+    sLatestVersionText.clear();
+    sVersionString.clear();
+}
+
 } // namespace VersionInfo

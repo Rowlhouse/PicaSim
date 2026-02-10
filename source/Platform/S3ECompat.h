@@ -14,7 +14,9 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#ifndef PICASIM_ANDROID
 #include <filesystem>
+#endif
 #include "imgui.h"
 
 #ifdef _WIN32
@@ -77,6 +79,12 @@ void PollEvents();
   * Returns true if quit was requested (e.g., window close button pressed).
   */
 bool CheckForQuitRequest();
+
+/**
+  * Reset quit request flag.
+  * Must be called at startup to clear stale state from previous Android launches.
+  */
+void ResetQuitRequest();
 
 //==============================================================================
 // Pointer/Touch functions (from s3ePointer.h)
@@ -216,18 +224,12 @@ inline int32 IwGxGetDisplayHeight() { return Platform::GetDisplayHeight(); }
 #define IW_GX_DEPTH_BUFFER_F 2
 
 // IwGx flush/swap/clear - implemented in Graphics.cpp
-void IwGxFlush();
 void IwGxSwapBuffers();
 void IwGxClear();
-void IwGxClear(uint32 flags);
 void IwGxSetColClear(uint8 r, uint8 g, uint8 b, uint8 a);
 
 // IwGL swap - same as IwGxSwapBuffers
 inline void IwGLSwapBuffers() { IwGxSwapBuffers(); }
-
-// PrepareForIwGx / RecoverFromIwGx - declared here, defined in Graphics.cpp
-void PrepareForIwGx(bool fullscreen);
-void RecoverFromIwGx(bool fullscreen);
 
 //==============================================================================
 // Vibration (mobile)

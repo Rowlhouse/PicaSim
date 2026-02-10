@@ -135,19 +135,73 @@ float GetScreenDPI()
     {
         return ddpi;
     }
-    return 96.0f; // Default DPI
+#if defined(PICASIM_ANDROID) || defined(__ANDROID__)
+    return 160.0f; // Android baseline DPI
+#else
+    return 96.0f; // Desktop default DPI
+#endif
+}
+
+float GetSurfaceDiagonalInches()
+{
+    float dpi = GetScreenDPI();
+    if (dpi > 0.0f)
+    {
+        int w = GetDisplayWidth();
+        int h = GetDisplayHeight();
+        float d = hypotf((float)w, (float)h);
+        return d / dpi;
+    }
+    return 0.0f;
 }
 
 float GetDisplayScale()
 {
     // Calculate display scale based on DPI
-    // Standard DPI is 96 on Windows, 72 on macOS
+    // Standard DPI is 96 on Windows, 72 on macOS, 160 on Android
 #ifdef _WIN32
     const float baseDPI = 96.0f;
+#elif defined(PICASIM_ANDROID) || defined(__ANDROID__)
+    const float baseDPI = 160.0f;
 #else
     const float baseDPI = 72.0f;
 #endif
     return GetScreenDPI() / baseDPI;
+}
+
+// --------------------------------------------------------------------------
+// Safe area insets for mobile cutouts and rounded corners
+// --------------------------------------------------------------------------
+
+#if defined(PICASIM_MOBILE)
+static float GetMobileScale()
+{
+    float dpiScale = GetDisplayScale();
+    float diagonal = GetSurfaceDiagonalInches();
+    float targetFontDp = (diagonal > 0.0f && diagonal < 7.0f) ? 20.0f :
+                         (diagonal <= 11.0f) ? 22.0f : 24.0f;
+    float scale = sqrtf(targetFontDp * dpiScale / 18.0f);  // 18.0f = sBaseFontSize
+    if (scale < 1.0f) scale = 1.0f;
+    return scale;
+}
+#endif
+
+float GetSafeAreaInsetX()
+{
+#if defined(PICASIM_MOBILE)
+    return GetMobileScale() * 40.0f;
+#else
+    return 0.0f;
+#endif
+}
+
+float GetSafeAreaInsetY()
+{
+#if defined(PICASIM_MOBILE)
+    return GetMobileScale() * 12.0f;
+#else
+    return 0.0f;
+#endif
 }
 
 // --------------------------------------------------------------------------

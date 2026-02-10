@@ -18,7 +18,7 @@ WindsockOverlay::WindsockOverlay(
     mTexture.SetClamping(true);
     mTexture.SetFormatHW(CIwImage::RGBA_4444);
     mTexture.Upload();
-    TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", imageFile, mTexture.mHWID);
+    TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", imageFile, mTexture.mHWID);
 
     // nice mipmapping
     if (mTexture.GetFlags() & Texture::UPLOADED_F)
@@ -88,6 +88,8 @@ void WindsockOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
     overlayShader->Use();
 
     glUniform1i(overlayShader->u_texture, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
     glEnableVertexAttribArray(overlayShader->a_position);

@@ -42,3 +42,14 @@ imgui.ini
 nul
 CodingStyleQueries.md
 data/VERSIONS.txt
+data/assets_manifest.txt
+
+# Android build artifacts
+android/.gradle/
+android/app/build/
+android/app/.cxx/
+android/build/
+android/local.properties
+*.apk
+*.aab
+android/logcat.txt

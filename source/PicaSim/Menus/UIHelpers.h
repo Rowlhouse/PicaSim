@@ -19,6 +19,11 @@ namespace UIHelpers
     // Get font scale based on current screen size (720p = 1.0)
     float GetFontScale();
 
+    // Set up a fullscreen ImGui window with safe area insets applied.
+    // Returns the usable content size (width, height) inside the window.
+    // Call ImGui::Begin() immediately after this.
+    ImVec2 BeginFullscreenWindow(const char* name, ImGuiWindowFlags flags);
+
     // Apply font scaling for current frame
     void ApplyFontScale();
 
@@ -53,6 +58,12 @@ namespace UIHelpers
         const ImU32 DarkGray = IM_COL32(64, 64, 64, 255);
         const ImU32 Yellow = IM_COL32(255, 255, 0, 255);
     }
+
+    // Call when transitioning to a new menu to suppress stale input
+    void NotifyMenuTransition();
+
+    // Returns true if input should be suppressed (within 200ms of a menu transition)
+    bool IsInputMuted();
 
     // NOTE: Style colors and Push/Pop functions have moved to PicaStyle.h
     // Use PicaStyle::PushSettingsStyle(), PicaStyle::PushMenuStyle(), etc.

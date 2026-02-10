@@ -19,7 +19,7 @@ RenderModel::~RenderModel()
 //======================================================================================================================
 void RenderModel::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     for (Components::iterator it = mComponents.begin() ; it != mComponents.end() ; ++it)
     {
         if (it->mVertexBuffer)
@@ -29,7 +29,7 @@ void RenderModel::Terminate()
     for (Textures::iterator it = mTextures.begin() ; it != mTextures.end() ; ++it)
     {
         Texture* texture = it->second;
-        TRACE_FILE_IF(1) TRACE("Releasing texture %s id %d", it->first.c_str(), texture->mHWID);
+        TRACE_FILE_IF(ONCE_2) TRACE("Releasing texture %s id %d", it->first.c_str(), texture->mHWID);
         delete it->second;
     }
     mTextures.clear();
@@ -40,7 +40,7 @@ void RenderModel::Terminate()
 //======================================================================================================================
 void RenderModel::Init(const ThreeDSModel& model, const Vector3& offset, float colourOffset, const Vector3& modelScale, bool cullBackFaces, const Colour& unsetColour)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     Terminate();
 
     mCullBackFaces = cullBackFaces;
@@ -172,7 +172,7 @@ Texture* RenderModel::getTextureID(const std::string& textureName, const std::st
         if (rgb565)
             texture->SetFormatHW(CIwImage::RGB_565);
         texture->Upload();
-        TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", textureFile.c_str(), texture->mHWID);
+        TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", textureFile.c_str(), texture->mHWID);
 
         if (texture->GetFlags() & Texture::UPLOADED_F)
         {
@@ -188,11 +188,11 @@ Texture* RenderModel::getTextureID(const std::string& textureName, const std::st
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
             texture->Upload();
-            TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", textureFile.c_str(), texture->mHWID);
+            TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", textureFile.c_str(), texture->mHWID);
         }
         else
         {
-            TRACE_FILE_IF(1) TRACE("Failed to upload texture %s", textureFile.c_str());
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to upload texture %s", textureFile.c_str());
             delete texture;
             return 0;
         }
@@ -208,10 +208,10 @@ Texture* RenderModel::getTextureID(const std::string& textureName, const std::st
 
 //======================================================================================================================
 void RenderModel::Init(
-    const ACModel& model, const std::string& modelFile, const Vector3& offset, float colourOffset, 
+    const ACModel& model, const std::string& modelFile, const Vector3& offset, float colourOffset,
     const Vector3& modelScale, bool cullBackFaces, bool rgb565, const NamedComponents* namedComponents)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     Terminate();
 
     mCullBackFaces = cullBackFaces;
@@ -373,7 +373,7 @@ void RenderModel::Init(
         }
         else
         {
-            TRACE("Unhandled Object: name = %s type = %d", object.name.c_str(), object.type);
+            TRACE("Unhandled AC3D Object: name = %s type = %d", object.name.c_str(), object.type);
         }
     }
     CreateVertexBuffers();
@@ -410,7 +410,7 @@ void RenderModel::CalculateBoundingRadius()
 //======================================================================================================================
 void RenderModel::Init(const Boxes& boxes)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     Terminate();
 
     mCullBackFaces = true;
@@ -774,7 +774,7 @@ void RenderModel::PartRenderPost(const Vector4* colour, bool forceColour, int co
 
     if (texture)
     {
-        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
   if (component.mVertexBuffer)

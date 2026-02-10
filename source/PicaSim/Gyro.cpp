@@ -16,7 +16,7 @@ Gyro::Gyro()
 //======================================================================================================================
 void Gyro::Init(class TiXmlElement* gyroElement, class Aeroplane* aeroplane)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mAeroplane = aeroplane;
     const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
 
@@ -131,7 +131,7 @@ void Gyro::Init(class TiXmlElement* gyroElement, class Aeroplane* aeroplane)
 //======================================================================================================================
 void Gyro::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 }
 
 //======================================================================================================================

@@ -355,6 +355,7 @@ struct Options : public Settings
     ShadowType mControlledPlaneShadows;
     ShadowType mOtherShadows;
     int   mProjectedShadowDetail;
+    float mShadowBlurMultiplier;
     bool  mDrawLaunchMarker;
     bool  mDrawGroundPosition;
     enum SkyGridOverlay {SKYGRID_NONE, SKYGRID_SPHERE, SKYGRID_BOX};
@@ -402,7 +403,6 @@ struct Options : public Settings
     int mBasicTextureDetail; /// texture size is 2^mBasicTextureDetail
     int mMaxSkyboxDetail;
     int mMSAASamples; /// 0=off, 2=2x, 4=4x, 8=8x - requires restart
-    int mGLVersion; /// 1=OpenGL 1.x (fixed function), 2=OpenGL 2.x (shaders) - requires restart
 
     bool mEnableSmoke;
     float mSmokeQuality;
@@ -1071,8 +1071,5 @@ struct GameSettings : public Settings
 
 // Helper to read MSAA setting early (before full settings load) for window creation
 int ReadMSAASamplesFromSettings(const char* filename);
-
-// Helper to read GL version early (before full settings load) for renderer initialization
-int ReadGLVersionFromSettings(const char* filename);
 
 #endif
