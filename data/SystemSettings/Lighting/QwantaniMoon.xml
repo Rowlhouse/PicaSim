@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<LightingSettings 
+ mThumbnail="SystemSettings/Thumbnails/Qwantani.jpg"
+ mTitle="Clear night lit by the moon"
+ mInfo=""
+ mSunBearingOffset="180" 
+ mThermalActivity="0.0"
+ mGamma="1.8" 
+ mSkyboxName="SystemData/Skyboxes/QwantaniMoon" />

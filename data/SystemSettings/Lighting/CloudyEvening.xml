@@ -5,5 +5,5 @@
  mInfo=""
  mSunBearingOffset="90" 
  mThermalActivity="0.1"
- mGamma="1.0" 
+ mGamma="1.5" 
  mSkyboxName="SystemData/Skyboxes/CloudyEvening" />

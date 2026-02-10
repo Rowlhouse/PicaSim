@@ -734,6 +734,7 @@ void InitStringsEN(const char** txt)
 "Detlef Jacobi for Litermonthalle Nalbach\n\n"
 "Some sounds from www.freesfx.co.uk and soundjay\n\n"
 "Textures from seamless-pixels.blogspot.co.uk/\n\n"
+"Greg Zaal & Jarod Guest for Qwantani Moon\n\n"
 "Everybody who has helped with testing and reporting bugs\n\n"
 "Aeroplane models provided by:\n\n"
 "Mark Cassidy (Phase 6, F18)\n\n"
