@@ -1,68 +1,73 @@
-"""Generate Windows .ico and Android mipmap icons from source PNG."""
+#!/usr/bin/env python3
+"""Generate Windows and Android icons from source images.
+
+Source images (in AndroidIcon/):
+  ic_launcher_foreground.png - plane on transparent background (432x432)
+  ic_launcher_background.png - blue gradient background (432x432)
+
+Generates:
+  Android: adaptive icon layers at all mipmap densities
+  Windows: composited multi-size ICO at resources/PicaSim.ico
+"""
 
 import os
-import sys
+from PIL import Image, ImageDraw
 
-try:
-    from PIL import Image
-except ImportError:
-    print("Pillow not found, installing...")
-    import subprocess
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow"])
-    from PIL import Image
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(script_dir)
+source_dir = os.path.join(script_dir, "AndroidIcon")
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
-SOURCE_IMAGE = os.path.join(SCRIPT_DIR, "IconFree.png")
+fg = Image.open(os.path.join(source_dir, "ic_launcher_foreground.png"))
+bg = Image.open(os.path.join(source_dir, "ic_launcher_background.png"))
 
-# Windows .ico sizes
+# --- Android adaptive icon layers ---
+print("Android:")
+ANDROID_SIZES = {
+    "mipmap-mdpi": 108,
+    "mipmap-hdpi": 162,
+    "mipmap-xhdpi": 216,
+    "mipmap-xxhdpi": 324,
+    "mipmap-xxxhdpi": 432,
+}
+res_dir = os.path.join(project_dir, "android", "app", "src", "main", "res")
+
+for name, src in (("ic_launcher_foreground", fg), ("ic_launcher_background", bg)):
+    for folder, size in ANDROID_SIZES.items():
+        out_dir = os.path.join(res_dir, folder)
+        os.makedirs(out_dir, exist_ok=True)
+        resized = src.resize((size, size), Image.LANCZOS)
+        resized.save(os.path.join(out_dir, f"{name}.png"))
+        print(f"  {folder}/{name}.png ({size}x{size})")
+
+# --- Windows ICO (composited with rounded corners) ---
+print("Windows:")
 ICO_SIZES = [256, 128, 64, 48, 32, 16]
 
-# Android mipmap densities
-ANDROID_MIPMAPS = {
-    "mipmap-mdpi": 48,
-    "mipmap-hdpi": 72,
-    "mipmap-xhdpi": 96,
-    "mipmap-xxhdpi": 144,
-    "mipmap-xxxhdpi": 192,
-}
+
+def make_rounded_mask(size, radius):
+    """Create a rounded rectangle alpha mask."""
+    mask = Image.new("L", (size, size), 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rounded_rectangle([0, 0, size - 1, size - 1], radius=radius, fill=255)
+    return mask
 
 
-def generate_windows_ico(source: Image.Image) -> None:
-    ico_path = os.path.join(SCRIPT_DIR, "PicaSim.ico")
-    sizes = []
-    for s in ICO_SIZES:
-        resized = source.resize((s, s), Image.LANCZOS)
-        sizes.append(resized)
-    # Save as .ico with all sizes
-    sizes[0].save(ico_path, format="ICO", sizes=[(s, s) for s in ICO_SIZES],
-                  append_images=sizes[1:])
-    print(f"Created {ico_path} with sizes: {ICO_SIZES}")
+ico_images = []
+for size in ICO_SIZES:
+    # Composite foreground onto background
+    bg_resized = bg.resize((size, size), Image.LANCZOS).convert("RGBA")
+    fg_resized = fg.resize((size, size), Image.LANCZOS).convert("RGBA")
+    composited = Image.alpha_composite(bg_resized, fg_resized)
+    # Apply rounded corners
+    radius = max(size // 8, 2)
+    mask = make_rounded_mask(size, radius)
+    composited.putalpha(mask)
+    ico_images.append(composited)
+    print(f"  {size}x{size}")
 
+ico_path = os.path.join(script_dir, "PicaSim.ico")
+ico_images[0].save(ico_path, format="ICO", sizes=[(s, s) for s in ICO_SIZES],
+                    append_images=ico_images[1:])
+print(f"  -> {ico_path}")
 
-def generate_android_mipmaps(source: Image.Image) -> None:
-    res_dir = os.path.join(PROJECT_DIR, "android", "app", "src", "main", "res")
-    for density, size in ANDROID_MIPMAPS.items():
-        out_dir = os.path.join(res_dir, density)
-        os.makedirs(out_dir, exist_ok=True)
-        out_path = os.path.join(out_dir, "ic_launcher.png")
-        resized = source.resize((size, size), Image.LANCZOS)
-        resized.save(out_path, format="PNG")
-        print(f"Created {out_path} ({size}x{size})")
-
-
-def main() -> None:
-    if not os.path.exists(SOURCE_IMAGE):
-        print(f"Error: Source image not found: {SOURCE_IMAGE}")
-        sys.exit(1)
-
-    source = Image.open(SOURCE_IMAGE).convert("RGBA")
-    print(f"Source image: {source.size[0]}x{source.size[1]} {source.mode}")
-
-    generate_windows_ico(source)
-    generate_android_mipmaps(source)
-    print("Done!")
-
-
-if __name__ == "__main__":
-    main()
+print("Done")
