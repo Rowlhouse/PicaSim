@@ -42,7 +42,7 @@ bool ContactAdded(
 //======================================================================================================================
 void EntityManager::Init(const FrameworkSettings& frameworkSettings)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     IwAssert(ROWLHOUSE, !mInstance);
     mInstance.reset(new EntityManager(frameworkSettings));
 
@@ -88,7 +88,7 @@ void EntityManager::Init(const FrameworkSettings& frameworkSettings)
 //======================================================================================================================
 void EntityManager::Terminate()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     IwAssert(ROWLHOUSE, mInstance);
 
     mInstance->UnregisterEntity(mInstance.get(), ENTITY_LEVEL_LOOP_PHYSICS);
@@ -187,9 +187,9 @@ void EntityManager::UpdateEntities(float deltaTime)
 void EntityManager::EntityUpdate(float deltaTime, int entityLevel)
 {
     IwAssert(ROWLHOUSE, entityLevel == ENTITY_LEVEL_LOOP_PHYSICS);
-    TRACE_FILE_IF(2) TRACE("Physics Step start");
+    TRACE_FILE_IF(FRAME_1) TRACE("Physics Step start");
     mDynamicsWorld->stepSimulation(deltaTime, 0);
-    TRACE_FILE_IF(2) TRACE("Physics Step end");
+    TRACE_FILE_IF(FRAME_1) TRACE("Physics Step end");
 }
 
 //======================================================================================================================

@@ -1,3 +1,6 @@
+#ifndef AC3D_H
+#define AC3D_H
+
 #include <string>
 #include <vector>
 
@@ -87,6 +90,4 @@ struct ACImage
 
 bool ACLoadModel(ACModel& model, const char *fname);
 
-ACImage *ACGetTexture(int ind);
-int ACLoadTexture(char *name);
-int ACLoadRGBImage(char *fileName);
+#endif // AC3D_H

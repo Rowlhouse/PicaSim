@@ -461,7 +461,7 @@ bool ac_load_object(ACObject& ob, FILE *f, ACObject *parent, Materials& material
                     if (news == NULL)
                     {
                         printf("error whilst reading surface at line: %d\n", line);
-                        return(NULL);
+                        return false;
                     }
 
                 }

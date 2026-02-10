@@ -67,7 +67,7 @@ namespace PicaStyle {
         const ImU32 SliderGrabHovered = IM_COL32(64, 134, 174, 255);
         const ImU32 SliderGrabActive = IM_COL32(54, 124, 164, 255);
         const float SliderTrackHeight = 6.0f;
-        const float SliderGrabRadius = 8.0f;
+        const float SliderGrabRadius = 10.0f;
 
         const ImU32 CheckboxBorder = IM_COL32(150, 155, 165, 255);
         const ImU32 CheckboxFill = IM_COL32(74, 144, 184, 255);     // Accent
@@ -109,7 +109,7 @@ namespace PicaStyle {
     namespace Layout {
         const float ControlWidthFraction = 0.45f;   // How much of row width the control takes
         const float LabelRightPadding = 16.0f;      // Padding between label and value
-        const float LabelValueButtonWidth = 60.0f;  // Width of value column in LabelValueButton
+        const float LabelValueButtonWidth = 80.0f;  // Width of value column in LabelValueButton
         const float RowExtraSpacing = 2.0f;         // Extra vertical spacing between rows
     }
 

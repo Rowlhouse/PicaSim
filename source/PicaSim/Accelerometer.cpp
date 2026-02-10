@@ -17,7 +17,7 @@ Accelerometer::Accelerometer()
 //======================================================================================================================
 void Accelerometer::Init(class TiXmlElement* accelerometerElement, class Aeroplane* aeroplane)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mAeroplane = aeroplane;
     const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
 
@@ -49,7 +49,7 @@ void Accelerometer::Init(class TiXmlElement* accelerometerElement, class Aeropla
 //======================================================================================================================
 void Accelerometer::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 }
 
 //======================================================================================================================

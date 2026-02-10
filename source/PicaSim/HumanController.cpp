@@ -176,7 +176,7 @@ HumanController::HumanController(GameSettings& gs)
 //======================================================================================================================
 HumanController::~HumanController()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     EntityManager::GetInstance().UnregisterEntity(this, ENTITY_LEVEL_CONTROL);
     RenderManager::GetInstance().UnregisterRenderOverlayObject(this, 0);
 
@@ -551,7 +551,7 @@ void HumanController::UpdateJoystick(float deltaTime)
     if (S3E_RESULT_SUCCESS != GetJoystickStatus(joystick, mGameSettings.mOptions.mJoystickID))
         return;
 
-    //TRACE_FILE_IF(1) TRACE("left = %d, %d Right = %d, %d", joystick.sThumbLX, joystick.sThumbLY, joystick.sThumbRX, joystick.sThumbRY);
+    //TRACE_FILE_IF(ONCE_1) TRACE("left = %d, %d Right = %d, %d", joystick.sThumbLX, joystick.sThumbLY, joystick.sThumbRX, joystick.sThumbRY);
 
     bool controlledByJoystick[ControllerSettings::CONTROLLER_NUM_CONTROLS];
     for (int i = 0 ; i != ControllerSettings::CONTROLLER_NUM_CONTROLS ; ++i)
@@ -850,6 +850,7 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
     const ControllerShader* controllerShader = (ControllerShader*) ShaderManager::GetInstance().GetShader(SHADER_CONTROLLER);
 
     controllerShader->Use();
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
     glEnableVertexAttribArray(controllerShader->a_position);
     esSetModelViewProjectionMatrix(controllerShader->u_mvpMatrix);
 

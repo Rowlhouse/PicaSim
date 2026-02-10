@@ -9,7 +9,7 @@ int GatePost::mRenderModelReferenceCount = 0;
 //======================================================================================================================
 void GatePost::Init(const Vector3& pos, bool draw, const Vector4& colour, float height, const Vector4& targetColour)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     mTM.SetIdentity();
     Vector3 p = pos;
@@ -27,7 +27,7 @@ void GatePost::Init(const Vector3& pos, bool draw, const Vector4& colour, float 
             IwAssert(ROWLHOUSE, !mRenderModel);
             mRenderModel = new RenderModel;
 
-            TRACE_FILE_IF(1) TRACE("GatePost::Init - creating 3D model");
+            TRACE_FILE_IF(ONCE_1) TRACE("GatePost::Init - creating 3D model");
             ACModel model;
             if (ACLoadModel(model, "SystemData/Objects/Tower.ac"))
             {
@@ -39,7 +39,7 @@ void GatePost::Init(const Vector3& pos, bool draw, const Vector4& colour, float 
             }
         }
         ++mRenderModelReferenceCount;
-        TRACE_FILE_IF(1) TRACE("GatePost::Init %d", mRenderModelReferenceCount);
+        TRACE_FILE_IF(ONCE_2) TRACE("GatePost::Init %d", mRenderModelReferenceCount);
 
         RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_OBJECTS);
     }
@@ -50,7 +50,7 @@ void GatePost::Init(const Vector3& pos, bool draw, const Vector4& colour, float 
 //======================================================================================================================
 void GatePost::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     if (mDraw)
     {
         RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
@@ -70,7 +70,7 @@ void GatePost::RenderUpdate(Viewport* viewport, int renderLevel)
 {
     if (!mDraw)
         return;
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     if (mRenderModel->IsCreated())
     {
@@ -99,7 +99,7 @@ void GatePost::RenderUpdate(Viewport* viewport, int renderLevel)
 //======================================================================================================================
 void PhysicalGate::Init(const Vector3& pos1, const Vector3& pos2, float height, const Vector4& colour)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
 
     mColour = colour;
@@ -165,7 +165,7 @@ void PhysicalGate::Init(const Vector3& pos1, const Vector3& pos2, float height, 
         EntityManager::GetInstance().GetDynamicsWorld().addRigidBody(mPostBodies[i]);
     }
 
-    TRACE_FILE_IF(1) TRACE("Gate::Init - creating model");
+    TRACE_FILE_IF(ONCE_1) TRACE("Gate::Init - creating model");
 
     mRenderModel.Init(boxes);
 
@@ -175,7 +175,7 @@ void PhysicalGate::Init(const Vector3& pos1, const Vector3& pos2, float height, 
 //======================================================================================================================
 void PhysicalGate::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
 
     mRenderModel.Terminate();
@@ -195,7 +195,7 @@ void PhysicalGate::Terminate()
 //======================================================================================================================
 void PhysicalGate::RenderUpdate(Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     if (mRenderModel.IsCreated())
     {
         const Options& options = PicaSim::GetInstance().GetSettings().mOptions;

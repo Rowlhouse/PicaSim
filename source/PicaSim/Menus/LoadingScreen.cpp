@@ -12,14 +12,12 @@
 // Forward declarations from Graphics.cpp
 void IwGxClear();
 void IwGxSwapBuffers();
-void PrepareForIwGx(bool fullscreen);
-void RecoverFromIwGx(bool clear);
 
 //======================================================================================================================
 static const char* GetTip(const struct GameSettings& gameSettings, const char** tips, size_t numTips)
 {
     ++gameSettings.mStatistics.mLoadCounter;
-    TRACE_FILE_IF(1) TRACE("GetTip: load counter = %d", gameSettings.mStatistics.mLoadCounter);
+    TRACE_FILE_IF(ONCE_2) TRACE("GetTip: load counter = %d", gameSettings.mStatistics.mLoadCounter);
     const Language language = gameSettings.mOptions.mLanguage;
 
     if (gameSettings.mChallengeSettings.mChallengeMode == ChallengeSettings::CHALLENGE_RACE)
@@ -65,7 +63,7 @@ LoadingScreen::LoadingScreen(const char* initialText, struct GameSettings& gameS
     , mProgressImageWidth(0)
     , mProgressImageHeight(0)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mLastTimeMs = Timer::GetMilliseconds();
     mLabelText = initialText ? initialText : "";
     mLabelColour.Set(0, 0, 0, 255);  // Black text
@@ -74,10 +72,8 @@ LoadingScreen::LoadingScreen(const char* initialText, struct GameSettings& gameS
     int height = gameSettings.mOptions.mFrameworkSettings.mScreenHeight;
     int width = gameSettings.mOptions.mFrameworkSettings.mScreenWidth;
 
-    PrepareForIwGx(false);
-
     // Load background texture
-    TRACE_FILE_IF(1) TRACE("Creating background texture");
+    TRACE_FILE_IF(ONCE_2) TRACE("Creating background texture");
     mBackgroundTexture = std::make_unique<Texture>();
     mBackgroundTexture->LoadFromFile("Menus/StartBackground.jpg");
     mBackgroundTexture->SetMipMapping(false);
@@ -86,12 +82,12 @@ LoadingScreen::LoadingScreen(const char* initialText, struct GameSettings& gameS
         mBackgroundTexture->SetFormatHW(CIwImage::RGB_565);
     }
     mBackgroundTexture->Upload();
-    TRACE_FILE_IF(1) TRACE("Background texture loaded");
+    TRACE_FILE_IF(ONCE_2) TRACE("Background texture loaded");
 
     // Load progress texture if needed
     if (showProgress)
     {
-        TRACE_FILE_IF(1) TRACE("Loading progress texture");
+        TRACE_FILE_IF(ONCE_2) TRACE("Loading progress texture");
         mProgressTexture = std::make_unique<Texture>();
         mProgressTexture->LoadFromFile("Menus/Progress.png");
         mProgressTexture->SetMipMapping(false);
@@ -105,7 +101,7 @@ LoadingScreen::LoadingScreen(const char* initialText, struct GameSettings& gameS
         float desiredHeight = desiredWidth / ar;
         mProgressImageWidth = (int32)desiredWidth;
         mProgressImageHeight = (int32)desiredHeight;
-        TRACE_FILE_IF(1) TRACE("Progress texture loaded: %dx%d", mProgressImageWidth, mProgressImageHeight);
+        TRACE_FILE_IF(ONCE_2) TRACE("Progress texture loaded: %dx%d", mProgressImageWidth, mProgressImageHeight);
     }
 
     // Get tip text if enabled
@@ -146,7 +142,6 @@ LoadingScreen::LoadingScreen(const char* initialText, struct GameSettings& gameS
 LoadingScreen::~LoadingScreen()
 {
     // unique_ptr automatically handles texture cleanup
-    RecoverFromIwGx(mClearOnExit);
 }
 
 //======================================================================================================================
@@ -165,9 +160,9 @@ void LoadingScreen::SetLabelColour(const Colour& colour)
 void LoadingScreen::Update(const char* moduleName)
 {
     if (moduleName)
-        TRACE_FILE_IF(1) TRACE("LoadingScreen::Update %s", moduleName);
+        TRACE_FILE_IF(ONCE_1) TRACE("LoadingScreen::Update %s", moduleName);
     else
-        TRACE_FILE_IF(1) TRACE("LoadingScreen::Update()");
+        TRACE_FILE_IF(ONCE_1) TRACE("LoadingScreen::Update()");
 
     int64 currentTimeMs = Timer::GetMilliseconds();
     int32 deltaTimeMs = (int32)(currentTimeMs - mLastTimeMs);

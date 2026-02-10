@@ -8,6 +8,8 @@
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
 
+#include "ScrollHelper.h"
+#include "ScrollableTabStrip.h"
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
@@ -15,8 +17,6 @@
 // Forward declarations from Graphics.cpp
 void IwGxClear();
 void IwGxSwapBuffers();
-void PrepareForIwGx(bool fullscreen);
-void RecoverFromIwGx(bool clear);
 
 //======================================================================================================================
 enum TabPanel
@@ -52,6 +52,9 @@ private:
     int mSelectedTab;
     bool mFinished;
     bool mResetScroll[TAB_NUM_TABS];  // Reset scroll position per tab when menu opens
+
+    ScrollHelper mScrollHelper;
+    ScrollableTabStrip mTabStrip;
 };
 
 //======================================================================================================================
@@ -60,6 +63,8 @@ HelpMenu::HelpMenu(GameSettings& gameSettings, int initialTab)
     , mSelectedTab(initialTab)
     , mFinished(false)
 {
+    UIHelpers::NotifyMenuTransition();
+
     // Reset scroll positions for all tabs when menu opens
     for (int i = 0; i < TAB_NUM_TABS; ++i)
         mResetScroll[i] = true;
@@ -94,10 +99,19 @@ const char* HelpMenu::GetTabContent(int tab)
 //======================================================================================================================
 bool HelpMenu::Update()
 {
+    int savedTab = mSelectedTab;
+
     IwGxClear();
     Render();
     IwGxSwapBuffers();
     PollEvents();
+
+    // Suppress stale input from the previous menu's touch/click events
+    if (UIHelpers::IsInputMuted())
+    {
+        mFinished = false;
+        mSelectedTab = savedTab;
+    }
 
     return mFinished;
 }
@@ -105,8 +119,6 @@ bool HelpMenu::Update()
 //======================================================================================================================
 void HelpMenu::Render()
 {
-    int width = Platform::GetDisplayWidth();
-    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
     Language language = mGameSettings.mOptions.mLanguage;
 
@@ -119,11 +131,11 @@ void HelpMenu::Render()
     // Apply menu style (light theme)
     PicaStyle::PushMenuStyle();
 
-    // Full-screen window
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2((float)width, (float)height));
-    ImGui::Begin("HelpMenu", nullptr,
+    // Full-screen window with safe area insets
+    ImVec2 winSize = UIHelpers::BeginFullscreenWindow("HelpMenu",
         ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+    float width = winSize.x;
+    float height = winSize.y;
 
     float buttonH = 32.0f * scale;
     float padding = ImGui::GetStyle().WindowPadding.y;
@@ -140,42 +152,21 @@ void HelpMenu::Render()
     ImGui::Dummy(ImVec2(10.0f * scale, 0));
     ImGui::SameLine();
 
-    // Tab bar with scroll policy for many tabs
-    // Increase frame padding to make tabs match button height
-    float fontSize = ImGui::GetFontSize();
-    float tabPaddingY = (buttonH - fontSize) * 0.5f;
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f * scale, tabPaddingY));
-    ImGui::PushStyleVar(ImGuiStyleVar_TabRounding, 4.0f * scale);
-    if (ImGui::BeginTabBar("HelpTabs", ImGuiTabBarFlags_FittingPolicyScroll))
-    {
-        // Tab definitions
-        struct TabInfo { int id; PicaString label; };
-        TabInfo tabs[] = {
-            {TAB_ABOUT, PS_ABOUT},
-            {TAB_HOW_TO_FLY, PS_FLYING},
-            {TAB_HOW_TO_CONFIGURE, PS_SETTINGS},
-            {TAB_HOW_TO_RACE, PS_RACES},
-            {TAB_TIPS, PS_TIPS},
-            {TAB_OBJECTEDITING, PS_OBJECTEDITING},
-            {TAB_KEYBOARD, PS_KEYBOARD},
-            {TAB_JOYSTICKS, PS_JOYSTICK},
-            {TAB_CREDITS, PS_CREDITS},
-            {TAB_LICENCE, PS_LICENCE},
-            {TAB_VERSIONS, PS_VERSIONS}
-        };
-
-        for (const auto& tab : tabs)
-        {
-            ImGuiTabItemFlags flags = 0;
-            if (ImGui::BeginTabItem(GetPS(tab.label, language), nullptr, flags))
-            {
-                mSelectedTab = tab.id;
-                ImGui::EndTabItem();
-            }
-        }
-        ImGui::EndTabBar();
-    }
-    ImGui::PopStyleVar(2);  // FramePadding and TabRounding
+    // Scrollable tab strip
+    const char* tabLabels[] = {
+        GetPS(PS_ABOUT, language),
+        GetPS(PS_FLYING, language),
+        GetPS(PS_SETTINGS, language),
+        GetPS(PS_RACES, language),
+        GetPS(PS_TIPS, language),
+        GetPS(PS_OBJECTEDITING, language),
+        GetPS(PS_KEYBOARD, language),
+        GetPS(PS_JOYSTICK, language),
+        GetPS(PS_CREDITS, language),
+        GetPS(PS_LICENCE, language),
+        GetPS(PS_VERSIONS, language)
+    };
+    mTabStrip.Render("HelpTabs", tabLabels, TAB_NUM_TABS, mSelectedTab, buttonH);
 
     // === MAIN CONTENT AREA (scrollable) ===
     // Calculate: content fills space between current position and bottom button
@@ -190,11 +181,13 @@ void HelpMenu::Render()
         "Content_Credits", "Content_Licence", "Content_Versions"
     };
     ImGui::BeginChild(tabContentIds[mSelectedTab], ImVec2(-1, contentHeight), true);
+    mScrollHelper.ApplyDragScroll(tabContentIds[mSelectedTab]);
 
     // Reset scroll position for this tab if menu was just opened
     if (mResetScroll[mSelectedTab])
     {
         ImGui::SetScrollY(0.0f);
+        mScrollHelper.ResetScroll(tabContentIds[mSelectedTab]);
         mResetScroll[mSelectedTab] = false;
     }
 
@@ -216,16 +209,7 @@ void HelpMenu::Render()
 
         int32 dpi = (int32)Platform::GetScreenDPI();
         int32 numCores = Platform::GetCPUCount();
-
-        // Calculate screen diagonal
-        float diagonal = 0.0f;
-        if (dpi > 0)
-        {
-            int w = Platform::GetDisplayWidth();
-            int h = Platform::GetDisplayHeight();
-            float d = hypotf((float)w, (float)h);
-            diagonal = d / dpi;
-        }
+        float diagonal = Platform::GetSurfaceDiagonalInches();
 
         sprintf(labelTxt, "Device info:\nCores: %d\nSurface: %d dpi %.2f\"",
             numCores, dpi, diagonal);
@@ -252,7 +236,6 @@ void HelpMenu::Render()
 void DisplayHelpMenu(GameSettings& gameSettings, bool showHowToFly)
 {
     AudioManager::GetInstance().SetAllChannelsToZeroVolume();
-    PrepareForIwGx(false);
 
     HelpMenu helpMenu(gameSettings, showHowToFly ? TAB_HOW_TO_FLY : TAB_ABOUT);
 
@@ -268,5 +251,4 @@ void DisplayHelpMenu(GameSettings& gameSettings, bool showHowToFly)
         AudioManager::GetInstance().Update(1.0f / 30.0f);
     }
 
-    RecoverFromIwGx(false);
 }

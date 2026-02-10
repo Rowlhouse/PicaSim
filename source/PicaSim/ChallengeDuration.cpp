@@ -14,9 +14,9 @@
 //======================================================================================================================
 ChallengeDuration::ChallengeDuration(GameSettings& gameSettings) : Challenge(gameSettings), mFinalScore(0.0, 0.0, 0)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const ChallengeSettings& cs = gameSettings.mChallengeSettings;
-    TRACE_FILE_IF(1) TRACE("ChallengeDuration::ChallengeDuration num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("ChallengeDuration::ChallengeDuration num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 }
 
 //======================================================================================================================
@@ -35,7 +35,7 @@ void ChallengeDuration::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingS
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     const ChallengeSettings& cs = gs.mChallengeSettings;
 
-    TRACE_FILE_IF(1) TRACE("ChallengeDuration::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("ChallengeDuration::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 
     mAeroplane = aeroplane;
     RenderManager::GetInstance().RegisterRenderGxObject(this, 0);
@@ -53,7 +53,7 @@ void ChallengeDuration::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingS
 //======================================================================================================================
 void ChallengeDuration::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderGxObject(this, 0);
 }
 
@@ -201,7 +201,8 @@ void ChallengeDuration::GxRender(int renderLevel, DisplayConfig& displayConfig)
 
     if (gs.mOptions.mDisplayFPS)
     {
-        font.SetRect(displayConfig.mLeft,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)displayConfig.mWidth,fontHeight);
+        int16 fpsInsetX = (int16)Platform::GetSafeAreaInsetX();
+        font.SetRect(displayConfig.mLeft + fpsInsetX,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)(displayConfig.mWidth - 2 * fpsInsetX),fontHeight);
         font.SetAlignmentHor(FONT_ALIGN_RIGHT);
         sprintf(txt, "%ld", std::lround(gs.mStatistics.mSmoothedFPS));
         font.SetColourABGR(0xff00ffff);

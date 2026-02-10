@@ -145,6 +145,13 @@ Be fairly liberal with comments. They serve to:
 
 Comments in headers should explain intent and clarify complexity. Not all parameters need comments when the purpose is clear.
 
+## Text
+
+- Text displayed to the user (not trace/logging) should go through the language system:
+  - Use TXT(PS_MYINFO)
+  - Add PS_MYINFO to the enum
+  - Add an entry in each of the English, German etc .cpp files (keeping to the order in the enum)
+
 ## Whitespace
 
 - Single blank line between functions in `.cpp` files

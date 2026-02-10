@@ -26,7 +26,7 @@ BoxObject::BoxObject(const Vector3& extents,
     {
         LoadTextureFromFile(mTexture, textureFile);
         mTexture.Upload();
-        TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", textureFile, mTexture.mHWID);
+        TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", textureFile, mTexture.mHWID);
     }
 
     // Create the physics representation
@@ -124,6 +124,8 @@ void BoxObject::RenderUpdate(class Viewport* viewport, int renderLevel)
     const ModelShader* modelShader = (ModelShader*) ShaderManager::GetInstance().GetShader(SHADER_MODEL);
     modelShader->Use();
     glUniform1f(modelShader->u_specularExponent, 100.0f);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     glDisableVertexAttribArray(modelShader->a_normal);
 

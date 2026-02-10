@@ -70,7 +70,7 @@ Skybox::~Skybox()
 //======================================================================================================================
 bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, LoadingScreenHelper* loadingScreen, float panoramaExtension)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_1);
     if (loadingScreen) loadingScreen->Update("Skybox");
 
     if (mInitialised)
@@ -96,7 +96,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
 
     if (detail < 1)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to find Skybox files for %s", skyboxPath);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to find Skybox files for %s", skyboxPath);
         return false;
     }
 
@@ -121,12 +121,12 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
                 if (image->LoadFromFile(filename))
                 {
                     allFaceImages[iSide].push_back(image);
-                    TRACE_FILE_IF(1) TRACE("Loaded image %s", filename);
+                    TRACE_FILE_IF(ONCE_2) TRACE("Loaded image %s", filename);
                 }
                 else
                 {
                     delete image;
-                    TRACE_FILE_IF(1) TRACE("Failed to load image %s", filename);
+                    TRACE_FILE_IF(ONCE_1) TRACE("Failed to load image %s", filename);
                 }
             }
         }
@@ -156,7 +156,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
                         char debugFilename[256];
                         sprintf(debugFilename, "expanded_%s%d.png", sideNames[iSide], iTile + 1);
                         expandedImage->SavePng(debugFilename);
-                        TRACE_FILE_IF(1) TRACE("Saved debug texture: %s", debugFilename);
+                        TRACE_FILE_IF(ONCE_2) TRACE("Saved debug texture: %s", debugFilename);
                     }
 #endif
                     Texture* texture = new Texture;
@@ -168,7 +168,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
                     if (use16BitTextures && texture->GetWidth() > 512)
                         texture->SetFormatHW(CIwImage::RGB_565);
                     texture->Upload();
-                    TRACE_FILE_IF(1) TRACE("Uploaded expanded texture %s%d id %d (size %dx%d)",
+                    TRACE_FILE_IF(ONCE_2) TRACE("Uploaded expanded texture %s%d id %d (size %dx%d)",
                         sideNames[iSide], iTile + 1, texture->mHWID,
                         expandedImage->GetWidth(), expandedImage->GetHeight());
 
@@ -224,7 +224,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
                 if (use16BitTextures && texture->GetWidth() > 512)
                     texture->SetFormatHW(CIwImage::RGB_565);
                 texture->Upload();
-                TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", filename, texture->mHWID);
+                TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", filename, texture->mHWID);
 
                 if (texture->GetFlags() & Texture::UPLOADED_F)
                 {
@@ -236,7 +236,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
 
                     if (loadingScreen) loadingScreen->Update();
                     texture->Upload();
-                    TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", filename, texture->mHWID);
+                    TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", filename, texture->mHWID);
                 }
             }
         }
@@ -253,7 +253,7 @@ bool Skybox::Init(const char* skyboxPath, bool use16BitTextures, int maxDetail, 
 //======================================================================================================================
 void Skybox::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_1);
     if (mInitialised)
         RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_SKYBOX);
 
@@ -322,7 +322,7 @@ void Skybox::DrawSide(Side side, int mvpLoc) const
 //======================================================================================================================
 void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     esPushMatrix();
 
     glFrontFace(GL_CW);
@@ -343,6 +343,8 @@ void Skybox::RenderUpdate(class Viewport* viewport, int renderLevel)
     esRotatef(-mOffset, 0, 0, 1);
 
     glActiveTexture(GL_TEXTURE0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     // Load the vertex position
     glVertexAttribPointer(skyboxShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
@@ -480,7 +482,7 @@ void Skybox::RenderVRParallax(Viewport* viewport,
                                float tanFovLeft, float tanFovRight,
                                float tanFovUp, float tanFovDown)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     if (!mInitialised)
         return;

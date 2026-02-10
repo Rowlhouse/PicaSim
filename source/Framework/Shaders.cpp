@@ -11,11 +11,11 @@
 #endif
 
 const char simpleVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     attribute vec4 a_position;
     attribute vec4 a_colour;
-    varying lowp vec4 v_colour;
+    varying mediump vec4 v_colour;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -24,7 +24,7 @@ const char simpleVertexShaderStr[] = GLSL(
 );
 
 const char simpleFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     varying vec4 v_colour;
     void main()
     {
@@ -33,7 +33,7 @@ const char simpleFragmentShaderStr[] = GLSL(
 );
 
 const char controllerVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     attribute vec4 a_position;
     void main()
@@ -43,7 +43,7 @@ const char controllerVertexShaderStr[] = GLSL(
 );
 
 const char controllerFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     uniform vec4 u_colour;
     void main()
     {
@@ -52,13 +52,13 @@ const char controllerFragmentShaderStr[] = GLSL(
 );
 
 const char plainVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     uniform mat4 u_textureMatrix;
     attribute vec4 a_position;
-    attribute lowp vec4 a_colour;
-    varying lowp vec2 v_texCoord;
-    varying lowp vec4 v_colour;
+    attribute mediump vec4 a_colour;
+    varying mediump vec2 v_texCoord;
+    varying mediump vec4 v_colour;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -68,7 +68,7 @@ const char plainVertexShaderStr[] = GLSL(
 );
 
 const char plainFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     varying vec2 v_texCoord;
     uniform sampler2D u_texture;
     varying vec4 v_colour;
@@ -80,13 +80,13 @@ const char plainFragmentShaderStr[] = GLSL(
 );
 
 const char terrainVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     uniform mat4 u_textureMatrix0;
     uniform mat4 u_textureMatrix1;
     attribute vec4 a_position;
-    varying lowp vec2 v_texCoord1;
-    varying lowp vec2 v_texCoord0;
+    varying mediump vec2 v_texCoord1;
+    varying mediump vec2 v_texCoord0;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -96,7 +96,7 @@ const char terrainVertexShaderStr[] = GLSL(
 );
 
 const char terrainFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     varying vec2 v_texCoord0;
     varying vec2 v_texCoord1;
     uniform sampler2D u_texture0;
@@ -109,7 +109,7 @@ const char terrainFragmentShaderStr[] = GLSL(
 );
 
 const char terrainPanoramaVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     attribute vec4 a_position;
     void main()
@@ -119,7 +119,7 @@ const char terrainPanoramaVertexShaderStr[] = GLSL(
 );
 
 const char terrainPanoramaFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     void main()
     {
         gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -127,11 +127,11 @@ const char terrainPanoramaFragmentShaderStr[] = GLSL(
 );
 
 const char overlayVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     attribute vec4 a_position;
     attribute vec2 a_texCoord;
-    varying lowp vec2 v_texCoord;
+    varying mediump vec2 v_texCoord;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -140,7 +140,7 @@ const char overlayVertexShaderStr[] = GLSL(
 );
 
 const char overlayFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     varying vec2 v_texCoord;
     uniform sampler2D u_texture;
     uniform vec4 u_colour;
@@ -151,14 +151,14 @@ const char overlayFragmentShaderStr[] = GLSL(
 );
 
 const char modelVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     uniform mat3 u_normalMatrix;
     attribute vec4 a_position;
     attribute vec3 a_normal;
     attribute vec4 a_colour;
-    varying lowp vec4 v_colour;
-    varying lowp vec3 v_normal;
+    varying mediump vec4 v_colour;
+    varying mediump vec3 v_normal;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -168,7 +168,7 @@ const char modelVertexShaderStr[] = GLSL(
 );
 
 const char modelFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     uniform vec3      u_lightDir[5];
     uniform vec4      u_lightDiffuseColour[5];
     uniform vec4      u_lightSpecularColour[5];
@@ -176,7 +176,7 @@ const char modelFragmentShaderStr[] = GLSL(
     uniform float     u_specularAmount;
     uniform float     u_specularExponent;
     varying vec4      v_colour;
-    varying lowp vec3 v_normal;
+    varying mediump vec3 v_normal;
 
     vec4 processLight(
         vec3 normal,
@@ -187,11 +187,11 @@ const char modelFragmentShaderStr[] = GLSL(
     {
         vec4 colour = lightAmbientColour * v_colour;
         // Diffuse
-        lowp float ndotl = max(0.0, dot(normal, lightDir));
+        mediump float ndotl = max(0.0, dot(normal, lightDir));
         colour += ndotl * lightDiffuseColour * v_colour;
         // Specular
-        lowp vec3 h_vec = normalize(lightDir + vec3(0,0,1));
-        lowp float ndoth = dot(normal, h_vec);
+        mediump vec3 h_vec = normalize(lightDir + vec3(0,0,1));
+        mediump float ndoth = dot(normal, h_vec);
         if (ndoth > 0.0)
         {
             colour += (pow(ndoth, u_specularExponent) * 
@@ -213,16 +213,16 @@ const char modelFragmentShaderStr[] = GLSL(
 );
 
 const char texturedModelVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     uniform mat3 u_normalMatrix;
     attribute vec4 a_position;
     attribute vec3 a_normal;
     attribute vec4 a_colour;
     attribute vec2 a_texCoord;
-    varying lowp vec4 v_colour;
-    varying lowp vec3 v_normal;
-    varying lowp vec2 v_texCoord;
+    varying mediump vec4 v_colour;
+    varying mediump vec3 v_normal;
+    varying mediump vec2 v_texCoord;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -233,7 +233,7 @@ const char texturedModelVertexShaderStr[] = GLSL(
 );
 
 const char texturedModelFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     uniform vec3      u_lightDir[5];
     uniform vec4      u_lightDiffuseColour[5];
     uniform vec4      u_lightSpecularColour[5];
@@ -243,7 +243,7 @@ const char texturedModelFragmentShaderStr[] = GLSL(
     uniform sampler2D u_texture;
     uniform float     u_texBias;
     varying vec4      v_colour;
-    varying lowp vec3 v_normal;
+    varying mediump vec3 v_normal;
     varying vec2      v_texCoord;
 
     vec4 processLight(
@@ -255,11 +255,11 @@ const char texturedModelFragmentShaderStr[] = GLSL(
     {
         vec4 colour = lightAmbientColour * v_colour;
         // Diffuse
-        lowp float ndotl = max(0.0, dot(normal, lightDir));
+        mediump float ndotl = max(0.0, dot(normal, lightDir));
         colour += ndotl * lightDiffuseColour * v_colour;
         // Specular
-        lowp vec3 h_vec = normalize(lightDir + vec3(0,0,1));
-        lowp float ndoth = dot(normal, h_vec);
+        mediump vec3 h_vec = normalize(lightDir + vec3(0,0,1));
+        mediump float ndoth = dot(normal, h_vec);
         if (ndoth > 0.0)
         {
             colour += (pow(ndoth, u_specularExponent) * 
@@ -283,7 +283,7 @@ const char texturedModelFragmentShaderStr[] = GLSL(
 );
 
 const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     uniform vec3      u_lightDir[5];
     uniform vec4      u_lightDiffuseColour[5];
     uniform vec4      u_lightSpecularColour[5];
@@ -293,7 +293,7 @@ const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
     uniform sampler2D u_texture;
     uniform float     u_texBias;
     varying vec4      v_colour;
-    varying lowp vec3 v_normal;
+    varying mediump vec3 v_normal;
     varying vec2      v_texCoord;
 
     vec4 processLight(
@@ -306,11 +306,11 @@ const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
     {
         vec4 colour = lightAmbientColour * fragColour;
         // Diffuse
-        lowp float ndotl = max(0.0, dot(normal, lightDir));
+        mediump float ndotl = max(0.0, dot(normal, lightDir));
         colour += ndotl * lightDiffuseColour * fragColour;
         // Specular
-        lowp vec3 h_vec = normalize(lightDir + vec3(0,0,1));
-        lowp float ndoth = dot(normal, h_vec);
+        mediump vec3 h_vec = normalize(lightDir + vec3(0,0,1));
+        mediump float ndoth = dot(normal, h_vec);
         if (ndoth > 0.0)
         {
             colour += (pow(ndoth, u_specularExponent) * 
@@ -336,12 +336,12 @@ const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
 
 
 const char shadowVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     uniform mat4 u_textureMatrix;
     attribute vec4 a_position;
     attribute vec4 a_texCoord;
-    varying lowp vec2 v_texCoord;
+    varying mediump vec2 v_texCoord;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -350,7 +350,7 @@ const char shadowVertexShaderStr[] = GLSL(
 );
 
 const char shadowFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     varying vec2 v_texCoord;
     uniform sampler2D u_texture;
     uniform vec4 u_colour;
@@ -359,86 +359,6 @@ const char shadowFragmentShaderStr[] = GLSL(
         gl_FragColor = u_colour * texture2D(u_texture, v_texCoord);
     }
 );
-
-#if 0
-// Shadow blur shader - uses vertex shader same as regular shadow
-// Uses 9-tap blur for shadowBlur <= 1.0, 25-tap for shadowBlur > 1.0
-const char shadowBlurFragmentShaderStr[] = GLSL(
-    precision mediump float;
-    varying vec2 v_texCoord;
-    uniform sampler2D u_texture;
-    uniform vec4 u_colour;
-    uniform float u_blurAmount;
-    uniform vec2 u_texelSize;
-    void main()
-    {
-        vec4 color = vec4(0.0);
-
-        if (u_blurAmount > 1.0)
-        {
-            // 21-tap Gaussian-weighted blur (normalized weights sum to 1.0)
-            // Based on Gaussian kernel with sigma ~1.0, excluding far corners
-            vec2 t1 = u_texelSize * u_blurAmount;        // 1 texel offset
-            vec2 t2 = u_texelSize * u_blurAmount * 2.0;  // 2 texel offset
-
-            // Center (weight 0.1524)
-            color += texture2D(u_texture, v_texCoord) * 0.1524;
-
-            // 4 adjacent at distance 1 (weight 0.0966 each)
-            color += texture2D(u_texture, v_texCoord + vec2(t1.x, 0.0)) * 0.0966;
-            color += texture2D(u_texture, v_texCoord - vec2(t1.x, 0.0)) * 0.0966;
-            color += texture2D(u_texture, v_texCoord + vec2(0.0, t1.y)) * 0.0966;
-            color += texture2D(u_texture, v_texCoord - vec2(0.0, t1.y)) * 0.0966;
-
-            // 4 diagonal at distance sqrt(2) (weight 0.0595 each)
-            color += texture2D(u_texture, v_texCoord + vec2(t1.x, t1.y)) * 0.0595;
-            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, t1.y)) * 0.0595;
-            color += texture2D(u_texture, v_texCoord + vec2(t1.x, -t1.y)) * 0.0595;
-            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, -t1.y)) * 0.0595;
-
-            // 4 far adjacent at distance 2 (weight 0.0260 each)
-            color += texture2D(u_texture, v_texCoord + vec2(t2.x, 0.0)) * 0.0260;
-            color += texture2D(u_texture, v_texCoord - vec2(t2.x, 0.0)) * 0.0260;
-            color += texture2D(u_texture, v_texCoord + vec2(0.0, t2.y)) * 0.0260;
-            color += texture2D(u_texture, v_texCoord - vec2(0.0, t2.y)) * 0.0260;
-
-            // 8 knight-move positions at distance sqrt(5) (weight 0.0149 each)
-            color += texture2D(u_texture, v_texCoord + vec2(t2.x, t1.y)) * 0.0149;
-            color += texture2D(u_texture, v_texCoord + vec2(t2.x, -t1.y)) * 0.0149;
-            color += texture2D(u_texture, v_texCoord + vec2(-t2.x, t1.y)) * 0.0149;
-            color += texture2D(u_texture, v_texCoord + vec2(-t2.x, -t1.y)) * 0.0149;
-            color += texture2D(u_texture, v_texCoord + vec2(t1.x, t2.y)) * 0.0149;
-            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, t2.y)) * 0.0149;
-            color += texture2D(u_texture, v_texCoord + vec2(t1.x, -t2.y)) * 0.0149;
-            color += texture2D(u_texture, v_texCoord + vec2(-t1.x, -t2.y)) * 0.0149;
-        }
-        else
-        {
-            // 9-tap 3x3 Gaussian-weighted blur (normalized weights sum to 1.0)
-            vec2 offset1 = u_texelSize * u_blurAmount;
-            vec2 offset2 = offset1 * 0.7071; // diagonal offset (1/sqrt(2))
-
-            // Center (weight 0.1884)
-            color += texture2D(u_texture, v_texCoord) * 0.1884;
-
-            // 4 adjacent taps (weight 0.1614 each)
-            color += texture2D(u_texture, v_texCoord + vec2(offset1.x, 0.0)) * 0.1614;
-            color += texture2D(u_texture, v_texCoord - vec2(offset1.x, 0.0)) * 0.1614;
-            color += texture2D(u_texture, v_texCoord + vec2(0.0, offset1.y)) * 0.1614;
-            color += texture2D(u_texture, v_texCoord - vec2(0.0, offset1.y)) * 0.1614;
-
-            // 4 diagonal taps (weight 0.0415 each)
-            color += texture2D(u_texture, v_texCoord + offset2) * 0.0415;
-            color += texture2D(u_texture, v_texCoord - offset2) * 0.0415;
-            color += texture2D(u_texture, v_texCoord + vec2(offset2.x, -offset2.y)) * 0.0415;
-            color += texture2D(u_texture, v_texCoord + vec2(-offset2.x, offset2.y)) * 0.0415;
-        }
-
-        gl_FragColor = u_colour * color;
-    }
-);
-
-#else
 
 // Shadow blur shader - uses vertex shader same as regular shadow
 // Optimized using bilinear filtering: 5-tap for shadowBlur <= 1.0, 9-tap for shadowBlur > 1.0
@@ -507,14 +427,12 @@ const char shadowBlurFragmentShaderStr[] = GLSL(
     }
 );
 
-#endif
-
 const char smokeVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     attribute vec4 a_position;
     attribute vec2 a_texCoord;
-    varying lowp vec2 v_texCoord;
+    varying mediump vec2 v_texCoord;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -523,10 +441,10 @@ const char smokeVertexShaderStr[] = GLSL(
 );
 
 const char smokeFragmentShaderStr[] = GLSL(
-    precision lowp float;
+    precision mediump float;
     varying vec2 v_texCoord;
     uniform sampler2D u_texture;
-    uniform lowp vec4 u_colour;
+    uniform mediump vec4 u_colour;
     void main()
     {
         gl_FragColor = texture2D(u_texture, v_texCoord);
@@ -535,11 +453,11 @@ const char smokeFragmentShaderStr[] = GLSL(
 );
 
 const char skyboxVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4   u_mvpMatrix;
     attribute vec4 a_position;
     attribute vec2 a_texCoord;
-    varying lowp vec2 v_texCoord;
+    varying mediump vec2 v_texCoord;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
@@ -565,7 +483,7 @@ const char skyboxFragmentShaderStr[] = GLSL(
 
 // VR Skybox with depth-based parallax for stereoscopic effect
 const char skyboxVRParallaxVertexShaderStr[] = GLSL(
-    precision mediump float;
+    precision highp float;
     uniform mat4 u_mvpMatrix;
     attribute vec4 a_position;
     attribute vec2 a_texCoord;

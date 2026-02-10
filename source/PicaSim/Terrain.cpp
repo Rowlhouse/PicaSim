@@ -401,12 +401,12 @@ static void GetInterpolatedRGB(
 //======================================================================================================================
 void Terrain::CalculateLightmapTexture(unsigned int size, float gamma, const char* basicTexture, Vector3& plainColour, LoadingScreenHelper* loadingScreen)
 {
-    TRACE_FILE_IF(1) TRACE("Calculating lightmap...");
+    TRACE_FILE_IF(ONCE_1) TRACE("Calculating lightmap...");
     CIwImage origImg;
     origImg.LoadFromFile(basicTexture);
     if (origImg.GetWidth() == 0)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to load %s", basicTexture);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to load %s", basicTexture);
         return;
     }
 
@@ -558,9 +558,9 @@ void Terrain::CalculateLightmapTexture(unsigned int size, float gamma, const cha
     
     mHeightfieldTexture.CopyFromBuffer(size, size, CIwImage::RGB_888, size * 3, image, 0);
     mHeightfieldTexture.Upload();
-    TRACE_FILE_IF(1) TRACE("Uploaded heightfield texture id %d", mHeightfieldTexture.mHWID);
+    TRACE_FILE_IF(ONCE_2) TRACE("Uploaded heightfield texture id %d", mHeightfieldTexture.mHWID);
     delete [] image;
-    TRACE_FILE_IF(1) TRACE("done\n");
+    TRACE_FILE_IF(ONCE_2) TRACE("done");
 
     // Also calculate the plain colour
     float r = Minimum(waterLightDot * diffuseColour.x + ambientColour.x, 0.9999f);
@@ -581,7 +581,7 @@ void Terrain::CalculateLightmapTexture(unsigned int size, float gamma, const cha
 //======================================================================================================================
 void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingScreen, uint32& checksum)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mLastLOD = 0;
     mLastCameraPosition = Vector3(0,0,0);
 
@@ -663,7 +663,7 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
 
         vertices = new Heightfield::Vertex[nx*nx];
 
-        TRACE_FILE_IF(1) TRACE("Calculating terrain...");
+        TRACE_FILE_IF(ONCE_1) TRACE("Calculating terrain...");
         if (ts.mType == TerrainSettings::TYPE_MIDPOINT_DISPLACEMENT)
         {
             float midpointDisplacementHeight = ts.mMidpointDisplacementHeight;
@@ -750,21 +750,21 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
         {
             IwAssertMsg(ROWLHOUSE, false, ("Failed to find a valid terrain type"));
         }
-        TRACE_FILE_IF(1) TRACE("done\n");
+        TRACE_FILE_IF(ONCE_2) TRACE("done");
     }
 
-    TRACE_FILE_IF(1) TRACE("Processing terrain...");
+    TRACE_FILE_IF(ONCE_1) TRACE("Processing terrain...");
     loadingScreen->Update("Processing terrain");
     Heightfield::HeightfieldBuilder lod(vertices, n, nx,
         ts.mCoastEnhancement,
         ts.mPlainHeight,
         ts.mSimplifyUnderPlain, loadingScreen);
-    TRACE_FILE_IF(1) TRACE("done\n");
+    TRACE_FILE_IF(ONCE_2) TRACE("done");
 
     // now have the output available
     int heightfieldOutputSize;
     lod.getOutput(mVertexOut, heightfieldOutputSize);
-    TRACE_FILE_IF(1) TRACE("heightfieldOutputSize = %d, memory = %d = %5.3f MB\n",
+    TRACE_FILE_IF(ONCE_2) TRACE("heightfieldOutputSize = %d, memory = %d = %5.3f MB",
         heightfieldOutputSize,
         heightfieldOutputSize * sizeof(mVertexOut[0]),
         heightfieldOutputSize * sizeof(mVertexOut[0]) / (1024.0f * 1024));
@@ -795,7 +795,7 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
         mDetailTexture.SetFiltering(true);
         mDetailTexture.SetMipMapping(true);
         mDetailTexture.Upload();
-        TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", ts.mBasicTexture.c_str(), mDetailTexture.mHWID);
+        TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", ts.mBasicTexture.c_str(), mDetailTexture.mHWID);
 
         // nice mipmapping
         if (mDetailTexture.GetFlags() & Texture::UPLOADED_F)
@@ -804,7 +804,7 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             mDetailTexture.Upload();
-            TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", ts.mBasicTexture.c_str(), mDetailTexture.mHWID);
+            TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", ts.mBasicTexture.c_str(), mDetailTexture.mHWID);
         }
     }
 
@@ -865,7 +865,7 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
         mGenericShadowTexture->SetFiltering(false);
         mGenericShadowTexture->SetFormatHW(CIwImage::RGBA_4444);
         mGenericShadowTexture->Upload();
-        TRACE_FILE_IF(1) TRACE("Uploaded shadow texture id %d", mGenericShadowTexture->mHWID);
+        TRACE_FILE_IF(ONCE_2) TRACE("Uploaded shadow texture id %d", mGenericShadowTexture->mHWID);
         glBindTexture(GL_TEXTURE_2D, mGenericShadowTexture->mHWID);
         if (mGenericShadowTexture->GetFlags() & Texture::UPLOADED_F)
         {
@@ -877,7 +877,7 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
             mGenericShadowTexture->Upload();
-            TRACE_FILE_IF(1) TRACE("Uploaded shadow texture id %d", mGenericShadowTexture->mHWID);
+            TRACE_FILE_IF(ONCE_2) TRACE("Uploaded shadow texture id %d", mGenericShadowTexture->mHWID);
         }
 
         int size = 1 << options.mProjectedShadowDetail;
@@ -976,7 +976,7 @@ void Terrain::InitPhysics(LoadingScreenHelper* loadingScreen)
 //======================================================================================================================
 void Terrain::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     {
         // plain physics
         if (mPlainRigidBody)
@@ -1031,7 +1031,7 @@ void Terrain::Terminate()
 //======================================================================================================================
 void Terrain::RenderUpdate(Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     const EnvironmentSettings&es = gs.mEnvironmentSettings;
 
@@ -1076,12 +1076,14 @@ void Terrain::RenderUpdate(Viewport* viewport, int renderLevel)
 //======================================================================================================================
 void Terrain::RenderPlain(Viewport* viewport)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     const EnvironmentSettings& es = gs.mEnvironmentSettings;
 
     const TerrainPanoramaShader* terrainPanoramaShader = (TerrainPanoramaShader*) ShaderManager::GetInstance().GetShader(SHADER_TERRAIN_PANORAMA);
     const PlainShader* plainShader = (PlainShader*) ShaderManager::GetInstance().GetShader(SHADER_PLAIN);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {
@@ -1095,6 +1097,8 @@ void Terrain::RenderPlain(Viewport* viewport)
         glDrawArrays(GL_TRIANGLE_FAN, 0, mNumPlainPts);
         // Don't bother with the outer plain
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+        glDisableVertexAttribArray(terrainPanoramaShader->a_position);
     }
     else
     {
@@ -1164,7 +1168,7 @@ void Terrain::RenderPlain(Viewport* viewport)
             esPushMatrix();
             esScalef(scaleX/heightfieldRange, scaleY/heightfieldRange, 1.0f);
             esSetTextureMatrix(textureMatrix);
-            glMatrixMode( GL_MODELVIEW );
+            esMatrixMode( GL_MODELVIEW );
         }
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, mNumOuterPlainPts*2);
@@ -1176,13 +1180,16 @@ void Terrain::RenderPlain(Viewport* viewport)
             esMatrixMode( GL_MODELVIEW );
         }
 #endif
+
+        glDisableVertexAttribArray(plainShader->a_position);
+        glDisableVertexAttribArray(plainShader->a_colour);
     }
 }
 
 //======================================================================================================================
 void Terrain::RenderHeightfield(Viewport* viewport)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(FRAME_1);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     const EnvironmentSettings&es = gs.mEnvironmentSettings;
 
@@ -1237,7 +1244,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
 
     if (needToRegen)
     {
-        TRACE_FILE_IF(3) TRACE("Regenerating Heightfield");
+        TRACE_FILE_IF(ONCE_3) TRACE("Regenerating Heightfield");
         mHeightfield->clearSaved();
         mHeightfield->meshRefine(cameraPosition, lod);
         mLastLOD = lod;
@@ -1259,12 +1266,12 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         }
     }
 
-    TRACE_FILE_IF(3) TRACE("Rendering Heightfield");
+    TRACE_FILE_IF(ONCE_3) TRACE("Rendering Heightfield");
     const Heightfield::HeightfieldRuntime::SavedPoints& savedPoints = mHeightfield->getSavedPoints();
 
     // Now actually draw
     unsigned num = savedPoints.size();
-    TRACE_FILE_IF(3) TRACE("Num points = %d", num);
+    TRACE_FILE_IF(ONCE_3) TRACE("Num points = %d", num);
     if (num == 0)
         return;
 
@@ -1291,7 +1298,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
     int texture0Loc = -1;
     int texture1Loc = -1;
 
-    TRACE_FILE_IF(3) TRACE("Setting up shaders", num);
+    TRACE_FILE_IF(ONCE_3) TRACE("Setting up shaders", num);
     if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {
         terrainPanoramaShader->Use();
@@ -1314,7 +1321,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
     if (es.mTerrainSettings.mType == TerrainSettings::TYPE_PANORAMA)
     {
         glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-        TRACE_FILE_IF(4) TRACE("Terrain::RenderHeightfield: num verts = %d", num);
+        TRACE_FILE_IF(FRAME_1) TRACE("Terrain::RenderHeightfield: num verts = %d", num);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, num);
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     }
@@ -1330,7 +1337,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
             mHeightfieldTexture.GetFlags() & Texture::UPLOADED_F
             )
         {
-            TRACE_FILE_IF(3) TRACE("Setting up basic texture");
+            TRACE_FILE_IF(ONCE_3) TRACE("Setting up basic texture");
             glActiveTexture(textureUnit);
             glUniform1i(texture0Loc, textureUnit - GL_TEXTURE0);
 
@@ -1355,7 +1362,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         else
         {
             glActiveTexture(textureUnit);
-            glDisable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
 
         // Detail texture
@@ -1364,7 +1371,7 @@ void Terrain::RenderHeightfield(Viewport* viewport)
             mDetailTexture.GetFlags() & Texture::UPLOADED_F
             )
         {
-            TRACE_FILE_IF(3) TRACE("Setting up detail texture");
+            TRACE_FILE_IF(ONCE_3) TRACE("Setting up detail texture");
             glActiveTexture(textureUnit);
             glUniform1i(texture1Loc, textureUnit - GL_TEXTURE0);
 
@@ -1390,13 +1397,13 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         else
         {
             glActiveTexture(textureUnit);
-            glDisable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
 
-        TRACE_FILE_IF(3) TRACE("Terrain::RenderHeightfield: num verts = %d", num);
+        TRACE_FILE_IF(ONCE_3) TRACE("Terrain::RenderHeightfield: num verts = %d", num);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, num);
 
-        TRACE_FILE_IF(3) TRACE("Clearing up", num);
+        TRACE_FILE_IF(ONCE_3) TRACE("Clearing up", num);
         textureUnit = GL_TEXTURE0;
         if (
             textureUnit < maxTextureUnit &&
@@ -1419,10 +1426,13 @@ void Terrain::RenderHeightfield(Viewport* viewport)
             esPopMatrix();
             esMatrixMode( GL_MODELVIEW );
 
-            glActiveTexture(GL_TEXTURE0);
-
             ++textureUnit;
         }
+
+        // Always reset active texture unit to GL_TEXTURE0 after multi-texture rendering.
+        // Without this, if heightfield texture was uploaded but detail wasn't, GL_TEXTURE1
+        // remains active and subsequent renders bind textures to the wrong unit.
+        glActiveTexture(GL_TEXTURE0);
     }
 
     if (mTerrainVertexBuffer)
@@ -1432,13 +1442,13 @@ void Terrain::RenderHeightfield(Viewport* viewport)
         glDisableVertexAttribArray(terrainPanoramaShader->a_position);
     else
         glDisableVertexAttribArray(terrainShader->a_position);
-    TRACE_FILE_IF(2) TRACE("Finished RenderHeightfield");
+    TRACE_FILE_IF(FRAME_1) TRACE("Finished RenderHeightfield");
 }
 
 //======================================================================================================================
 void Terrain::RenderTerrainWireframe(Viewport* viewport)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(FRAME_1);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
 
     if (!gs.mOptions.mTerrainWireframe)
@@ -1469,9 +1479,14 @@ void Terrain::RenderTerrainWireframe(Viewport* viewport)
 
     // Draw wireframe - use GL_LEQUAL so equal depths pass (needed for VR)
     glDepthFunc(GL_LEQUAL);
+#if !defined(PS_PLATFORM_ANDROID) && !defined(PS_PLATFORM_IOS)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, num);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#else
+    // GLES2 doesn't support glPolygonMode - draw as lines instead
+    glDrawArrays(GL_LINE_STRIP, 0, num);
+#endif
     glDepthFunc(GL_LESS);
 
     glDisableVertexAttribArray(controllerShader->a_position);
@@ -1479,7 +1494,7 @@ void Terrain::RenderTerrainWireframe(Viewport* viewport)
     if (mTerrainVertexBuffer)
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    TRACE_FILE_IF(2) TRACE("Finished RenderTerrainWireframe");
+    TRACE_FILE_IF(FRAME_1) TRACE("Finished RenderTerrainWireframe");
 }
 
 //======================================================================================================================
@@ -1578,7 +1593,7 @@ struct btSingleRayCallback : public btBroadphaseRayCallback
 //======================================================================================================================
 void Terrain::RenderShadow(RenderObject& shadowCaster, Viewport* viewport)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     Vector3 pos = shadowCaster.GetTM().GetTrans();
     float radius = shadowCaster.GetRenderBoundingRadius();
     RenderShadow(shadowCaster, pos, radius, viewport);
@@ -1587,7 +1602,7 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, Viewport* viewport)
 //======================================================================================================================
 void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCasterPos, const float shadowCasterRadius, Viewport* viewport)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     Vector3 dirToLight = -RenderManager::GetInstance().GetLightingDirection().GetNormalised();
@@ -1749,7 +1764,8 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
     esTranslatef(offset.x, offset.y, offset.z + 0.02f); // small upwards to stop shimmering when camera is at the object's location
 
     // Determine whether to use blur shader for projected shadows
-    float shadowBlur = RenderManager::GetInstance().GetShadowBlur();
+    float shadowBlur = RenderManager::GetInstance().GetShadowBlur()
+        * PicaSim::GetInstance().GetSettings().mOptions.mShadowBlurMultiplier;
     bool useBlurShader = (shadowBlur > 0.001f) && !useBlob;
 
     const ShadowShader* shadowShader = (ShadowShader*) ShaderManager::GetInstance().GetShader(SHADER_SHADOW);
@@ -1869,6 +1885,9 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
     int a_position = useBlurShader ? shadowBlurShader->a_position : shadowShader->a_position;
     int a_texCoord = useBlurShader ? shadowBlurShader->a_texCoord : shadowShader->a_texCoord;
 
+    // Ensure no VBO is bound before passing client-side arrays to RenderTerrainQuad
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     for (int i = i0 - di ; i < i0 + di + 1; ++i)
     {
         if (i < 0 || i > heightfieldSize-2)
@@ -1883,6 +1902,9 @@ void Terrain::RenderShadow(RenderObject& shadowCaster, const Vector3& shadowCast
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glDisableVertexAttribArray(a_position);
+    glDisableVertexAttribArray(a_texCoord);
 
     esMatrixMode( GL_TEXTURE );
     esPopMatrix();

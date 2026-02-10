@@ -171,6 +171,7 @@ void InitStringsFR(const char** txt)
   txt[PS_CONTROLLEDPLANESHADOWS] = "Ombres avion contrôlé";
   txt[PS_OTHERSHADOWS] = "Autres ombres";
   txt[PS_PROJECTEDSHADOWDETAIL] = "Détail ombre projetée";
+  txt[PS_SHADOWBLURMULTIPLIER] = "Multiplicateur flou d'ombre";
   txt[PS_BLOB] = "Tache";
   txt[PS_PROJECTED] = "Projetée";
   txt[PS_AEROPLANERENDER] = "Rendu du modèle";
@@ -757,6 +758,8 @@ void InitStringsFR(const char** txt)
   txt[PS_VRNOTAVAILABLE] = "VR non disponible - aucun casque détecté";
   txt[PS_VRPANORAMADEPTH] = "Profondeur panorama VR";
   txt[PS_VRPANORAMAEXTENSION] = "Extension Panorama VR";
+  txt[PS_MIRROR_TEXT] = "Casque VR en cours d'utilisation";
+  txt[PS_MIRROR_SETTINGS] = "Afficher le miroir VR dans les Paramètres";
   txt[PS_ORIENTATION] = "Orientation";
   txt[PS_SMOKESOURCE] = "Source fumée %d";
   txt[PS_NAME] = "Nom";

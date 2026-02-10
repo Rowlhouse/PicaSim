@@ -171,6 +171,77 @@ The installer is created at `dist/PicaSim-X.Y.Z-Setup.exe`. Running it will:
 
 **VS Code**: F7 to build. Use F5 to debug - the `.vscode/launch.json` is configured with the correct working directory.
 
+### Android Build
+
+#### Prerequisites
+
+- **Android SDK** with platform API 33+
+- **Android NDK 25** (r25 / 25.1.x) - install via Android Studio's SDK Manager
+- **Java 17** - required by Gradle 8.5
+- **Git submodules** initialised (SDL2, SDL2_net, openal-soft, imgui, stb, glm live in `third_party/`)
+
+```bash
+# Initialise submodules (one-time, after cloning)
+git submodule update --init --recursive
+```
+
+Set the `ANDROID_HOME` environment variable if not already set (Android Studio usually sets this):
+
+```bash
+# Windows
+setx ANDROID_HOME "%LOCALAPPDATA%\Android\Sdk"
+
+# Linux/macOS
+export ANDROID_HOME=~/Android/Sdk
+```
+
+#### Building the APK
+
+From the project root:
+
+```bash
+# Debug build (arm64-v8a + x86_64)
+cd android
+gradlew.bat assembleDebug        # Windows
+./gradlew assembleDebug           # Linux/macOS
+```
+
+The APK is output to `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+#### Installing on a Device
+
+1. Enable **Developer Options** on your Android device (Settings > About Phone > tap Build Number 7 times)
+2. Enable **USB Debugging** in Developer Options
+3. Connect the device via USB and accept the debugging prompt
+
+Then install via adb:
+
+```bash
+adb install android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+Or build and install in one step:
+
+```bash
+cd android
+gradlew.bat installDebug          # Windows
+./gradlew installDebug             # Linux/macOS
+```
+
+#### Viewing Logs
+
+Filter logcat to PicaSim output:
+
+```bash
+adb logcat -s SDL:* PicaSim:* OpenAL:*
+```
+
+#### Notes
+
+- The APK bundles all game assets from `data/` — on first launch they are extracted to internal storage, which takes a moment
+- Supported ABIs: `arm64-v8a` (most modern phones) and `x86_64` (emulators)
+- The Android build uses libraries from `third_party/` submodules rather than vcpkg
+
 ### Directory Structure
 
 ```

@@ -1,4 +1,5 @@
 #include "SettingsWidgets.h"
+#include "ScrollHelper.h"
 #include "UIHelpers.h"
 #include "PicaStyle.h"
 #include "../Platform/Texture.h"
@@ -186,7 +187,7 @@ bool BeginSettingsBlock()
     snprintf(id, sizeof(id), "SettingsBlock%d", sSettingsBlockCounter++);
 
     // Begin a child region with auto-sizing height
-    ImGui::BeginChild(id, ImVec2(-1, 0), ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+    ImGui::BeginChild(id, ImVec2(-1, 0), ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Borders);
 
     return true;
 }
@@ -212,15 +213,13 @@ bool Checkbox(const char* label, bool& value)
     // Custom checkbox drawing
     ImGui::PushID(label);
 
-    // Scale sizes by font scale for large screens
-    float scale = UIHelpers::GetFontScale();
-
     ImVec2 pos = ImGui::GetCursorScreenPos();
     ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-    float size = kCheckboxSize * scale;
-    float rounding = 3.0f * scale;
-    float lineWidth = 2.0f * scale;
+    // Size relative to ImGui's frame height so it scales with the double-scaled font
+    float size = ImGui::GetFrameHeight() * 0.9f;
+    float rounding = size * 0.17f;
+    float lineWidth = size * 0.11f;
     ImVec2 checkboxMin = pos;
     ImVec2 checkboxMax = ImVec2(pos.x + size, pos.y + size);
 
@@ -251,7 +250,7 @@ bool Checkbox(const char* label, bool& value)
     {
         // Empty outline when unchecked
         ImU32 borderColor = hovered ? kAccentColor : kCheckboxBorderColor;
-        drawList->AddRect(checkboxMin, checkboxMax, borderColor, rounding, 0, 1.5f * scale);
+        drawList->AddRect(checkboxMin, checkboxMax, borderColor, rounding, 0, lineWidth * 0.75f);
     }
 
     ImGui::PopID();
@@ -300,6 +299,10 @@ static bool CustomSliderBehavior(const char* label, float& value, float min, flo
     ImGui::InvisibleButton("##slider", ImVec2(sliderWidth, frameHeight));
     bool hovered = ImGui::IsItemHovered();
     bool active = ImGui::IsItemActive();
+
+    // Tell ScrollHelper this is a drag-type widget so it won't steal input
+    if (active)
+        ScrollHelper::MarkEditWidgetActive();
 
     // Handle dragging
     bool changed = false;
@@ -460,6 +463,9 @@ bool Combo(const char* label, int& value, const char* const* items, int itemCoun
     bool changed = false;
     if (ImGui::BeginCombo("##combo", items[value]))
     {
+        // Tell ScrollHelper this is a drag-type widget so it won't steal input
+        ScrollHelper::MarkEditWidgetActive();
+
         for (int i = 0; i < itemCount; ++i)
         {
             bool isSelected = (value == i);
@@ -503,6 +509,9 @@ bool Combo(const char* label, int& value, const std::vector<std::string>& items)
 
     if (ImGui::BeginCombo("##combo", preview))
     {
+        // Tell ScrollHelper this is a drag-type widget so it won't steal input
+        ScrollHelper::MarkEditWidgetActive();
+
         for (int i = 0; i < (int)items.size(); ++i)
         {
             bool isSelected = (value == i);

@@ -72,7 +72,7 @@ RenderManager::~RenderManager()
 //======================================================================================================================
 void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelper* loadingScreen)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     IwAssert(ROWLHOUSE, !mInstance);
     mInstance.reset(new RenderManager(frameworkSettings));
 
@@ -81,14 +81,12 @@ void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelp
     int height = Platform::GetDisplayHeight();
     GLint depthBits = 0;
     glGetIntegerv( GL_DEPTH_BITS, &depthBits);
-    TRACE_FILE_IF(1) TRACE("Screen Size : %dx%d\n", width, height);
-    TRACE_FILE_IF(1) TRACE("\n");
-    TRACE_FILE_IF(1) TRACE( "Vendor     : %s\n", (const char*)glGetString( GL_VENDOR ) );
-    TRACE_FILE_IF(1) TRACE( "Renderer   : %s\n", (const char*)glGetString( GL_RENDERER ) );
-    TRACE_FILE_IF(1) TRACE( "Version    : %s\n", (const char*)glGetString( GL_VERSION ) );
-    TRACE_FILE_IF(1) TRACE( "Extensions : %s\n", (const char*)glGetString( GL_EXTENSIONS ) );
-    TRACE_FILE_IF(1) TRACE( "Depth bits : %d\n", depthBits );
-    TRACE_FILE_IF(1) TRACE("\n");
+    TRACE_FILE_IF(ONCE_1) TRACE("Screen Size : %dx%d", width, height);
+    TRACE_FILE_IF(ONCE_2) TRACE( "Vendor     : %s", (const char*)glGetString( GL_VENDOR ) );
+    TRACE_FILE_IF(ONCE_2) TRACE( "Renderer   : %s", (const char*)glGetString( GL_RENDERER ) );
+    TRACE_FILE_IF(ONCE_2) TRACE( "Version    : %s", (const char*)glGetString( GL_VERSION ) );
+    TRACE_FILE_IF(ONCE_2) TRACE( "Extensions : %s", (const char*)glGetString( GL_EXTENSIONS ) );
+    TRACE_FILE_IF(ONCE_2) TRACE( "Depth bits : %d", depthBits );
 
     mInstance->mDebugRenderer->Init();
 }
@@ -96,7 +94,7 @@ void RenderManager::Init(FrameworkSettings& frameworkSettings, LoadingScreenHelp
 //======================================================================================================================
 void RenderManager::Terminate()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     IwAssert(ROWLHOUSE, mInstance);
 
     for (Viewports::iterator it = mInstance->mViewports.begin(); it != mInstance->mViewports.end() ; ++it)
@@ -176,6 +174,7 @@ void RenderManager::SetupLighting()
 
 }
 
+//======================================================================================================================
 DisplayConfig GetDisplayConfig(int screenWidth, int screenHeight)
 {
     DisplayConfig result;
@@ -190,7 +189,7 @@ DisplayConfig GetDisplayConfig(int screenWidth, int screenHeight)
 //======================================================================================================================
 void RenderManager::RenderUpdate()
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     GLenum gl_error;
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -279,8 +278,6 @@ void RenderManager::RenderUpdate()
     // IwGx rendering
     if (!mRenderGxObjects.empty())
     {
-        PrepareForIwGx(false);
-
         DisableDepthMask disableDepthMask;
         DisableDepthTest disableDepthTest;
 
@@ -294,9 +291,8 @@ void RenderManager::RenderUpdate()
     {
         DisableDepthMask disableDepthMask;
         DisableDepthTest disableDepthTest;
-        IwGxFlush();
+        glFlush();
         IwGxSwapBuffers();
-        RecoverFromIwGx(false);
     }
     else
     {
@@ -317,7 +313,7 @@ void RenderManager::RenderUpdate()
 //======================================================================================================================
 void RenderManager::RenderWithoutSwap()
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -587,7 +583,7 @@ void RenderManager::DestroyCamera(Camera* camera)
 //======================================================================================================================
 void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     if (!VRManager::IsAvailable() || !VRManager::GetInstance().IsVREnabled())
     {
@@ -636,7 +632,7 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
     GLenum preErr = glGetError();
     if (preErr != GL_NO_ERROR)
     {
-        TRACE_FILE_IF(1) TRACE("VR pre-render GL error: 0x%x", preErr);
+        TRACE_FILE_IF(ONCE_1) TRACE("VR pre-render GL error: 0x%x", preErr);
     }
 
     // Render each eye
@@ -707,7 +703,7 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
         {
-            TRACE_FILE_IF(1) TRACE("VR FBO incomplete for eye %d: 0x%x", eye, fboStatus);
+            TRACE_FILE_IF(ONCE_1) TRACE("VR FBO incomplete for eye %d: 0x%x", eye, fboStatus);
         }
 
         glViewport(0, 0, eyeWidth, eyeHeight);
@@ -718,7 +714,7 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         GLenum clearErr = glGetError();
         if (clearErr != GL_NO_ERROR)
         {
-            TRACE_FILE_IF(1) TRACE("VR clear GL error for eye %d: 0x%x", eye, clearErr);
+            TRACE_FILE_IF(ONCE_1) TRACE("VR clear GL error for eye %d: 0x%x", eye, clearErr);
         }
 
         // Create display config for this eye

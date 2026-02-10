@@ -876,7 +876,7 @@ float AerofoilDefinition::ApplyForces(
             DrawAerofoilPlot(config, parameters, control, angleOfAttack, spSq);
     }
 
-    if (options.mStallMarkers && fabsf(flying < 0.99f))
+    if (options.mStallMarkers && fabsf(flying) < 0.99f)
     {
         const Vector3 colour(1.0f - flying, flying, 0.0f);
         float stallMarkerSize = configuration.mExtents.x * 0.3f;

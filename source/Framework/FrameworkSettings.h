@@ -23,6 +23,8 @@ struct FrameworkSettings
     float mFarClipPlaneDistance;
     bool  mUseMultiLights;
 
+    int mLogLevel;
+
     Platform::PlatformID mPlatform;
     mutable int mScreenWidth, mScreenHeight;
 };

@@ -41,7 +41,7 @@ void Aeroplane::Init(const AeroplaneSettings& as,
                      const Vector3* basicLaunchPos,
                      LoadingScreenHelper* loadingScreen)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mAeroplaneSettings = as;
 
     if (loadingScreen) loadingScreen->Update("Aeroplane");
@@ -86,7 +86,7 @@ void Aeroplane::Init(const AeroplaneSettings& as,
 
     if (loadingScreen) loadingScreen->Update("Aeroplane sound");
 
-    TRACE_FILE_IF(1) TRACE("Aeroplane::Init Audio");
+    TRACE_FILE_IF(ONCE_1) TRACE("Aeroplane::Init Audio");
     TiXmlHandle audioHandle = doc.FirstChild("Audio");
     for (int iAudio = 0 ; ; ++iAudio)
     {
@@ -119,7 +119,7 @@ void Aeroplane::Init(const AeroplaneSettings& as,
 
     // Optional vario sound
 #if 1
-    TRACE_FILE_IF(1) TRACE("Aeroplane::Init Vario");
+    TRACE_FILE_IF(ONCE_1) TRACE("Aeroplane::Init Vario");
     mVarioSoundSetting.mSound = AudioManager::GetInstance().LoadSound("SystemData/Audio/Vario22050Mono.raw", 22050, false, true, true);
     if (mVarioSoundSetting.mSound)
     {
@@ -289,7 +289,7 @@ float Aeroplane::GetHeightForNoGroundPenetration(const Vector3& launchPos) const
 //======================================================================================================================
 void Aeroplane::LaunchNormal(const Vector3& basicLaunchPos)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     const EnvironmentSettings& es = PicaSim::GetInstance().GetSettings().mEnvironmentSettings;
     const AeroplaneSettings& as = mAeroplaneSettings;
@@ -326,7 +326,7 @@ void Aeroplane::LaunchNormal(const Vector3& basicLaunchPos)
 //======================================================================================================================
 void Aeroplane::LaunchAtPosition(const Vector3& pos, const Vector3& dir)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const AeroplaneSettings& as = mAeroplaneSettings;
     DimensionalScaling ds(as.mSizeScale, as.mMassScale, true);
 
@@ -364,7 +364,7 @@ void Aeroplane::LaunchAtPosition(const Vector3& pos, const Vector3& dir)
 //======================================================================================================================
 bool Aeroplane::LaunchBungee(const Vector3& basicLaunchPos)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     const EnvironmentSettings& es = PicaSim::GetInstance().GetSettings().mEnvironmentSettings;
     const AeroplaneSettings& as = mAeroplaneSettings;
@@ -407,7 +407,7 @@ bool Aeroplane::LaunchBungee(const Vector3& basicLaunchPos)
 //======================================================================================================================
 bool Aeroplane::LaunchAerotow(const Vector3& basicLaunchPos)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     const EnvironmentSettings& es = PicaSim::GetInstance().GetSettings().mEnvironmentSettings;
     const AeroplaneSettings& as = mAeroplaneSettings;
@@ -456,7 +456,7 @@ bool Aeroplane::LaunchAerotow(const Vector3& basicLaunchPos)
 //======================================================================================================================
 void Aeroplane::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     if (mTugController)
     {
         mTugController->Terminate();

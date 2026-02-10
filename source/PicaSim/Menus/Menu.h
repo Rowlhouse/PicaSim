@@ -25,12 +25,6 @@ Texture* GetCachedTexture(std::string path, bool convertTo16Bit);
 
 void ReleaseCachedTextures();
 
-struct FixStateForMenus
-{
-    FixStateForMenus(bool clearOnEnter, bool clearOnExit) : mClearOnExit(clearOnExit) {PrepareForIwGx(clearOnEnter);}
-    ~FixStateForMenus() {RecoverFromIwGx(mClearOnExit);}
-    bool mClearOnExit;
-};
 
 #endif
 

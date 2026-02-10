@@ -105,7 +105,7 @@ void PropellerEngine::ReadFromXML(TiXmlElement* engineElement, EngineData& engin
 //======================================================================================================================
 void PropellerEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     Engine::Init(engineElement, aerodynamicsHandle, aeroplane);
 
     mAeroplane = aeroplane;
@@ -266,7 +266,7 @@ void PropellerEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle&
 //======================================================================================================================
 void PropellerEngine::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     for (size_t i = 0 ; i != mSoundSettings.size() ; ++i)
     {
         if (mSoundSettings[i].mSoundChannel != -1)
@@ -664,6 +664,6 @@ void PropellerEngine::EntityUpdate(float deltaTime, int entityLevel)
             AudioManager::GetInstance().SetChannelTargetVolumeScale(soundSetting.mSoundChannel, PicaSim::GetInstance().GetSettings().mOptions.mInsideAeroplaneVolume * volumeScale);
 
         if (mAeroplane->GetCrashed(Aeroplane::CRASHFLAG_PROPELLER))
-            AudioManager::GetInstance().SetChannelVolumeScale(soundSetting.mSoundChannel, 0.0f);
+            AudioManager::GetInstance().SetChannelTargetVolumeScale(soundSetting.mSoundChannel, 0.0f, 20.0f);
     }
 }

@@ -35,7 +35,7 @@ ConnectionListener::ConnectionListener()
 //======================================================================================================================
 void ConnectionListener::Init()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     // Initialize SDL2_net if not already done
     if (SDLNet_Init() < 0)
@@ -91,7 +91,7 @@ void ConnectionListener::Update()
     {
         if (IncomingConnection::CONNECTION_CLOSED == it->Update(mSocketSet))
         {
-            TRACE("Lost connection\n");
+            TRACE("Lost connection");
             SDLNet_TCP_DelSocket(mSocketSet, it->GetSocket());
             it->CloseSocket();
             it = mIncomingConnections.erase(it);
@@ -106,7 +106,7 @@ void ConnectionListener::Update()
 //======================================================================================================================
 void ConnectionListener::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     for (IncomingConnections::iterator it = mIncomingConnections.begin() ; it != mIncomingConnections.end() ; ++it)
     {
         if (mSocketSet)

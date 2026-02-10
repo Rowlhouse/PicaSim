@@ -20,7 +20,7 @@ Environment& Environment::GetInstance()
 //======================================================================================================================
 bool Environment::Init(LoadingScreenHelper* loadingScreen)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
 
     if (loadingScreen) loadingScreen->Update("Loading environment");
@@ -152,7 +152,7 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
 //======================================================================================================================
 void Environment::Terminate()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     IwAssert(ROWLHOUSE, mInstance);
 
     mInstance->mThermalManager.Terminate();

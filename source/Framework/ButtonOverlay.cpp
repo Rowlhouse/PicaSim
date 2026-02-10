@@ -58,7 +58,7 @@ ButtonOverlay::ButtonOverlay(
     LoadTextureFromFile(*mTexture, imageFile);
     mTexture->SetFormatHW(CIwImage::RGBA_4444);
     mTexture->Upload();
-    TRACE_FILE_IF(1) TRACE("Uploaded texture %s id %d", imageFile, mTexture->mHWID);
+    TRACE_FILE_IF(ONCE_2) TRACE("Uploaded texture %s id %d", imageFile, mTexture->mHWID);
     Init(size, paddingFraction, anchorH, anchorV, x, y, alpha, enabled, enableText);
 }
 
@@ -161,6 +161,15 @@ void ButtonOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displayC
     // midpoint of the button
     float x = displayConfig.mLeft + mX * displayConfig.mWidth;
     float y = displayConfig.mBottom + mY * displayConfig.mHeight;
+
+    // Safe area horizontal inset for mobile cutouts (0 on desktop)
+    float insetX = Platform::GetSafeAreaInsetX();
+    float insetY = Platform::GetSafeAreaInsetY();
+    if (mAnchorH == ANCHOR_H_LEFT)  x += insetX;
+    else if (mAnchorH == ANCHOR_H_RIGHT) x -= insetX;
+    if (mAnchorV == ANCHOR_V_BOT)   x += insetY;
+    else if (mAnchorV == ANCHOR_V_TOP)   y -= insetY;
+
     x0 = x - mAnchorH * s2;
     x1 = x0 + s;
     y0 = y - mAnchorV * s2;
@@ -201,6 +210,8 @@ void ButtonOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displayC
 
     // Get the variable locations
     glUniform1i(overlayShader->u_texture, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     glVertexAttribPointer(overlayShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
     glEnableVertexAttribArray(overlayShader->a_position);

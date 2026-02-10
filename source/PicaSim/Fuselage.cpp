@@ -8,7 +8,7 @@
 //======================================================================================================================
 void Fuselage::Init(class TiXmlElement* fuselageElement, class Aeroplane* aeroplane)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mAeroplane = aeroplane;
     const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
 
@@ -41,7 +41,7 @@ void Fuselage::Init(class TiXmlElement* fuselageElement, class Aeroplane* aeropl
 //======================================================================================================================
 void Fuselage::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 }
 
 //======================================================================================================================

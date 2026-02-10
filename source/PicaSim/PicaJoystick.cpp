@@ -21,7 +21,7 @@ bool JoystickAvailable()
 //======================================================================================================================
 s3eResult GetJoystickStatus(JoystickData& joystick, int id)
 {
-    TRACE_FUNCTION_ONLY(2);
+    TRACE_FUNCTION_ONLY(ONCE_2);
 
     if (!JoystickAvailable())
         return S3E_RESULT_ERROR;
@@ -40,14 +40,14 @@ void CalibrateJoystick()
 //======================================================================================================================
 void UpdateJoystick(int id)
 {
-    TRACE_FILE_IF(2) TRACE("Updating joystick %d\n", id);
+    TRACE_FILE_IF(FRAME_1) TRACE("Updating joystick %d", id);
 
     gamepadUpdate();
 
     sJoystickData = JoystickData();
     if (JoystickAvailable() && id >= 0 && id < (int) gamepadGetNumDevices())
     {
-        TRACE_FILE_IF(2) TRACE("Copying gamepad results");
+        TRACE_FILE_IF(FRAME_2) TRACE("Copying gamepad results");
         // Map [-4096,4096] to [0,65535]
         uint32 numAxes = gamepadGetNumAxes(id);
         for (uint32 i = 0 ; i < numAxes && i < JoystickData::MAX_ANALOGUEINPUTS ; ++i)
@@ -71,7 +71,7 @@ void UpdateJoystick(int id)
     else
     {
         sprintf(sJoystickData.mName, "Joystick %d unavailable", id);
-        TRACE_FILE_IF(2) TRACE("No gamepad available");
+        TRACE_FILE_IF(FRAME_2) TRACE("No gamepad available");
     }
 }
 

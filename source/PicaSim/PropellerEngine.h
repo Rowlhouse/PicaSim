@@ -27,7 +27,7 @@ public:
 
     void GetRotation(float& angle, float& angVel) const OVERRIDE {angle = mAngle; angVel = mW;}
 
-    virtual float GetRadius() const {return mRadius;}
+    float GetRadius() const OVERRIDE {return mRadius;}
 
     float GetPropSpeed() const OVERRIDE {return mW;}
 

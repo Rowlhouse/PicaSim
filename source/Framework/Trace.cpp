@@ -7,6 +7,11 @@
 
 #include <stdio.h>
 
+#ifdef PICASIM_ANDROID
+#include <android/log.h>
+#define ANDROID_LOG_TAG "PicaSim"
+#endif
+
 /// Overall trace enabled
 bool traceEnabled = true;
 
@@ -21,26 +26,36 @@ std::vector<std::string> traceStrings;
 /// If this flag is set, all trace strings are enabled
 bool traceAllStrings = true;
 
+// File-scope statics (promoted from TracePrintf for reset support)
+static bool traceFileInit = false;
+static FILE* traceLogFile = nullptr;
+
+void ResetTrace()
+{
+    if (traceLogFile)
+    {
+        fclose(traceLogFile);
+        traceLogFile = nullptr;
+    }
+    traceFileInit = false;
+}
+
 void TracePrintf(const char *fmt, ...)
 {
     va_list ap;
 
-    // prepare log file
-    static bool init = false;
-    static FILE * logFile = 0;
-
-    if (init == false)
+    if (traceFileInit == false)
     {
-        init = true;
+        traceFileInit = true;
 
         // Use platform-specific writable logs directory
         std::string logsPath = Platform::GetLogsPath();
         FileSystem::MakeDirectory(logsPath);
         std::string logFilePath = logsPath + "trace.txt";
 
-        logFile = fopen(logFilePath.c_str(), "w");
+        traceLogFile = fopen(logFilePath.c_str(), "w");
 
-        if (logFile == NULL)
+        if (traceLogFile == NULL)
         {
             fprintf(stderr, "Unable to open %s\n", logFilePath.c_str());
         }
@@ -58,13 +73,17 @@ void TracePrintf(const char *fmt, ...)
     va_end(ap);
 
     // Output to stdout (replaces Marmalade IwTrace)
+#ifdef PICASIM_ANDROID
+    __android_log_print(ANDROID_LOG_INFO, ANDROID_LOG_TAG, "%s", str);
+#else
     printf("%s\n", str);
+#endif
 
     // now to file
-    if (logFile)
+    if (traceLogFile)
     {
-        fprintf(logFile, "%s\n", str);
+        fprintf(traceLogFile, "%s\n", str);
         // flush it line-by-line so we don't miss any
-        fflush(logFile);
+        fflush(traceLogFile);
     }
 }

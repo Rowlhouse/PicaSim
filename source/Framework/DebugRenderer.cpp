@@ -13,7 +13,7 @@
 //======================================================================================================================
 void DebugRenderer::Init()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     RenderManager::GetInstance().RegisterRenderObject(this, RENDER_LEVEL_DEBUG);
     RenderManager::GetInstance().RegisterRenderOverlayObject(this, 1);
     RenderManager::GetInstance().RegisterRenderGxObject(this, 0);
@@ -22,7 +22,7 @@ void DebugRenderer::Init()
 //======================================================================================================================
 void DebugRenderer::Terminate()
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_DEBUG);
     RenderManager::GetInstance().UnregisterRenderOverlayObject(this, 1);
     RenderManager::GetInstance().UnregisterRenderGxObject(this, 0);
@@ -98,6 +98,7 @@ void DebugRenderer::RenderOverlayUpdate(int renderLevel, DisplayConfig& displayC
     // Graphs
     {
         controllerShader->Use();
+        glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
         glEnableVertexAttribArray(controllerShader->a_position);
         esSetModelViewProjectionMatrix(controllerShader->u_mvpMatrix);
 
@@ -136,10 +137,12 @@ void DebugRenderer::RenderOverlayUpdate(int renderLevel, DisplayConfig& displayC
 //======================================================================================================================
 void DebugRenderer::RenderUpdate(class Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const SimpleShader* simpleShader = (SimpleShader*) ShaderManager::GetInstance().GetShader(SHADER_SIMPLE);
 
     simpleShader->Use();
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
 
     glVertexAttribPointer(simpleShader->a_position, 3, GL_FLOAT, GL_FALSE, 0, pts);
     glEnableVertexAttribArray(simpleShader->a_position);
@@ -186,7 +189,7 @@ void DebugRenderer::RenderUpdate(class Viewport* viewport, int renderLevel)
 //======================================================================================================================
 void DebugRenderer::GxRender(int renderLevel, DisplayConfig& displayConfig)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     if (mTexts2D.empty())
         return;
 

@@ -13,13 +13,13 @@ using namespace std;
 //======================================================================================================================
 ParticleEngine::ParticleEngine()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 }
 
 //======================================================================================================================
 ParticleEngine::~ParticleEngine()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
 }
 
 static void LoadTexture(Texture& texture, const char* fileName)
@@ -36,7 +36,7 @@ static void LoadTexture(Texture& texture, const char* fileName)
 //======================================================================================================================
 void ParticleEngine::Init()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_1);
 
     // initialise the free id list. Note that if we run out of ids we 
     // can always add more.
@@ -51,7 +51,7 @@ void ParticleEngine::Init()
 //======================================================================================================================
 void ParticleEngine::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_1);
 
     EntityManager::GetInstance().UnregisterEntity(this, ENTITY_LEVEL_LOOP_PRE_PHYSICS);
 
@@ -78,7 +78,7 @@ int ParticleEngine::RegisterEmitter(
     float          dampingTime,
     float          rate)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     if (mFreeIDs.empty())
     {
@@ -122,7 +122,7 @@ int ParticleEngine::RegisterEmitter(
 //======================================================================================================================
 ParticleEmitter* ParticleEngine::GetEmitter(int id)
 {
-    TRACE_METHOD_ONLY(4);
+    TRACE_METHOD_ONLY(FRAME_1);
     // make sure it exists
     if (id == -1)
         return 0;
@@ -134,7 +134,7 @@ ParticleEmitter* ParticleEngine::GetEmitter(int id)
 //======================================================================================================================
 const ParticleEmitter* ParticleEngine::GetEmitter(int id) const
 {
-    TRACE_METHOD_ONLY(4);
+    TRACE_METHOD_ONLY(FRAME_1);
     // make sure it exists
     if (id == -1)
         return 0;
@@ -146,7 +146,7 @@ const ParticleEmitter* ParticleEngine::GetEmitter(int id) const
 //======================================================================================================================
 void ParticleEngine::DeregisterEmitter(int id)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     // make sure it exists
     if (id == -1)
         return;
@@ -185,7 +185,7 @@ void ParticleEngine::EntityUpdate(float deltaTime, int entityLevel)
         it->second->MoveParticles(deltaTime);
         if (it->second->IsDead())
         {
-            TRACE_FILE_IF(4)
+            TRACE_FILE_IF(FRAME_1)
                 TRACE("Removing particle source %p\n", it->second);
             delete it->second;
             mFreeIDs.push_back(it->first);

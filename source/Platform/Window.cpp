@@ -1,9 +1,13 @@
 #include "Window.h"
 #include "Platform.h"
+#include "S3ECompat.h"
+#include "../Framework/Trace.h"
 #include <stdio.h>
 
 #ifdef _WIN32
 #include <glad/glad.h>
+#elif defined(PICASIM_ANDROID) || defined(__ANDROID__)
+#include <GLES2/gl2.h>
 #else
 #include <GL/gl.h>
 #endif
@@ -29,23 +33,35 @@ Window::~Window()
 
 bool Window::Init(int width, int height, const char* title, bool fullscreen, int msaaSamples)
 {
+    TRACE_FILE_IF(ONCE_1) TRACE("Window::Init (SDL_WasInit=0x%x)", SDL_WasInit(0));
+
     // Initialize SDL video subsystem if not already done
     if (SDL_WasInit(SDL_INIT_VIDEO) == 0)
     {
+        TRACE_FILE_IF(ONCE_2) TRACE("Calling SDL_Init(SDL_INIT_VIDEO)");
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
+            TRACE_FILE_IF(ONCE_1) TRACE("SDL_Init failed: %s", SDL_GetError());
             fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
             return false;
         }
+        TRACE_FILE_IF(ONCE_2) TRACE("SDL_Init succeeded (SDL_WasInit=0x%x)", SDL_WasInit(0));
+    }
+    else
+    {
+        TRACE_FILE_IF(ONCE_2) TRACE("SDL video already initialized, skipping SDL_Init");
     }
 
     // Get display mode for default resolution
     SDL_DisplayMode displayMode;
+    TRACE_FILE_IF(ONCE_2) TRACE("Querying desktop display mode");
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0)
     {
+        TRACE_FILE_IF(ONCE_1) TRACE("SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
         fprintf(stderr, "SDL_GetDesktopDisplayMode failed: %s\n", SDL_GetError());
         return false;
     }
+    TRACE_FILE_IF(ONCE_1) TRACE("Desktop display mode: %dx%d", displayMode.w, displayMode.h);
 
     // Use desktop resolution if width/height are 0
     if (width <= 0) width = displayMode.w;
@@ -81,12 +97,19 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     }
 
     // Create window
-    Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+    Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+#if defined(PICASIM_ANDROID) || defined(__ANDROID__)
+    // Android: always fullscreen, not resizable
+    windowFlags |= SDL_WINDOW_FULLSCREEN;
+#else
+    windowFlags |= SDL_WINDOW_RESIZABLE;
     if (fullscreen)
     {
         windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
+#endif
 
+    TRACE_FILE_IF(ONCE_2) TRACE("Creating SDL window %dx%d (flags=0x%x)", width, height, windowFlags);
     mWindow = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_CENTERED,
@@ -96,21 +119,36 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
         windowFlags
     );
 
+    if (!mWindow && msaaSamples > 0)
+    {
+        // MSAA config may not be supported (common on Android emulators) - retry without it
+        TRACE_FILE_IF(ONCE_1) TRACE("SDL_CreateWindow failed with MSAA=%d: %s - retrying without MSAA", msaaSamples, SDL_GetError());
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+        msaaSamples = 0;
+        mWindow = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, windowFlags);
+    }
+
     if (!mWindow)
     {
+        TRACE_FILE_IF(ONCE_1) TRACE("SDL_CreateWindow failed: %s", SDL_GetError());
         fprintf(stderr, "SDL_CreateWindow failed: %s\n", SDL_GetError());
         return false;
     }
+    TRACE_FILE_IF(ONCE_2) TRACE("SDL window created (window=%p)", mWindow);
 
     // Create OpenGL context
+    TRACE_FILE_IF(ONCE_2) TRACE("Creating OpenGL context");
     mContext = SDL_GL_CreateContext(mWindow);
     if (!mContext)
     {
+        TRACE_FILE_IF(ONCE_1) TRACE("SDL_GL_CreateContext failed: %s", SDL_GetError());
         fprintf(stderr, "SDL_GL_CreateContext failed: %s\n", SDL_GetError());
         SDL_DestroyWindow(mWindow);
         mWindow = nullptr;
         return false;
     }
+    TRACE_FILE_IF(ONCE_2) TRACE("OpenGL context created");
 
     // Make context current
     SDL_GL_MakeCurrent(mWindow, mContext);
@@ -139,11 +177,13 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &mGlMajorVersion);
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &mGlMinorVersion);
 
-    // Enable multisampling if requested
+    // Enable multisampling if requested (not available on GLES2)
+#if !defined(PICASIM_ANDROID) && !defined(__ANDROID__) && !defined(PICASIM_IOS)
     if (msaaSamples > 0)
     {
         glEnable(GL_MULTISAMPLE);
     }
+#endif
 
     // Get actual MSAA samples (may be different from requested if not supported)
     int actualMsaaSamples = 0;
@@ -160,6 +200,7 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
 
 void Window::Shutdown()
 {
+    TRACE_FILE_IF(ONCE_1) TRACE("Window::Shutdown (context=%p, window=%p)", mContext, mWindow);
     if (mContext)
     {
         SDL_GL_DeleteContext(mContext);
@@ -255,6 +296,6 @@ void Window::Resize(int width, int height)
 
 Window& Window::GetInstance()
 {
-    static Window instance;
-    return instance;
+    IwAssert(ROWLHOUSE, gWindow != nullptr);
+    return *gWindow;
 }

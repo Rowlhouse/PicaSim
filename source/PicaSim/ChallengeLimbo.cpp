@@ -18,9 +18,9 @@ static const Vector4 colourWaiting(0.0f, 0.5f, 1.0f, 1.0f);
 //======================================================================================================================
 ChallengeLimbo::ChallengeLimbo(GameSettings& gameSettings) : Challenge(gameSettings)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const ChallengeSettings& cs = gameSettings.mChallengeSettings;
-    TRACE_FILE_IF(1) TRACE("ChallengeLimbo::ChallengeLimbo num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("ChallengeLimbo::ChallengeLimbo num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 }
 
 //======================================================================================================================
@@ -56,7 +56,7 @@ void ChallengeLimbo::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScre
     GameSettings& gs = PicaSim::GetInstance().GetSettings();
     const ChallengeSettings& cs = gs.mChallengeSettings;
 
-    TRACE_FILE_IF(1) TRACE("ChallengeLimbo::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("ChallengeLimbo::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 
     gs.mOptions.mLimboDifficultyMultiplier = ClampToRange(gs.mOptions.mLimboDifficultyMultiplier, 1.0f, Options::LIMBO_MAX_DIFFICULTY_MULTIPLIER);
 
@@ -74,9 +74,9 @@ void ChallengeLimbo::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScre
     if (mSound)
     {
         mSoundChannel = AudioManager::GetInstance().AllocateSoundChannel(1.0f, false);
-        TRACE_FILE_IF(1) TRACE("Allocated sound channel %d for ChallengeLimbo", mSoundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("Allocated sound channel %d for ChallengeLimbo", mSoundChannel);
         if (mSoundChannel == -1)
-            TRACE_FILE_IF(1) TRACE("Failed to allocate sound channel for limbo");
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to allocate sound channel for limbo");
     }
 
     if (cs.mDefaultToChaseView)
@@ -88,7 +88,7 @@ void ChallengeLimbo::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScre
 //======================================================================================================================
 void ChallengeLimbo::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderGxObject(this, 0);
     mGate.Terminate();
 
@@ -201,7 +201,7 @@ Challenge::ChallengeResult ChallengeLimbo::UpdateChallenge(float deltaTime)
             mGateColourAmount = 1.0f;
             if (isThrough > 0)
             {
-                TRACE_FILE_IF(1) TRACE("Through limbo gate");
+                TRACE_FILE_IF(ONCE_1) TRACE("Through limbo gate");
                 mGate.SetBlendColour(colourNeedAltitude, mGateColourAmount);
                 ++mLimboCount;
                 mMaxAltitudeSinceLastGate = 0.0f;
@@ -209,7 +209,7 @@ Challenge::ChallengeResult ChallengeLimbo::UpdateChallenge(float deltaTime)
             }
             else
             {
-                TRACE_FILE_IF(1) TRACE("Through limbo gate BACKWARDS");
+                TRACE_FILE_IF(ONCE_1) TRACE("Through limbo gate BACKWARDS");
                 mGate.SetBlendColour(colourWrongWay, mGateColourAmount);
                 if (mLimboCount > 0)
                     --mLimboCount;
@@ -314,7 +314,8 @@ void ChallengeLimbo::GxRender(int renderLevel, DisplayConfig& displayConfig)
 
     if (gs.mOptions.mDisplayFPS)
     {
-        font.SetRect(displayConfig.mLeft,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)displayConfig.mWidth,fontHeight);
+        int16 fpsInsetX = (int16)Platform::GetSafeAreaInsetX();
+        font.SetRect(displayConfig.mLeft + fpsInsetX,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)(displayConfig.mWidth - 2 * fpsInsetX),fontHeight);
         font.SetAlignmentHor(FONT_ALIGN_RIGHT);
         sprintf(txt, "%ld", std::lround(gs.mStatistics.mSmoothedFPS));
         font.SetColourABGR(0xff00ffff);

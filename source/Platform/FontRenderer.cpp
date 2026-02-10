@@ -22,17 +22,19 @@
 // stb_image for loading PNG fallback
 #include <stb_image.h>
 
-// OpenGL headers
-#include <glad/glad.h>
+// OpenGL headers are provided by Graphics.h included above
 
 // For esSetModelViewProjectionMatrix
 void esSetModelViewProjectionMatrix(int location);
 
+// Global FontRenderer instance pointer (set in main())
+FontRenderer* gFontRenderer = nullptr;
+
 //======================================================================================================================
 FontRenderer& FontRenderer::GetInstance()
 {
-    static FontRenderer instance;
-    return instance;
+    IwAssert(ROWLHOUSE, gFontRenderer != nullptr);
+    return *gFontRenderer;
 }
 
 //======================================================================================================================
@@ -67,20 +69,20 @@ bool FontRenderer::Init()
     if (mInitialized)
         return true;
 
-    TRACE_FILE_IF(1) TRACE("FontRenderer::Init");
+    TRACE_FILE_IF(ONCE_1) TRACE("FontRenderer::Init");
 
     // Try to load font texture from PNG first
     if (LoadFontTexture("SystemData/Fonts/font.png"))
     {
-        TRACE_FILE_IF(1) TRACE("Loaded font texture from PNG");
+        TRACE_FILE_IF(ONCE_1) TRACE("Loaded font texture from PNG");
         mInitialized = true;
         return true;
     }
 
     // Try to generate from TTF
-    if (GenerateFontTexture("fonts/FontRegular.ttf", 20))
+    if (GenerateFontTexture("Fonts/FontRegular.ttf", 20))
     {
-        TRACE_FILE_IF(1) TRACE("Generated font texture from TTF");
+        TRACE_FILE_IF(ONCE_1) TRACE("Generated font texture from TTF");
         mInitialized = true;
         return true;
     }
@@ -88,12 +90,12 @@ bool FontRenderer::Init()
     // Fallback to embedded simple font
     if (CreateFallbackFont())
     {
-        TRACE_FILE_IF(1) TRACE("Created fallback font");
+        TRACE_FILE_IF(ONCE_1) TRACE("Created fallback font");
         mInitialized = true;
         return true;
     }
 
-    TRACE_FILE_IF(1) TRACE("FontRenderer::Init FAILED");
+    TRACE_FILE_IF(ONCE_1) TRACE("FontRenderer::Init FAILED");
     return false;
 }
 
@@ -115,7 +117,7 @@ bool FontRenderer::LoadFontTexture(const char* pngPath)
     unsigned char* data = stbi_load(pngPath, &width, &height, &channels, 4);
     if (!data)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to load font texture: %s", pngPath);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to load font texture: %s", pngPath);
         return false;
     }
 
@@ -152,7 +154,7 @@ bool FontRenderer::GenerateFontTexture(const char* ttfPath, int fontSize)
     FILE* fp = fopen(ttfPath, "rb");
     if (!fp)
     {
-        TRACE_FILE_IF(1) TRACE("Failed to open TTF file: %s", ttfPath);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to open TTF file: %s", ttfPath);
         return false;
     }
 
@@ -175,7 +177,7 @@ bool FontRenderer::GenerateFontTexture(const char* ttfPath, int fontSize)
     if (!stbtt_InitFont(&font, ttfBuffer, stbtt_GetFontOffsetForIndex(ttfBuffer, 0)))
     {
         free(ttfBuffer);
-        TRACE_FILE_IF(1) TRACE("Failed to init font from TTF");
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to init font from TTF");
         return false;
     }
 
@@ -262,18 +264,20 @@ bool FontRenderer::GenerateFontTexture(const char* ttfPath, int fontSize)
 //======================================================================================================================
 bool FontRenderer::CreateFallbackFont()
 {
-    // Create a very simple 8x8 bitmap font
-    // This is a minimal fallback - just draws basic ASCII
-    mCharWidth = 8;
-    mCharHeight = 8;
+    // Create a bitmap font by scaling 8x8 glyph data up to 16x16.
+    // Kept smaller than the TTF (mCharHeight ~22) because this is monospace
+    // with square cells, so text is inherently wider than proportional fonts.
+    const int kFontScale = 2;
+    mCharWidth = 8 * kFontScale;
+    mCharHeight = 8 * kFontScale;
     mCharsPerRow = 16;
-    mTextureWidth = 128;  // 16 chars * 8 pixels
-    mTextureHeight = 48;  // 6 rows * 8 pixels
+    mTextureWidth = mCharsPerRow * mCharWidth;   // 256
+    mTextureHeight = 6 * mCharHeight;            // 96
     mFirstChar = 32;
 
-    // Set all characters to use the same 8-pixel advance
+    // Set all characters to use the same advance
     for (int i = 0; i < 96; i++)
-        mCharAdvance[i] = 8;
+        mCharAdvance[i] = mCharWidth;
 
     // Simple 8x8 font data (just basic characters)
     // Each character is 8 bytes (8 rows of 8 bits)
@@ -377,7 +381,7 @@ bool FontRenderer::CreateFallbackFont()
         {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}, // 127 DEL (blank)
     };
 
-    // Create texture data
+    // Create texture data, scaling each 8x8 glyph up by kFontScale
     unsigned char* texData = (unsigned char*)calloc(mTextureWidth * mTextureHeight * 4, 1);
 
     for (int c = 0; c < 96; c++)
@@ -390,15 +394,22 @@ bool FontRenderer::CreateFallbackFont()
             unsigned char row = fontData[c][y];
             for (int x = 0; x < 8; x++)
             {
-                if (row & (1 << (7 - x)))
+                if (row & (1 << x))
                 {
-                    int texX = cellX + x;
-                    int texY = cellY + y;
-                    int idx = (texY * mTextureWidth + texX) * 4;
-                    texData[idx + 0] = 255;
-                    texData[idx + 1] = 255;
-                    texData[idx + 2] = 255;
-                    texData[idx + 3] = 255;
+                    // Fill a kFontScale x kFontScale block for each source pixel
+                    for (int sy = 0; sy < kFontScale; sy++)
+                    {
+                        for (int sx = 0; sx < kFontScale; sx++)
+                        {
+                            int texX = cellX + x * kFontScale + sx;
+                            int texY = cellY + y * kFontScale + sy;
+                            int idx = (texY * mTextureWidth + texX) * 4;
+                            texData[idx + 0] = 255;
+                            texData[idx + 1] = 255;
+                            texData[idx + 2] = 255;
+                            texData[idx + 3] = 255;
+                        }
+                    }
                 }
             }
         }
@@ -407,8 +418,8 @@ bool FontRenderer::CreateFallbackFont()
     // Create OpenGL texture
     glGenTextures(1, &mTextureID);
     glBindTexture(GL_TEXTURE_2D, mTextureID);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mTextureWidth, mTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
@@ -469,17 +480,42 @@ uint32_t FontRenderer::GetColourABGR() const
 }
 
 //======================================================================================================================
+float FontRenderer::GetDisplayScale() const
+{
+    static int sCachedHeight = 0;
+    static float sCachedScale = 1.0f;
+
+    int h = Platform::GetDisplayHeight();
+    if (h == sCachedHeight)
+        return sCachedScale;
+
+    float scale = h / 720.0f;
+    if (scale < 1.0f) scale = 1.0f;
+
+    sCachedHeight = h;
+    sCachedScale = scale;
+    return scale;
+}
+
+//======================================================================================================================
+uint16_t FontRenderer::GetFontHeight() const
+{
+    return (uint16_t)(mCharHeight * GetDisplayScale());
+}
+
+//======================================================================================================================
 int FontRenderer::CalculateTextWidth(const char* text) const
 {
     if (!text) return 0;
+    float scale = GetDisplayScale();
     int width = 0;
     for (const char* c = text; *c; c++)
     {
         char ch = *c;
         if (ch >= mFirstChar && ch < mFirstChar + 96)
-            width += mCharAdvance[ch - mFirstChar];
+            width += (int)(mCharAdvance[ch - mFirstChar] * scale);
         else
-            width += mCharWidth; // fallback for unknown chars
+            width += (int)(mCharWidth * scale); // fallback for unknown chars
     }
     return width;
 }
@@ -496,6 +532,7 @@ void FontRenderer::DrawCharacter(char c, float x, float y)
 
     // Get the actual advance width for this character (for proper proportional rendering)
     int charAdvance = mCharAdvance[charIndex];
+    float scale = GetDisplayScale();
 
     // Calculate UV coordinates - only sample the portion of the cell that contains the glyph
     // Swap v0 and v1 to flip the texture vertically (GL has Y=0 at bottom, texture was created with Y=0 at top)
@@ -507,8 +544,8 @@ void FontRenderer::DrawCharacter(char c, float x, float y)
 
     float x0 = x;
     float y0 = y;
-    float x1 = x + charAdvance;  // Draw quad width matches character advance
-    float y1 = y + mCharHeight;
+    float x1 = x + charAdvance * scale;  // Draw quad width matches scaled character advance
+    float y1 = y + mCharHeight * scale;
 
     // UV mapping for quad (v0 is now bottom, v1 is top - matching GL's Y axis)
     float uvs[] = {
@@ -542,9 +579,10 @@ void FontRenderer::RenderText(const char* text)
     glGetIntegerv(GL_VIEWPORT, viewport);
     int viewportHeight = viewport[3];
 
-    // Calculate text dimensions
+    // Calculate text dimensions (scaled)
     int textWidth = CalculateTextWidth(text);
-    int textHeight = mCharHeight;
+    float scale = GetDisplayScale();
+    int textHeight = (int)(mCharHeight * scale);
 
     // Calculate starting position based on rect and alignment
     // Note: The rect Y uses screen coordinates (Y=0 at top, Y increases downward)
@@ -583,6 +621,9 @@ void FontRenderer::RenderText(const char* text)
     const OverlayShader* overlayShader = (OverlayShader*)ShaderManager::GetInstance().GetShader(SHADER_OVERLAY);
     overlayShader->Use();
     glUniform1i(overlayShader->u_texture, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // Ensure no VBO bound before client-side arrays
+
     glEnableVertexAttribArray(overlayShader->a_position);
     glEnableVertexAttribArray(overlayShader->a_texCoord);
     glUniform4f(overlayShader->u_colour, r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
@@ -596,11 +637,11 @@ void FontRenderer::RenderText(const char* text)
     {
         char ch = *c;
         DrawCharacter(ch, x, y);
-        // Advance by the actual character width
+        // Advance by the scaled character width
         if (ch >= mFirstChar && ch < mFirstChar + 96)
-            x += mCharAdvance[ch - mFirstChar];
+            x += mCharAdvance[ch - mFirstChar] * scale;
         else
-            x += mCharWidth;
+            x += mCharWidth * scale;
     }
 
     // Restore state

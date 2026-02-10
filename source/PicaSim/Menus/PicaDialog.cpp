@@ -5,6 +5,7 @@
 #include "RenderManager.h"
 #include "Trace.h"
 
+#include "ScrollHelper.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
 
@@ -89,6 +90,8 @@ static int RenderDialogFrame(
     // Text area (scrollable) - fills space between title and buttons
     float textAreaHeight = dialogH - ImGui::GetCursorPosY() - buttonAreaHeight - 10.0f * scale;
     ImGui::BeginChild("TextArea", ImVec2(-1, textAreaHeight), false);
+    static ScrollHelper sDialogScrollHelper;
+    sDialogScrollHelper.ApplyDragScroll("TextArea");
     ImGui::TextWrapped("%s", text);
     ImGui::EndChild();
 
@@ -283,7 +286,7 @@ int ShowInGameDialog(float widthFrac, float heightFrac,
 //======================================================================================================================
 void ShowHelpOverlays(const GameSettings& gameSettings)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
 
     const Language language = gameSettings.mOptions.mLanguage;
 

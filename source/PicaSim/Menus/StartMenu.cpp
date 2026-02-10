@@ -9,6 +9,7 @@
 #include "Platform.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
+#include "../../Framework/Trace.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
@@ -19,8 +20,6 @@
 // Forward declarations from Graphics.cpp
 void IwGxClear();
 void IwGxSwapBuffers();
-void PrepareForIwGx(bool fullscreen);
-void RecoverFromIwGx(bool clear);
 
 //======================================================================================================================
 class StartMenu
@@ -53,7 +52,7 @@ StartMenu::StartMenu(GameSettings& gameSettings)
     : mGameSettings(gameSettings)
     , mResult(STARTMENU_MAX)
 {
-    PrepareForIwGx(false);
+    UIHelpers::NotifyMenuTransition();
     LoadTextures();
 }
 
@@ -61,7 +60,6 @@ StartMenu::StartMenu(GameSettings& gameSettings)
 StartMenu::~StartMenu()
 {
     // unique_ptr handles texture cleanup
-    RecoverFromIwGx(false);
 }
 
 //======================================================================================================================
@@ -109,11 +107,19 @@ StartMenuResult StartMenu::Update()
     mResult = STARTMENU_MAX;
 
     // Clear and render
+    TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - glClear");
     IwGxClear();
+    TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - Render");
     Render();
+    TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - SwapBuffers");
     IwGxSwapBuffers();
-
+    TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - PollEvents");
     PollEvents();
+    TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - done");
+
+    // Suppress stale input from the previous menu's touch/click events
+    if (UIHelpers::IsInputMuted())
+        mResult = STARTMENU_MAX;
 
     // Check for quit request
     if (CheckForQuitRequest())
@@ -127,14 +133,14 @@ StartMenuResult StartMenu::Update()
 //======================================================================================================================
 void StartMenu::Render()
 {
-    int width = Platform::GetDisplayWidth();
-    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
 
     // Begin ImGui frame
+    TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Render - ImGui NewFrame");
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+    TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Render - drawing UI");
 
     // Apply font scaling for button text
     UIHelpers::ApplyFontScale();
@@ -143,24 +149,24 @@ void StartMenu::Render()
     UIHelpers::DrawBackground(mBackgroundTexture.get());
 
     // Calculate sizes
-    float iconSize = 48.0f * scale;
+    float iconSize = 60.0f * scale;
     float mainButtonW = 200.0f * scale;
-    float mainButtonH = 50.0f * scale;
-    float smallIconSize = iconSize * 0.75f;
+    float mainButtonH = 70.0f * scale;
+    float buttonInsetAmount = 0.01f;
 
     // Create full-screen invisible window for button placement
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2((float)width, (float)height));
-    ImGui::Begin("StartMenu", nullptr,
+    ImVec2 winSize = UIHelpers::BeginFullscreenWindow("StartMenu",
         ImGuiWindowFlags_NoDecoration |
         ImGuiWindowFlags_NoBackground |
         ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoResize);
+    float width = winSize.x;
+    float height = winSize.y;
 
     // Exit button (top-left) - not on iPhone/Win10
 #if !defined(PICASIM_IOS) && !defined(PICASIM_WIN10)
     if (UIHelpers::DrawImageButton("exit", mExitTexture.get(),
-                                   width * 0.02f, height * 0.02f, smallIconSize))
+                                   width * buttonInsetAmount, height * buttonInsetAmount, iconSize))
     {
         mResult = STARTMENU_QUIT;
     }
@@ -170,8 +176,9 @@ void StartMenu::Render()
     // NewVersion button (top-right) - Windows desktop only
     if (mNewVersionTexture && IsNewVersionAvailable())
     {
-        if (UIHelpers::DrawImageButton("newversion", mNewVersionTexture.get(),
-                                       width - smallIconSize - width * 0.02f, height * 0.02f, smallIconSize))
+        if (UIHelpers::DrawImageButton(
+            "newversion", mNewVersionTexture.get(),
+            width - iconSize - width * buttonInsetAmount, height * buttonInsetAmount, iconSize))
         {
             NewVersion();
         }
@@ -184,14 +191,14 @@ void StartMenu::Render()
     Language language = mGameSettings.mOptions.mLanguage;
 
     // Free-Fly button (left side, ~20% from top)
-    ImGui::SetCursorPos(ImVec2(width * 0.1f, height * 0.18f));
+    ImGui::SetCursorPos(ImVec2(width * 0.1f, height * 0.2f));
     if (ImGui::Button(TXT(PS_FREEFLY), ImVec2(mainButtonW, mainButtonH)))
     {
         mResult = STARTMENU_FLY;
     }
 
     // Challenge button (right side, ~20% from top)
-    ImGui::SetCursorPos(ImVec2(width * 0.9f - mainButtonW, height * 0.18f));
+    ImGui::SetCursorPos(ImVec2(width * 0.9f - mainButtonW, height * 0.2f));
     if (ImGui::Button(TXT(PS_CHALLENGE), ImVec2(mainButtonW, mainButtonH)))
     {
         mResult = STARTMENU_CHALLENGE;
@@ -209,27 +216,28 @@ void StartMenu::Render()
     }
 #endif
 
-    // Bottom icon row
-    float bottomY = height * 0.88f;
+    // Bottom icon row — keep icons above bottom edge at small window sizes
+    float bottomY = std::min(height * 0.88f, height - iconSize - height * buttonInsetAmount);
     float iconSpacing = iconSize * 1.5f;
 
     // Facebook (left side)
-    float iconX = width * 0.05f;
+    float iconX = width * buttonInsetAmount;
     if (UIHelpers::DrawImageButton("facebook", mFacebookTexture.get(),
                                    iconX, bottomY, iconSize))
     {
-        Platform::OpenURL("http://www.facebook.com/233467446753191");
+        Platform::OpenURL("www.facebook.com/233467446753191");
     }
 
-    // Help and Settings (right side)
-    iconX = width - iconSpacing * 2 - width * 0.02f;
+    // Help (centered)
+    iconX = (width - iconSize) * 0.5f;
     if (UIHelpers::DrawImageButton("help", mHelpTexture.get(),
                                    iconX, bottomY, iconSize))
     {
         mResult = STARTMENU_HELP;
     }
 
-    iconX += iconSpacing;
+    // Settings (right side)
+    iconX = width - iconSpacing - width * buttonInsetAmount;
     if (UIHelpers::DrawImageButton("settings", mSettingsTexture.get(),
                                    iconX, bottomY, iconSize))
     {

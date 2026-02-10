@@ -14,9 +14,9 @@
 //======================================================================================================================
 ChallengeRace::ChallengeRace(GameSettings& gameSettings) : Challenge(gameSettings)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const ChallengeSettings& cs = gameSettings.mChallengeSettings;
-    TRACE_FILE_IF(1) TRACE("ChallengeRace::ChallengeRace num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("ChallengeRace::ChallengeRace num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 }
 
 //======================================================================================================================
@@ -35,7 +35,7 @@ void ChallengeRace::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScree
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
     const ChallengeSettings& cs = gs.mChallengeSettings;
 
-    TRACE_FILE_IF(1) TRACE("ChallengeRace::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("ChallengeRace::Init num gates = %d num checkpoints = %d", cs.mGates.size(), cs.mCheckpoints.size());
 
     mAeroplane = aeroplane;
     RenderManager::GetInstance().RegisterRenderGxObject(this, 0);
@@ -79,9 +79,9 @@ void ChallengeRace::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScree
     if (mSound)
     {
         mSoundChannel = AudioManager::GetInstance().AllocateSoundChannel(1.0f, false);
-        TRACE_FILE_IF(1) TRACE("Allocated sound channel %d for ChallengeRace", mSoundChannel);
+        TRACE_FILE_IF(ONCE_1) TRACE("Allocated sound channel %d for ChallengeRace", mSoundChannel);
         if (mSoundChannel == -1)
-            TRACE_FILE_IF(1) TRACE("Failed to allocate sound channel for race");
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to allocate sound channel for race");
     }
 
     if (cs.mDefaultToChaseView)
@@ -93,7 +93,7 @@ void ChallengeRace::Init(Aeroplane* aeroplane, LoadingScreenHelper* loadingScree
 //======================================================================================================================
 void ChallengeRace::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderGxObject(this, 0);
     for (size_t i = 0 ; i != mGatePosts.size() ; ++i)
     {
@@ -193,7 +193,7 @@ Challenge::ChallengeResult ChallengeRace::UpdateChallenge(float deltaTime)
             mOldPos = pos;
             if (isThrough == 1)
             {
-                TRACE_FILE_IF(1) TRACE("Through gate order index %d", mTargetCheckpointsIndex);
+                TRACE_FILE_IF(ONCE_1) TRACE("Through gate order index %d", mTargetCheckpointsIndex);
                 ++mTargetCheckpointsIndex;
 
                 // Play sound and vibrate
@@ -329,7 +329,8 @@ void ChallengeRace::GxRender(int renderLevel, DisplayConfig& displayConfig)
 
     if (gs.mOptions.mDisplayFPS)
     {
-        font.SetRect(displayConfig.mLeft,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)displayConfig.mWidth,fontHeight);
+        int16 fpsInsetX = (int16)Platform::GetSafeAreaInsetX();
+        font.SetRect(displayConfig.mLeft + fpsInsetX,(int16)(displayConfig.mBottom + displayConfig.mHeight - fontHeight*5/4),(int16)(displayConfig.mWidth - 2 * fpsInsetX),fontHeight);
         font.SetAlignmentHor(FONT_ALIGN_RIGHT);
         sprintf(txt, "%ld", std::lround(gs.mStatistics.mSmoothedFPS));
         font.SetColourABGR(0xff00ffff);

@@ -12,6 +12,10 @@
 
 #ifdef _WIN32
 #include <glad/glad.h>
+#elif defined(PICASIM_ANDROID) || defined(__ANDROID__)
+#include <GLES2/gl2.h>
+#elif defined(PICASIM_IOS)
+#include <OpenGLES/ES2/gl.h>
 #else
 #include <GL/gl.h>
 #endif

@@ -9,6 +9,7 @@
 #include <vector>
 #include <filesystem>
 
+#include "ScrollHelper.h"
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
@@ -16,8 +17,6 @@
 // Forward declarations from Graphics.cpp
 void IwGxClear();
 void IwGxSwapBuffers();
-void PrepareForIwGx(bool fullscreen);
-void RecoverFromIwGx(bool clear);
 
 // Forward declaration from Helpers.cpp
 float GetImagesPerLoadScreen(const GameSettings& gameSettings);
@@ -163,6 +162,8 @@ private:
 
     // For SAVE mode
     char mFilenameBuffer[MAX_FILENAME_LEN + 1];
+
+    ScrollHelper mScrollHelper;
 };
 
 //======================================================================================================================
@@ -189,6 +190,7 @@ FileMenu::FileMenu(const GameSettings& gameSettings,
     , mResult(FILEMENURESULT_CANCEL)
     , mForceFirstTab(true)
 {
+    UIHelpers::NotifyMenuTransition();
     memset(mFilenameBuffer, 0, sizeof(mFilenameBuffer));
 
     // Copy tab titles
@@ -229,13 +231,13 @@ FileMenu::~FileMenu()
 //======================================================================================================================
 void FileMenu::LoadFilesFromDirectory(const char* path, bool isUserPath, bool useTitleFromFile)
 {
-    TRACE_FILE_IF(1) TRACE("FileMenu::LoadFilesFromDirectory: path='%s' isUserPath=%d", path, isUserPath);
+    TRACE_FILE_IF(ONCE_1) TRACE("FileMenu::LoadFilesFromDirectory: path='%s' isUserPath=%d", path, isUserPath);
     namespace fs = std::filesystem;
 
     std::error_code ec;
     if (!fs::exists(path, ec) || !fs::is_directory(path, ec))
     {
-        TRACE_FILE_IF(1) TRACE("FileMenu::LoadFilesFromDirectory: failed to open directory '%s'", path);
+        TRACE_FILE_IF(ONCE_1) TRACE("FileMenu::LoadFilesFromDirectory: failed to open directory '%s'", path);
         return;
     }
 
@@ -347,10 +349,20 @@ FileMenuResult FileMenu::GetResult(std::string& selectedPath) const
 //======================================================================================================================
 bool FileMenu::Update()
 {
+    int savedTab = mSelectedTab;
+
     IwGxClear();
     Render();
     IwGxSwapBuffers();
     PollEvents();
+
+    // Suppress stale input from the previous menu's touch/click events
+    if (UIHelpers::IsInputMuted())
+    {
+        mFinished = false;
+        mResult = FILEMENURESULT_CANCEL;
+        mSelectedTab = savedTab;
+    }
 
     return mFinished;
 }
@@ -358,8 +370,6 @@ bool FileMenu::Update()
 //======================================================================================================================
 void FileMenu::Render()
 {
-    int width = Platform::GetDisplayWidth();
-    int height = Platform::GetDisplayHeight();
     float scale = UIHelpers::GetFontScale();
     Language language = mGameSettings.mOptions.mLanguage;
 
@@ -372,11 +382,11 @@ void FileMenu::Render()
     // Apply menu style (light theme)
     PicaStyle::PushMenuStyle();
 
-    // Full-screen window
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2((float)width, (float)height));
-    ImGui::Begin("FileMenu", nullptr,
+    // Full-screen window with safe area insets
+    ImVec2 winSize = UIHelpers::BeginFullscreenWindow("FileMenu",
         ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+    float width = winSize.x;
+    float height = winSize.y;
 
     float buttonH = 32.0f * scale;
     float padding = ImGui::GetStyle().WindowPadding.y;
@@ -468,11 +478,13 @@ void FileMenu::Render()
     char childId[32];
     snprintf(childId, sizeof(childId), "FileList##Tab%d", mSelectedTab);
     ImGui::BeginChild(childId, ImVec2(-1, contentHeight), true);
+    mScrollHelper.ApplyDragScroll(childId);
 
     // Reset scroll position for this tab if menu was just opened
     if (mSelectedTab < (int)mResetScroll.size() && mResetScroll[mSelectedTab])
     {
         ImGui::SetScrollY(0.0f);
+        mScrollHelper.ResetScroll(childId);
         mResetScroll[mSelectedTab] = false;
     }
 
@@ -630,7 +642,7 @@ FileMenuResult FileMenuLoad(
     float imagesPerScreen,
     IncludeCallback* includeCallback)
 {
-    PrepareForIwGx(false);
+
 
     if (imagesPerScreen < 0.0f)
         imagesPerScreen = GetImagesPerLoadScreen(gameSettings);
@@ -651,7 +663,7 @@ FileMenuResult FileMenuLoad(
                     (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
                     (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
             {
-                RecoverFromIwGx(false);
+            
                 return FILEMENURESULT_CANCEL;
             }
         }
@@ -661,7 +673,7 @@ FileMenuResult FileMenuLoad(
 
         // In original code, tab >= 0 means tab was changed (recreate menu)
         // With ImGui filtering in-place, we can just return directly
-        RecoverFromIwGx(false);
+    
         return ret;
     }
 }
@@ -675,7 +687,7 @@ FileMenuResult FileMenuSave(
     const char* title,
     FileMenuType fileMenuType)
 {
-    PrepareForIwGx(false);
+
     Language language = gameSettings.mOptions.mLanguage;
 
     FileMenu menu(gameSettings, nullptr, userPath, extension,
@@ -688,13 +700,13 @@ FileMenuResult FileMenuSave(
                 (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
                 (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
         {
-            RecoverFromIwGx(false);
+        
             return FILEMENURESULT_CANCEL;
         }
     }
 
     FileMenuResult ret = menu.GetResult(selectedString);
-    RecoverFromIwGx(false);
+
 
     if (selectedString.empty())
         return FILEMENURESULT_CANCEL;
@@ -712,7 +724,7 @@ void FileMenuDelete(
     const char* title,
     FileMenuType fileMenuType)
 {
-    PrepareForIwGx(false);
+
     Language language = gameSettings.mOptions.mLanguage;
 
     FileMenu menu(gameSettings, nullptr, userPath, extension,
@@ -725,18 +737,18 @@ void FileMenuDelete(
                 (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) ||
                 (Input::GetInstance().GetKeyState(SDLK_ESCAPE) & KEY_STATE_PRESSED))
         {
-            RecoverFromIwGx(false);
+        
             return;
         }
     }
 
     std::string selectedPath;
     menu.GetResult(selectedPath);
-    RecoverFromIwGx(false);
+
 
     if (!selectedPath.empty())
     {
-        TRACE_FILE_IF(1) TRACE("Deleting %s", selectedPath.c_str());
+        TRACE_FILE_IF(ONCE_1) TRACE("Deleting %s", selectedPath.c_str());
         std::filesystem::remove(selectedPath);
     }
 }
@@ -748,13 +760,13 @@ void FileMenuDelete(
 //======================================================================================================================
 ScenarioResult SelectScenario(GameSettings& gameSettings, const char* title, const char* cancelButtonText, const char* altButtonText)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     std::string file;
     FileMenuResult result = FileMenuLoad(file, gameSettings, "SystemSettings/Scenario", NULL, ".xml", title, 0, 0,
         cancelButtonText, altButtonText, FILEMENUTYPE_AEROPLANE, 3.7f);
     if (!file.empty() && result == FILEMENURESULT_SELECTED)
     {
-        TRACE_FILE_IF(1) TRACE("Selected scenario settings %s", file.c_str());
+        TRACE_FILE_IF(ONCE_1) TRACE("Selected scenario settings %s", file.c_str());
 
         if (file.find("lider.xml") != std::string::npos)
             return SCENARIO_TRAINERGLIDER;
@@ -774,7 +786,7 @@ ScenarioResult SelectScenario(GameSettings& gameSettings, const char* title, con
 SelectResult SelectAeroplane(std::string& file, GameSettings& gameSettings, const char* title,
     const char* cancelButtonText, const char* altButtonText, IncludeCallback* includeCallback)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     Language language = gameSettings.mOptions.mLanguage;
     const char* aeroplaneTabTitles[] = {TXT(PS_ALL), TXT(PS_GLIDERS), TXT(PS_POWERED), TXT(PS_USER)};
     std::string userPath = Platform::GetUserSettingsPath() + "Aeroplane";
@@ -801,7 +813,7 @@ SelectResult SelectAeroplane(std::string& file, GameSettings& gameSettings, cons
 //======================================================================================================================
 SelectResult SelectAndLoadAeroplane(GameSettings& gameSettings, const char* title, const char* cancelButtonText, const char* altButtonText)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     std::string file;
     Language language = gameSettings.mOptions.mLanguage;
     const char* aeroplaneTabTitles[] = {TXT(PS_ALL), TXT(PS_GLIDERS), TXT(PS_POWERED), TXT(PS_USER)};
@@ -813,10 +825,10 @@ SelectResult SelectAndLoadAeroplane(GameSettings& gameSettings, const char* titl
         cancelButtonText, altButtonText, FILEMENUTYPE_AEROPLANE);
     if (!file.empty() && result == FILEMENURESULT_SELECTED)
     {
-        TRACE_FILE_IF(1) TRACE("Loading Aeroplane settings %s", file.c_str());
+        TRACE_FILE_IF(ONCE_1) TRACE("Loading Aeroplane settings %s", file.c_str());
         bool loadResult = gameSettings.mAeroplaneSettings.LoadFromFile(file);
         IwAssert(ROWLHOUSE, loadResult);
-        TRACE_FILE_IF(1) TRACE(" %s\n", loadResult ? "success" : "failed");
+        TRACE_FILE_IF(ONCE_1) TRACE(" %s", loadResult ? "success" : "failed");
         gameSettings.mStatistics.mLoadedAeroplane = true;
 
         if (
@@ -825,9 +837,9 @@ SelectResult SelectAndLoadAeroplane(GameSettings& gameSettings, const char* titl
             !gameSettings.mAeroplaneSettings.mPreferredController.empty()
             )
         {
-            TRACE_FILE_IF(1) TRACE("Loading Controller %s", gameSettings.mAeroplaneSettings.mPreferredController.c_str());
+            TRACE_FILE_IF(ONCE_1) TRACE("Loading Controller %s", gameSettings.mAeroplaneSettings.mPreferredController.c_str());
             bool controllerResult = gameSettings.mControllerSettings.LoadFromFile(gameSettings.mAeroplaneSettings.mPreferredController);
-            TRACE_FILE_IF(1) TRACE(" %s\n", controllerResult ? "success" : "failed");
+            TRACE_FILE_IF(ONCE_1) TRACE(" %s", controllerResult ? "success" : "failed");
         }
         return SELECTRESULT_SELECTED;
     }
@@ -844,7 +856,7 @@ SelectResult SelectAndLoadAeroplane(GameSettings& gameSettings, const char* titl
 //======================================================================================================================
 SelectResult SelectAndLoadEnvironment(GameSettings& gameSettings, const char* title, const char* cancelButtonText, const char* altButtonText)
 {
-    TRACE_FUNCTION_ONLY(1);
+    TRACE_FUNCTION_ONLY(ONCE_1);
     std::string file;
     Language language = gameSettings.mOptions.mLanguage;
     const char* environmentTabTitles[] = {TXT(PS_ALL), TXT(PS_SLOPE), TXT(PS_FLAT), TXT(PS_PANORAMIC), TXT(PS_3D), TXT(PS_USER)};
@@ -855,10 +867,10 @@ SelectResult SelectAndLoadEnvironment(GameSettings& gameSettings, const char* ti
         title, environmentTabTitles, 6, cancelButtonText, altButtonText, FILEMENUTYPE_SCENERY);
     if (!file.empty() && result == FILEMENURESULT_SELECTED)
     {
-        TRACE_FILE_IF(1) TRACE("Loading Environment %s - ", file.c_str());
+        TRACE_FILE_IF(ONCE_1) TRACE("Loading Environment %s - ", file.c_str());
         bool loadResult = gameSettings.mEnvironmentSettings.LoadFromFile(file);
         IwAssert(ROWLHOUSE, loadResult);
-        TRACE_FILE_IF(1) TRACE(" %s\n", loadResult ? "success" : "failed");
+        TRACE_FILE_IF(ONCE_1) TRACE(" %s", loadResult ? "success" : "failed");
         bool objectsResult = gameSettings.mObjectsSettings.LoadFromFile(gameSettings.mEnvironmentSettings.mObjectsSettingsFile);
         IwAssert(ROWLHOUSE, objectsResult);
         gameSettings.mStatistics.mLoadedTerrain = true;

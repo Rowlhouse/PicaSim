@@ -11,7 +11,7 @@ void Aerofoil::Init(
     Aeroplane* aeroplane,
     uint32& checksum)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     mDefinition = AerofoilDefinition::Create(name);
     mConfiguration = configuration;
     mAeroplane = aeroplane;
@@ -26,7 +26,7 @@ void Aerofoil::Init(
 //======================================================================================================================
 void Aerofoil::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     AerofoilDefinition::Release(mDefinition);
     mDefinition = 0;
 }

@@ -79,7 +79,7 @@ bool ReadFromXML(TiXmlElement* wingElement, WingData& wingData)
 //======================================================================================================================
 void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     const AeroplaneSettings& as = aeroplane->GetAeroplaneSettings();
 
     mAeroplane = aeroplane;
@@ -91,7 +91,7 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
     TiXmlHandle aerodynamicsHandle = docHandle.FirstChild("Physics").FirstChild("Aerodynamics");
     TiXmlElement* aerodynamicsElement = aerodynamicsHandle.ToElement();
 
-    TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init Wings");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init Wings");
     for (int iWing = 0 ; ; ++iWing)
     {
         TiXmlElement* wingElement = aerodynamicsHandle.Child("Wing", iWing).ToElement();
@@ -164,7 +164,7 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
         mBoxes.push_back(box);
     }
 
-    TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init Fuselages");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init Fuselages");
     for (int iFuselage = 0 ; ; ++iFuselage)
     {
         TiXmlElement* fuselageElement = aerodynamicsHandle.Child("Fuselage", iFuselage).ToElement();
@@ -207,7 +207,7 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
         mBoxes.push_back(box);
     }
 
-    TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init PropellerEngines");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init PropellerEngines");
     for (int iPropDisk = 0 ; ; ++iPropDisk)
     {
         TiXmlElement* propDiskElement = aerodynamicsHandle.Child("PropellerEngine", iPropDisk).ToElement();
@@ -274,7 +274,7 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
         propDisk.mTM.SetTrans(enginePosition);
     }
 
-    TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init Geometry");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init Geometry");
     // Set up the additional geometry
     TiXmlHandle geometryHandle = docHandle.FirstChild("Physics").FirstChild("Geometry");
     TiXmlElement* geometryElement = geometryHandle.ToElement();
@@ -319,7 +319,7 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
     } // Loop over shapes
 
     // Loop over the crash shapes
-    TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init Crash Shapes");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init Crash Shapes");
     TiXmlHandle crashShapesHandle = docHandle.FirstChild("Physics").FirstChild("CrashShapes");
     TiXmlElement* crashShapesElement = crashShapesHandle.ToElement();
     for (int iShape = 0 ; ; ++iShape)
@@ -358,7 +358,7 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
     }
 
     // Load 3DS model
-    TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init 3D Model");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init 3D Model");
     TiXmlHandle graphicsHandle = docHandle.FirstChild("Graphics");
 
     std::vector<std::string> models;
@@ -416,7 +416,7 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
         Colour unsetColour = unsetColours[iModel];
         if (!modelFile.empty())
         {
-            TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init - Loading %s", modelFile.c_str());
+            TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init - Loading %s", modelFile.c_str());
             if (modelFile.find(".3ds") != std::string::npos)
             {
                 CLoad3DS load3DS;
@@ -472,13 +472,13 @@ void AeroplaneGraphics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane)
     EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_LOOP_POST_PHYSICS);
 
     mLastGraphPointTime = 0.0f;
-    TRACE_FILE_IF(1) TRACE("AeroplaneGraphics::Init - Finished");
+    TRACE_FILE_IF(ONCE_1) TRACE("AeroplaneGraphics::Init - Finished");
 }
 
 //======================================================================================================================
 void AeroplaneGraphics::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     RenderManager::GetInstance().UnregisterRenderObject(this, RENDER_LEVEL_OBJECTS);
     RenderManager::GetInstance().UnregisterShadowCasterObject(this);
     EntityManager::GetInstance().UnregisterEntity(this, ENTITY_LEVEL_LOOP_POST_PHYSICS);
@@ -662,7 +662,7 @@ static GLfloat boxPoints[] = {
 //======================================================================================================================
 void AeroplaneGraphics::RenderUpdate(Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const Options& options = PicaSim::GetInstance().GetSettings().mOptions;
     
     if (renderLevel != RENDER_LEVEL_TERRAIN_SHADOW)
@@ -770,7 +770,7 @@ void AeroplaneGraphics::RenderUpdate(Viewport* viewport, int renderLevel)
 //======================================================================================================================
 void AeroplaneGraphics::RenderUpdateComponents(Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const Options& options = PicaSim::GetInstance().GetSettings().mOptions;
     EnableCullFace enableCullFace(GL_BACK);
     const ModelShader* modelShader = (ModelShader*) ShaderManager::GetInstance().GetShader(SHADER_MODEL);
@@ -868,7 +868,7 @@ void AeroplaneGraphics::RenderUpdateComponents(Viewport* viewport, int renderLev
 //======================================================================================================================
 void AeroplaneGraphics::RenderUpdatePropDisks(Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
 
     EnableBlend enableBlend;
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -952,7 +952,7 @@ void AeroplaneGraphics::RenderUpdatePropDisks(Viewport* viewport, int renderLeve
 //======================================================================================================================
 void AeroplaneGraphics::RenderUpdate3DS(Viewport* viewport, int renderLevel)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     const Options& options = PicaSim::GetInstance().GetSettings().mOptions;
     glDisable(GL_BLEND);
 

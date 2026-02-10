@@ -12,7 +12,7 @@
 //======================================================================================================================
 void JetEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     Engine::Init(engineElement, aerodynamicsHandle, aeroplane);
 
     mAeroplane = aeroplane;
@@ -111,7 +111,7 @@ void JetEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle& aerod
 //======================================================================================================================
 void JetEngine::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     for (size_t i = 0 ; i != mSoundSettings.size() ; ++i)
     {
         if (mSoundSettings[i].mSoundChannel != -1)

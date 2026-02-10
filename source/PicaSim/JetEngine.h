@@ -10,7 +10,7 @@ class JetEngine : public Engine
 {
 public:
     void Init(class TiXmlElement* engineElement, class TiXmlHandle& aerodynamicsHandle, class Aeroplane* aeroplane) OVERRIDE;
-    void Terminate();
+    void Terminate() OVERRIDE;
 
     void EntityUpdate(float deltaTime, int entityLevel) OVERRIDE;
 
@@ -24,7 +24,7 @@ public:
 
     Transform GetTM() const OVERRIDE {return mTM;}
 
-    virtual float GetRadius() const {return FLT_MAX;}
+    float GetRadius() const OVERRIDE {return FLT_MAX;}
 
 private:
     class Aeroplane* mAeroplane;

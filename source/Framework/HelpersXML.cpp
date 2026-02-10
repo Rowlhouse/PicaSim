@@ -21,7 +21,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, bool& value, size_t* inde
     }
     if (res != TIXML_SUCCESS)
     {
-        TRACE_FILE_IF(2) TRACE("Failed to read bool %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
+        TRACE_FILE_IF(ONCE_2) TRACE("Failed to read bool %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
         return false;
     }
     return true;
@@ -45,7 +45,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, unsigned int& value, size
     }
     if (res != TIXML_SUCCESS)
     {
-        TRACE_FILE_IF(2) TRACE("Failed to read unsigned %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
+        TRACE_FILE_IF(ONCE_2) TRACE("Failed to read unsigned %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
         return false;
     }
     return true;
@@ -61,8 +61,8 @@ bool readFromXML(TiXmlElement* elem, const char* name, long unsigned int& value,
 }
 
 //======================================================================================================================
-// size_t overload for 64-bit Windows compatibility
-#if defined(_WIN64) || defined(__x86_64__) || defined(__ppc64__)
+// size_t overload for 64-bit Windows where size_t differs from unsigned long
+#if defined(_WIN64)
 bool readFromXML(TiXmlElement* elem, const char* name, size_t& value, size_t* index)
 {
     unsigned int v = (unsigned int) value;
@@ -91,7 +91,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, unsigned char& value, siz
     }
     if (res != TIXML_SUCCESS)
     {
-        TRACE_FILE_IF(2) TRACE("Failed to read unsigned char %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
+        TRACE_FILE_IF(ONCE_2) TRACE("Failed to read unsigned char %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
         return false;
     }
     value = v;
@@ -116,7 +116,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, int& value, size_t* index
     }
     if (res != TIXML_SUCCESS)
     {
-        TRACE_FILE_IF(2) TRACE("Failed to read int %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
+        TRACE_FILE_IF(ONCE_2) TRACE("Failed to read int %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
         return false;
     }
     return true;
@@ -140,7 +140,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, float& value, size_t* ind
     }
     if (res != TIXML_SUCCESS)
     {
-        TRACE_FILE_IF(2) TRACE("Failed to read float %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
+        TRACE_FILE_IF(ONCE_2) TRACE("Failed to read float %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
         return false;
     }
     return true;
@@ -164,7 +164,7 @@ bool readFromXML(TiXmlElement* elem, const char* name, std::string& value, size_
     }
     if (res != TIXML_SUCCESS)
     {
-        TRACE_FILE_IF(2) TRACE("Failed to read string %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
+        TRACE_FILE_IF(ONCE_2) TRACE("Failed to read string %s, error = %s\n", name, res == TIXML_NO_ATTRIBUTE ? "TIXML_NO_ATTRIBUTE" : "TIXML_WRONG_TYPE");
         return false;
     }
     return true;

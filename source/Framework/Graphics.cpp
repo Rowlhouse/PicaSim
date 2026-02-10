@@ -2,7 +2,6 @@
 #include "Trace.h"
 #include "Shaders.h"
 #include "../Platform/Window.h"
-#include "../Platform/Input.h"
 #include "../Platform/S3ECompat.h"
 #include "../Platform/FontRenderer.h"
 #include <cmath>
@@ -12,7 +11,7 @@ static const int MAX_STACK_SIZE = 8;
 static const int MAX_MATRIX_MODES = 3;
 static const int MAX_NUM_LIGHTS = 8;
 static GLMat44 gMatrixStack[MAX_MATRIX_MODES][MAX_STACK_SIZE];
-static int gStackIndex[MAX_MATRIX_MODES];
+static int gStackIndex[MAX_MATRIX_MODES] = {0};
 static int gModeIndex = 0;
 
 static GLVec4 gLightPos[MAX_NUM_LIGHTS] = {{0,0,0,0}};
@@ -20,11 +19,8 @@ static GLVec4 gLightDiffuseColour[MAX_NUM_LIGHTS] = {{0,0,0,0}};
 static GLVec4 gLightAmbientColour[MAX_NUM_LIGHTS] = {{0,0,0,0}};
 static GLVec4 gLightSpecularColour[MAX_NUM_LIGHTS] = {{0,0,0,0}};
 
-// Global Window instance (defined in Window.cpp)
-extern Window* gWindow;
-
 //======================================================================================================================
-int eglInit(bool createSurface, int msaaSamples)
+void eglInit()
 {
     // Initialize matrix stacks
     for (int i = 0; i != MAX_MATRIX_MODES; ++i)
@@ -42,47 +38,8 @@ int eglInit(bool createSurface, int msaaSamples)
         esSetVector4(gLightSpecularColour[i], 0.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    // Create window if not already created
-    if (!gWindow)
-    {
-        gWindow = &Window::GetInstance();
-    }
-
-    if (!gWindow->IsInitialized() && createSurface)
-    {
-        // Use 1280x720 windowed mode (set last param to true for fullscreen)
-        if (!gWindow->Init(1280, 720, "PicaSim", false, msaaSamples))
-        {
-            fprintf(stderr, "Failed to create window\n");
-            return 1;
-        }
-
-        // Initialize Input system after window is created
-        Input::GetInstance().Init();
-    }
-
-    // Initialize font renderer
+    // Initialize font renderer (needs GL context to be ready)
     FontRenderer::GetInstance().Init();
-
-    return 0;
-}
-
-//======================================================================================================================
-void eglTerm(bool destroySurface)
-{
-    if (destroySurface)
-    {
-        // Shutdown font renderer
-        FontRenderer::GetInstance().Shutdown();
-
-        // Shutdown Input system
-        Input::GetInstance().Shutdown();
-    }
-
-    if (gWindow && destroySurface)
-    {
-        gWindow->Shutdown();
-    }
 }
 
 //======================================================================================================================
@@ -90,12 +47,6 @@ void eglTerm(bool destroySurface)
 //======================================================================================================================
 
 static uint8 gClearColorR = 0, gClearColorG = 0, gClearColorB = 0, gClearColorA = 255;
-
-void IwGxFlush()
-{
-    // Flush any pending GL commands
-    glFlush();
-}
 
 void IwGxSwapBuffers()
 {
@@ -112,19 +63,6 @@ void IwGxClear()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void IwGxClear(uint32 flags)
-{
-    GLbitfield glFlags = 0;
-    if (flags & IW_GX_COLOUR_BUFFER_F) glFlags |= GL_COLOR_BUFFER_BIT;
-    if (flags & IW_GX_DEPTH_BUFFER_F) glFlags |= GL_DEPTH_BUFFER_BIT;
-
-    if (glFlags & GL_COLOR_BUFFER_BIT)
-    {
-        glClearColor(gClearColorR / 255.0f, gClearColorG / 255.0f, gClearColorB / 255.0f, gClearColorA / 255.0f);
-    }
-    glClear(glFlags);
-}
-
 void IwGxSetColClear(uint8 r, uint8 g, uint8 b, uint8 a)
 {
     gClearColorR = r;
@@ -139,26 +77,6 @@ static GLfloat UITextureMatrix[16] = {
     0, 1, 0, 0,
     0, 0, 1, 0,
     0, 0, 0, 1};
-
-//======================================================================================================================
-void ResetGraphicsState(bool clear)
-{
-    // GL2 only - no state reset needed
-    (void)clear;
-}
-
-// Legacy compatibility function names
-void RecoverFromIwGx(bool clear) { ResetGraphicsState(clear); }
-
-//======================================================================================================================
-void PrepareForUIRendering(bool clear)
-{
-    // GL2 only - no special setup needed
-    (void)clear;
-}
-
-// Legacy compatibility function name
-void PrepareForIwGx(bool clear) { PrepareForUIRendering(clear); }
 
 //======================================================================================================================
 void LookAt(
@@ -248,7 +166,7 @@ void LoadTextureFromFile(Texture& texture, const char* filename, float colourOff
     Image image;
     if (!image.LoadFromFile(filename))
     {
-        TRACE_FILE_IF(1) TRACE("Failed to load image: %s", filename);
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to load image: %s", filename);
         return;
     }
 
@@ -258,7 +176,7 @@ void LoadTextureFromFile(Texture& texture, const char* filename, float colourOff
     GLint origHeight = image.GetHeight();
     int channels = image.GetChannels();
 
-    TRACE_FILE_IF(1) TRACE("Image %s size %d, %d channels %d", filename, origWidth, origHeight, channels);
+    TRACE_FILE_IF(ONCE_2) TRACE("Image %s size %d, %d channels %d", filename, origWidth, origHeight, channels);
 
     // Apply colour offset if requested (assumes RGB or RGBA data)
     if (colourOffset != 0.0f && channels >= 3)
@@ -301,7 +219,7 @@ void LoadTextureFromFile(Texture& texture, const char* filename, float colourOff
         newHeight = maxTextureSize;
         newWidth = (origWidth * maxTextureSize) / origHeight;
     }
-    TRACE_FILE_IF(1) TRACE("Resizing texture %s to %d, %d", filename, newWidth, newHeight);
+    TRACE_FILE_IF(ONCE_2) TRACE("Resizing texture %s to %d, %d", filename, newWidth, newHeight);
 
     Image newImage;
     newImage.SetFormat(image.GetFormat());
@@ -381,47 +299,6 @@ void SaveScreenshotAsTexture(Texture* texture)
     image.SetBuffers(framebuffer, dataSize);
 
     texture->SetImage(&image);
-}
-
-//======================================================================================================================
-void glMatrixRotateFast(GLfloat sinAngle, GLfloat cosAngle, GLfloat x, GLfloat y, GLfloat z)
-{
-    GLfloat xx, yy, zz, xy, yz, zx, xs, ys, zs;
-    GLfloat oneMinusCos;
-    GLMat44 rotMat;
-
-    xx = x * x;
-    yy = y * y;
-    zz = z * z;
-    xy = x * y;
-    yz = y * z;
-    zx = z * x;
-    xs = x * sinAngle;
-    ys = y * sinAngle;
-    zs = z * sinAngle;
-    oneMinusCos = 1.0f - cosAngle;
-
-    rotMat[0][0] = (oneMinusCos * xx) + cosAngle;
-    rotMat[1][0] = (oneMinusCos * xy) - zs;
-    rotMat[2][0] = (oneMinusCos * zx) + ys;
-    rotMat[3][0] = 0.0F; 
-
-    rotMat[0][1] = (oneMinusCos * xy) + zs;
-    rotMat[1][1] = (oneMinusCos * yy) + cosAngle;
-    rotMat[2][1] = (oneMinusCos * yz) - xs;
-    rotMat[3][1] = 0.0F;
-
-    rotMat[0][2] = (oneMinusCos * zx) - ys;
-    rotMat[1][2] = (oneMinusCos * yz) + xs;
-    rotMat[2][2] = (oneMinusCos * zz) + cosAngle;
-    rotMat[3][2] = 0.0F; 
-
-    rotMat[0][3] = 0.0F;
-    rotMat[1][3] = 0.0F;
-    rotMat[2][3] = 0.0F;
-    rotMat[3][3] = 1.0F;
-
-    glMultMatrixf(&rotMat[0][0]);
 }
 
 //======================================================================================================================

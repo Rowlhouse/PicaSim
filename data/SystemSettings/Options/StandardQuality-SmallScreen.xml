@@ -84,6 +84,7 @@
  mControlledPlaneShadows="2"
  mOtherShadows="1"
  mProjectedShadowDetail="7"
+ mShadowBlurMultiplier="0.5"
  mDrawLaunchMarker="1"
  mDrawGroundPosition="0"
  mSkyGridOverlay="0"
@@ -118,7 +119,6 @@
  mBasicTextureDetail="9"
  mMaxSkyboxDetail="2"
  mMSAASamples="2"
- mGLVersion="2"
  mEnableSmoke="1"
  mSmokeQuality="1"
  />

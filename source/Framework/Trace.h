@@ -46,11 +46,11 @@ This resolve into a simple (or complex) "if", which is followed by a
 print-style macro to do the actual tracing. Multiple lines of
 tracing can be done with a single test by using braces - e.g.
 
-TRACE_FILE_IF(3) TRACE("value = %d", m_value);
+TRACE_FILE_IF(ONCE_3) TRACE("value = %d", m_value);
 
 or
 
-TRACE_IF(3, "file.cpp") 
+TRACE_IF(ONCE_3, "file.cpp") 
 {
 int a = calc_value(m_value);
 TRACE("val1 = %d, val2 = %d", m_value, a);
@@ -191,6 +191,9 @@ extern bool traceAllStrings;
 
 /// do the output
 void TracePrintf(const char *format, ...);
+
+/// Reset trace file state (close stale log file handle, allow re-init)
+void ResetTrace();
 
 /// enable/disable overall trace
 inline void EnableTrace(bool enable) {traceEnabled = enable;}

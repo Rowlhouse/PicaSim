@@ -27,7 +27,7 @@ VRRuntime* CreateVRRuntime()
     do { \
         XrResult result = (call); \
         if (XR_FAILED(result)) { \
-            TRACE_FILE_IF(1) TRACE("OpenXR error: %s returned %d", #call, (int)result); \
+            TRACE_FILE_IF(ONCE_1) TRACE("OpenXR error: %s returned %d", #call, (int)result); \
             return false; \
         } \
     } while (0)
@@ -36,7 +36,7 @@ VRRuntime* CreateVRRuntime()
     do { \
         XrResult result = (call); \
         if (XR_FAILED(result)) { \
-            TRACE_FILE_IF(1) TRACE("OpenXR error: %s returned %d", #call, (int)result); \
+            TRACE_FILE_IF(ONCE_1) TRACE("OpenXR error: %s returned %d", #call, (int)result); \
             return; \
         } \
     } while (0)
@@ -95,19 +95,19 @@ bool OpenXRRuntime::Initialize()
 
     if (!CreateInstance())
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::Initialize - Failed to create instance");
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::Initialize - Failed to create instance");
         return false;
     }
 
     if (!GetSystem())
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::Initialize - Failed to get system");
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::Initialize - Failed to get system");
         DestroyInstance();
         return false;
     }
 
     mIsInitialized = true;
-    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::Initialize - Success: %s on %s",
+    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::Initialize - Success: %s on %s",
         mRuntimeName.c_str(), mSystemName.c_str());
     return true;
 }
@@ -171,7 +171,7 @@ bool OpenXRRuntime::CreateInstance()
 
     if (!hasOpenGL)
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::CreateInstance - OpenGL extension not available");
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::CreateInstance - OpenGL extension not available");
         return false;
     }
 
@@ -209,7 +209,7 @@ bool OpenXRRuntime::CreateInstance()
         mRuntimeName = "Unknown Runtime";
     }
 
-    TRACE_FILE_IF(2) TRACE("OpenXRRuntime::CreateInstance - Runtime: %s", mRuntimeName.c_str());
+    TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::CreateInstance - Runtime: %s", mRuntimeName.c_str());
     return true;
 }
 
@@ -239,11 +239,11 @@ bool OpenXRRuntime::GetSystem()
     {
         if (result == XR_ERROR_FORM_FACTOR_UNAVAILABLE)
         {
-            TRACE_FILE_IF(1) TRACE("OpenXRRuntime::GetSystem - No HMD connected");
+            TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::GetSystem - No HMD connected");
         }
         else
         {
-            TRACE_FILE_IF(1) TRACE("OpenXRRuntime::GetSystem - xrGetSystem failed: %d", (int)result);
+            TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::GetSystem - xrGetSystem failed: %d", (int)result);
         }
         return false;
     }
@@ -282,10 +282,10 @@ bool OpenXRRuntime::GetSystem()
         view.next = nullptr;
     }
 
-    TRACE_FILE_IF(2) TRACE("OpenXRRuntime::GetSystem - %s, %d views", mSystemName.c_str(), (int)viewCount);
+    TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::GetSystem - %s, %d views", mSystemName.c_str(), (int)viewCount);
     for (size_t i = 0; i < mConfigViews.size(); ++i)
     {
-        TRACE_FILE_IF(2) TRACE("  View %d: %dx%d recommended", (int)i,
+        TRACE_FILE_IF(ONCE_2) TRACE("  View %d: %dx%d recommended", (int)i,
             mConfigViews[i].recommendedImageRectWidth,
             mConfigViews[i].recommendedImageRectHeight);
     }
@@ -321,7 +321,7 @@ bool OpenXRRuntime::CreateSessionInternal()
     Window* window = gWindow;
     if (!window || !window->GetSDLWindow())
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::CreateSessionInternal - No window available");
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::CreateSessionInternal - No window available");
         return false;
     }
 
@@ -329,7 +329,7 @@ bool OpenXRRuntime::CreateSessionInternal()
     SDL_VERSION(&wmInfo.version);
     if (!SDL_GetWindowWMInfo(window->GetSDLWindow(), &wmInfo))
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::CreateSessionInternal - Failed to get window info");
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::CreateSessionInternal - Failed to get window info");
         return false;
     }
 
@@ -343,7 +343,7 @@ bool OpenXRRuntime::CreateSessionInternal()
     graphicsReqs.type = XR_TYPE_GRAPHICS_REQUIREMENTS_OPENGL_KHR;
     XR_CHECK(xrGetOpenGLGraphicsRequirementsKHR(mInstance, mSystemId, &graphicsReqs));
 
-    TRACE_FILE_IF(2) TRACE("OpenXRRuntime::CreateSessionInternal - OpenGL requirements: %d.%d to %d.%d",
+    TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::CreateSessionInternal - OpenGL requirements: %d.%d to %d.%d",
         XR_VERSION_MAJOR(graphicsReqs.minApiVersionSupported),
         XR_VERSION_MINOR(graphicsReqs.minApiVersionSupported),
         XR_VERSION_MAJOR(graphicsReqs.maxApiVersionSupported),
@@ -365,7 +365,7 @@ bool OpenXRRuntime::CreateSessionInternal()
 
     XR_CHECK(xrCreateSession(mInstance, &sessionInfo, &mSession));
 
-    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::CreateSessionInternal - Session created");
+    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::CreateSessionInternal - Session created");
 
     // Create reference space
     if (!CreateReferenceSpace())
@@ -376,7 +376,7 @@ bool OpenXRRuntime::CreateSessionInternal()
 
     return true;
 #else
-    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::CreateSessionInternal - Platform not supported yet");
+    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::CreateSessionInternal - Platform not supported yet");
     return false;
 #endif
 }
@@ -405,7 +405,7 @@ bool OpenXRRuntime::CreateReferenceSpace()
 
     XR_CHECK(xrCreateReferenceSpace(mSession, &spaceInfo, &mLocalSpace));
 
-    TRACE_FILE_IF(2) TRACE("OpenXRRuntime::CreateReferenceSpace - LOCAL space created");
+    TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::CreateReferenceSpace - LOCAL space created");
     return true;
 }
 
@@ -474,7 +474,7 @@ bool OpenXRRuntime::BeginSession()
     // This allows VR to be enabled before the headset is worn
     if (mSessionState != XR_SESSION_STATE_READY)
     {
-        TRACE_FILE_IF(2) TRACE("OpenXRRuntime::BeginSession - Waiting for READY state (current: %s)",
+        TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::BeginSession - Waiting for READY state (current: %s)",
             GetSessionStateName(mSessionState));
         return true;  // Not an error, just not ready yet
     }
@@ -488,12 +488,12 @@ bool OpenXRRuntime::BeginSession()
     XrResult result = xrBeginSession(mSession, &beginInfo);
     if (XR_FAILED(result))
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::BeginSession - xrBeginSession failed: %d", (int)result);
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::BeginSession - xrBeginSession failed: %d", (int)result);
         return false;
     }
 
     mIsRunning = true;
-    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::BeginSession - Session started successfully");
+    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::BeginSession - Session started successfully");
     return true;
 }
 
@@ -516,7 +516,7 @@ void OpenXRRuntime::EndSession()
 
     xrEndSession(mSession);
     mIsRunning = false;
-    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::EndSession - Session ended");
+    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::EndSession - Session ended");
 }
 
 //======================================================================================================================
@@ -540,7 +540,7 @@ void OpenXRRuntime::PollEvents()
             }
             case XR_TYPE_EVENT_DATA_INSTANCE_LOSS_PENDING:
             {
-                TRACE_FILE_IF(1) TRACE("OpenXRRuntime::PollEvents - Instance loss pending");
+                TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::PollEvents - Instance loss pending");
                 break;
             }
             default:
@@ -573,7 +573,7 @@ static const char* GetSessionStateName(XrSessionState state)
 //----------------------------------------------------------------------------------------------------------------------
 void OpenXRRuntime::HandleSessionStateChange(XrSessionState newState)
 {
-    TRACE_FILE_IF(1) TRACE("OpenXR session state: %s -> %s",
+    TRACE_FILE_IF(ONCE_1) TRACE("OpenXR session state: %s -> %s",
         GetSessionStateName(mSessionState), GetSessionStateName(newState));
     mSessionState = newState;
 
@@ -592,11 +592,11 @@ void OpenXRRuntime::HandleSessionStateChange(XrSessionState newState)
                 if (XR_SUCCEEDED(result))
                 {
                     mIsRunning = true;
-                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - Session started");
+                    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::HandleSessionStateChange - Session started");
                 }
                 else
                 {
-                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - xrBeginSession failed: %d", (int)result);
+                    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::HandleSessionStateChange - xrBeginSession failed: %d", (int)result);
                 }
             }
             break;
@@ -607,11 +607,11 @@ void OpenXRRuntime::HandleSessionStateChange(XrSessionState newState)
                 XrResult result = xrEndSession(mSession);
                 if (XR_SUCCEEDED(result))
                 {
-                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - Session ended");
+                    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::HandleSessionStateChange - Session ended");
                 }
                 else
                 {
-                    TRACE_FILE_IF(1) TRACE("OpenXRRuntime::HandleSessionStateChange - xrEndSession failed: %d", (int)result);
+                    TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::HandleSessionStateChange - xrEndSession failed: %d", (int)result);
                 }
                 mIsRunning = false;
             }
@@ -657,7 +657,7 @@ bool OpenXRRuntime::WaitFrame(VRFrameInfo& frameInfo)
     XrResult result = xrWaitFrame(mSession, &waitInfo, &mFrameState);
     if (XR_FAILED(result))
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::WaitFrame - xrWaitFrame failed: %d", (int)result);
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::WaitFrame - xrWaitFrame failed: %d", (int)result);
         return false;
     }
 
@@ -699,7 +699,7 @@ bool OpenXRRuntime::BeginFrame()
     XrResult result = xrBeginFrame(mSession, &beginInfo);
     if (XR_FAILED(result))
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::BeginFrame - xrBeginFrame failed: %d", (int)result);
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::BeginFrame - xrBeginFrame failed: %d", (int)result);
         return false;
     }
 
@@ -752,7 +752,7 @@ bool OpenXRRuntime::EndFrame(const VRFrameInfo& frameInfo)
     XrResult result = xrEndFrame(mSession, &endInfo);
     if (XR_FAILED(result))
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::EndFrame - xrEndFrame failed: %d", (int)result);
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::EndFrame - xrEndFrame failed: %d", (int)result);
         return false;
     }
 
@@ -777,7 +777,7 @@ bool OpenXRRuntime::LocateViews(XrTime displayTime)
     XrResult result = xrLocateViews(mSession, &locateInfo, &viewState, viewCount, &viewCount, mViews.data());
     if (XR_FAILED(result))
     {
-        TRACE_FILE_IF(1) TRACE("OpenXRRuntime::LocateViews - xrLocateViews failed: %d", (int)result);
+        TRACE_FILE_IF(ONCE_1) TRACE("OpenXRRuntime::LocateViews - xrLocateViews failed: %d", (int)result);
         mPosesValid = false;
         return false;
     }
@@ -813,7 +813,7 @@ bool OpenXRRuntime::LocateViews(XrTime displayTime)
 void OpenXRRuntime::SetMSAASamples(int samples)
 {
     mMSAASamples = (samples > 0) ? samples : 1;
-    TRACE_FILE_IF(2) TRACE("OpenXRRuntime::SetMSAASamples - %d", mMSAASamples);
+    TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::SetMSAASamples - %d", mMSAASamples);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -854,7 +854,7 @@ bool OpenXRRuntime::CreateSwapchainsInternal()
         }
     }
 
-    TRACE_FILE_IF(2) TRACE("OpenXRRuntime::CreateSwapchainsInternal - Using format: 0x%X", (int)selectedFormat);
+    TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::CreateSwapchainsInternal - Using format: 0x%X", (int)selectedFormat);
 
     // Create swapchain for each eye
     for (int eye = 0; eye < VR_EYE_COUNT && eye < (int)mConfigViews.size(); ++eye)
@@ -891,7 +891,7 @@ bool OpenXRRuntime::CreateSwapchainsInternal()
         XR_CHECK(xrEnumerateSwapchainImages(mSwapchains[eye].swapchain, imageCount, &imageCount,
             (XrSwapchainImageBaseHeader*)mSwapchains[eye].images.data()));
 
-        TRACE_FILE_IF(2) TRACE("OpenXRRuntime::CreateSwapchainsInternal - Eye %d: %dx%d, %d images",
+        TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::CreateSwapchainsInternal - Eye %d: %dx%d, %d images",
             eye, mSwapchains[eye].width, mSwapchains[eye].height, imageCount);
     }
 

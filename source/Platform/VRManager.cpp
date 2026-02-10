@@ -22,19 +22,19 @@ bool VRManager::Init()
 {
     if (mInstance)
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::Init - Already initialized");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::Init - Already initialized");
         return true;
     }
 
     mInstance.reset(new VRManager());
     if (!mInstance->InitializeRuntime())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::Init - Failed to initialize VR runtime");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::Init - Failed to initialize VR runtime");
         mInstance.reset();
         return false;
     }
 
-    TRACE_FILE_IF(1) TRACE("VRManager::Init - Initialized successfully");
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::Init - Initialized successfully");
     return true;
 }
 
@@ -45,7 +45,7 @@ void VRManager::Terminate()
     {
         mInstance->ShutdownRuntime();
         mInstance.reset();
-        TRACE_FILE_IF(1) TRACE("VRManager::Terminate - Shutdown complete");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::Terminate - Shutdown complete");
     }
 }
 
@@ -104,18 +104,18 @@ bool VRManager::InitializeRuntime()
     mRuntime.reset(CreateVRRuntime());
     if (!mRuntime)
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::InitializeRuntime - No VR runtime available");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::InitializeRuntime - No VR runtime available");
         return false;
     }
 
     if (!mRuntime->Initialize())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::InitializeRuntime - Failed to initialize runtime");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::InitializeRuntime - Failed to initialize runtime");
         mRuntime.reset();
         return false;
     }
 
-    TRACE_FILE_IF(1) TRACE("VRManager::InitializeRuntime - Runtime: %s, System: %s",
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::InitializeRuntime - Runtime: %s, System: %s",
         mRuntime->GetRuntimeName(), mRuntime->GetSystemName());
 
     return true;
@@ -148,14 +148,14 @@ bool VRManager::EnableVR()
 
     if (!mRuntime || !mRuntime->IsHMDConnected())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - No HMD connected");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::EnableVR - No HMD connected");
         return false;
     }
 
     // Create VR session
     if (!mRuntime->CreateSession())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - Failed to create session");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::EnableVR - Failed to create session");
         return false;
     }
 
@@ -165,7 +165,7 @@ bool VRManager::EnableVR()
     // Create swapchains
     if (!mRuntime->CreateSwapchains())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - Failed to create swapchains");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::EnableVR - Failed to create swapchains");
         mRuntime->DestroySession();
         return false;
     }
@@ -173,7 +173,7 @@ bool VRManager::EnableVR()
     // Create eye framebuffers
     if (!CreateEyeFramebuffers())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - Failed to create eye framebuffers");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::EnableVR - Failed to create eye framebuffers");
         mRuntime->DestroySwapchains();
         mRuntime->DestroySession();
         return false;
@@ -182,7 +182,7 @@ bool VRManager::EnableVR()
     // Begin the session
     if (!mRuntime->BeginSession())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - Failed to begin session");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::EnableVR - Failed to begin session");
         DestroyEyeFramebuffers();
         mRuntime->DestroySwapchains();
         mRuntime->DestroySession();
@@ -191,7 +191,7 @@ bool VRManager::EnableVR()
 
     mVREnabled = true;
 
-    TRACE_FILE_IF(1) TRACE("VRManager::EnableVR - VR mode enabled");
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::EnableVR - VR mode enabled");
     return true;
 }
 
@@ -221,7 +221,7 @@ void VRManager::DisableVR()
 
     mVREnabled = false;
 
-    TRACE_FILE_IF(1) TRACE("VRManager::DisableVR - VR mode disabled");
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::DisableVR - VR mode disabled");
 }
 
 //======================================================================================================================
@@ -252,13 +252,13 @@ void VRManager::PollEvents()
     // Handle audio switching on session state changes
     if (currentState != mLastSessionState)
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Session state: %d -> %d, IsVRReady: %s",
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::PollEvents - Session state: %d -> %d, IsVRReady: %s",
             (int)mLastSessionState, (int)currentState, IsVRReady() ? "true" : "false");
 
         // Reset VR view when session becomes focused (headset put on)
         if (currentState == VR_SESSION_FOCUSED && mLastSessionState != VR_SESSION_FOCUSED)
         {
-            TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Session focused, resetting VR view with yaw %.1f",
+            TRACE_FILE_IF(ONCE_1) TRACE("VRManager::PollEvents - Session focused, resetting VR view with yaw %.1f",
                 glm::degrees(mDefaultFacingYaw));
             ResetVRView(mDefaultFacingYaw, false);
         }
@@ -268,7 +268,7 @@ void VRManager::PollEvents()
 
         if (shouldHaveVRAudio && !mAudioSwitchedToVR && !mVRAudioDevice.empty())
         {
-            TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Switching audio to VR device: %s", mVRAudioDevice.c_str());
+            TRACE_FILE_IF(ONCE_1) TRACE("VRManager::PollEvents - Switching audio to VR device: %s", mVRAudioDevice.c_str());
             if (AudioManager::IsAvailable())
             {
                 AudioManager::GetInstance().SwitchAudioDevice(mVRAudioDevice.c_str());
@@ -278,7 +278,7 @@ void VRManager::PollEvents()
         // Switch back to default audio when session loses focus
         else if (!shouldHaveVRAudio && mAudioSwitchedToVR)
         {
-            TRACE_FILE_IF(1) TRACE("VRManager::PollEvents - Switching audio back to default");
+            TRACE_FILE_IF(ONCE_1) TRACE("VRManager::PollEvents - Switching audio back to default");
             if (AudioManager::IsAvailable())
             {
                 AudioManager::GetInstance().SwitchToDefaultAudio();
@@ -302,7 +302,7 @@ bool VRManager::BeginVRFrame(VRFrameInfo& frameInfo)
 
     if (mInVRFrame)
     {
-        TRACE_FILE_IF(1) TRACE("VRManager::BeginVRFrame - Already in VR frame");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::BeginVRFrame - Already in VR frame");
         return false;
     }
 
@@ -383,7 +383,7 @@ bool VRManager::CreateEyeFramebuffers()
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE)
         {
-            TRACE_FILE_IF(1) TRACE("VRManager::CreateEyeFramebuffers - Framebuffer incomplete for eye %d, status: 0x%x", eye, status);
+            TRACE_FILE_IF(ONCE_1) TRACE("VRManager::CreateEyeFramebuffers - Framebuffer incomplete for eye %d, status: 0x%x", eye, status);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             DestroyEyeFramebuffers();
             return false;
@@ -391,7 +391,7 @@ bool VRManager::CreateEyeFramebuffers()
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        TRACE_FILE_IF(2) TRACE("VRManager::CreateEyeFramebuffers - Created eye %d FBO: %dx%d", eye, width, height);
+        TRACE_FILE_IF(ONCE_2) TRACE("VRManager::CreateEyeFramebuffers - Created eye %d FBO: %dx%d", eye, width, height);
     }
 
     return true;
@@ -594,7 +594,7 @@ glm::mat4 VRManager::GetEyeProjectionMatrix(VREye eye, float nearClip, float far
 //======================================================================================================================
 void VRManager::ResetVRView(float facingYaw, bool useHeadsetFacingDirection)
 {
-    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - Facing yaw: %.1f", glm::degrees(facingYaw));
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::ResetVRView - Facing yaw: %.1f", glm::degrees(facingYaw));
 
     // We could capture current headset pose as reference. However, if this is done then panoramic scenes get an offset 
     // between the skybox and the 3D objects.
@@ -622,28 +622,28 @@ void VRManager::ResetVRView(float facingYaw, bool useHeadsetFacingDirection)
         // euler.z is zero when facing forwards (so long as everything is calibrated). It is +ve when facing left
         // We might want the user to be able to adjust this direction by looking forward as they apply this calibration
 
-        TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - headset Eulers: %f %f %f",
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager::ResetVRView - headset Eulers: %f %f %f",
         glm::degrees(euler.x), glm::degrees(euler.y), glm::degrees(euler.z));
     }
 
     // Reset manual offset
 //    mManualYawOffset = 0.0f;
 
-    TRACE_FILE_IF(1) TRACE("VRManager::ResetVRView - automatic offset = %.1f", glm::degrees(mAutomaticYawOffset));
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::ResetVRView - automatic offset = %.1f", glm::degrees(mAutomaticYawOffset));
 }
 
 //======================================================================================================================
 void VRManager::ResetYawOffset()
 {
     mManualYawOffset = 0.0f;
-    TRACE_FILE_IF(1) TRACE("VRManager::ResetYawOffset - Manual offset reset to 0");
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::ResetYawOffset - Manual offset reset to 0");
 }
 
 //======================================================================================================================
 void VRManager::AdjustYawOffset(float deltaDegrees)
 {
     mManualYawOffset += glm::radians(deltaDegrees);
-    TRACE_FILE_IF(1) TRACE("VRManager::AdjustYawOffset - Manual offset now %.1f degrees",
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::AdjustYawOffset - Manual offset now %.1f degrees",
         glm::degrees(mManualYawOffset));
 }
 
@@ -671,7 +671,7 @@ std::string VRManager::AutoDetectVRAudioDevice()
     if (!autoDevice.empty())
     {
         mVRAudioDevice = autoDevice;
-        TRACE_FILE_IF(1) TRACE("Auto-detected VR audio device: %s", autoDevice.c_str());
+        TRACE_FILE_IF(ONCE_1) TRACE("Auto-detected VR audio device: %s", autoDevice.c_str());
     }
     return autoDevice;
 }

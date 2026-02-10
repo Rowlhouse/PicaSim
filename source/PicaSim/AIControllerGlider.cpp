@@ -111,7 +111,7 @@ void AIControllerGlider::Relaunched()
 //======================================================================================================================
 void AIControllerGlider::Terminate()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_2);
     EntityManager::GetInstance().UnregisterEntity(this, ENTITY_LEVEL_CONTROL);
     PicaSim::GetInstance().RemoveCameraTarget(mAeroplane.get());
 

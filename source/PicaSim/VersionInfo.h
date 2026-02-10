@@ -15,6 +15,9 @@ const char* GetLatestVersionText();
 // Get version string (e.g., "1.0.0")
 const char* GetVersionString();
 
+// Reset state for clean re-init (Android relaunch safety)
+void Terminate();
+
 } // namespace VersionInfo
 
 #endif // VERSIONINFO_H

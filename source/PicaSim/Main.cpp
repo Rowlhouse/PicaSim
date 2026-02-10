@@ -14,6 +14,9 @@
 #include "Menus/PicaDialog.h"
 
 #include "../Platform/S3ECompat.h"
+#include "../Platform/Window.h"
+#include "../Platform/Input.h"
+#include "../Platform/FontRenderer.h"
 #include "../Framework/Graphics.h"
 #include "Platform.h"
 #include "Menus/UIHelpers.h"
@@ -24,48 +27,40 @@
 #include "../Platform/VRRuntime.h"
 #endif
 
+#ifdef PICASIM_ANDROID
+#include "../Platform/AndroidAssets.h"
+#include <android/log.h>
+#include <unistd.h>  // _exit
+#endif
+
 //======================================================================================================================
 // Attempt to lock to a 60 frames per second
 #define MS_PER_FRAME (1000 / 60)
 #define CAP_FRAME_RATE
 
-static float GetSurfaceDiagonalInches()
-{
-    int32 dpi = (int32)Platform::GetScreenDPI();
-    if (dpi > 0)
-    {
-        int w = Platform::GetDisplayWidth();
-        int h = Platform::GetDisplayHeight();
-        float d = hypotf((float) w, (float) h);
-        return d / dpi;
-    }
-    else
-    {
-        return 0.0f;
-    }
-}
-
+//======================================================================================================================
 static bool SelectChallenge(GameSettings& gameSettings)
 {
     const Language language = gameSettings.mOptions.mLanguage;
-    TRACE_FILE_IF(1) TRACE("Loading challenge from file");
+    TRACE_FILE_IF(ONCE_1) TRACE("Loading challenge from file");
     std::string file;
     std::string userChallengePath = Platform::GetUserSettingsPath() + "Challenge";
-    FileMenuLoad(file, gameSettings, "SystemSettings/Challenge", userChallengePath.c_str(), ".xml", TXT(PS_SELECTRACE), 0, 0, TXT(PS_BACK), NULL, FILEMENUTYPE_CHALLENGE);
+    FileMenuLoad(file, gameSettings, "SystemSettings/Challenge", userChallengePath.c_str(), 
+                 ".xml", TXT(PS_SELECTRACE), 0, 0, TXT(PS_BACK), NULL, FILEMENUTYPE_CHALLENGE);
     if (!file.empty())
     {
-        TRACE_FILE_IF(1) TRACE("Loading challenge %s", file.c_str());
+        TRACE_FILE_IF(ONCE_1) TRACE("Loading challenge %s", file.c_str());
         gameSettings.mChallengeSettings = ChallengeSettings();
         bool result = gameSettings.mChallengeSettings.LoadFromFile(file);
 
         IwAssert(ROWLHOUSE, result);
-        TRACE_FILE_IF(1) TRACE(" %s\n", result ? "success" : "failed");
+        TRACE_FILE_IF(ONCE_1) TRACE(" %s\n", result ? "success" : "failed");
 
         gameSettings.mChallengeSettings.CalculateChecksum(file);
     }
     else
     {
-        TRACE_FILE_IF(1) TRACE("Got cancel on challenge choice");
+        TRACE_FILE_IF(ONCE_1) TRACE("Got cancel on challenge choice");
         return false;
     }
     return true;
@@ -80,15 +75,15 @@ static bool InitialiseOptions(GameSettings& gameSettings)
     {
         bool result = gameSettings.mOptions.LoadFromFile("SystemSettings/Options/HighQuality-LargeScreen.xml");
         IwAssert(ROWLHOUSE, result);
-        TRACE_FILE_IF(1) TRACE(" %s\n", result ? "success" : "failed");
+        TRACE_FILE_IF(ONCE_1) TRACE(" %s\n", result ? "success" : "failed");
         gameSettings.mStatistics.mLoadedOptions = true;
     }
     else
     {
         // Attempt to guess the screen size and CPU power
-        float diagonalInches = GetSurfaceDiagonalInches();
+        float diagonalInches = Platform::GetSurfaceDiagonalInches();
         int32 numCores = Platform::GetCPUCount();
-        TRACE_FILE_IF(1) TRACE("diagonalInches = %5.2f numCores = %d ", diagonalInches, numCores);
+        TRACE_FILE_IF(ONCE_1) TRACE("diagonalInches = %5.2f numCores = %d ", diagonalInches, numCores);
 
         if (diagonalInches > 0.0f && numCores > 0)
         {
@@ -111,109 +106,145 @@ static bool InitialiseOptions(GameSettings& gameSettings)
                 else
                     settingsFile = "SystemSettings/Options/HighQuality-SmallScreen.xml";
             }
-            TRACE_FILE_IF(1) TRACE("Loading %s\n", settingsFile);
+            TRACE_FILE_IF(ONCE_1) TRACE("Loading %s\n", settingsFile);
             bool result = gameSettings.mOptions.LoadFromFile(settingsFile);
             IwAssert(ROWLHOUSE, result);
-            TRACE_FILE_IF(1) TRACE(" %s\n", result ? "success" : "failed");
+            TRACE_FILE_IF(ONCE_1) TRACE(" %s\n", result ? "success" : "failed");
 
             gameSettings.mStatistics.mLoadedOptions = true;
         }
         else
         {
-            TRACE_FILE_IF(1) TRACE("Forcing options choice");
+            TRACE_FILE_IF(ONCE_1) TRACE("Forcing options choice");
             std::string file;
             std::string userOptionsPath = Platform::GetUserSettingsPath() + "Options";
-            FileMenuLoad(file, gameSettings, "SystemSettings/Options", userOptionsPath.c_str(), ".xml", TXT(PS_SELECTOPTIONS), 0, 0, TXT(PS_BACK), NULL);
+            FileMenuLoad(file, gameSettings, "SystemSettings/Options", userOptionsPath.c_str(), 
+                         ".xml", TXT(PS_SELECTOPTIONS), 0, 0, TXT(PS_BACK), NULL);
             if (!file.empty())
             {
-                TRACE_FILE_IF(1) TRACE("Loading Options %s - ", file.c_str());
+                TRACE_FILE_IF(ONCE_1) TRACE("Loading Options %s - ", file.c_str());
                 bool result = gameSettings.mOptions.LoadFromFile(file);
                 IwAssert(ROWLHOUSE, result);
-                TRACE_FILE_IF(1) TRACE(" %s\n", result ? "success" : "failed");
+                TRACE_FILE_IF(ONCE_1) TRACE(" %s\n", result ? "success" : "failed");
                 gameSettings.mStatistics.mLoadedOptions = true;
             }
             else
             {
-                TRACE_FILE_IF(1) TRACE("Got cancel on options choice");
+                TRACE_FILE_IF(ONCE_1) TRACE("Got cancel on options choice");
                 return false;
             }
         }
     }
 
     int32 memoryMB = Platform::GetSystemRAM();
-    TRACE_FILE_IF(1) TRACE("InitialiseOptions: reported memory = %d MB", memoryMB);
+    TRACE_FILE_IF(ONCE_1) TRACE("InitialiseOptions: reported memory = %d MB", memoryMB);
     if (memoryMB > 400 || memoryMB <= 0)
         gameSettings.mOptions.m16BitTextures = false;
     else
         gameSettings.mOptions.m16BitTextures = true;
-    TRACE_FILE_IF(1) TRACE("Options: Using 16 bit textures = %d", gameSettings.mOptions.m16BitTextures);
+    TRACE_FILE_IF(ONCE_1) TRACE("Options: Using 16 bit textures = %d", gameSettings.mOptions.m16BitTextures);
 
         return true;
 }
 
-int32 pauseCallback(void *systemData, void *userData)
-{
-    TRACE_FILE_IF(1) TRACE("PicaSim pause start");
-    if (PicaSim::IsCreated())
-    {
-        PicaSim::GetInstance().SetStatus(PicaSim::STATUS_PAUSED);
-    }
-    TRACE_FILE_IF(1) TRACE("PicaSim pause end");
-    return 0;
-}
-
-int32 unpauseCallback(void *systemData, void *userData)
-{
-    TRACE_FILE_IF(1) TRACE("PicaSim unpause start");
-    if (PicaSim::IsCreated())
-    {
-        PicaSim::GetInstance().SetStatus(PicaSim::STATUS_PAUSED);
-    }
-    TRACE_FILE_IF(1) TRACE("PicaSim unpause end");
-    return 0;
-}
-
 //======================================================================================================================
-int main()
+int main(int argc, char* argv[])
 {
     SetTraceLevel(1);
+
+#ifdef PICASIM_ANDROID
+    __android_log_print(ANDROID_LOG_INFO, "PicaSim", "main() entered, SDL_WasInit=0x%x", SDL_WasInit(0));
+#endif
+
+    TRACE_FILE_IF(ONCE_1) TRACE("main() started");
+
+#ifdef PICASIM_ANDROID
+    // Extract APK assets to internal storage and chdir there.
+    // Must happen before any file I/O since all paths are relative to data/.
+    TRACE_FILE_IF(ONCE_1) TRACE("Extracting APK assets if needed");
+    if (!AndroidAssets::ExtractIfNeeded())
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("Asset extraction failed, aborting");
+        // Fatal: can't run without assets
+        return 1;
+    }
+    TRACE_FILE_IF(ONCE_1) TRACE("Asset extraction complete");
+#endif
+
+    // Reset stale static state for Android relaunch safety.
+    // On Android the shared library stays loaded between app launches,
+    // so statics retain values from the previous run. These are all
+    // no-ops on a fresh launch.
+    TRACE_FILE_IF(ONCE_1) TRACE("Resetting stale state from previous run");
+    ResetQuitRequest();
+    ResetTrace();
+
+    // Clean up any stale SDL state from a previous Android launch.
+    // On Android the process (and shared library statics) survive between
+    // Activity launches. SDL_Quit is a no-op if SDL isn't initialized,
+    // so this is harmless on a fresh launch or on desktop.
+    TRACE_FILE_IF(ONCE_1) TRACE("Cleaning up stale SDL state (SDL_WasInit=0x%x)", SDL_WasInit(0));
+    SDL_Quit();
+    TRACE_FILE_IF(ONCE_1) TRACE("SDL_Quit complete (SDL_WasInit=0x%x)", SDL_WasInit(0));
 
     InitMemoryOverrunCheck();
     MEMTEST();
 
-    std::string settingsPath = Platform::GetUserSettingsPath() + "settings.xml";
+    // --- RAII-owned subsystems (destroyed in reverse order) ---
+    // Destruction order: fontRenderer -> input -> window (correct: GL resources
+    // freed while context alive, then SDL subsystems, then GL context + window)
 
-#if 0
-    s3eGLRegister(S3E_GL_SUSPEND, suspendCallback, 0);
-    s3eGLRegister(S3E_GL_RESUME, resumeCallback, 0);
-#endif
+    Window window;
+    gWindow = &window;
+
+    std::string settingsPath = Platform::GetUserSettingsPath() + "settings.xml";
 
     // Read MSAA setting early (before window creation)
     int msaaSamples = ReadMSAASamplesFromSettings(settingsPath.c_str());
-    TRACE_FILE_IF(1) TRACE("MSAA samples from settings: %d", msaaSamples);
+    TRACE_FILE_IF(ONCE_1) TRACE("MSAA samples from settings: %d", msaaSamples);
 
-    // Create window and initialise OpenGL
-    TRACE_FILE_IF(1) TRACE("Calling eglInit with MSAA=%d", msaaSamples);
-    eglInit(true, msaaSamples);
-    TRACE_FILE_IF(1) TRACE("eglInit has been called");
+    // Create SDL window and OpenGL context
+    TRACE_FILE_IF(ONCE_1) TRACE("Creating SDL window and GL context");
+    if (!window.Init(1280, 720, "PicaSim", false, msaaSamples))
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("Window initialization failed, aborting");
+        gWindow = nullptr;
+        return 1;
+    }
+    TRACE_FILE_IF(ONCE_1) TRACE("Window initialized successfully");
+
+    Input input;
+    gInput = &input;
+    input.Init();
+    TRACE_FILE_IF(ONCE_1) TRACE("Input initialized");
+
+    FontRenderer fontRenderer;
+    gFontRenderer = &fontRenderer;
+
+    // Initialize matrix stacks, light arrays, and font renderer (needs GL context)
+    TRACE_FILE_IF(ONCE_1) TRACE("Initializing GL state (matrix stacks, lights, fonts)");
+    eglInit();
+    TRACE_FILE_IF(ONCE_1) TRACE("GL state initialized");
 
     // Initialize UI helpers (loads fonts, requires ImGui context)
+    TRACE_FILE_IF(ONCE_1) TRACE("Initializing UI helpers (ImGui, fonts)");
     UIHelpers::Init();
+    TRACE_FILE_IF(ONCE_1) TRACE("UI helpers initialized");
 
 #ifdef PICASIM_VR_SUPPORT
     // Initialize VR manager (requires OpenGL context to be created)
-    TRACE_FILE_IF(1) TRACE("Initializing VRManager");
+    TRACE_FILE_IF(ONCE_1) TRACE("Initializing VRManager");
     if (VRManager::Init())
     {
-        TRACE_FILE_IF(1) TRACE("VRManager initialized successfully");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager initialized successfully");
     }
     else
     {
-        TRACE_FILE_IF(1) TRACE("VRManager initialization failed or no headset connected");
+        TRACE_FILE_IF(ONCE_1) TRACE("VRManager initialization failed or no headset connected");
     }
 #endif
 
-    TRACE("dpi = %d so physical diagonal = %5.2f inches", (int)Platform::GetScreenDPI(), GetSurfaceDiagonalInches());
+    TRACE("dpi = %d so physical diagonal = %5.2f inches", (int)Platform::GetScreenDPI(), Platform::GetSurfaceDiagonalInches());
 
 #if 0
     s3eWindowDisplayMode modes[32];
@@ -222,9 +253,9 @@ int main()
     result = s3eWindowSetFullscreen(&modes[numModes-1]);
 #endif
 
-    TRACE_FILE_IF(1) TRACE("Calling AudioManager::Init()");
+    TRACE_FILE_IF(ONCE_1) TRACE("Initializing AudioManager");
     AudioManager::Init();
-    TRACE_FILE_IF(1) TRACE("AudioManager::Init() has been called");
+    TRACE_FILE_IF(ONCE_1) TRACE("AudioManager initialized");
 
     InitPicaStrings();
     VersionInfo::Init();
@@ -232,16 +263,17 @@ int main()
     srand(time(0));
 
     MEMTEST();
+    TRACE_FILE_IF(ONCE_1) TRACE("Creating GameSettings");
     // Make sure everything goes out of scope before we close down Marmalade
     {
         GameSettings gameSettings;
 
-        TRACE_FILE_IF(1) TRACE("Calling MenuInit");
+        TRACE_FILE_IF(ONCE_1) TRACE("Calling MenuInit");
         MenuInit(gameSettings);
-        TRACE_FILE_IF(1) TRACE("MenuInit has been called");
+        TRACE_FILE_IF(ONCE_1) TRACE("MenuInit has been called");
 
         // Make the user settings directory if necessary (in user-writable location)
-        TRACE_FILE_IF(1) TRACE("Making settings directories if necessary in %s", Platform::GetUserSettingsPath().c_str());
+        TRACE_FILE_IF(ONCE_1) TRACE("Making settings directories if necessary in %s", Platform::GetUserSettingsPath().c_str());
         std::string userSettingsBase = Platform::GetUserSettingsPath();
         std::string userDataBase = Platform::GetUserDataPath();
 
@@ -266,7 +298,7 @@ int main()
         FileSystem::MakeDirectory(userDataBase + "Syboxes");
         FileSystem::MakeDirectory(userDataBase + "Textures");
 
-        TRACE_FILE_IF(1) TRACE("Loading game settings");
+        TRACE_FILE_IF(ONCE_1) TRACE("Loading game settings");
         std::string userSettingsFile = userSettingsBase + "settings.xml";
         gameSettings.LoadFromFile(userSettingsFile, false);
 
@@ -274,7 +306,7 @@ int main()
         {
             DisplayWhatsNewMenu(gameSettings);
             gameSettings.mStatistics.mPicaSimBuildNumber = GetBuildNumber();
-            TRACE_FILE_IF(1) TRACE("Saving settings to remember the build number");
+            TRACE_FILE_IF(ONCE_1) TRACE("Saving settings to remember the build number");
             gameSettings.SaveToFile(userSettingsFile);
         }
         else
@@ -284,7 +316,7 @@ int main()
 
         if (gameSettings.mStatistics.mPicaSimSettingsVersion < Statistics::LATEST_PICASIM_SETTINGS_VERSION)
         {
-            TRACE_FILE_IF(1) TRACE("Using default settings due to version update");
+            TRACE_FILE_IF(ONCE_1) TRACE("Using default settings due to version update");
             // Preserve just a few things.
             Statistics origStatistics = gameSettings.mStatistics;
 
@@ -298,7 +330,7 @@ int main()
         // Force options to be loaded at least once
         if (!gameSettings.mStatistics.mLoadedOptions)
         {
-            TRACE_FILE_IF(1) TRACE("Forcing options loading");
+            TRACE_FILE_IF(ONCE_1) TRACE("Forcing options loading");
             InitialiseOptions(gameSettings);
         }
 
@@ -306,7 +338,7 @@ int main()
 
         GLint depthBits = 0;
         glGetIntegerv(GL_DEPTH_BITS, &depthBits);
-        TRACE_FILE_IF(1) TRACE("Depth buffer = %d bits", depthBits);
+        TRACE_FILE_IF(ONCE_1) TRACE("Depth buffer = %d bits", depthBits);
         if (depthBits == 0)
         {
             const Language language = gameSettings.mOptions.mLanguage;
@@ -319,6 +351,7 @@ int main()
 
         ShaderManager::Init(initialLoadingScreen);
 
+#ifdef PICASIM_VR_SUPPORT
         // Initialize VR if it was enabled in saved settings
         if (VRManager::IsAvailable() && gameSettings.mOptions.mEnableVR)
         {
@@ -334,9 +367,10 @@ int main()
 
             VRManager::GetInstance().EnableVR();
         }
+#endif
 
         // Cache the thumbnails
-        TRACE_FILE_IF(1) TRACE("Caching thumbnails");
+        TRACE_FILE_IF(ONCE_1) TRACE("Caching thumbnails");
         CacheThumbnailsFromDir("SystemSettings/Thumbnails",
             gameSettings.mOptions.m16BitTextures, initialLoadingScreen, GetPS(PS_LOADING, gameSettings.mOptions.mLanguage));
 
@@ -347,6 +381,12 @@ int main()
         delete initialLoadingScreen;
         initialLoadingScreen = 0;
 
+        // Drain any SDL_QUIT events that arrived during initialization (e.g. from
+        // the previous Android lifecycle teardown) so they don't immediately exit.
+        SDL_FlushEvent(SDL_QUIT);
+        ResetQuitRequest();
+
+        TRACE_FILE_IF(ONCE_1) TRACE("Entering main game loop");
         {
             bool doDefaultFreeFly = gameSettings.mOptions.mFreeFlyOnStartup;
 
@@ -360,31 +400,34 @@ int main()
                 gameSettings.mOptions.mFrameworkSettings.UpdateScreenDimensions();
 
                 if (CheckForQuitRequest())
+                {
+                    TRACE_FILE_IF(ONCE_1) TRACE("Quit requested before start menu");
                     break;
+                }
 
                 StartMenuResult startMenuResult;
 
                 if (doDefaultFreeFly)
                 {
-                    TRACE_FILE_IF(1) TRACE("Doing default Free Fly");
+                    TRACE_FILE_IF(ONCE_1) TRACE("Doing default Free Fly");
                     startMenuResult = STARTMENU_FLY;
                 }
                 else
                 {
-                    TRACE_FILE_IF(1) TRACE("Displaying start menu");
+                    TRACE_FILE_IF(ONCE_1) TRACE("Displaying start menu");
                     startMenuResult = DisplayStartMenu(gameSettings);
                 }
 
                 if (startMenuResult == STARTMENU_QUIT)
                 {
-                    TRACE_FILE_IF(1) TRACE("Got start menu quit");
+                    TRACE_FILE_IF(ONCE_1) TRACE("Got start menu quit");
                     break;
                 }
 
                 // Force options to be loaded at least once
                 if (!gameSettings.mStatistics.mLoadedOptions)
                 {
-                    TRACE_FILE_IF(1) TRACE("Forcing options loading");
+                    TRACE_FILE_IF(ONCE_1) TRACE("Forcing options loading");
                     if (!InitialiseOptions(gameSettings))
                         continue;
                 }
@@ -394,7 +437,7 @@ int main()
                 // Prompt for the challenge
                 if (startMenuResult == STARTMENU_CHALLENGE)
                 {
-                    TRACE_FILE_IF(1) TRACE("Selecting aeroplane");
+                    TRACE_FILE_IF(ONCE_1) TRACE("Selecting aeroplane");
                     if (!SelectChallenge(gameSettings))
                         continue;
                     if (gameSettings.mChallengeSettings.mAllowAeroplaneSettings)
@@ -417,10 +460,10 @@ SelectScenario:
                     if (scenarioResult == SCENARIO_CHOOSE)
                     {
 SelectPlane:
-                        TRACE_FILE_IF(1) TRACE("Selecting plane");
+                        TRACE_FILE_IF(ONCE_1) TRACE("Selecting plane");
                         if (SelectAndLoadAeroplane(gameSettings, TXT(PS_SELECTAEROPLANE), TXT(PS_BACK), TXT(PS_USEDEFAULTPREVIOUS)) == SELECTRESULT_CANCELLED)
                             goto SelectScenario;
-                        TRACE_FILE_IF(1) TRACE("Selecting scenery");
+                        TRACE_FILE_IF(ONCE_1) TRACE("Selecting scenery");
                         if (SelectAndLoadEnvironment(gameSettings, TXT(PS_SELECTSCENERY), TXT(PS_BACK), TXT(PS_USEDEFAULTPREVIOUS)) == SELECTRESULT_CANCELLED)
                             goto SelectPlane;
                         bool objectsResult = gameSettings.mObjectsSettings.LoadFromFile(gameSettings.mEnvironmentSettings.mObjectsSettingsFile);
@@ -429,7 +472,7 @@ SelectPlane:
                     else if (scenarioResult == SCENARIO_TRAINERGLIDER)
                     {
                         gameSettings.mOptions.mFreeFlyMode = Options::FREEFLYMODE_TRAINERGLIDER;
-                        TRACE_FILE_IF(1) TRACE("Using default/learner plane and environment settings");
+                        TRACE_FILE_IF(ONCE_1) TRACE("Using default/learner plane and environment settings");
                         bool result = gameSettings.mAeroplaneSettings.LoadFromFile("SystemSettings/Aeroplane/Trainer.xml");
                         IwAssert(ROWLHOUSE, result);
                         bool controllerResult = gameSettings.mControllerSettings.LoadFromFile("SystemSettings/Controller/SingleStick.xml");
@@ -474,9 +517,9 @@ SelectPlane:
                 doDefaultFreeFly = false;
 
                 {
-                    TRACE_FILE_IF(1) TRACE("Setting up loading screen");
+                    TRACE_FILE_IF(ONCE_1) TRACE("Setting up loading screen");
                     LoadingScreen loadingScreen(TXT(PS_LOADING), gameSettings, true, true, true);
-                    TRACE_FILE_IF(1) TRACE("Initialising PicaSim");
+                    TRACE_FILE_IF(ONCE_1) TRACE("Initialising PicaSim");
                     if (!PicaSim::Init(gameSettings, &loadingScreen))
                     {
                         // Message box should have been shown from the source of the error
@@ -488,7 +531,7 @@ SelectPlane:
 
                 PicaSim::UpdateResult updateResult = PicaSim::UPDATE_CONTINUE;
 
-                TRACE_FILE_IF(1) TRACE("Starting main loop");
+                TRACE_FILE_IF(ONCE_1) TRACE("Starting main loop");
                 while (updateResult == PicaSim::UPDATE_CONTINUE)
                 {
                     MEMTEST();
@@ -544,14 +587,14 @@ SelectPlane:
 #endif
                     lastTimeMs = currentTimeMs;
                 }
-                TRACE_FILE_IF(1) TRACE("Finished main loop. Terminating PicaSim ready to start again");
+                TRACE_FILE_IF(ONCE_1) TRACE("Finished main loop. Terminating PicaSim ready to start again");
 
                 PicaSim::Terminate();
 
                 if (updateResult == PicaSim::UPDATE_QUIT)
                     break;
             }
-            TRACE_FILE_IF(1) TRACE("PicaSim requested quit - terminating audio");
+            TRACE_FILE_IF(ONCE_1) TRACE("PicaSim requested quit - terminating audio");
         }
 
         ShaderManager::Terminate();
@@ -560,26 +603,47 @@ SelectPlane:
         destroyDebugMenu();
 #endif
 
-        TRACE_FILE_IF(1) TRACE("Saving settings");
+        TRACE_FILE_IF(ONCE_1) TRACE("Saving settings");
         gameSettings.SaveToFile(userSettingsFile);
 
         TerminateVersionChecker();
+        VersionInfo::Terminate();
 
-        TRACE_FILE_IF(1) TRACE("MenuTerminate");
+        TRACE_FILE_IF(ONCE_1) TRACE("MenuTerminate");
         MenuTerminate();
 
     }
 
-    TRACE_FILE_IF(1) TRACE("AudioManager::Terminate()");
+    TRACE_FILE_IF(ONCE_1) TRACE("AudioManager::Terminate()");
     AudioManager::Terminate();
 
 #ifdef PICASIM_VR_SUPPORT
-    TRACE_FILE_IF(1) TRACE("VRManager::Terminate()");
+    TRACE_FILE_IF(ONCE_1) TRACE("VRManager::Terminate()");
     VRManager::Terminate();
 #endif
 
-    // Shutdown UI helpers
+    // Shutdown UI helpers (must happen before GL context is destroyed)
+    TRACE_FILE_IF(ONCE_1) TRACE("Shutting down UI helpers");
     UIHelpers::Shutdown();
+
+    // RAII cleanup: fontRenderer, input, and window destructors run here
+    // (in reverse declaration order), calling Shutdown() automatically.
+    // Null out global pointers so stale references aren't used on Android relaunch.
+    TRACE_FILE_IF(ONCE_1) TRACE("Releasing subsystems (FontRenderer, Input, Window)");
+    gFontRenderer = nullptr;
+    gInput = nullptr;
+    gWindow = nullptr;
+
+    TRACE_FILE_IF(ONCE_1) TRACE("main() exiting normally");
+
+#ifdef PICASIM_ANDROID
+    // Force process termination so the next launch gets a completely fresh
+    // process. Without this, Android keeps the process alive and the next
+    // Activity launch reuses it — but SDL2's Java↔Native communication
+    // (semaphores, SurfaceView callbacks, EGL surface) is left in an
+    // inconsistent state, causing a deadlocked UI thread (ANR).
+    _exit(0);
+#endif
 
     return 0;
 }

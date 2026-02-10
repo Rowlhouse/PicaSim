@@ -30,8 +30,6 @@ public:
     
     void Update(float dt, float dampingFrac, float dampingTime);
 
-    void Draw(const float* rotationMatrix);
-
     float GetTimeLeft() const {return mTimeLeft;}
 //private:
     Vector3       mPos;

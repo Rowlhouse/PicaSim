@@ -8,12 +8,12 @@ const int Statistics::LATEST_PICASIM_SETTINGS_VERSION = 27;
 
 const float Options::LIMBO_MAX_DIFFICULTY_MULTIPLIER = 3.0f;
 
-#define COMPARE_FOR_WIND(var)  if (var != settings.var) {settingsChangeActions.mRecalcWind = true; TRACE_FILE_IF(1) TRACE("Recalc wind due to %s", #var);}
-#define COMPARE_FOR_TERRAIN(var)  if (var != settings.var) {settingsChangeActions.mReloadTerrain = true; TRACE_FILE_IF(1) TRACE("Reload terrain due to %s", #var);}
-#define COMPARE_FOR_AIRELOAD(var)  if (var != settings.var) {settingsChangeActions.mReloadAI = true; TRACE_FILE_IF(1) TRACE("Reload AI due to %s", #var);}
-#define COMPARE_FOR_AIRESET(var)  if (var != settings.var) {settingsChangeActions.mResetAI = true; TRACE_FILE_IF(1) TRACE("Reset AI due to %s", #var);}
-#define COMPARE_FOR_AEROPLANE(var)  if (var != settings.var) {settingsChangeActions.mReloadAeroplane = true; TRACE_FILE_IF(1) TRACE("Reload aeroplane due to %s", #var);}
-#define COMPARE_FOR_CHALLENGE(var)  if (var != settings.var) {settingsChangeActions.mRestartChallenge = true; TRACE_FILE_IF(1) TRACE("Restart challenge due to %s", #var);}
+#define COMPARE_FOR_WIND(var)  if (var != settings.var) {settingsChangeActions.mRecalcWind = true; TRACE_FILE_IF(ONCE_2) TRACE("Recalc wind due to %s", #var);}
+#define COMPARE_FOR_TERRAIN(var)  if (var != settings.var) {settingsChangeActions.mReloadTerrain = true; TRACE_FILE_IF(ONCE_2) TRACE("Reload terrain due to %s", #var);}
+#define COMPARE_FOR_AIRELOAD(var)  if (var != settings.var) {settingsChangeActions.mReloadAI = true; TRACE_FILE_IF(ONCE_2) TRACE("Reload AI due to %s", #var);}
+#define COMPARE_FOR_AIRESET(var)  if (var != settings.var) {settingsChangeActions.mResetAI = true; TRACE_FILE_IF(ONCE_2) TRACE("Reset AI due to %s", #var);}
+#define COMPARE_FOR_AEROPLANE(var)  if (var != settings.var) {settingsChangeActions.mReloadAeroplane = true; TRACE_FILE_IF(ONCE_2) TRACE("Reload aeroplane due to %s", #var);}
+#define COMPARE_FOR_CHALLENGE(var)  if (var != settings.var) {settingsChangeActions.mRestartChallenge = true; TRACE_FILE_IF(ONCE_2) TRACE("Restart challenge due to %s", #var);}
 
 const char* TerrainSettings::mTerrainTypes[NUM_TYPES] =
 {
@@ -33,12 +33,12 @@ bool Settings::SaveToFile(const std::string& fileName) const
     if (WriteToDoc(doc))
     {
         bool result = doc.SaveFile(fileName.c_str());
-        TRACE_FILE_IF(1) TRACE("Written to file %s = %d", fileName.c_str(), result);
+        TRACE_FILE_IF(ONCE_1) TRACE("Written to file %s = %d", fileName.c_str(), result);
         return result;
     }
     else
     {
-        TRACE_FILE_IF(1) TRACE("Failed writing settings to xml doc");
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed writing settings to xml doc");
     }
     return false;
 }
@@ -52,7 +52,7 @@ bool Settings::LoadFromFile(const std::string& name, bool readAll, bool disableL
         if (!disableLogging)
         {
             // Don't assert on missing files - this is normal for first-run scenarios
-            TRACE_FILE_IF(1) TRACE("Failed to load settings from %s", name.c_str());
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to load settings from %s", name.c_str());
         }
         return false;
     }
@@ -68,7 +68,7 @@ bool Settings::LoadBasicsFromFile(const std::string& name, bool disableLogging)
         if (!disableLogging)
         {
             // Don't assert on missing files - this is normal for first-run scenarios
-            TRACE_FILE_IF(1) TRACE("Failed to load settings from %s", name.c_str());
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to load settings from %s", name.c_str());
         }
         return false;
     }
@@ -153,7 +153,7 @@ void AIControllersSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool AIControllersSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "AIControllers" ).ToElement();
     if (!element)
@@ -274,6 +274,7 @@ Options::Options() :
     mControlledPlaneShadows(BLOB),
     mOtherShadows(BLOB),
     mProjectedShadowDetail(8),
+    mShadowBlurMultiplier(1.0f),
     mDrawLaunchMarker(true),
     mDrawGroundPosition(false),
     mSkyGridOverlay(SKYGRID_NONE),
@@ -308,17 +309,16 @@ Options::Options() :
     mBasicTextureDetail(9),
     mMaxSkyboxDetail(2),
     mMSAASamples(0),
-    mGLVersion(2),
     mEnableSmoke(true),
     mSmokeQuality(1.0f)
 {
     int32 memoryMB = Platform::GetSystemRAM();
-    TRACE_FILE_IF(1) TRACE("Options: reported memory = %d MB", memoryMB);
+    TRACE_FILE_IF(ONCE_1) TRACE("Options: reported memory = %d MB", memoryMB);
     if (memoryMB > 400 || memoryMB <= 0)
         m16BitTextures = false;
     else
         m16BitTextures = true;
-    TRACE_FILE_IF(1) TRACE("Options: Using 16 bit textures = %d", m16BitTextures);
+    TRACE_FILE_IF(ONCE_1) TRACE("Options: Using 16 bit textures = %d", m16BitTextures);
 
     // Default to English - user can change in settings
     mLanguage = LANG_EN;
@@ -422,6 +422,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_ATTRIBUTE(mControlledPlaneShadows);
     WRITE_ATTRIBUTE(mOtherShadows);
     WRITE_ATTRIBUTE(mProjectedShadowDetail);
+    WRITE_DOUBLE_ATTRIBUTE(mShadowBlurMultiplier);
     WRITE_ATTRIBUTE(mDrawLaunchMarker);
     WRITE_ATTRIBUTE(mDrawGroundPosition);
     WRITE_ATTRIBUTE(mSkyGridOverlay);
@@ -456,7 +457,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_ATTRIBUTE(mBasicTextureDetail);
     WRITE_ATTRIBUTE(mMaxSkyboxDetail);
     WRITE_ATTRIBUTE(mMSAASamples);
-    WRITE_ATTRIBUTE(mGLVersion);
+    WRITE_ATTRIBUTE(mFrameworkSettings.mLogLevel);
     WRITE_ATTRIBUTE(mEnableSmoke);
     WRITE_DOUBLE_ATTRIBUTE(mSmokeQuality);
     return true;
@@ -474,7 +475,7 @@ void Options::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "Options" ).ToElement();
     if (!element)
@@ -566,6 +567,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ENUM_ATTRIBUTE(mControlledPlaneShadows);
     READ_ENUM_ATTRIBUTE(mOtherShadows);
     READ_ATTRIBUTE(mProjectedShadowDetail);
+    READ_ATTRIBUTE(mShadowBlurMultiplier);
     READ_ATTRIBUTE(mDrawLaunchMarker);
     READ_ATTRIBUTE(mDrawGroundPosition);
     READ_ENUM_ATTRIBUTE(mSkyGridOverlay);
@@ -588,7 +590,8 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mBasicTextureDetail);
     READ_ATTRIBUTE(mMaxSkyboxDetail);
     READ_ATTRIBUTE(mMSAASamples);
-    READ_ATTRIBUTE(mGLVersion);
+    READ_ATTRIBUTE(mFrameworkSettings.mLogLevel);
+    SetTraceLevel(mFrameworkSettings.mLogLevel);
     READ_ATTRIBUTE(mEnableSmoke);
     READ_ATTRIBUTE(mSmokeQuality);
 
@@ -755,7 +758,7 @@ void TerrainSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool TerrainSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "TerrainSettings" ).ToElement();
     if (!element)
@@ -880,7 +883,7 @@ void AIEnvironmentSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool AIEnvironmentSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "AIEnvironmentSettings" ).ToElement();
     if (!element)
@@ -970,13 +973,13 @@ ObjectsSettings::ObjectsSettings() :
     mResetCounter(0),
     mForceAllVisible(false)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
 }
 
 //======================================================================================================================
 ObjectsSettings::~ObjectsSettings()
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
 }
 
 //======================================================================================================================
@@ -1000,7 +1003,7 @@ void ObjectsSettings::GetStats(size_t& numObjects, size_t& numStaticVisible, siz
 //======================================================================================================================
 SettingsChangeActions ObjectsSettings::GetSettingsChangeActions(SettingsChangeActions settingsChangeActions, ObjectsSettings& settings) const
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     if (mBoxes.size() != settings.mBoxes.size())
     {
         settingsChangeActions.mReloadTerrain = true;
@@ -1025,7 +1028,7 @@ SettingsChangeActions ObjectsSettings::GetSettingsChangeActions(SettingsChangeAc
 //======================================================================================================================
 bool ObjectsSettings::WriteToDoc(TiXmlDocument& doc) const
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlElement* element = new TiXmlElement( "Objects" );
     doc.LinkEndChild( element );
 
@@ -1060,7 +1063,7 @@ void ObjectsSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool ObjectsSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "Objects" ).ToElement();
     if (!element)
@@ -1157,13 +1160,13 @@ EnvironmentSettings::EnvironmentSettings() :
     mRunwayLength(40.0f),
     mRunwayWidth(15.0f)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
 }
 
 //======================================================================================================================
 bool EnvironmentSettings::WriteToDoc(TiXmlDocument& doc) const
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlElement* element = new TiXmlElement( "EnvironmentSettings" );
     doc.LinkEndChild( element );
 
@@ -1224,7 +1227,7 @@ bool EnvironmentSettings::WriteToDoc(TiXmlDocument& doc) const
 //======================================================================================================================
 bool EnvironmentSettings::ReadBasicsFromDoc(TiXmlDocument& doc)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "EnvironmentSettings" ).ToElement();
     if (!element)
@@ -1247,7 +1250,7 @@ void EnvironmentSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool EnvironmentSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "EnvironmentSettings" ).ToElement();
     if (!element)
@@ -1370,7 +1373,7 @@ bool ChallengeSettings::WriteToDoc(TiXmlDocument& doc) const
 //======================================================================================================================
 bool ChallengeSettings::ReadBasicsFromDoc(TiXmlDocument& doc)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "ChallengeSettings" ).ToElement();
     if (!element)
@@ -1390,7 +1393,7 @@ void ChallengeSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool ChallengeSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "ChallengeSettings" ).ToElement();
     if (!element)
@@ -1486,7 +1489,7 @@ bool ChallengeSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
         {
             if (id == mGates[i].mID)
             {
-                TRACE_FILE_IF(1) TRACE("Adding gate ID %d", id);
+                TRACE_FILE_IF(ONCE_1) TRACE("Adding gate ID %d", id);
                 mCheckpoints.push_back(i);
                 break;
             }
@@ -1497,7 +1500,7 @@ bool ChallengeSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
         }
     }
 
-    TRACE_FILE_IF(1) TRACE("mCheckpoints.size = %d", mCheckpoints.size());
+    TRACE_FILE_IF(ONCE_1) TRACE("mCheckpoints.size = %d", mCheckpoints.size());
 
     mChecksum = 0;
 
@@ -1534,7 +1537,7 @@ bool GetFileChecksum(uint32& checksum, const char* file)
     FILE* fileHandle = fopen(file, "rb");
     if (!fileHandle)
     {
-        TRACE_FILE_IF(1) TRACE("Error opening %s", file);
+        TRACE_FILE_IF(ONCE_1) TRACE("Error opening %s", file);
         return false;
     }
     fseek(fileHandle, 0, SEEK_END);
@@ -1544,7 +1547,7 @@ bool GetFileChecksum(uint32& checksum, const char* file)
     size_t result = fread(&data[0], fileNumBytes, 1, fileHandle);
     if (result != 1)
     {
-        TRACE_FILE_IF(1) TRACE("Error loading %s", file);
+        TRACE_FILE_IF(ONCE_1) TRACE("Error loading %s", file);
         fclose(fileHandle);
         return false;
     }
@@ -1684,7 +1687,7 @@ bool LightingSettings::WriteToDoc(TiXmlDocument& doc) const
 //======================================================================================================================
 bool LightingSettings::ReadBasicsFromDoc(TiXmlDocument& doc)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "LightingSettings" ).ToElement();
     if (!element)
@@ -1704,7 +1707,7 @@ void LightingSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool LightingSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "LightingSettings" ).ToElement();
     if (!element)
@@ -1851,7 +1854,7 @@ void AIAeroplaneSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool AIAeroplaneSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "AIAeroplaneSettings" ).ToElement();
     if (!element)
@@ -1985,7 +1988,7 @@ bool AeroplaneSettings::SmokeSource::WriteToDoc(TiXmlDocument& doc, int i) const
 //======================================================================================================================
 bool AeroplaneSettings::SmokeSource::ReadFromDoc(TiXmlDocument& doc, int i)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     char name[256];
     sprintf(name, "SmokeSource_%d", i);
     TiXmlHandle docHandle( &doc );
@@ -2188,7 +2191,7 @@ bool AeroplaneSettings::WriteToDoc(TiXmlDocument& doc) const
 //======================================================================================================================
 bool AeroplaneSettings::ReadBasicsFromDoc(TiXmlDocument& doc)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "AeroplaneSettings" ).ToElement();
     if (!element)
@@ -2211,7 +2214,7 @@ void AeroplaneSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool AeroplaneSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(2);
+    TRACE_METHOD_ONLY(ONCE_2);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "AeroplaneSettings" ).ToElement();
     if (!element)
@@ -2479,7 +2482,7 @@ void ControllerSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool ControllerSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "ControllerSettings" ).ToElement();
     if (!element)
@@ -2563,7 +2566,7 @@ bool ControllerSettings::ControlSetting::WriteToDoc(TiXmlDocument& doc, int i, i
 //======================================================================================================================
 bool ControllerSettings::ControlSetting::ReadFromDoc(TiXmlDocument& doc, int i, int j)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     char name[256];
     sprintf(name, "ControllerControlSettings_%d_%d", i, j);
     TiXmlHandle docHandle( &doc );
@@ -2661,7 +2664,7 @@ void JoystickSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool JoystickSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "JoystickSettings" ).ToElement();
     if (!element)
@@ -2776,7 +2779,7 @@ void Statistics::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool Statistics::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "Statistics" ).ToElement();
     if (!element)
@@ -2855,7 +2858,7 @@ void GameSettings::Upgrade(TiXmlDocument& doc)
 //======================================================================================================================
 bool GameSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 {
-    TRACE_METHOD_ONLY(1);
+    TRACE_METHOD_ONLY(ONCE_3);
     TiXmlHandle docHandle( &doc );
     TiXmlElement* element = docHandle.FirstChild( "GameSettings" ).ToElement();
     if (!element)
@@ -2911,24 +2914,5 @@ int ReadMSAASamplesFromSettings(const char* filename)
     return msaaSamples;
 }
 
-//======================================================================================================================
-// Helper to read GL version early (before full settings load) for renderer initialization
-int ReadGLVersionFromSettings(const char* filename)
-{
-    int glVersion = 2;  // Default to OpenGL 2.x (shaders)
-    TiXmlDocument doc(filename);
-    if (doc.LoadFile())
-    {
-        TiXmlHandle docHandle(&doc);
-        // Options element is at root level in the settings file
-        TiXmlElement* options = docHandle.FirstChild("Options").Element();
-        if (options)
-            readFromXML(options, "mGLVersion", glVersion);
-    }
-    // Clamp to valid range
-    if (glVersion < 1) glVersion = 1;
-    if (glVersion > 2) glVersion = 2;
-    return glVersion;
-}
 
 

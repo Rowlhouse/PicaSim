@@ -15,11 +15,12 @@ FrameworkSettings::FrameworkSettings()
     mPhysicsSubsteps(8),
     mNearClipPlaneDistance(0.5f),
     mFarClipPlaneDistance(50000.0f),
-    mUseMultiLights(true)
+    mUseMultiLights(true),
+    mLogLevel(1)
 {
     // Get platform type
     mPlatform = Platform::GetPlatformID();
-    TRACE_FILE_IF(1) TRACE("Platform = %s", Platform::GetPlatformName());
+    TRACE_FILE_IF(ONCE_1) TRACE("Platform = %s", Platform::GetPlatformName());
 
     UpdateScreenDimensions();
 }

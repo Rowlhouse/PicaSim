@@ -946,7 +946,7 @@ private:
 
 inline float RangedRandom(float min, float max)
 {
-    float f = (float) (rand()) / RAND_MAX;
+    float f = (float) (rand()) / (float) RAND_MAX;
     float res = min + f * (max - min);
     return res;
 }
