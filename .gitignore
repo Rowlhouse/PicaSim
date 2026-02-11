@@ -53,3 +53,4 @@ android/local.properties
 *.apk
 *.aab
 android/logcat.txt
+android/keystore.properties

@@ -1,15 +1,48 @@
 apply plugin: 'com.android.application'
 
+// Parse version from VERSIONS.txt (single source of truth)
+def versionsFile = file("${projectDir}/../../VERSIONS.txt")
+def parsedVersionName = "1.0.0"
+if (versionsFile.exists()) {
+    def firstLine = versionsFile.readLines().first()
+    def matcher = firstLine =~ /Version\s+(\d+\.\d+\.\d+)/
+    if (matcher.find()) {
+        parsedVersionName = matcher.group(1)
+    }
+}
+// Version code scheme: 2MMNNPP where 2 = SDL2 rewrite prefix, MM.NN.PP = version parts
+def versionParts = parsedVersionName.split('\\.')
+def parsedVersionCode = 2000000 +
+    (versionParts[0] as int) * 10000 +
+    (versionParts[1] as int) * 100 +
+    (versionParts[2] as int)
+
+// Load signing keystore properties (not committed to git)
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace "com.rowlhouse.picasim"
     compileSdkVersion 35
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'] ?: '/dev/null')
+            storePassword keystoreProperties['storePassword'] ?: ''
+            keyAlias keystoreProperties['keyAlias'] ?: ''
+            keyPassword keystoreProperties['keyPassword'] ?: ''
+        }
+    }
 
     defaultConfig {
         applicationId "com.rowlhouse.picasim"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 1
-        versionName "1.0"
+        versionCode parsedVersionCode
+        versionName parsedVersionName
 
         externalNativeBuild {
             cmake {
@@ -25,7 +58,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 
