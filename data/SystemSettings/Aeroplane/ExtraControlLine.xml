@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<AeroplaneSettings mAvailability="1"
+<AeroplaneSettings
  mType="2"
  mAIType="3"
  mName="SystemData/Aeroplanes/ExtraControlLine"

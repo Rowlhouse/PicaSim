@@ -606,7 +606,6 @@ struct EnvironmentSettings : public Settings
     static const int mCurrentVersion = 2;
     int mVersion;
 
-    int mAvailability;
     // 1 Slope
     // 2 Flat
     // 4 Panoramic
@@ -849,7 +848,6 @@ struct AeroplaneSettings : public Settings
     static const int mCurrentVersion = 2;
     int mVersion;
 
-    int mAvailability;
     // 1 Glider
     // 2 Powered
     uint32 mType;

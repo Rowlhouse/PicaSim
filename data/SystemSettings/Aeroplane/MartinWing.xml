@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<AeroplaneSettings mAvailability="0"
+<AeroplaneSettings
  mType="1"
  mAIType="0"
  mName="SystemData/Aeroplanes/MartinWing"

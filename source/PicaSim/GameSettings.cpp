@@ -1122,7 +1122,6 @@ bool ObjectsSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
 //======================================================================================================================
 EnvironmentSettings::EnvironmentSettings() : 
     mVersion(mCurrentVersion),
-    mAvailability(0),
     mType(9),
     mTitle("Hills"),
     mInfo("A hilly island - lots of lift on the steep slopes."),
@@ -1171,7 +1170,6 @@ bool EnvironmentSettings::WriteToDoc(TiXmlDocument& doc) const
     doc.LinkEndChild( element );
 
     WRITE_ATTRIBUTE(mVersion);
-    WRITE_ATTRIBUTE(mAvailability);
     writeToXML(mType | 16, element, "mType"); // flag as user setting
     WRITE_ATTRIBUTE(mThumbnail);
     WRITE_ATTRIBUTE(mTitle);
@@ -1233,7 +1231,6 @@ bool EnvironmentSettings::ReadBasicsFromDoc(TiXmlDocument& doc)
     if (!element)
         return false;
 
-    READ_ATTRIBUTE(mAvailability);
     READ_ATTRIBUTE(mType);
     READ_ATTRIBUTE(mThumbnail);
     READ_ATTRIBUTE(mTitle);
@@ -1261,7 +1258,6 @@ bool EnvironmentSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     if (!READ_ATTRIBUTE(mVersion))
         mVersion = 1;
 
-    READ_ATTRIBUTE(mAvailability);
     READ_ATTRIBUTE(mType);
     READ_ATTRIBUTE(mThumbnail);
     READ_ATTRIBUTE(mTitle);
@@ -2023,7 +2019,6 @@ bool AeroplaneSettings::SmokeSource::ReadFromDoc(TiXmlDocument& doc, int i)
 //======================================================================================================================
 AeroplaneSettings::AeroplaneSettings() :
     mVersion(mCurrentVersion),
-    mAvailability(0),
     mType(1),
     mAIType(AITYPE_GLIDER),
     mName("SystemData/Aeroplanes/Trainer"), 
@@ -2099,7 +2094,6 @@ bool AeroplaneSettings::WriteToDoc(TiXmlDocument& doc) const
     doc.LinkEndChild( element );
 
     WRITE_ATTRIBUTE(mVersion);
-    WRITE_ATTRIBUTE(mAvailability);
     writeToXML(mType | 4, element, "mType"); // flag as user setting
     WRITE_ATTRIBUTE(mAIType);
     WRITE_ATTRIBUTE(mName);
@@ -2197,7 +2191,6 @@ bool AeroplaneSettings::ReadBasicsFromDoc(TiXmlDocument& doc)
     if (!element)
         return false;
 
-    READ_ATTRIBUTE(mAvailability);
     READ_ATTRIBUTE(mType);
     READ_ATTRIBUTE(mThumbnail);
     READ_ATTRIBUTE(mTitle);
@@ -2223,7 +2216,6 @@ bool AeroplaneSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     if (!READ_ATTRIBUTE(mVersion))
         mVersion = 1;
 
-    READ_ATTRIBUTE(mAvailability);
     READ_ATTRIBUTE(mType);
     READ_ENUM_ATTRIBUTE(mAIType);
     READ_ATTRIBUTE(mName);
