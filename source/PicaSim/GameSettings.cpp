@@ -308,7 +308,7 @@ Options::Options() :
     mDiffuseLightingScale(1.0f),
     mBasicTextureDetail(9),
     mMaxSkyboxDetail(2),
-    mMSAASamples(0),
+    mMSAASamples(4),
     mEnableSmoke(true),
     mSmokeQuality(1.0f)
 {
@@ -2893,7 +2893,8 @@ SettingsChangeActions GameSettings::GetSettingsChangeActions(SettingsChangeActio
 // Helper to read MSAA setting early (before full settings load) for window creation
 int ReadMSAASamplesFromSettings(const char* filename)
 {
-    int msaaSamples = 0;
+    Options defaults;
+    int msaaSamples = defaults.mMSAASamples;
     TiXmlDocument doc(filename);
     if (doc.LoadFile())
     {

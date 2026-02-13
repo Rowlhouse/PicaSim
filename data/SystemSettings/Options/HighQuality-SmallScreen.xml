@@ -118,7 +118,7 @@
  mDiffuseLightingScale="1"
  mBasicTextureDetail="10"
  mMaxSkyboxDetail="2"
- mMSAASamples="8"
+ mMSAASamples="4"
  mEnableSmoke="1"
  mSmokeQuality="1.5"
  />

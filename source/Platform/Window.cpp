@@ -89,14 +89,7 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
-    // Set MSAA attributes if requested
-    if (msaaSamples > 0)
-    {
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, msaaSamples);
-    }
-
-    // Create window
+    // Create window with MSAA step-down: try requested samples, then halve until success or 0
     Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 #if defined(PICASIM_ANDROID) || defined(__ANDROID__)
     // Android: always fullscreen, not resizable
@@ -109,45 +102,82 @@ bool Window::Init(int width, int height, const char* title, bool fullscreen, int
     }
 #endif
 
-    TRACE_FILE_IF(ONCE_2) TRACE("Creating SDL window %dx%d (flags=0x%x)", width, height, windowFlags);
-    mWindow = SDL_CreateWindow(
-        title,
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        width,
-        height,
-        windowFlags
-    );
-
-    if (!mWindow && msaaSamples > 0)
+    int requestedMsaa = msaaSamples;
+    while (true)
     {
-        // MSAA config may not be supported (common on Android emulators) - retry without it
-        TRACE_FILE_IF(ONCE_1) TRACE("SDL_CreateWindow failed with MSAA=%d: %s - retrying without MSAA", msaaSamples, SDL_GetError());
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-        msaaSamples = 0;
+        // Set MSAA attributes
+        if (msaaSamples > 0)
+        {
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, msaaSamples);
+        }
+        else
+        {
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+        }
+
+        // Try to create window
+        TRACE_FILE_IF(ONCE_2) TRACE("Creating SDL window %dx%d (flags=0x%x, MSAA=%d)", width, height, windowFlags, msaaSamples);
         mWindow = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, windowFlags);
+        if (!mWindow)
+        {
+            if (msaaSamples > 0)
+            {
+                TRACE_FILE_IF(ONCE_1) TRACE("SDL_CreateWindow failed with MSAA=%d: %s - stepping down", msaaSamples, SDL_GetError());
+                msaaSamples = (msaaSamples > 1) ? msaaSamples / 2 : 0;
+                continue;
+            }
+            TRACE_FILE_IF(ONCE_1) TRACE("SDL_CreateWindow failed: %s", SDL_GetError());
+            fprintf(stderr, "SDL_CreateWindow failed: %s\n", SDL_GetError());
+            return false;
+        }
+
+        // Try to create GL context
+        TRACE_FILE_IF(ONCE_2) TRACE("Creating OpenGL context");
+        mContext = SDL_GL_CreateContext(mWindow);
+        if (!mContext)
+        {
+            if (msaaSamples > 0)
+            {
+                TRACE_FILE_IF(ONCE_1) TRACE("SDL_GL_CreateContext failed with MSAA=%d: %s - stepping down", msaaSamples, SDL_GetError());
+                SDL_DestroyWindow(mWindow);
+                mWindow = nullptr;
+                msaaSamples = (msaaSamples > 1) ? msaaSamples / 2 : 0;
+                continue;
+            }
+            TRACE_FILE_IF(ONCE_1) TRACE("SDL_GL_CreateContext failed: %s", SDL_GetError());
+            fprintf(stderr, "SDL_GL_CreateContext failed: %s\n", SDL_GetError());
+            SDL_DestroyWindow(mWindow);
+            mWindow = nullptr;
+            return false;
+        }
+
+        // Verify actual MSAA samples match what we requested
+        if (msaaSamples > 0)
+        {
+            int actualSamples = 0;
+            SDL_GL_GetAttribute(SDL_GL_MULTISAMPLESAMPLES, &actualSamples);
+            if (actualSamples < msaaSamples)
+            {
+                TRACE_FILE_IF(ONCE_1) TRACE("MSAA %d requested but only %d delivered - stepping down", msaaSamples, actualSamples);
+                SDL_GL_DeleteContext(mContext);
+                mContext = nullptr;
+                SDL_DestroyWindow(mWindow);
+                mWindow = nullptr;
+                msaaSamples = (msaaSamples > 1) ? msaaSamples / 2 : 0;
+                continue;
+            }
+        }
+
+        break; // success
     }
 
-    if (!mWindow)
+    if (msaaSamples != requestedMsaa)
     {
-        TRACE_FILE_IF(ONCE_1) TRACE("SDL_CreateWindow failed: %s", SDL_GetError());
-        fprintf(stderr, "SDL_CreateWindow failed: %s\n", SDL_GetError());
-        return false;
+        TRACE_FILE_IF(ONCE_1) TRACE("MSAA stepped down from %d to %d", requestedMsaa, msaaSamples);
     }
     TRACE_FILE_IF(ONCE_2) TRACE("SDL window created (window=%p)", mWindow);
-
-    // Create OpenGL context
-    TRACE_FILE_IF(ONCE_2) TRACE("Creating OpenGL context");
-    mContext = SDL_GL_CreateContext(mWindow);
-    if (!mContext)
-    {
-        TRACE_FILE_IF(ONCE_1) TRACE("SDL_GL_CreateContext failed: %s", SDL_GetError());
-        fprintf(stderr, "SDL_GL_CreateContext failed: %s\n", SDL_GetError());
-        SDL_DestroyWindow(mWindow);
-        mWindow = nullptr;
-        return false;
-    }
     TRACE_FILE_IF(ONCE_2) TRACE("OpenGL context created");
 
     // Make context current

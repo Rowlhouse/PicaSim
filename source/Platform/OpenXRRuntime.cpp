@@ -813,6 +813,16 @@ bool OpenXRRuntime::LocateViews(XrTime displayTime)
 void OpenXRRuntime::SetMSAASamples(int samples)
 {
     mMSAASamples = (samples > 0) ? samples : 1;
+
+    // Clamp to GPU maximum to avoid glRenderbufferStorageMultisample failures
+    GLint maxSamples = 0;
+    glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+    if (maxSamples > 0 && mMSAASamples > maxSamples)
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("VR MSAA %d exceeds GL_MAX_SAMPLES %d, clamping", mMSAASamples, maxSamples);
+        mMSAASamples = maxSamples;
+    }
+
     TRACE_FILE_IF(ONCE_2) TRACE("OpenXRRuntime::SetMSAASamples - %d", mMSAASamples);
 }
 
