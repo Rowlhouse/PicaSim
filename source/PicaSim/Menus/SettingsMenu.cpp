@@ -1826,14 +1826,8 @@ void SettingsMenu::RenderAIControllersTab()
         SettingsWidgets::BeginSettingsBlock();
         {
             // Check if the aeroplane is available
-            bool available = true;
             AeroplaneSettings as;
-            if (!as.LoadBasicsFromFile(ai.mAeroplaneFile.c_str(), true))  // disableLogging=true
-            {
-                available = false;
-            }
-
-            if (available)
+            if (as.LoadBasicsFromFile(ai.mAeroplaneFile.c_str(), true))  // disableLogging=true
             {
                 SettingsWidgets::SliderFloat(TXT(PS_COLOUROFFSET), ai.mColourOffset, 0.0f, 1.0f);
 
@@ -1851,10 +1845,6 @@ void SettingsMenu::RenderAIControllersTab()
                     }
                     ImGui::PopID();
                 }
-            }
-            else
-            {
-                SettingsWidgets::InfoLabel("", TXT(PS_AVAILABLEINFULLVERSION));
             }
 
             // Remove button for each AI controller

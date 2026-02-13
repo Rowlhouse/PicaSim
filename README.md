@@ -235,6 +235,11 @@ Or build and install in one step:
 cd android
 gradlew.bat installDebug          # Windows
 ./gradlew installDebug             # Linux/macOS
+
+gradlew.bat installRelease
+gradlew.bat bundleRelease # full release bundle in android\app\build\outputs\bundle\release
+
+
 ```
 
 #### Viewing Logs

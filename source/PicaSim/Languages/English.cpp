@@ -318,7 +318,6 @@ void InitStringsEN(const char** txt)
   txt[PS_ADDNEWAICONTROLLER] = "Add new AI controller";
   txt[PS_REMOVEAICONTROLLERS] = "Remove all AI controllers";
   txt[PS_LAUNCHSEPARATIONDISTANCE] = "Launch separation distance";
-  txt[PS_AVAILABLEINFULLVERSION] = "Only available in full version";
   txt[PS_INCLUDEINCAMERAVIEWS] = "Enable cameras";
   txt[PS_CREATEMAXNUMCONTROLLERS] = "Create max AI controllers";
   txt[PS_LAUNCHDIRECTION] = "Launch direction";

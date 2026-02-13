@@ -7,7 +7,7 @@
  mRandomColourOffset="1"
  mLaunchSeparationDistance="1.5"
  numAIControllers="1"
- file_0="SystemSettings/Aeroplane/weasel.xml"
+ file_0="SystemSettings/Aeroplane/Weasel.xml"
  includeInCameraViews_0="1"
  enableDebugDraw_0="1"
  colourShift_0="0"

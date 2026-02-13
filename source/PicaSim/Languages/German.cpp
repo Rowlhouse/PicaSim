@@ -318,7 +318,6 @@ void InitStringsDE(const char** txt)
   txt[PS_ADDNEWAICONTROLLER] = "Neue KI-Steuerung hinzufügen";
   txt[PS_REMOVEAICONTROLLERS] = "Alle KI-Steuerungen entfernen";
   txt[PS_LAUNCHSEPARATIONDISTANCE] = "Start-Trennungsabstand";
-  txt[PS_AVAILABLEINFULLVERSION] = "Nur in Vollversion verfügbar";
   txt[PS_INCLUDEINCAMERAVIEWS] = "Kameras aktivieren";
   txt[PS_CREATEMAXNUMCONTROLLERS] = "Max KI-Steuerungen erstellen";
   txt[PS_LAUNCHDIRECTION] = "Startrichtung";

@@ -316,7 +316,6 @@ void InitStringsFR(const char** txt)
   txt[PS_ADDNEWAICONTROLLER] = "Ajouter contrôleur IA";
   txt[PS_REMOVEAICONTROLLERS] = "Supprimer tous les contrôleurs IA";
   txt[PS_LAUNCHSEPARATIONDISTANCE] = "Distance de séparation au lancement";
-  txt[PS_AVAILABLEINFULLVERSION] = "Disponible uniquement en version complète";
   txt[PS_INCLUDEINCAMERAVIEWS] = "Activer caméras";
   txt[PS_CREATEMAXNUMCONTROLLERS] = "Créer max contrôleurs IA";
   txt[PS_LAUNCHDIRECTION] = "Direction de lancement";
