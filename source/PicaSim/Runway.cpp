@@ -347,7 +347,7 @@ void Runway::RenderUpdate(class Viewport* viewport, int renderLevel)
     glVertexAttribPointer(texturedModelShader->a_colour, 4, GL_FLOAT, GL_FALSE, 0, &mColours[0].x);
     glVertexAttrib3f(texturedModelShader->a_normal, 0, 0, 1.0f);
 
-    esSetModelViewProjectionAndNormalMatrix(texturedModelShader->u_mvpMatrix, texturedModelShader->u_normalMatrix);
+    esSetModelViewProjectionAndNormalMatrix(texturedModelShader->u_mvpMatrix, texturedModelShader->u_normalMatrix, texturedModelShader->u_mvMatrix);
 
     if (mTexture.GetFlags() & Texture::UPLOADED_F)
     {

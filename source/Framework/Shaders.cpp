@@ -153,17 +153,20 @@ const char overlayFragmentShaderStr[] = GLSL(
 const char modelVertexShaderStr[] = GLSL(
     precision highp float;
     uniform mat4 u_mvpMatrix;
+    uniform mat4 u_mvMatrix;
     uniform mat3 u_normalMatrix;
     attribute vec4 a_position;
     attribute vec3 a_normal;
     attribute vec4 a_colour;
     varying mediump vec4 v_colour;
     varying mediump vec3 v_normal;
+    varying highp vec3 v_eyePos;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
         v_normal    = u_normalMatrix * a_normal;
         v_colour    = a_colour;
+        v_eyePos    = (u_mvMatrix * a_position).xyz;
     }
 );
 
@@ -177,10 +180,12 @@ const char modelFragmentShaderStr[] = GLSL(
     uniform float     u_specularExponent;
     varying vec4      v_colour;
     varying mediump vec3 v_normal;
+    varying highp vec3 v_eyePos;
 
     vec4 processLight(
         vec3 normal,
         vec3 lightDir,
+        vec3 viewDir,
         vec4 lightDiffuseColour,
         vec4 lightSpecularColour,
         vec4 lightAmbientColour)
@@ -190,11 +195,11 @@ const char modelFragmentShaderStr[] = GLSL(
         mediump float ndotl = max(0.0, dot(normal, lightDir));
         colour += ndotl * lightDiffuseColour * v_colour;
         // Specular
-        mediump vec3 h_vec = normalize(lightDir + vec3(0,0,1));
+        mediump vec3 h_vec = normalize(lightDir + viewDir);
         mediump float ndoth = dot(normal, h_vec);
         if (ndoth > 0.0)
         {
-            colour += (pow(ndoth, u_specularExponent) * 
+            colour += (pow(ndoth, u_specularExponent) *
                 vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
         }
         return colour;
@@ -203,11 +208,12 @@ const char modelFragmentShaderStr[] = GLSL(
     void main()
     {
         vec3 normal = normalize(v_normal);
-        gl_FragColor  = processLight(normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
-        gl_FragColor += processLight(normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
-        gl_FragColor += processLight(normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
-        gl_FragColor += processLight(normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
-        gl_FragColor += processLight(normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
+        vec3 viewDir = normalize(-v_eyePos);
+        gl_FragColor  = processLight(normal, u_lightDir[0], viewDir, u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
+        gl_FragColor += processLight(normal, u_lightDir[1], viewDir, u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
+        gl_FragColor += processLight(normal, u_lightDir[2], viewDir, u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
+        gl_FragColor += processLight(normal, u_lightDir[3], viewDir, u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
+        gl_FragColor += processLight(normal, u_lightDir[4], viewDir, u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
         gl_FragColor.a = v_colour.a;
     }
 );
@@ -215,6 +221,7 @@ const char modelFragmentShaderStr[] = GLSL(
 const char texturedModelVertexShaderStr[] = GLSL(
     precision highp float;
     uniform mat4 u_mvpMatrix;
+    uniform mat4 u_mvMatrix;
     uniform mat3 u_normalMatrix;
     attribute vec4 a_position;
     attribute vec3 a_normal;
@@ -223,12 +230,14 @@ const char texturedModelVertexShaderStr[] = GLSL(
     varying mediump vec4 v_colour;
     varying mediump vec3 v_normal;
     varying mediump vec2 v_texCoord;
+    varying highp vec3 v_eyePos;
     void main()
     {
         gl_Position = u_mvpMatrix * a_position;
         v_normal    = u_normalMatrix * a_normal;
         v_colour    = a_colour;
         v_texCoord = a_texCoord;
+        v_eyePos    = (u_mvMatrix * a_position).xyz;
     }
 );
 
@@ -245,10 +254,12 @@ const char texturedModelFragmentShaderStr[] = GLSL(
     varying vec4      v_colour;
     varying mediump vec3 v_normal;
     varying vec2      v_texCoord;
+    varying highp vec3 v_eyePos;
 
     vec4 processLight(
         vec3 normal,
         vec3 lightDir,
+        vec3 viewDir,
         vec4 lightDiffuseColour,
         vec4 lightSpecularColour,
         vec4 lightAmbientColour)
@@ -258,11 +269,11 @@ const char texturedModelFragmentShaderStr[] = GLSL(
         mediump float ndotl = max(0.0, dot(normal, lightDir));
         colour += ndotl * lightDiffuseColour * v_colour;
         // Specular
-        mediump vec3 h_vec = normalize(lightDir + vec3(0,0,1));
+        mediump vec3 h_vec = normalize(lightDir + viewDir);
         mediump float ndoth = dot(normal, h_vec);
         if (ndoth > 0.0)
         {
-            colour += (pow(ndoth, u_specularExponent) * 
+            colour += (pow(ndoth, u_specularExponent) *
                 vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
         }
         return colour;
@@ -271,11 +282,12 @@ const char texturedModelFragmentShaderStr[] = GLSL(
     void main()
     {
         vec3 normal = normalize(v_normal);
-        gl_FragColor  = processLight(normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
-        gl_FragColor += processLight(normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
-        gl_FragColor += processLight(normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
-        gl_FragColor += processLight(normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
-        gl_FragColor += processLight(normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
+        vec3 viewDir = normalize(-v_eyePos);
+        gl_FragColor  = processLight(normal, u_lightDir[0], viewDir, u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
+        gl_FragColor += processLight(normal, u_lightDir[1], viewDir, u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
+        gl_FragColor += processLight(normal, u_lightDir[2], viewDir, u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
+        gl_FragColor += processLight(normal, u_lightDir[3], viewDir, u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
+        gl_FragColor += processLight(normal, u_lightDir[4], viewDir, u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
         gl_FragColor.a = v_colour.a;
         gl_FragColor = min(gl_FragColor, 1.0);
         gl_FragColor *= texture2D(u_texture, v_texCoord, u_texBias);
@@ -295,11 +307,13 @@ const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
     varying vec4      v_colour;
     varying mediump vec3 v_normal;
     varying vec2      v_texCoord;
+    varying highp vec3 v_eyePos;
 
     vec4 processLight(
         vec4 fragColour,
         vec3 normal,
         vec3 lightDir,
+        vec3 viewDir,
         vec4 lightDiffuseColour,
         vec4 lightSpecularColour,
         vec4 lightAmbientColour)
@@ -309,11 +323,11 @@ const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
         mediump float ndotl = max(0.0, dot(normal, lightDir));
         colour += ndotl * lightDiffuseColour * fragColour;
         // Specular
-        mediump vec3 h_vec = normalize(lightDir + vec3(0,0,1));
+        mediump vec3 h_vec = normalize(lightDir + viewDir);
         mediump float ndoth = dot(normal, h_vec);
         if (ndoth > 0.0)
         {
-            colour += (pow(ndoth, u_specularExponent) * 
+            colour += (pow(ndoth, u_specularExponent) *
                 vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
         }
         return colour;
@@ -322,13 +336,14 @@ const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
     void main()
     {
         vec3 normal = normalize(v_normal);
+        vec3 viewDir = normalize(-v_eyePos);
         vec4 texColour = texture2D(u_texture, v_texCoord, u_texBias);
         vec4 fragColour = v_colour * texColour;
-        gl_FragColor  = processLight(fragColour, normal, u_lightDir[0], u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[1], u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[2], u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[3], u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
-        gl_FragColor += processLight(fragColour, normal, u_lightDir[4], u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
+        gl_FragColor  = processLight(fragColour, normal, u_lightDir[0], viewDir, u_lightDiffuseColour[0], u_lightSpecularColour[0], u_lightAmbientColour[0]);
+        gl_FragColor += processLight(fragColour, normal, u_lightDir[1], viewDir, u_lightDiffuseColour[1], u_lightSpecularColour[1], u_lightAmbientColour[1]);
+        gl_FragColor += processLight(fragColour, normal, u_lightDir[2], viewDir, u_lightDiffuseColour[2], u_lightSpecularColour[2], u_lightAmbientColour[2]);
+        gl_FragColor += processLight(fragColour, normal, u_lightDir[3], viewDir, u_lightDiffuseColour[3], u_lightSpecularColour[3], u_lightAmbientColour[3]);
+        gl_FragColor += processLight(fragColour, normal, u_lightDir[4], viewDir, u_lightDiffuseColour[4], u_lightSpecularColour[4], u_lightAmbientColour[4]);
         gl_FragColor.a = v_colour.a * texColour.a;
         gl_FragColor = min(gl_FragColor, 1.0);
     }
@@ -806,6 +821,7 @@ void ModelShader::Init()
 void ModelShader::SetupVars()
 {
     u_mvpMatrix           = getUniformLocation(mShaderProgram, "u_mvpMatrix");
+    u_mvMatrix            = getUniformLocation(mShaderProgram, "u_mvMatrix");
     u_normalMatrix        = getUniformLocation(mShaderProgram, "u_normalMatrix");
     lightShaderInfo[0].u_lightDir         = getUniformLocation(mShaderProgram, "u_lightDir[0]");
     lightShaderInfo[1].u_lightDir         = getUniformLocation(mShaderProgram, "u_lightDir[1]");

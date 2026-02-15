@@ -815,7 +815,7 @@ void AeroplaneGraphics::RenderUpdateComponents(Viewport* viewport, int renderLev
         // draw the top and then round the sides
         glVertexAttrib4f(modelShader->a_colour, colourTop.x, colourTop.y, colourTop.z, 1.0f);
 
-        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         //==================================================================================
@@ -825,7 +825,7 @@ void AeroplaneGraphics::RenderUpdateComponents(Viewport* viewport, int renderLev
         glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/box.mExtents.y);
 
         ROTATE_90_Y;
-        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 
@@ -836,20 +836,20 @@ void AeroplaneGraphics::RenderUpdateComponents(Viewport* viewport, int renderLev
         glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/box.mExtents.x);
 
         ROTATE_90_X;
-        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         //==================================================================================
         glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/box.mExtents.y);
 
         ROTATE_90_X;
-        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/box.mExtents.x);
 
         ROTATE_90_X;
-        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         //==================================================================================
@@ -858,7 +858,7 @@ void AeroplaneGraphics::RenderUpdateComponents(Viewport* viewport, int renderLev
         glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/box.mExtents.z);
 
         ROTATE_90_Y;
-        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         esPopMatrix();
@@ -942,7 +942,7 @@ void AeroplaneGraphics::RenderUpdatePropDisks(Viewport* viewport, int renderLeve
 
         glVertexAttrib4f(modelShader->a_colour, diskColour.x, diskColour.y, diskColour.z, diskColour.w);
 
-        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+        esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
         glDrawArrays(GL_TRIANGLE_FAN, 0, mNumPropDiskPoints);
 
         esPopMatrix();

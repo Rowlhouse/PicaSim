@@ -245,8 +245,8 @@ void esSetLightSpecularColour(GLenum light, const GLVec4& specularColour);
 
 /// Sets just the modelview-projection matrix
 void esSetModelViewProjectionMatrix(int mvpMatrixLoc);
-/// Sets the mvp and the 3x3 matrix for transforming normals
-void esSetModelViewProjectionAndNormalMatrix(int mvpMatrixLoc, int normalMatrixLoc);
+/// Sets the mvp, the 3x3 normal matrix, and optionally the modelview matrix
+void esSetModelViewProjectionAndNormalMatrix(int mvpMatrixLoc, int normalMatrixLoc, int mvMatrixLoc = -1);
 
 /// Sets just the texture matrix
 void esSetTextureMatrix(int textureMatrixLoc);

@@ -11,6 +11,7 @@ struct ShaderProgramModelInfo
     int colourLoc;
     int mvpLoc;
     int normalMatrixLoc;
+    int mvMatrixLoc;
 };
 
 typedef std::vector<std::string> NamedComponents;

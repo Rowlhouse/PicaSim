@@ -72,7 +72,7 @@ public:
     void Init() OVERRIDE;
     void SetupVars();
     LightShaderInfo lightShaderInfo[5];
-    int u_mvpMatrix, u_normalMatrix;
+    int u_mvpMatrix, u_normalMatrix, u_mvMatrix;
     int u_specularAmount, u_specularExponent, a_position, a_normal, a_colour;
 };
 

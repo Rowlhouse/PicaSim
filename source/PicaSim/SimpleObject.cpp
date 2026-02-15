@@ -168,38 +168,38 @@ void BoxObject::RenderUpdate(class Viewport* viewport, int renderLevel)
     {
         glVertexAttrib4f(modelShader->a_colour, mColour.x, mColour.y, mColour.z, 1.0f);
     }
-    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     // Sides
     glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/mExtents.y);
 
     ROTATE_90_X;
-    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/mExtents.x);
 
     ROTATE_90_Y;
-    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/mExtents.y);
 
     ROTATE_90_Y;
-    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/mExtents.x);
 
     ROTATE_90_Y;
-    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     glVertexAttrib3f(modelShader->a_normal, 0, 0, 1.0f/mExtents.z);
 
     ROTATE_90_X;
-    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix);
+    esSetModelViewProjectionAndNormalMatrix(modelShader->u_mvpMatrix, modelShader->u_normalMatrix, modelShader->u_mvMatrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     if (mWireframe)

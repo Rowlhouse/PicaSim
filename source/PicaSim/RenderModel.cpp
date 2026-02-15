@@ -632,6 +632,7 @@ bool RenderModel::PartRenderPre(const Vector4* colour, bool forceColour, ShaderP
         shaderInfo.colourLoc = texturedModelShader->a_colour;
         shaderInfo.mvpLoc = texturedModelShader->u_mvpMatrix;
         shaderInfo.normalMatrixLoc = texturedModelShader->u_normalMatrix;
+        shaderInfo.mvMatrixLoc = texturedModelShader->u_mvMatrix;
 
         positionLoc = texturedModelShader->a_position;
         normalLoc = texturedModelShader->a_normal;
@@ -651,6 +652,7 @@ bool RenderModel::PartRenderPre(const Vector4* colour, bool forceColour, ShaderP
         shaderInfo.colourLoc = modelShader->a_colour;
         shaderInfo.mvpLoc = modelShader->u_mvpMatrix;
         shaderInfo.normalMatrixLoc = modelShader->u_normalMatrix;
+        shaderInfo.mvMatrixLoc = modelShader->u_mvMatrix;
 
         positionLoc = modelShader->a_position;
         normalLoc = modelShader->a_normal;
@@ -738,7 +740,7 @@ void RenderModel::PartRender(const Vector4* colour, bool forceColour, ShaderProg
         glVertexAttrib4fv(shaderInfo.colourLoc, &colour->x);
         glDisableVertexAttribArray(shaderInfo.colourLoc);
     }
-    esSetModelViewProjectionAndNormalMatrix(shaderInfo.mvpLoc, shaderInfo.normalMatrixLoc);
+    esSetModelViewProjectionAndNormalMatrix(shaderInfo.mvpLoc, shaderInfo.normalMatrixLoc, shaderInfo.mvMatrixLoc);
     if (component.mTexture)
         glDrawArrays(GL_TRIANGLES, 0, component.mTexturedVertices.size());
     else

@@ -776,16 +776,21 @@ void esSetModelViewProjectionMatrix(int mvpMatrixLoc)
     glUniformMatrix4fv(mvpMatrixLoc, 1, GL_FALSE, (GLfloat*) &mvpMatrix[0][0]);
 }
 
-void esSetModelViewProjectionAndNormalMatrix(int mvpMatrixLoc, int normalMatrixLoc)
+void esSetModelViewProjectionAndNormalMatrix(int mvpMatrixLoc, int normalMatrixLoc, int mvMatrixLoc)
 {
     esSetModelViewProjectionMatrix(mvpMatrixLoc);
-    if (normalMatrixLoc == -1)
-        return;
 
-    GLMat33 normalMatrix;
     GLMat44 mvMatrix; esGetMatrix(mvMatrix, GL_MODELVIEW);
-    esMatrixCopyRotation(normalMatrix, mvMatrix);
-    glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, (GLfloat*) &normalMatrix);
+
+    if (normalMatrixLoc != -1)
+    {
+        GLMat33 normalMatrix;
+        esMatrixCopyRotation(normalMatrix, mvMatrix);
+        glUniformMatrix3fv(normalMatrixLoc, 1, GL_FALSE, (GLfloat*) &normalMatrix);
+    }
+
+    if (mvMatrixLoc != -1)
+        glUniformMatrix4fv(mvMatrixLoc, 1, GL_FALSE, (GLfloat*) &mvMatrix);
 }
 
 void esSetLighting(const LightShaderInfo lightShaderInfo[5])
