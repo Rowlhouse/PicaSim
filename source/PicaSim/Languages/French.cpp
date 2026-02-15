@@ -759,6 +759,7 @@ void InitStringsFR(const char** txt)
   txt[PS_VRPANORAMAEXTENSION] = "Extension Panorama VR";
   txt[PS_VROVERLAYDISTANCE] = "Distance superposition VR";
   txt[PS_VROVERLAYSCALE] = "Échelle superposition VR";
+  txt[PS_VRUISCALE] = "Échelle menu VR";
   txt[PS_MIRROR_TEXT] = "Casque VR en cours d'utilisation";
   txt[PS_MIRROR_SETTINGS] = "Afficher le miroir VR dans les Paramètres";
   txt[PS_ORIENTATION] = "Orientation";

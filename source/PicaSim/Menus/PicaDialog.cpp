@@ -8,6 +8,7 @@
 #include "ScrollHelper.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
+#include "../../Platform/VRMenuRenderer.h"
 
 #include <SDL.h>
 #include "imgui.h"
@@ -192,6 +193,9 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
     float finalX = (screenWidth - dialogW) / 2.0f;
     float finalY = (screenHeight - dialogH) / 2.0f;
 
+    // Redirect to offscreen FBO when VR is active
+    VRMenuRenderer::BeginMenuFrame();
+
     // Render background content
     if (mBackgroundCallback)
     {
@@ -231,7 +235,7 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
     // End ImGui frame and render
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    IwGxSwapBuffers();
+    VRMenuRenderer::EndMenuFrame();
 
     // Check for exit conditions
     if (shouldExit)

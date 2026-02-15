@@ -7,6 +7,7 @@
 #include "Platform.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
+#include "../../Platform/VRMenuRenderer.h"
 
 #include "ScrollHelper.h"
 #include "ScrollableTabStrip.h"
@@ -101,9 +102,10 @@ bool HelpMenu::Update()
 {
     int savedTab = mSelectedTab;
 
+    VRMenuRenderer::BeginMenuFrame();
     IwGxClear();
     Render();
-    IwGxSwapBuffers();
+    VRMenuRenderer::EndMenuFrame();
     PollEvents();
 
     // Suppress stale input from the previous menu's touch/click events

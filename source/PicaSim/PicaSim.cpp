@@ -21,11 +21,13 @@
 
 #include "../Platform/S3ECompat.h"
 #include "../Platform/Input.h"
+#include "../Platform/Window.h"
 #include "../Framework/Camera.h"
 #include "Platform.h"
 
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
+#include "../Platform/VRMenuRenderer.h"
 #include "../Platform/VRRuntime.h"
 #include <glad/glad.h>
 #include "Menus/UIHelpers.h"
@@ -1147,8 +1149,16 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     float nearClipScale = ClampToRange(cameraHeight - 0.3f, 0.01f, maxClipDist);
     mGameSettings.mOptions.mFrameworkSettings.mNearClipPlaneDistance = nearClipScale * mGameSettings.mOptions.mMaxNearClipDistance;
 
+    // Ensure desktop OS cursor stays visible during gameplay.
+    // Menu loops may leave it hidden (ImGui software cursor sets SDL_ShowCursor(FALSE)).
+    SDL_ShowCursor(SDL_TRUE);
+
     // Draw everything
 #ifdef PICASIM_VR_SUPPORT
+    // Reset VR overlay mapping each frame — RenderOverlaysForVREye will set it
+    // if VR overlay rendering happens this frame.
+    RenderManager::GetInstance().ResetVROverlayMapping();
+
     // Track VR camera transform for audio (captured before desktop rendering can overwrite it)
     Transform vrListenerTM;
     bool hasVRListenerTM = false;
@@ -1157,6 +1167,9 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     // This allows falling back to desktop rendering when headset is removed
     if (VRManager::IsAvailable() && VRManager::GetInstance().IsVRReady())
     {
+        // Confine mouse to desktop window while headset is active
+        SDL_SetWindowGrab(Window::GetInstance().GetSDLWindow(), SDL_TRUE);
+
         // VR headset is active - render to VR
         VRFrameInfo vrFrameInfo;
         if (VRManager::GetInstance().GetRuntime())
@@ -1169,7 +1182,12 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             rm.SetVRSkybox(&Environment::getSkybox());
             rm.SetVROverlayDistance(mGameSettings.mOptions.mVROverlayDistance);
             rm.SetVROverlayScale(mGameSettings.mOptions.mVROverlayScale);
-            rm.SetVROverlayVisible(mShowVRUI);
+            rm.SetVROverlayVisible(mShowVRUI || mStatus == STATUS_PAUSED);
+            rm.SetVROverlayShowCursor(mStatus == STATUS_PAUSED);
+
+            // Configure VR menu renderer with matching distance and UI scale
+            VRMenuRenderer::SetOverlayDistance(mGameSettings.mOptions.mVROverlayDistance);
+            VRMenuRenderer::SetUIScale(mGameSettings.mOptions.mVRUIScale);
 
             rm.RenderUpdateVR(vrFrameInfo);
 
@@ -1227,11 +1245,15 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     else
 #endif
     {
+#ifdef PICASIM_VR_SUPPORT
+        // Release mouse grab when headset is not active
+        SDL_SetWindowGrab(Window::GetInstance().GetSDLWindow(), SDL_FALSE);
+#endif
         // No VR or headset not active - render normally to desktop
         RenderManager::GetInstance().RenderUpdate();
     }
 
-    if (!mShowUI)
+    if (!mShowUI && mStatus != STATUS_PAUSED)
     {
         mPauseOverlay->SetAlpha(0);
         mHelpOverlay->SetAlpha(0);
@@ -1302,7 +1324,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     AudioManager::GetInstance().SetChannelTargetVolumeScale(mSoundChannel, GetSettings().mOptions.mWindVolume * volumeScale);
 
     // Windsock
-    if (mShowUI && windStrength > 0.02f)
+    if ((mShowUI || mStatus == STATUS_PAUSED) && windStrength > 0.02f)
     {
         float windAngle = 270.0f-RadiansToDegrees(atan2f(windDir.Dot(cameraTM.RowX()), windDir.Dot(cameraTM.RowY())));
         mWindsockOverlay->SetAngle(windAngle);

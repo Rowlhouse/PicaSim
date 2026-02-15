@@ -60,6 +60,7 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
     mVROverlayDistance = 2.0f;
     mVROverlayScale = 0.75f;
     mVROverlayVisible = true;
+    mVROverlayShowCursor = false;
 #endif
 
     float lightBearing   = 0.0f;
@@ -1234,8 +1235,132 @@ void RenderManager::RenderOverlaysForVREye(int eyeWidth, int eyeHeight, float st
         }
     }
 
+    // Store VR overlay mapping for input hit testing (ButtonOverlay::IsPressed)
+    mVROverlayMapping.active = true;
+    mVROverlayMapping.virtualWidth = virtualWidth;
+    mVROverlayMapping.virtualHeight = virtualHeight;
+    mVROverlayMapping.invScale = invScale;
+
+    // Draw mouse cursor in VR overlay when paused
+    if (mVROverlayShowCursor)
+    {
+        int mx = s3ePointerGetTouchX(0);
+        int my = s3ePointerGetTouchY(0);
+        float dxFrac = (float)mx / (float)IwGxGetDisplayWidth();
+        float dyFrac = (float)my / (float)IwGxGetDisplayHeight();
+
+        // Map desktop [0,1] to ortho space (matching the projection set up above)
+        float cursorX = -marginX + dxFrac * float(virtualWidth) * invScale;
+        float cursorY = float(virtualHeight) + marginY - dyFrac * float(virtualHeight) * invScale;
+
+        DrawVRCursor(cursorX, cursorY);
+    }
+
     // Clear the override so desktop rendering is unaffected
     FontRenderer::SetDisplayHeightOverride(0);
+}
+
+//======================================================================================================================
+void RenderManager::DrawVRCursor(float cursorX, float cursorY)
+{
+    const SimpleShader* shader = static_cast<const SimpleShader*>(
+        ShaderManager::GetInstance().GetShader(SHADER_SIMPLE));
+    shader->Use();
+
+    // Reuse the current ortho projection (already set by RenderOverlaysForVREye)
+    GLMat44 mvpMatrix;
+    esGetMatrix(mvpMatrix, GL_PROJECTION);
+    glUniformMatrix4fv(shader->u_mvpMatrix, 1, GL_FALSE, &mvpMatrix[0][0]);
+
+    // Crosshair cursor — four bars around a center gap (like a + with a hole)
+    // Dimensions in virtual pixels (720-tall virtual screen)
+    float armLen  = 8.0f;   // length of each arm from gap edge
+    float gap     = 3.0f;   // half-size of the center gap
+    float thick   = 2.0f;   // half-thickness of each bar
+    float outline = 1.5f;   // outline border width
+
+    struct CursorVertex { float x, y, z, r, g, b, a; };
+
+    // Each arm is a filled quad (6 vertices = 2 triangles).
+    // Four arms: top, bottom, left, right.
+    // Draw black outline first (slightly larger), then white fill.
+    auto makeQuad = [](CursorVertex* out,
+                       float x0, float y0, float x1, float y1,
+                       float r, float g, float b, float a)
+    {
+        out[0] = { x0, y0, 0, r, g, b, a };
+        out[1] = { x1, y0, 0, r, g, b, a };
+        out[2] = { x0, y1, 0, r, g, b, a };
+        out[3] = { x1, y0, 0, r, g, b, a };
+        out[4] = { x1, y1, 0, r, g, b, a };
+        out[5] = { x0, y1, 0, r, g, b, a };
+    };
+
+    // 4 arms x 6 vertices = 24 vertices per pass (outline + fill)
+    CursorVertex outlineVerts[24];
+    CursorVertex fillVerts[24];
+    float o = outline;
+
+    // Top arm
+    makeQuad(&outlineVerts[0],
+        cursorX - thick - o, cursorY + gap - o,
+        cursorX + thick + o, cursorY + gap + armLen + o,
+        0, 0, 0, 0.8f);
+    makeQuad(&fillVerts[0],
+        cursorX - thick, cursorY + gap,
+        cursorX + thick, cursorY + gap + armLen,
+        1, 1, 1, 1);
+
+    // Bottom arm
+    makeQuad(&outlineVerts[6],
+        cursorX - thick - o, cursorY - gap - armLen - o,
+        cursorX + thick + o, cursorY - gap + o,
+        0, 0, 0, 0.8f);
+    makeQuad(&fillVerts[6],
+        cursorX - thick, cursorY - gap - armLen,
+        cursorX + thick, cursorY - gap,
+        1, 1, 1, 1);
+
+    // Right arm
+    makeQuad(&outlineVerts[12],
+        cursorX + gap - o, cursorY - thick - o,
+        cursorX + gap + armLen + o, cursorY + thick + o,
+        0, 0, 0, 0.8f);
+    makeQuad(&fillVerts[12],
+        cursorX + gap, cursorY - thick,
+        cursorX + gap + armLen, cursorY + thick,
+        1, 1, 1, 1);
+
+    // Left arm
+    makeQuad(&outlineVerts[18],
+        cursorX - gap - armLen - o, cursorY - thick - o,
+        cursorX - gap + o, cursorY + thick + o,
+        0, 0, 0, 0.8f);
+    makeQuad(&fillVerts[18],
+        cursorX - gap - armLen, cursorY - thick,
+        cursorX - gap, cursorY + thick,
+        1, 1, 1, 1);
+
+    glEnableVertexAttribArray(shader->a_position);
+    glEnableVertexAttribArray(shader->a_colour);
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Draw black outline
+    glVertexAttribPointer(shader->a_position, 3, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &outlineVerts[0].x);
+    glVertexAttribPointer(shader->a_colour, 4, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &outlineVerts[0].r);
+    glDrawArrays(GL_TRIANGLES, 0, 24);
+
+    // Draw white fill
+    glVertexAttribPointer(shader->a_position, 3, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &fillVerts[0].x);
+    glVertexAttribPointer(shader->a_colour, 4, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &fillVerts[0].r);
+    glDrawArrays(GL_TRIANGLES, 0, 24);
+
+    glDisableVertexAttribArray(shader->a_position);
+    glDisableVertexAttribArray(shader->a_colour);
+    glEnable(GL_DEPTH_TEST);
 }
 
 //======================================================================================================================

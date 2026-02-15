@@ -9,6 +9,8 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
 
+#include "../../Platform/VRMenuRenderer.h"
+
 // Forward declarations from Graphics.cpp
 void IwGxClear();
 void IwGxSwapBuffers();
@@ -194,6 +196,9 @@ void LoadingScreen::Render()
     int width = Platform::GetDisplayWidth();
     int height = Platform::GetDisplayHeight();
 
+    // Redirect to offscreen FBO when VR is active
+    VRMenuRenderer::BeginMenuFrame();
+
     // Clear the screen
     IwGxClear();
 
@@ -239,6 +244,6 @@ void LoadingScreen::Render()
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    // Swap buffers
-    IwGxSwapBuffers();
+    // Submit to VR headset (if active) and swap desktop buffers
+    VRMenuRenderer::EndMenuFrame();
 }

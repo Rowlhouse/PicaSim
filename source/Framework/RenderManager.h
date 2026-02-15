@@ -165,6 +165,17 @@ public:
     void SetVROverlayDistance(float distance) { mVROverlayDistance = distance; }
     void SetVROverlayScale(float scale) { mVROverlayScale = scale; }
     void SetVROverlayVisible(bool visible) { mVROverlayVisible = visible; }
+    void SetVROverlayShowCursor(bool show) { mVROverlayShowCursor = show; }
+
+    // VR overlay coordinate mapping for input hit testing
+    struct VROverlayMapping {
+        bool active = false;
+        int virtualWidth = 0;
+        int virtualHeight = 0;
+        float invScale = 1.0f;
+    };
+    const VROverlayMapping& GetVROverlayMapping() const { return mVROverlayMapping; }
+    void ResetVROverlayMapping() { mVROverlayMapping.active = false; }
 #endif
 
     const struct FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
@@ -209,7 +220,10 @@ private:
     float   mVROverlayDistance;
     float   mVROverlayScale;
     bool    mVROverlayVisible;
+    bool    mVROverlayShowCursor;
+    VROverlayMapping mVROverlayMapping;
     void RenderOverlaysForVREye(int eyeWidth, int eyeHeight, float stereoPixelShift);
+    void DrawVRCursor(float cursorX, float cursorY);
 #endif
 
     FrameworkSettings& mFrameworkSettings;

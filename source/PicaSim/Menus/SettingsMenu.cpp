@@ -10,6 +10,7 @@
 #include "PicaDialog.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
+#include "../../Platform/VRMenuRenderer.h"
 #include "../../Framework/Trace.h"
 #include "Platform.h"
 #include "HelpersXML.h"
@@ -201,9 +202,10 @@ SettingsStatus SettingsMenu::Update()
 
     int savedTab = sSelectedTab;
 
+    VRMenuRenderer::BeginMenuFrame();
     IwGxClear();
     Render();
-    IwGxSwapBuffers();
+    VRMenuRenderer::EndMenuFrame();
     PollEvents();
 
     // Suppress stale input from the previous menu's touch/click events
@@ -602,6 +604,7 @@ void SettingsMenu::RenderOptions1Tab()
 
                         SettingsWidgets::SliderFloat(TXT(PS_VROVERLAYDISTANCE), options.mVROverlayDistance, 0.1f, 0.5f);
                         SettingsWidgets::SliderFloat(TXT(PS_VROVERLAYSCALE), options.mVROverlayScale, 0.25f, 1.0f);
+                        SettingsWidgets::SliderFloat(TXT(PS_VRUISCALE), options.mVRUIScale, 0.25f, 1.0f);
                     }
                 }
             }

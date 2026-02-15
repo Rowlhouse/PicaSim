@@ -723,6 +723,7 @@ void InitStringsDE(const char** txt)
   txt[PS_VRPANORAMAEXTENSION] = "VR Panorama Erweiterung";
   txt[PS_VROVERLAYDISTANCE] = "VR-Overlay-Abstand";
   txt[PS_VROVERLAYSCALE] = "VR-Overlay-Skalierung";
+  txt[PS_VRUISCALE] = "VR-Menü-Skalierung";
   txt[PS_MIRROR_TEXT] = "VR-Headset wird verwendet";
   txt[PS_MIRROR_SETTINGS] = "VR-Anzeige in Einstellungen spiegeln";
   txt[PS_ORIENTATION] = "Ausrichtung";

@@ -4,6 +4,7 @@
 #include "../PicaStrings.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
+#include "../../Platform/VRMenuRenderer.h"
 #include "Platform.h"
 #include <string>
 #include <vector>
@@ -351,9 +352,10 @@ bool FileMenu::Update()
 {
     int savedTab = mSelectedTab;
 
+    VRMenuRenderer::BeginMenuFrame();
     IwGxClear();
     Render();
-    IwGxSwapBuffers();
+    VRMenuRenderer::EndMenuFrame();
     PollEvents();
 
     // Suppress stale input from the previous menu's touch/click events

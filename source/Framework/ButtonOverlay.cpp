@@ -110,6 +110,23 @@ bool ButtonOverlay::IsPressed(uint32_t pressMask) const
             float x = (float) touchX / displayWidth;
             float y = 1.0f - (float) touchY / displayHeight;
 
+#ifdef PICASIM_VR_SUPPORT
+            // When VR overlay is active, transform desktop mouse coords to VR
+            // overlay virtual space (matching how bounding boxes are stored)
+            const auto& vrMapping = RenderManager::GetInstance().GetVROverlayMapping();
+            if (vrMapping.active)
+            {
+                float marginX = float(vrMapping.virtualWidth)  * (vrMapping.invScale - 1.0f) * 0.5f;
+                float marginY = float(vrMapping.virtualHeight) * (vrMapping.invScale - 1.0f) * 0.5f;
+
+                float orthoX = -marginX + x * float(vrMapping.virtualWidth) * vrMapping.invScale;
+                float orthoY = -marginY + y * float(vrMapping.virtualHeight) * vrMapping.invScale;
+
+                x = orthoX / (float)displayWidth;
+                y = orthoY / (float)displayHeight;
+            }
+#endif
+
             if (
                 x > (mX0 -paddingX) && x < (mX1 + paddingX) && 
                 y > (mY0 - paddingY) && y < (mY1 + paddingY)
@@ -175,7 +192,14 @@ void ButtonOverlay::RenderOverlayUpdate(int renderLevel, DisplayConfig& displayC
     y0 = y - mAnchorV * s2;
     y1 = y0 + s;
 
-    if (displayConfig.mViewpointIndex == 0)
+    if (displayConfig.mViewpointIndex == 0
+#ifdef PICASIM_VR_SUPPORT
+        // When VR overlay mapping is active, bounding boxes were already set in
+        // VR virtual coords by the VR render pass. Don't let a subsequent desktop
+        // render (e.g. VR_DESKTOP_NORMAL_VIEW) overwrite them.
+        && !RenderManager::GetInstance().GetVROverlayMapping().active
+#endif
+        )
     {
         const FrameworkSettings& fs = RenderManager::GetInstance().GetFrameworkSettings();
         mX0 = x0/fs.mScreenWidth;

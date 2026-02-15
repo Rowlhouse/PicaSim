@@ -233,6 +233,7 @@ Options::Options() :
     mVRPanoramaExtension(0.025f),
     mVROverlayDistance(0.16f),
     mVROverlayScale(0.55f),
+    mVRUIScale(0.7f),
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
     mWindArrowSize(0.12f),
@@ -372,6 +373,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_DOUBLE_ATTRIBUTE(mVRPanoramaExtension);
     WRITE_DOUBLE_ATTRIBUTE(mVROverlayDistance);
     WRITE_DOUBLE_ATTRIBUTE(mVROverlayScale);
+    WRITE_DOUBLE_ATTRIBUTE(mVRUIScale);
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
     WRITE_ATTRIBUTE(mFreeFlightDisplaySpeed);
@@ -523,6 +525,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mVRPanoramaExtension);
     READ_ATTRIBUTE(mVROverlayDistance);
     READ_ATTRIBUTE(mVROverlayScale);
+    READ_ATTRIBUTE(mVRUIScale);
 
     READ_ATTRIBUTE(mWindArrowSize);
     READ_ATTRIBUTE(mFreeFlightDisplayTime);

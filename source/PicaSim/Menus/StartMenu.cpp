@@ -9,6 +9,7 @@
 #include "Platform.h"
 #include "../../Platform/S3ECompat.h"
 #include "../../Platform/Input.h"
+#include "../../Platform/VRMenuRenderer.h"
 #include "../../Framework/Trace.h"
 
 #include "imgui.h"
@@ -108,11 +109,12 @@ StartMenuResult StartMenu::Update()
 
     // Clear and render
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - glClear");
+    VRMenuRenderer::BeginMenuFrame();
     IwGxClear();
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - Render");
     Render();
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - SwapBuffers");
-    IwGxSwapBuffers();
+    VRMenuRenderer::EndMenuFrame();
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - PollEvents");
     PollEvents();
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - done");
