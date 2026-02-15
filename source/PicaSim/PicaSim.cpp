@@ -1291,7 +1291,7 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     AudioManager::GetInstance().SetChannelTargetVolumeScale(mSoundChannel, GetSettings().mOptions.mWindVolume * volumeScale);
 
     // Windsock
-    if (windStrength > 0.02f)
+    if (mShowUI && windStrength > 0.02f)
     {
         float windAngle = 270.0f-RadiansToDegrees(atan2f(windDir.Dot(cameraTM.RowX()), windDir.Dot(cameraTM.RowY())));
         mWindsockOverlay->SetAngle(windAngle);
