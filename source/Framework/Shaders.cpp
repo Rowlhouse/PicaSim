@@ -196,12 +196,8 @@ const char modelFragmentShaderStr[] = GLSL(
         colour += ndotl * lightDiffuseColour * v_colour;
         // Specular
         mediump vec3 h_vec = normalize(lightDir + viewDir);
-        mediump float ndoth = dot(normal, h_vec);
-        if (ndoth > 0.0)
-        {
-            colour += (pow(ndoth, u_specularExponent) *
-                vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
-        }
+        mediump float ndoth = max(0.0, dot(normal, h_vec));
+        colour += pow(ndoth, u_specularExponent) * u_specularAmount * lightSpecularColour;
         return colour;
     }
 
@@ -270,12 +266,8 @@ const char texturedModelFragmentShaderStr[] = GLSL(
         colour += ndotl * lightDiffuseColour * v_colour;
         // Specular
         mediump vec3 h_vec = normalize(lightDir + viewDir);
-        mediump float ndoth = dot(normal, h_vec);
-        if (ndoth > 0.0)
-        {
-            colour += (pow(ndoth, u_specularExponent) *
-                vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
-        }
+        mediump float ndoth = max(0.0, dot(normal, h_vec));
+        colour += pow(ndoth, u_specularExponent) * u_specularAmount * lightSpecularColour;
         return colour;
     }
 
@@ -324,12 +316,8 @@ const char texturedModelSeparateSpecularFragmentShaderStr[] = GLSL(
         colour += ndotl * lightDiffuseColour * fragColour;
         // Specular
         mediump vec3 h_vec = normalize(lightDir + viewDir);
-        mediump float ndoth = dot(normal, h_vec);
-        if (ndoth > 0.0)
-        {
-            colour += (pow(ndoth, u_specularExponent) *
-                vec4(u_specularAmount, u_specularAmount, u_specularAmount, 1) * lightSpecularColour);
-        }
+        mediump float ndoth = max(0.0, dot(normal, h_vec));
+        colour += pow(ndoth, u_specularExponent) * u_specularAmount * lightSpecularColour;
         return colour;
     }
 
