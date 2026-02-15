@@ -38,7 +38,10 @@ WindsockOverlay::WindsockOverlay(
 //======================================================================================================================
 WindsockOverlay::~WindsockOverlay()
 {
-    RenderManager::GetInstance().UnregisterRenderOverlayObject(this, 0);
+    if (RenderManager::GetExists())
+    {
+        RenderManager::GetInstance().UnregisterRenderOverlayObject(this, 0);
+    }
 }
 
 static GLfloat uvs[] = {

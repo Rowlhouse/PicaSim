@@ -25,7 +25,6 @@
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
 #include "../Platform/VRRuntime.h"
-#include "../Platform/VRMenuRenderer.h"
 #endif
 
 #ifdef PICASIM_ANDROID
@@ -367,11 +366,6 @@ int main(int argc, char* argv[])
             }
 
             VRManager::GetInstance().EnableVR();
-
-            // Push VR menu settings so initial menus (start, settings, loading)
-            // use the correct stereo depth and scale before the game loop starts.
-            VRMenuRenderer::SetOverlayDistance(gameSettings.mOptions.mVROverlayDistance);
-            VRMenuRenderer::SetUIScale(gameSettings.mOptions.mVRUIScale);
         }
 #endif
 

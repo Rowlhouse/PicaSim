@@ -24,9 +24,9 @@ static int sMenuFBOWidth = 0;
 static int sMenuFBOHeight = 0;
 static bool sVRActiveThisFrame = false;
 
-// Configurable settings (set via SetUIScale / SetOverlayDistance)
-static float sUIScale = 1.0f;             // 1 = fills eye view, <1 = smaller centered panel
-static float sOverlayDistance = 1.0f;     // Stereo depth in meters (matches GameSettings default)
+// Defaults used when VR is first enabled (before settings are loaded)
+static constexpr float kDefaultUIScale = 0.7f;
+static constexpr float kDefaultOverlayDistance = 0.16f;
 
 //======================================================================================================================
 static void EnsureMenuFBO(int width, int height)
@@ -212,7 +212,7 @@ void VRMenuRenderer::BeginMenuFrame()
 }
 
 //======================================================================================================================
-void VRMenuRenderer::EndMenuFrame()
+void VRMenuRenderer::EndMenuFrame(float uiScale, float overlayDistance)
 {
     if (!sVRActiveThisFrame)
     {
@@ -274,11 +274,11 @@ void VRMenuRenderer::EndMenuFrame()
                     float eyeSign = (eye == VR_EYE_LEFT) ? 1.0f : -1.0f;
                     glm::mat4 projMatrix = runtime->GetProjectionMatrix((VREye)eye, 0.1f, 100.0f);
                     float ipd = runtime->GetIPD();
-                    float ndcShift = projMatrix[0][0] * (ipd * 0.5f) / sOverlayDistance;
+                    float ndcShift = projMatrix[0][0] * (ipd * 0.5f) / overlayDistance;
                     float stereoPixelShift = ndcShift * float(eyeWidth) * 0.5f * eyeSign;
 
                     // Render menu texture as a scaled, aspect-correct quad
-                    RenderMenuQuad(eyeWidth, eyeHeight, stereoPixelShift, sUIScale,
+                    RenderMenuQuad(eyeWidth, eyeHeight, stereoPixelShift, uiScale,
                                    sMenuFBOWidth, sMenuFBOHeight);
 
                     // Release swapchain image and clean up temp FBO
@@ -317,18 +317,6 @@ void VRMenuRenderer::EndMenuFrame()
 }
 
 //======================================================================================================================
-void VRMenuRenderer::SetUIScale(float scale)
-{
-    sUIScale = scale;
-}
-
-//======================================================================================================================
-void VRMenuRenderer::SetOverlayDistance(float distance)
-{
-    sOverlayDistance = distance;
-}
-
-//======================================================================================================================
 void VRMenuRenderer::Shutdown()
 {
     if (sMenuFBO != 0)
@@ -354,13 +342,10 @@ void VRMenuRenderer::BeginMenuFrame()
     // No-op without VR
 }
 
-void VRMenuRenderer::EndMenuFrame()
+void VRMenuRenderer::EndMenuFrame(float, float)
 {
     IwGxSwapBuffers();
 }
-
-void VRMenuRenderer::SetUIScale(float) {}
-void VRMenuRenderer::SetOverlayDistance(float) {}
 
 void VRMenuRenderer::Shutdown()
 {

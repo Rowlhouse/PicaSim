@@ -245,5 +245,5 @@ void LoadingScreen::Render()
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     // Submit to VR headset (if active) and swap desktop buffers
-    VRMenuRenderer::EndMenuFrame();
+    VRMenuRenderer::EndMenuFrame(mGameSettings.mOptions.mVRUIScale, mGameSettings.mOptions.mVROverlayDistance);
 }

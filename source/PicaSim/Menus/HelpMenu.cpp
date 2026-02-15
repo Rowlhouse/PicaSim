@@ -105,7 +105,7 @@ bool HelpMenu::Update()
     VRMenuRenderer::BeginMenuFrame();
     IwGxClear();
     Render();
-    VRMenuRenderer::EndMenuFrame();
+    VRMenuRenderer::EndMenuFrame(mGameSettings.mOptions.mVRUIScale, mGameSettings.mOptions.mVROverlayDistance);
     PollEvents();
 
     // Suppress stale input from the previous menu's touch/click events

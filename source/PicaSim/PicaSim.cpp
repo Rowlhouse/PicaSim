@@ -27,7 +27,6 @@
 
 #ifdef PICASIM_VR_SUPPORT
 #include "../Platform/VRManager.h"
-#include "../Platform/VRMenuRenderer.h"
 #include "../Platform/VRRuntime.h"
 #include <glad/glad.h>
 #include "Menus/UIHelpers.h"
@@ -1184,10 +1183,6 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             rm.SetVROverlayScale(mGameSettings.mOptions.mVROverlayScale);
             rm.SetVROverlayVisible(mShowVRUI || mStatus == STATUS_PAUSED);
             rm.SetVROverlayShowCursor(mStatus == STATUS_PAUSED);
-
-            // Configure VR menu renderer with matching distance and UI scale
-            VRMenuRenderer::SetOverlayDistance(mGameSettings.mOptions.mVROverlayDistance);
-            VRMenuRenderer::SetUIScale(mGameSettings.mOptions.mVRUIScale);
 
             rm.RenderUpdateVR(vrFrameInfo);
 

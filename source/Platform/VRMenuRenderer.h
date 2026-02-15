@@ -14,12 +14,9 @@ namespace VRMenuRenderer
 
     // Call instead of IwGxSwapBuffers(). When VR is active, submits the menu FBO to
     // the headset as a floating screen, then blits to the desktop window.
-    void EndMenuFrame();
-
-    // Configure the VR menu appearance. Call these before the menu loop starts,
-    // or they take effect on the next frame.
-    void SetUIScale(float scale);           // 1 = full eye view, <1 = smaller centered panel
-    void SetOverlayDistance(float distance); // Stereo depth distance in meters
+    // uiScale: 1 = fills eye view, <1 = smaller centered panel
+    // overlayDistance: stereo depth distance in meters
+    void EndMenuFrame(float uiScale, float overlayDistance);
 
     // Release GPU resources (call on shutdown or when VR is disabled).
     void Shutdown();

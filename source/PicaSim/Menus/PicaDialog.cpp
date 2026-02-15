@@ -1,6 +1,7 @@
 #include "PicaDialog.h"
 #include "UIHelpers.h"
 #include "../GameSettings.h"
+#include "../PicaSim.h"
 #include "../PicaStrings.h"
 #include "RenderManager.h"
 #include "Trace.h"
@@ -235,7 +236,8 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
     // End ImGui frame and render
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    VRMenuRenderer::EndMenuFrame();
+    const auto& opts = PicaSim::GetInstance().GetSettings().mOptions;
+    VRMenuRenderer::EndMenuFrame(opts.mVRUIScale, opts.mVROverlayDistance);
 
     // Check for exit conditions
     if (shouldExit)

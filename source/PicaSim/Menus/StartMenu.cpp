@@ -114,7 +114,7 @@ StartMenuResult StartMenu::Update()
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - Render");
     Render();
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - SwapBuffers");
-    VRMenuRenderer::EndMenuFrame();
+    VRMenuRenderer::EndMenuFrame(mGameSettings.mOptions.mVRUIScale, mGameSettings.mOptions.mVROverlayDistance);
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - PollEvents");
     PollEvents();
     TRACE_FILE_IF(FRAME_1) TRACE("StartMenu::Update - done");
