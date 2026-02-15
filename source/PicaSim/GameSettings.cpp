@@ -231,6 +231,8 @@ Options::Options() :
     mVRMSAASamples(4),
     mVRPanoramaDepth(true),
     mVRPanoramaExtension(0.025f),
+    mVROverlayDistance(0.16f),
+    mVROverlayScale(0.55f),
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),
     mWindArrowSize(0.12f),
@@ -368,6 +370,8 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     element->SetAttribute("mVRAudioDevice", mVRAudioDevice.c_str());
     WRITE_ATTRIBUTE(mVRPanoramaDepth);
     WRITE_DOUBLE_ATTRIBUTE(mVRPanoramaExtension);
+    WRITE_DOUBLE_ATTRIBUTE(mVROverlayDistance);
+    WRITE_DOUBLE_ATTRIBUTE(mVROverlayScale);
     WRITE_DOUBLE_ATTRIBUTE(mWindArrowSize);
     WRITE_ATTRIBUTE(mFreeFlightDisplayTime);
     WRITE_ATTRIBUTE(mFreeFlightDisplaySpeed);
@@ -517,6 +521,8 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mVRAudioDevice);
     READ_ATTRIBUTE(mVRPanoramaDepth);
     READ_ATTRIBUTE(mVRPanoramaExtension);
+    READ_ATTRIBUTE(mVROverlayDistance);
+    READ_ATTRIBUTE(mVROverlayScale);
 
     READ_ATTRIBUTE(mWindArrowSize);
     READ_ATTRIBUTE(mFreeFlightDisplayTime);

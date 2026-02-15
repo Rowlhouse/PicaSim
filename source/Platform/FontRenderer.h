@@ -27,6 +27,10 @@ public:
 
     static FontRenderer& GetInstance();
 
+    // Override the display height used for scaling (0 = use actual display height)
+    // Used by VR overlay rendering to decouple from desktop window / headset resolution
+    static void SetDisplayHeightOverride(int height) { sDisplayHeightOverride = height; }
+
     // Initialize font renderer - call after OpenGL context is ready
     bool Init();
 
@@ -90,6 +94,8 @@ private:
     uint32_t mColour; // ARGB format
 
     bool mInitialized;
+
+    static int sDisplayHeightOverride;
 };
 
 // Global FontRenderer instance pointer (set in main())

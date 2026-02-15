@@ -721,6 +721,8 @@ void InitStringsDE(const char** txt)
   txt[PS_VRNOTAVAILABLE] = "VR nicht verfügbar - kein Headset erkannt";
   txt[PS_VRPANORAMADEPTH] = "VR-Panoramatiefe";
   txt[PS_VRPANORAMAEXTENSION] = "VR Panorama Erweiterung";
+  txt[PS_VROVERLAYDISTANCE] = "VR-Overlay-Abstand";
+  txt[PS_VROVERLAYSCALE] = "VR-Overlay-Skalierung";
   txt[PS_MIRROR_TEXT] = "VR-Headset wird verwendet";
   txt[PS_MIRROR_SETTINGS] = "VR-Anzeige in Einstellungen spiegeln";
   txt[PS_ORIENTATION] = "Ausrichtung";

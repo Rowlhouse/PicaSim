@@ -599,6 +599,9 @@ void SettingsMenu::RenderOptions1Tab()
 
                         // VR Panorama Extension - border expansion for tiled panoramas (helps with parallax sampling)
                         SettingsWidgets::SliderFloat(TXT(PS_VRPANORAMAEXTENSION), options.mVRPanoramaExtension, 0.0f, 0.1f);
+
+                        SettingsWidgets::SliderFloat(TXT(PS_VROVERLAYDISTANCE), options.mVROverlayDistance, 0.1f, 0.5f);
+                        SettingsWidgets::SliderFloat(TXT(PS_VROVERLAYSCALE), options.mVROverlayScale, 0.25f, 1.0f);
                     }
                 }
             }

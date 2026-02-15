@@ -30,6 +30,8 @@ void esSetModelViewProjectionMatrix(int location);
 // Global FontRenderer instance pointer (set in main())
 FontRenderer* gFontRenderer = nullptr;
 
+int FontRenderer::sDisplayHeightOverride = 0;
+
 //======================================================================================================================
 FontRenderer& FontRenderer::GetInstance()
 {
@@ -485,7 +487,7 @@ float FontRenderer::GetDisplayScale() const
     static int sCachedHeight = 0;
     static float sCachedScale = 1.0f;
 
-    int h = Platform::GetDisplayHeight();
+    int h = sDisplayHeightOverride > 0 ? sDisplayHeightOverride : Platform::GetDisplayHeight();
     if (h == sCachedHeight)
         return sCachedScale;
 
@@ -577,7 +579,7 @@ void FontRenderer::RenderText(const char* text)
     // Get viewport height for coordinate conversion
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-    int viewportHeight = viewport[3];
+    int viewportHeight = sDisplayHeightOverride > 0 ? sDisplayHeightOverride : viewport[3];
 
     // Calculate text dimensions (scaled)
     int textWidth = CalculateTextWidth(text);

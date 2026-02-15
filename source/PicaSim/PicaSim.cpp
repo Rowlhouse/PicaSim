@@ -163,6 +163,7 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
 
     // Button overlays
     mInstance->mShowUI = true;
+    mInstance->mShowVRUI = false;
     float buttonSize = mInstance->mGameSettings.mOptions.mPauseButtonsSize / numButtonSlots;
     float buttonOffset = 1.0f / numButtonSlots;
     float paddingFraction = 0.25f;
@@ -871,7 +872,14 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
     }
     // UI
     if (uiKeyPressed)
-        mShowUI = !mShowUI;
+    {
+#ifdef PICASIM_VR_SUPPORT
+        if (VRManager::IsAvailable() && VRManager::GetInstance().IsVRReady())
+            mShowVRUI = !mShowVRUI;
+        else
+#endif
+            mShowUI = !mShowUI;
+    }
 
     // Zoom view
     if (zoomViewKeyPressed)
@@ -1159,6 +1167,9 @@ PicaSim::UpdateResult PicaSim::Update(int64 deltaTimeMs)
             VRManager::GetInstance().SetPanoramicScene(isPanoramicScene);
             rm.SetVRPanoramaDepthEnabled(mGameSettings.mOptions.mVRPanoramaDepth && isPanoramicScene);
             rm.SetVRSkybox(&Environment::getSkybox());
+            rm.SetVROverlayDistance(mGameSettings.mOptions.mVROverlayDistance);
+            rm.SetVROverlayScale(mGameSettings.mOptions.mVROverlayScale);
+            rm.SetVROverlayVisible(mShowVRUI);
 
             rm.RenderUpdateVR(vrFrameInfo);
 

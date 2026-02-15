@@ -30,6 +30,8 @@
  mVRAudioDevice=""
  mVRPanoramaDepth="1"
  mVRPanoramaExtension="0.025"
+ mVROverlayDistance="0.16"
+ mVROverlayScale="0.55"
  mWindArrowSize="0.12"
  mFreeFlightDisplayTime="0"
  mFreeFlightDisplaySpeed="1"

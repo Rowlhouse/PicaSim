@@ -868,6 +868,26 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
         }
     }
 
+    // Recompute controller sizes and positions from displayConfig dimensions so
+    // they match the current coordinate system (VR virtual screen may differ
+    // from the desktop window dimensions used by UpdateScreenSticks).
+    float xSize = options.mControllerSize;
+    float ySize = options.mControllerSize;
+    if (options.mControllerSquare)
+    {
+        if (displayConfig.mWidth > displayConfig.mHeight)
+            xSize = (ySize * displayConfig.mHeight) / displayConfig.mWidth;
+        else
+            ySize = (xSize * displayConfig.mWidth) / displayConfig.mHeight;
+    }
+    float controllerSizeX = 0.5f * xSize * displayConfig.mWidth;
+    float controllerSizeY = 0.5f * ySize * displayConfig.mHeight;
+
+    float leftPosX = xSize * 0.25f + options.mControllerHorOffset * (0.5f - xSize * 0.5f);
+    float rightPosX = 1.0f - leftPosX;
+    float rightPosY = ySize * 0.25f + options.mControllerVerOffset * (0.5f - ySize * 0.5f);
+    float leftPosY = options.mControllerStaggered ? (1.0f - rightPosY) : rightPosY;
+
     float s = mStickIndicatorSize * (displayConfig.mWidth + displayConfig.mHeight) * 0.5f;
 
     GLfloat stickColour[] = {1.0f, 1.0f, 1.0f, options.mControllerStickAlpha/255.0f};
@@ -877,32 +897,32 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
     {
         glUniform4fv(controllerShader->u_colour, 1, controllerColour);
         if (stickVisibleMask & STICK_RIGHT)
-            RenderController(displayConfig.mLeft + mRightControllerPosX * displayConfig.mWidth,
-                displayConfig.mBottom + mRightControllerPosY * displayConfig.mHeight,
-                mControllerSizeX, mControllerSizeY, mGameSettings.mOptions.mControllerStyle, controllerShader);
+            RenderController(displayConfig.mLeft + rightPosX * displayConfig.mWidth,
+                displayConfig.mBottom + rightPosY * displayConfig.mHeight,
+                controllerSizeX, controllerSizeY, mGameSettings.mOptions.mControllerStyle, controllerShader);
         if (stickVisibleMask & STICK_LEFT)
-            RenderController(displayConfig.mLeft + mLeftControllerPosX * displayConfig.mWidth,
-                displayConfig.mBottom + mLeftControllerPosY * displayConfig.mHeight,
-                mControllerSizeX, mControllerSizeY, mGameSettings.mOptions.mControllerStyle, controllerShader);
+            RenderController(displayConfig.mLeft + leftPosX * displayConfig.mWidth,
+                displayConfig.mBottom + leftPosY * displayConfig.mHeight,
+                controllerSizeX, controllerSizeY, mGameSettings.mOptions.mControllerStyle, controllerShader);
     }
     if (stickColour[3])
     {
         glUniform4fv(controllerShader->u_colour, 1, stickColour);
         if (stickVisibleMask & STICK_RIGHT)
         {
-            RenderStick(displayConfig.mLeft + mRightControllerPosX * displayConfig.mWidth,
-                displayConfig.mBottom + mRightControllerPosY * displayConfig.mHeight, options.mControllerStickCross,
+            RenderStick(displayConfig.mLeft + rightPosX * displayConfig.mWidth,
+                displayConfig.mBottom + rightPosY * displayConfig.mHeight, options.mControllerStickCross,
                 mInputControls[GetControlForStick(ControllerSettings::CONTROLLER_RIGHT_HORIZONTAL, options.mControllerMode)],
                 mInputControls[GetControlForStick(ControllerSettings::CONTROLLER_RIGHT_VERTICAL, options.mControllerMode)],
-                mControllerSizeX, mControllerSizeY, s, s, controllerShader);
+                controllerSizeX, controllerSizeY, s, s, controllerShader);
         }
         if (stickVisibleMask & STICK_LEFT)
         {
-            RenderStick(displayConfig.mLeft + mLeftControllerPosX * displayConfig.mWidth,
-                displayConfig.mBottom + mLeftControllerPosY * displayConfig.mHeight, options.mControllerStickCross,
+            RenderStick(displayConfig.mLeft + leftPosX * displayConfig.mWidth,
+                displayConfig.mBottom + leftPosY * displayConfig.mHeight, options.mControllerStickCross,
                 mInputControls[GetControlForStick(ControllerSettings::CONTROLLER_LEFT_HORIZONTAL, options.mControllerMode)],
                 mInputControls[GetControlForStick(ControllerSettings::CONTROLLER_LEFT_VERTICAL, options.mControllerMode)],
-                mControllerSizeX, mControllerSizeY, s, s, controllerShader);
+                controllerSizeX, controllerSizeY, s, s, controllerShader);
         }
     }
 
@@ -911,10 +931,10 @@ void HumanController::RenderOverlayUpdate(int renderLevel, DisplayConfig& displa
         GLfloat trimColour[] = {0.5f, 0.5f, 0.5f, 0.3f};
 
         glUniform4fv(controllerShader->u_colour, 1, trimColour);
-        RenderController(displayConfig.mLeft + 0.5f * displayConfig.mWidth, displayConfig.mBottom + mRightControllerPosY * displayConfig.mHeight, 
-            options.mControllerTrimSize * displayConfig.mWidth, mControllerSizeY, Options::CONTROLLER_STYLE_CROSS_AND_BOX, controllerShader);
-        RenderStick(displayConfig.mLeft + 0.5f * displayConfig.mWidth, displayConfig.mBottom + mRightControllerPosY * displayConfig.mHeight, false,
-            0.0f, mElevatorTrim, options.mControllerTrimSize * displayConfig.mWidth, mControllerSizeY, options.mControllerTrimSize * displayConfig.mWidth, s, controllerShader);
+        RenderController(displayConfig.mLeft + 0.5f * displayConfig.mWidth, displayConfig.mBottom + rightPosY * displayConfig.mHeight,
+            options.mControllerTrimSize * displayConfig.mWidth, controllerSizeY, Options::CONTROLLER_STYLE_CROSS_AND_BOX, controllerShader);
+        RenderStick(displayConfig.mLeft + 0.5f * displayConfig.mWidth, displayConfig.mBottom + rightPosY * displayConfig.mHeight, false,
+            0.0f, mElevatorTrim, options.mControllerTrimSize * displayConfig.mWidth, controllerSizeY, options.mControllerTrimSize * displayConfig.mWidth, s, controllerShader);
     }
 
     glDisableVertexAttribArray(controllerShader->a_position);

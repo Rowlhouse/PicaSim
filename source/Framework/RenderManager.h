@@ -5,6 +5,7 @@
 #include "FrameworkSettings.h"
 #include "Graphics.h"
 #include "FrameBufferObject.h"
+#include "../Platform/FontRenderer.h"
 
 #include <vector>
 #include <map>
@@ -161,6 +162,9 @@ public:
     // VR skybox with depth-based parallax
     void SetVRSkybox(Skybox* skybox) { mVRSkybox = skybox; }
     void SetVRPanoramaDepthEnabled(bool enabled) { mVRPanoramaDepthEnabled = enabled; }
+    void SetVROverlayDistance(float distance) { mVROverlayDistance = distance; }
+    void SetVROverlayScale(float scale) { mVROverlayScale = scale; }
+    void SetVROverlayVisible(bool visible) { mVROverlayVisible = visible; }
 #endif
 
     const struct FrameworkSettings& GetFrameworkSettings() const {return mFrameworkSettings;}
@@ -202,6 +206,10 @@ private:
 #ifdef PICASIM_VR_SUPPORT
     Skybox* mVRSkybox;
     bool    mVRPanoramaDepthEnabled;
+    float   mVROverlayDistance;
+    float   mVROverlayScale;
+    bool    mVROverlayVisible;
+    void RenderOverlaysForVREye(int eyeWidth, int eyeHeight, float stereoPixelShift);
 #endif
 
     FrameworkSettings& mFrameworkSettings;

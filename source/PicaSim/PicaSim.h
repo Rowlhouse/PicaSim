@@ -108,6 +108,7 @@ public:
     const Aeroplane* GetAeroplane(size_t iPlane) const {return iPlane < mAeroplanes.size() ? mAeroplanes[iPlane] : 0;}
 
     bool GetShowUI() const {return mShowUI;}
+    bool GetShowVRUI() const {return mShowVRUI;}
 
     ParticleEngine& GetParticleEngine() {return mParticleEngine;}
 
@@ -167,6 +168,7 @@ private:
     float mActualTimeScale;
     float mControllerOverlayTextOpacity;
     bool mShowUI;
+    bool mShowVRUI;
     bool mShowHelpAfterLoading; // Show the basic help after loading
 
     uint32 mUpdateCounter;

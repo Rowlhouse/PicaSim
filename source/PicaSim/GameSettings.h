@@ -286,6 +286,8 @@ struct Options : public Settings
     // VR panorama depth settings - for stereoscopic parallax in panoramic sceneries
     bool  mVRPanoramaDepth;       // Enable depth-based parallax for panorama skybox
     float mVRPanoramaExtension;   // Border expansion for tiled panoramas (0=off, 0.1=10% border)
+    float mVROverlayDistance;     // Stereoscopic distance for UI overlays in VR (meters)
+    float mVROverlayScale;        // Scale factor for UI overlays in VR (1=full, 0.5=half, centered)
 
     float mMaxNearClipDistance;
     bool  mSeparateSpecular;

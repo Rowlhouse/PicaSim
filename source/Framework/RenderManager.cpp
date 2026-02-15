@@ -57,6 +57,9 @@ RenderManager::RenderManager(FrameworkSettings& frameworkSettings)
 #ifdef PICASIM_VR_SUPPORT
     mVRSkybox = nullptr;
     mVRPanoramaDepthEnabled = false;
+    mVROverlayDistance = 2.0f;
+    mVROverlayScale = 0.75f;
+    mVROverlayVisible = true;
 #endif
 
     float lightBearing   = 0.0f;
@@ -1108,6 +1111,22 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
                               GL_COLOR_BUFFER_BIT, GL_NEAREST);
         }
 
+        // Render 2D overlays (buttons, windsock, challenge text) into the swapchain FBO
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, swapchainFBO);
+
+            // Compute stereo pixel shift for overlay depth
+            float eyeSign = (eye == VR_EYE_LEFT) ? 1.0f : -1.0f;
+            glm::mat4 projMatrix = runtime->GetProjectionMatrix((VREye)eye,
+                mFrameworkSettings.mNearClipPlaneDistance,
+                mFrameworkSettings.mFarClipPlaneDistance);
+            float ipd = runtime->GetIPD();
+            float ndcShift = projMatrix[0][0] * (ipd * 0.5f) / mVROverlayDistance;
+            float stereoPixelShift = ndcShift * float(eyeWidth) * 0.5f * eyeSign;
+
+            RenderOverlaysForVREye(eyeWidth, eyeHeight, stereoPixelShift);
+        }
+
         // Copy rendered content to VRManager's mirror texture (for desktop display)
         // We do this while the swapchain texture is still bound
         uint32_t mirrorTex = vrManager.GetEyeColorTexture((VREye)eye);
@@ -1148,6 +1167,75 @@ void RenderManager::RenderUpdateVR(VRFrameInfo& frameInfo)
         // Release swapchain image
         runtime->ReleaseSwapchainImage((VREye)eye);
     }
+}
+
+//======================================================================================================================
+void RenderManager::RenderOverlaysForVREye(int eyeWidth, int eyeHeight, float stereoPixelShift)
+{
+    if (!mVROverlayVisible)
+        return;
+
+    // Use a fixed virtual screen so overlay sizes are independent of both
+    // the desktop window size and the headset resolution.
+    // virtualHeight = 720 matches FontRenderer's baseline (GetDisplayScale() == 1.0).
+    // virtualWidth preserves the eye aspect ratio.
+    const int virtualHeight = 720;
+    int virtualWidth = (int)(720.0f * float(eyeWidth) / float(eyeHeight));
+
+    // Tell FontRenderer to use the virtual height for scaling and Y-flip
+    FontRenderer::SetDisplayHeightOverride(virtualHeight);
+
+    DisplayConfig displayConfig;
+    displayConfig.mViewpointIndex = 0;
+    displayConfig.mLeft = 0;
+    displayConfig.mBottom = 0;
+    displayConfig.mWidth = virtualWidth;
+    displayConfig.mHeight = virtualHeight;
+
+    // Viewport covers the full eye texture — the ortho projection maps
+    // virtual coords onto this area.
+    glViewport(0, 0, eyeWidth, eyeHeight);
+
+    // Compute ortho with scale margins + stereo shift.
+    float invScale = 1.0f / mVROverlayScale;
+    float marginX = float(virtualWidth)  * (invScale - 1.0f) * 0.5f;
+    float marginY = float(virtualHeight) * (invScale - 1.0f) * 0.5f;
+    float totalOrthoW = float(virtualWidth) * invScale;
+    // stereoPixelShift is in eye pixels — convert to ortho (virtual) units
+    float orthoShift = stereoPixelShift * totalOrthoW / float(eyeWidth);
+
+    esMatrixMode(GL_PROJECTION);
+    esLoadIdentity();
+    esOrthof(
+        -marginX - orthoShift,
+        float(virtualWidth) + marginX - orthoShift,
+        -marginY,
+        float(virtualHeight) + marginY,
+        1.0f, -1.0f);
+
+    esMatrixMode(GL_MODELVIEW);
+    esLoadIdentity();
+
+    // Render overlay objects (buttons, windsock, etc.)
+    for (RenderOverlayObjects::iterator it = mRenderOverlayObjects.begin(); it != mRenderOverlayObjects.end(); ++it)
+    {
+        (it->second)->RenderOverlayUpdate(it->first, displayConfig);
+    }
+
+    // Render Gx objects (challenge text, viewport frame, etc.) with depth disabled
+    if (!mRenderGxObjects.empty())
+    {
+        DisableDepthMask disableDepthMask;
+        DisableDepthTest disableDepthTest;
+
+        for (RenderGxObjects::iterator it = mRenderGxObjects.begin(); it != mRenderGxObjects.end(); ++it)
+        {
+            (it->second)->GxRender(it->first, displayConfig);
+        }
+    }
+
+    // Clear the override so desktop rendering is unaffected
+    FontRenderer::SetDisplayHeightOverride(0);
 }
 
 //======================================================================================================================
