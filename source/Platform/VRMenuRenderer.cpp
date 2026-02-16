@@ -24,10 +24,6 @@ static int sMenuFBOWidth = 0;
 static int sMenuFBOHeight = 0;
 static bool sVRActiveThisFrame = false;
 
-// Defaults used when VR is first enabled (before settings are loaded)
-static constexpr float kDefaultUIScale = 0.7f;
-static constexpr float kDefaultOverlayDistance = 0.16f;
-
 //======================================================================================================================
 static void EnsureMenuFBO(int width, int height)
 {
@@ -181,6 +177,18 @@ void VRMenuRenderer::BeginMenuFrame()
         return;
 
     VRManager& vrManager = VRManager::GetInstance();
+
+    // Poll VR events to keep session state current (detect headset on/off).
+    // The game loop does this in Main.cpp, but menu loops run independently.
+    if (vrManager.IsVREnabled())
+        vrManager.PollEvents();
+
+    // Manage mouse grab during menus: grab when headset is active, release when not
+    if (vrManager.IsVRReady())
+        SDL_SetWindowGrab(Window::GetInstance().GetSDLWindow(), SDL_TRUE);
+    else
+        SDL_SetWindowGrab(Window::GetInstance().GetSDLWindow(), SDL_FALSE);
+
     if (!vrManager.IsVREnabled())
         return;
 

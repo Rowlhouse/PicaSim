@@ -1274,9 +1274,9 @@ void RenderManager::DrawVRCursor(float cursorX, float cursorY)
 
     // Crosshair cursor — four bars around a center gap (like a + with a hole)
     // Dimensions in virtual pixels (720-tall virtual screen)
-    float armLen  = 8.0f;   // length of each arm from gap edge
-    float gap     = 3.0f;   // half-size of the center gap
-    float thick   = 2.0f;   // half-thickness of each bar
+    float armLen  = 5.0f;   // length of each arm from gap edge
+    float gap     = 4.0f;   // half-size of the center gap
+    float thick   = 1.0f;   // half-thickness of each bar
     float outline = 1.5f;   // outline border width
 
     struct CursorVertex { float x, y, z, r, g, b, a; };
@@ -1301,45 +1301,53 @@ void RenderManager::DrawVRCursor(float cursorX, float cursorY)
     CursorVertex fillVerts[24];
     float o = outline;
 
+#if 0
+#define OUTLINE_COLOUR 0, 0, 0, 0.0f
     // Top arm
     makeQuad(&outlineVerts[0],
         cursorX - thick - o, cursorY + gap - o,
         cursorX + thick + o, cursorY + gap + armLen + o,
-        0, 0, 0, 0.8f);
-    makeQuad(&fillVerts[0],
-        cursorX - thick, cursorY + gap,
-        cursorX + thick, cursorY + gap + armLen,
-        1, 1, 1, 1);
-
+        OUTLINE_COLOUR);
     // Bottom arm
     makeQuad(&outlineVerts[6],
         cursorX - thick - o, cursorY - gap - armLen - o,
         cursorX + thick + o, cursorY - gap + o,
-        0, 0, 0, 0.8f);
-    makeQuad(&fillVerts[6],
-        cursorX - thick, cursorY - gap - armLen,
-        cursorX + thick, cursorY - gap,
-        1, 1, 1, 1);
-
+        OUTLINE_COLOUR);
     // Right arm
     makeQuad(&outlineVerts[12],
         cursorX + gap - o, cursorY - thick - o,
         cursorX + gap + armLen + o, cursorY + thick + o,
-        0, 0, 0, 0.8f);
-    makeQuad(&fillVerts[12],
-        cursorX + gap, cursorY - thick,
-        cursorX + gap + armLen, cursorY + thick,
-        1, 1, 1, 1);
-
+        OUTLINE_COLOUR);
     // Left arm
     makeQuad(&outlineVerts[18],
         cursorX - gap - armLen - o, cursorY - thick - o,
         cursorX - gap + o, cursorY + thick + o,
-        0, 0, 0, 0.8f);
+        OUTLINE_COLOUR);
+#endif
+
+#if 1
+#define FILL_COLOUR 1, 1, 1, 0.8f
+    // Top arm
+    makeQuad(&fillVerts[0],
+        cursorX - thick, cursorY + gap,
+        cursorX + thick, cursorY + gap + armLen,
+        FILL_COLOUR);
+    // Bottom arm
+    makeQuad(&fillVerts[6],
+        cursorX - thick, cursorY - gap - armLen,
+        cursorX + thick, cursorY - gap,
+        FILL_COLOUR);
+    // Right arm
+    makeQuad(&fillVerts[12],
+        cursorX + gap, cursorY - thick,
+        cursorX + gap + armLen, cursorY + thick,
+        FILL_COLOUR);
+    // Left arm
     makeQuad(&fillVerts[18],
         cursorX - gap - armLen, cursorY - thick,
         cursorX - gap, cursorY + thick,
-        1, 1, 1, 1);
+        FILL_COLOUR);
+#endif
 
     glEnableVertexAttribArray(shader->a_position);
     glEnableVertexAttribArray(shader->a_colour);
