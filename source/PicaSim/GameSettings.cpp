@@ -232,7 +232,7 @@ Options::Options() :
     mVRPanoramaDepth(true),
     mVRPanoramaExtension(0.025f),
     mVROverlayDistance(0.16f),
-    mVROverlayScale(0.55f),
+    mVROverlayScale(0.45f),
     mVRUIScale(0.7f),
     mMaxNearClipDistance(1.0f),
     mSeparateSpecular(true),

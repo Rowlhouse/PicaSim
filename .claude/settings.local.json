@@ -35,7 +35,8 @@
       "Bash(xargs -I{} sh -c 'awk \"\"length > 180 {print length\\\\\"\":\\\\\"\"FILENAME\\\\\"\":\\\\\"\"NR}\"\" \"\"{}\"\"')",
       "Bash(sort:*)",
       "Bash(comm:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

@@ -1272,82 +1272,71 @@ void RenderManager::DrawVRCursor(float cursorX, float cursorY)
     esGetMatrix(mvpMatrix, GL_PROJECTION);
     glUniformMatrix4fv(shader->u_mvpMatrix, 1, GL_FALSE, &mvpMatrix[0][0]);
 
-    // Crosshair cursor — four bars around a center gap (like a + with a hole)
+    // Crosshair cursor — single cross that blends from black at the center
+    // to white at the tips. Visible against both light and dark backgrounds.
     // Dimensions in virtual pixels (720-tall virtual screen)
-    float armLen  = 5.0f;   // length of each arm from gap edge
-    float gap     = 4.0f;   // half-size of the center gap
+    float armLen  = 6.0f;   // length of each arm from gap edge
+    float gap     = 1.0f;   // half-size of the center gap
     float thick   = 1.0f;   // half-thickness of each bar
-    float outline = 1.5f;   // outline border width
+    float alpha   = 0.8f;
 
     struct CursorVertex { float x, y, z, r, g, b, a; };
 
-    // Each arm is a filled quad (6 vertices = 2 triangles).
-    // Four arms: top, bottom, left, right.
-    // Draw black outline first (slightly larger), then white fill.
-    auto makeQuad = [](CursorVertex* out,
-                       float x0, float y0, float x1, float y1,
-                       float r, float g, float b, float a)
+    // Each arm is a quad (6 verts = 2 tris) with per-vertex color gradient.
+    // Inner edge (near center): black. Outer edge (tip): white.
+    // makeGradientQuadV: vertical arm (gradient along Y)
+    // makeGradientQuadH: horizontal arm (gradient along X)
+    // innerC/outerC are the grayscale values (0=black, 1=white)
+    auto makeGradientQuadV = [](CursorVertex* out,
+                                float x0, float x1,
+                                float yInner, float yOuter,
+                                float innerC, float outerC, float a)
     {
-        out[0] = { x0, y0, 0, r, g, b, a };
-        out[1] = { x1, y0, 0, r, g, b, a };
-        out[2] = { x0, y1, 0, r, g, b, a };
-        out[3] = { x1, y0, 0, r, g, b, a };
-        out[4] = { x1, y1, 0, r, g, b, a };
-        out[5] = { x0, y1, 0, r, g, b, a };
+        // Two triangles: (0,1,2) and (3,4,5)
+        // yInner edge gets innerC, yOuter edge gets outerC
+        out[0] = { x0, yInner, 0, innerC, innerC, innerC, a };
+        out[1] = { x1, yInner, 0, innerC, innerC, innerC, a };
+        out[2] = { x0, yOuter, 0, outerC, outerC, outerC, a };
+        out[3] = { x1, yInner, 0, innerC, innerC, innerC, a };
+        out[4] = { x1, yOuter, 0, outerC, outerC, outerC, a };
+        out[5] = { x0, yOuter, 0, outerC, outerC, outerC, a };
     };
 
-    // 4 arms x 6 vertices = 24 vertices per pass (outline + fill)
-    CursorVertex outlineVerts[24];
-    CursorVertex fillVerts[24];
-    float o = outline;
+    auto makeGradientQuadH = [](CursorVertex* out,
+                                float y0, float y1,
+                                float xInner, float xOuter,
+                                float innerC, float outerC, float a)
+    {
+        out[0] = { xInner, y0, 0, innerC, innerC, innerC, a };
+        out[1] = { xOuter, y0, 0, outerC, outerC, outerC, a };
+        out[2] = { xInner, y1, 0, innerC, innerC, innerC, a };
+        out[3] = { xOuter, y0, 0, outerC, outerC, outerC, a };
+        out[4] = { xOuter, y1, 0, outerC, outerC, outerC, a };
+        out[5] = { xInner, y1, 0, innerC, innerC, innerC, a };
+    };
 
-#if 0
-#define OUTLINE_COLOUR 0, 0, 0, 0.0f
-    // Top arm
-    makeQuad(&outlineVerts[0],
-        cursorX - thick - o, cursorY + gap - o,
-        cursorX + thick + o, cursorY + gap + armLen + o,
-        OUTLINE_COLOUR);
-    // Bottom arm
-    makeQuad(&outlineVerts[6],
-        cursorX - thick - o, cursorY - gap - armLen - o,
-        cursorX + thick + o, cursorY - gap + o,
-        OUTLINE_COLOUR);
-    // Right arm
-    makeQuad(&outlineVerts[12],
-        cursorX + gap - o, cursorY - thick - o,
-        cursorX + gap + armLen + o, cursorY + thick + o,
-        OUTLINE_COLOUR);
-    // Left arm
-    makeQuad(&outlineVerts[18],
-        cursorX - gap - armLen - o, cursorY - thick - o,
-        cursorX - gap + o, cursorY + thick + o,
-        OUTLINE_COLOUR);
-#endif
+    CursorVertex verts[24];
 
-#if 1
-#define FILL_COLOUR 1, 1, 1, 0.8f
-    // Top arm
-    makeQuad(&fillVerts[0],
-        cursorX - thick, cursorY + gap,
-        cursorX + thick, cursorY + gap + armLen,
-        FILL_COLOUR);
-    // Bottom arm
-    makeQuad(&fillVerts[6],
-        cursorX - thick, cursorY - gap - armLen,
-        cursorX + thick, cursorY - gap,
-        FILL_COLOUR);
-    // Right arm
-    makeQuad(&fillVerts[12],
-        cursorX + gap, cursorY - thick,
-        cursorX + gap + armLen, cursorY + thick,
-        FILL_COLOUR);
-    // Left arm
-    makeQuad(&fillVerts[18],
-        cursorX - gap - armLen, cursorY - thick,
-        cursorX - gap, cursorY + thick,
-        FILL_COLOUR);
-#endif
+    // Top arm: inner (bottom) = black, outer (top) = white
+    makeGradientQuadV(&verts[0],
+        cursorX - thick, cursorX + thick,
+        cursorY + gap, cursorY + gap + armLen,
+        0, 1, alpha);
+    // Bottom arm: inner (top) = black, outer (bottom) = white
+    makeGradientQuadV(&verts[6],
+        cursorX - thick, cursorX + thick,
+        cursorY - gap, cursorY - gap - armLen,
+        0, 1, alpha);
+    // Right arm: inner (left) = black, outer (right) = white
+    makeGradientQuadH(&verts[12],
+        cursorY - thick, cursorY + thick,
+        cursorX + gap, cursorX + gap + armLen,
+        0, 1, alpha);
+    // Left arm: inner (right) = black, outer (left) = white
+    makeGradientQuadH(&verts[18],
+        cursorY - thick, cursorY + thick,
+        cursorX - gap, cursorX - gap - armLen,
+        0, 1, alpha);
 
     glEnableVertexAttribArray(shader->a_position);
     glEnableVertexAttribArray(shader->a_colour);
@@ -1356,14 +1345,8 @@ void RenderManager::DrawVRCursor(float cursorX, float cursorY)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // Draw black outline
-    glVertexAttribPointer(shader->a_position, 3, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &outlineVerts[0].x);
-    glVertexAttribPointer(shader->a_colour, 4, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &outlineVerts[0].r);
-    glDrawArrays(GL_TRIANGLES, 0, 24);
-
-    // Draw white fill
-    glVertexAttribPointer(shader->a_position, 3, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &fillVerts[0].x);
-    glVertexAttribPointer(shader->a_colour, 4, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &fillVerts[0].r);
+    glVertexAttribPointer(shader->a_position, 3, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &verts[0].x);
+    glVertexAttribPointer(shader->a_colour, 4, GL_FLOAT, GL_FALSE, sizeof(CursorVertex), &verts[0].r);
     glDrawArrays(GL_TRIANGLES, 0, 24);
 
     glDisableVertexAttribArray(shader->a_position);
