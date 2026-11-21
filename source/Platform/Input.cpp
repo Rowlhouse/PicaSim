@@ -914,18 +914,9 @@ void PollEvents()
             break;
 #endif
         case SDL_KEYDOWN:
-#if defined(PICASIM_ANDROID) || defined(__ANDROID__)
-            // Android back button -> treat as Escape
-            if (event.key.keysym.sym == SDLK_AC_BACK)
-            {
-                // Synthesize an escape key event
-                SDL_Event escEvent = event;
-                escEvent.key.keysym.sym = SDLK_ESCAPE;
-                escEvent.key.keysym.scancode = SDL_SCANCODE_ESCAPE;
-                Input::GetInstance().ProcessEvent(escEvent);
-                break;
-            }
-#else
+            // The Android back button arrives as SDLK_AC_BACK and is passed on unchanged, since the
+            // menus and flight controls check for it directly
+#if !defined(PICASIM_ANDROID) && !defined(__ANDROID__)
             // F11 or Alt+Enter toggles fullscreen globally
             // F key also toggles fullscreen, but only when not typing in a text input field
             if (event.key.keysym.sym == SDLK_F11 ||
