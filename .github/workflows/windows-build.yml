@@ -35,9 +35,25 @@ jobs:
         run: |
           cmake --install build/windows-x64 --config Release
       
+      # Runs Inno Setup (preinstalled on the windows-2022 runner) on the
+      # installed dist/PicaSim-<version> folder, producing dist/PicaSim-<version>-Setup.exe
+      - name: Build installer
+        run: |
+          cmake --build --preset windows-x64-release --target installer
+      
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: picasim-windows-x64
-          path: dist/
+          path: |
+            dist/
+            !dist/*-Setup.exe
+          retention-days: 30
+      
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: picasim-windows-installer
+          path: dist/*-Setup.exe
+          if-no-files-found: error
           retention-days: 30
