@@ -12,9 +12,17 @@ name: Release
 # The Android APK is signed with a key kept only for GitHub downloads (not the
 # Google Play key). It lives in secrets on the android-release environment,
 # which should require approval before the job can use it.
+#
+# Ticking "Android only" builds just the signed APK, for testing on a phone. It is
+# uploaded as the picasim-android-release artifact, and no release is created.
 
 on:
   workflow_dispatch:
+    inputs:
+      android_only:
+        description: 'Android only (a signed test APK, no release)'
+        type: boolean
+        default: false
 
 concurrency:
   group: release-${{ github.ref }}
@@ -45,14 +53,17 @@ jobs:
 
   windows:
     needs: version
+    if: ${{ !inputs.android_only }}
     uses: ./.github/workflows/windows-build.yml
 
   linux:
     needs: version
+    if: ${{ !inputs.android_only }}
     uses: ./.github/workflows/linux-build.yml
 
   macos:
     needs: version
+    if: ${{ !inputs.android_only }}
     uses: ./.github/workflows/macos-build.yml
 
   android:
@@ -154,6 +165,8 @@ jobs:
 
   release:
     needs: [version, windows, linux, macos, android]
+    # Skipped for Android-only runs, so they never create a release
+    if: ${{ !inputs.android_only }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
