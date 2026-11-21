@@ -8,9 +8,10 @@
 void ConnectionListener::HandleIncomingConnection(TCPsocket newSocket)
 {
     IPaddress* peerAddr = SDLNet_TCP_GetPeerAddress(newSocket);
+    const char* host = nullptr;
     if (peerAddr)
     {
-        const char* host = SDLNet_ResolveIP(peerAddr);
+        host = SDLNet_ResolveIP(peerAddr);
         TRACE("IncomingConnection: %p from %s:%d", newSocket, host ? host : "unknown", peerAddr->port);
     }
     else
@@ -18,7 +19,19 @@ void ConnectionListener::HandleIncomingConnection(TCPsocket newSocket)
         TRACE("IncomingConnection: %p", newSocket);
     }
 
-    IncomingConnection incomingConnection(newSocket);
+    // IPaddress.host is in network byte order, so the first byte is the first octet of the address
+    const Uint8* hostBytes = peerAddr ? (const Uint8*)&peerAddr->host : nullptr;
+    bool isLoopback = hostBytes && hostBytes[0] == 127;
+
+    if (!isLoopback && !mAllowRemoteConnections)
+    {
+        TRACE("Rejecting remote connection from %s - set mSocketControllerAllowRemote in settings.xml to allow remote control",
+            host ? host : "unknown");
+        SDLNet_TCP_Close(newSocket);
+        return;
+    }
+
+    IncomingConnection incomingConnection(newSocket, isLoopback);
     mIncomingConnections.push_back(incomingConnection);
 
     // Add to socket set for non-blocking receive checks
@@ -30,12 +43,15 @@ ConnectionListener::ConnectionListener()
 {
     mSocketListener = nullptr;
     mSocketSet = nullptr;
+    mAllowRemoteConnections = false;
 }
 
 //======================================================================================================================
-void ConnectionListener::Init()
+void ConnectionListener::Init(bool allowRemoteConnections)
 {
     TRACE_METHOD_ONLY(ONCE_2);
+
+    mAllowRemoteConnections = allowRemoteConnections;
 
     // Initialize SDL2_net if not already done
     if (SDLNet_Init() < 0)

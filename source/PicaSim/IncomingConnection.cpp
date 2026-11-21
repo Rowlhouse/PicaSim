@@ -1,7 +1,12 @@
 #include "IncomingConnection.h"
 #include "PicaSim.h"
 
+#include <cctype>
+
 static char s_terminator = '\n';
+
+// If a peer sends this much data without a terminator, treat it as a protocol violation and close the connection
+static const size_t s_maxReceiveBufferSize = 4096;
 
 //======================================================================================================================
 void IncomingConnection::ConvertToTokens(const char* txt, Tokens& tokens)
@@ -10,7 +15,7 @@ void IncomingConnection::ConvertToTokens(const char* txt, Tokens& tokens)
     Token token;
     for (size_t i = 0 ; i != len ; ++i)
     {
-        if (txt[i] == ' ' || txt[i] == '\n')
+        if (txt[i] == ' ' || txt[i] == '\n' || txt[i] == '\r')
         {
             if (!token.empty())
             {
@@ -151,8 +156,15 @@ void IncomingConnection::HandleMessage(Tokens& tokens)
 
         if (t == "exit")
         {
-            TRACE("Exit");
-            exit(0);
+            if (mIsLoopback)
+            {
+                TRACE("Exit");
+                exit(0);
+            }
+            else
+            {
+                TRACE("Ignoring exit from remote peer");
+            }
         }
         else if (t == "pause")
         {
@@ -221,66 +233,6 @@ static bool Send(TCPsocket socket, std::string msg)
 }
 
 //======================================================================================================================
-/// Reads into msg, up to (but not including) the terminator.
-/// Uses socket set to check if data is available (non-blocking).
-/// If there's nothing to read then msg will be empty. Returns false if the socket is dead.
-static bool Receive(TCPsocket socket, SDLNet_SocketSet socketSet, std::string& msg)
-{
-    if (!socket)
-        return false;
-
-    msg.reserve(1024);
-    msg = "";
-
-    // Check if there's any data ready to read (non-blocking)
-    int numReady = SDLNet_CheckSockets(socketSet, 0);
-    if (numReady <= 0)
-        return true; // No data available, but socket is still OK
-
-    // Check if this specific socket has data
-    if (!SDLNet_SocketReady(socket))
-        return true; // This socket has no data
-
-    // Read character by character until newline
-    while (true)
-    {
-        char c;
-        int result = SDLNet_TCP_Recv(socket, &c, 1);
-        if (result <= 0)
-        {
-            // Connection closed or error
-            return false;
-        }
-
-        if (c == s_terminator)
-            return true;
-
-        msg += std::tolower(c);
-
-        // Check if more data is available
-        numReady = SDLNet_CheckSockets(socketSet, 0);
-        if (numReady <= 0 || !SDLNet_SocketReady(socket))
-        {
-            // No more data right now, but we have a partial message
-            // Continue waiting for the terminator
-            // Use a small timeout to avoid blocking forever
-            numReady = SDLNet_CheckSockets(socketSet, 100);
-            if (numReady <= 0 || !SDLNet_SocketReady(socket))
-            {
-                // Still no data - return what we have if anything
-                // Actually, for a line-based protocol we should wait for the terminator
-                // But to avoid blocking, return true with partial data
-                // The next Update() call will continue reading
-                return true;
-            }
-        }
-    }
-
-    return true;
-}
-
-
-//======================================================================================================================
 void IncomingConnection::CloseSocket()
 {
     size_t num = PicaSim::GetInstance().GetNumAeroplanes();
@@ -302,30 +254,59 @@ void IncomingConnection::CloseSocket()
 }
 
 //======================================================================================================================
-IncomingConnection::IncomingConnection(TCPsocket socket)
-        : mSocket(socket), mCurrentAgent(0)
+IncomingConnection::IncomingConnection(TCPsocket socket, bool isLoopback)
+        : mSocket(socket), mIsLoopback(isLoopback), mCurrentAgent(0)
 {
 }
 
 //======================================================================================================================
 IncomingConnection::UpdateResult IncomingConnection::Update(SDLNet_SocketSet socketSet)
 {
-    while (true)
+    if (!mSocket)
+        return CONNECTION_CLOSED;
+
+    // Read all available data into the persistent buffer (non-blocking)
+    while (mReceiveBuffer.size() <= s_maxReceiveBufferSize &&
+           SDLNet_CheckSockets(socketSet, 0) > 0 && SDLNet_SocketReady(mSocket))
     {
-        std::string msg;
-        if (!Receive(mSocket, socketSet, msg))
+        char chunk[512];
+        int result = SDLNet_TCP_Recv(mSocket, chunk, sizeof(chunk));
+        if (result <= 0)
         {
+            // Connection closed or error
             TRACE("Error reading - closing connection");
             return CONNECTION_CLOSED;
         }
 
+        for (int i = 0 ; i != result ; ++i)
+        {
+            mReceiveBuffer.push_back((char) std::tolower((unsigned char) chunk[i]));
+        }
+    }
+
+    // Handle every complete line - a trailing partial line stays in the buffer until the terminator arrives
+    size_t terminatorPos;
+    while ((terminatorPos = mReceiveBuffer.find(s_terminator)) != std::string::npos)
+    {
+        std::string msg = mReceiveBuffer.substr(0, terminatorPos);
+        mReceiveBuffer.erase(0, terminatorPos + 1);
+
         if (msg.empty())
-            return CONNECTION_OK;
+            continue;
 
         Tokens tokens;
         ConvertToTokens(msg.c_str(), tokens);
         HandleMessage(tokens);
     }
+
+    // Guard against a peer streaming data without ever sending a terminator
+    if (mReceiveBuffer.size() > s_maxReceiveBufferSize)
+    {
+        TRACE("Receive buffer overflow without terminator - closing connection");
+        return CONNECTION_CLOSED;
+    }
+
+    return CONNECTION_OK;
 }
 
 //======================================================================================================================
@@ -368,7 +349,7 @@ void IncomingConnection::SendAgentMessages(const Aeroplane* aeroplane, float dt)
         float altitude = fabsf(pos.z -  Environment::GetInstance().GetTerrain().GetTerrainHeightFast(pos.x, pos.y, true));
         float time = Environment::GetInstance().GetTime();
 
-        sprintf(messageToSend, "Agent %d Telemetry time %f pos %f %f %f faceDir %f %f %f upDir %f %f %f alt %f vel %f %f %f wind %f %f %f",
+        snprintf(messageToSend, sizeof(messageToSend), "Agent %d Telemetry time %f pos %f %f %f faceDir %f %f %f upDir %f %f %f alt %f vel %f %f %f wind %f %f %f",
             agentID,
             time,
             pos.x, pos.y, pos.z,

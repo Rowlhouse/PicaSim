@@ -9,7 +9,7 @@
 class IncomingConnection
 {
 public:
-    IncomingConnection(TCPsocket socket);
+    IncomingConnection(TCPsocket socket, bool isLoopback);
 
     /// Closes the socket
     void CloseSocket();
@@ -44,6 +44,8 @@ private:
     void HandleReset(Tokens& tokens);
 
     TCPsocket mSocket;
+    bool mIsLoopback;
+    std::string mReceiveBuffer;
 
     NetworkControllers mNetworkControllers;
     int                mCurrentAgent;

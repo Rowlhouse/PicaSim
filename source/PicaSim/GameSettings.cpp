@@ -199,6 +199,7 @@ Options::Options() :
     mFreeFlyMode(FREEFLYMODE_MAX),
     mFreeFlyOnStartup(false),
     mEnableSocketController(false),
+    mSocketControllerAllowRemote(false),
     mSetWindDirectionOnWalkabout(true),
     mUseBackButtonToExit(false),
     mUseAeroplanePreferredController(true),
@@ -417,6 +418,7 @@ bool Options::WriteToDoc(TiXmlDocument& doc) const
     WRITE_ATTRIBUTE(mFreeFlyMode);
     WRITE_ATTRIBUTE(mFreeFlyOnStartup);
     WRITE_ATTRIBUTE(mEnableSocketController);
+    WRITE_ATTRIBUTE(mSocketControllerAllowRemote);
     WRITE_ATTRIBUTE(mSetWindDirectionOnWalkabout);
     WRITE_ATTRIBUTE(mUseBackButtonToExit);
     WRITE_ATTRIBUTE(mEnableWalkabout);
@@ -567,6 +569,7 @@ bool Options::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mAeroplaneViewTerrainLOD);
     READ_ATTRIBUTE(mFreeFlyOnStartup);
     READ_ATTRIBUTE(mEnableSocketController);
+    READ_ATTRIBUTE(mSocketControllerAllowRemote);
     READ_ATTRIBUTE(mSetWindDirectionOnWalkabout);
     READ_ATTRIBUTE(m16BitTextures);
     READ_ENUM_ATTRIBUTE(mFreeFlyMode);

@@ -240,6 +240,7 @@ struct Options : public Settings
     FreeFlyMode mFreeFlyMode;
     bool  mFreeFlyOnStartup;
     bool  mEnableSocketController;
+    bool  mSocketControllerAllowRemote;
     bool  mSetWindDirectionOnWalkabout;
     bool  mUseBackButtonToExit;
     bool  mEnableWalkabout;

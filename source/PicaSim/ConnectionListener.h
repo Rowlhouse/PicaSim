@@ -11,7 +11,7 @@ class ConnectionListener
 {
 public:
     ConnectionListener();
-    void Init();
+    void Init(bool allowRemoteConnections);
     void Terminate();
 
     void Update();
@@ -21,6 +21,7 @@ private:
 
     TCPsocket mSocketListener;
     SDLNet_SocketSet mSocketSet;
+    bool mAllowRemoteConnections;
 
     typedef std::vector<IncomingConnection> IncomingConnections;
     IncomingConnections mIncomingConnections;
