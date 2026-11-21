@@ -47,9 +47,10 @@ static std::string GetVersionMarkerPath(const std::string& basePath)
 
 static std::string GetCurrentVersionString()
 {
-    // Use a combination of app version info
-    // We read VERSIONS.txt from the APK to get the version
-    SDL_RWops* rw = SDL_RWFromFile("VERSIONS.txt", "r");
+    // assets_version.txt is a digest of the paths and contents of all the packaged assets,
+    // written by tools/generate_asset_manifest.py. Re-extracting whenever it changes means
+    // data changes reach the device even when the version number hasn't changed.
+    SDL_RWops* rw = SDL_RWFromFile("assets_version.txt", "r");
     if (rw)
     {
         char buf[256];
