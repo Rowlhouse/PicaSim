@@ -189,7 +189,10 @@ bool OpenXRRuntime::CreateInstance()
     createInfo.applicationInfo.applicationVersion = 1;
     strcpy(createInfo.applicationInfo.engineName, "PicaSim");
     createInfo.applicationInfo.engineVersion = 1;
-    createInfo.applicationInfo.apiVersion = XR_CURRENT_API_VERSION;
+    // Request OpenXR 1.0 rather than XR_CURRENT_API_VERSION. With a 1.1 loader the
+    // latter asks for 1.1, which SteamVR rejects. PicaSim uses no 1.1 features.
+    createInfo.applicationInfo.apiVersion =
+        XR_MAKE_VERSION(1, 0, XR_VERSION_PATCH(XR_CURRENT_API_VERSION));
     createInfo.enabledApiLayerCount = 0;
     createInfo.enabledApiLayerNames = nullptr;
     createInfo.enabledExtensionCount = 1;
