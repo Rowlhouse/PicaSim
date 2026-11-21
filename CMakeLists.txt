@@ -110,6 +110,9 @@ endif()
 
 # --- Common build options ---
 set(SDL_TEST OFF CACHE BOOL "" FORCE)
+# PicaSim's sound goes through OpenAL and never starts SDL's audio, so SDL's PipeWire
+# backend isn't needed. It also fails to compile against PipeWire 1.6 (current Arch Linux).
+set(SDL_PIPEWIRE OFF CACHE BOOL "" FORCE)
 set(ALSOFT_UTILS OFF CACHE BOOL "" FORCE)
 set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
