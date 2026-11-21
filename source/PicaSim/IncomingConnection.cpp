@@ -235,11 +235,13 @@ static bool Send(TCPsocket socket, std::string msg)
 //======================================================================================================================
 void IncomingConnection::CloseSocket()
 {
+    // Only unlink the aeroplanes sending telemetry to this connection, not those of other connections
     size_t num = PicaSim::GetInstance().GetNumAeroplanes();
     for (size_t i = 0 ; i != num ; ++i)
     {
         Aeroplane* aeroplane = PicaSim::GetInstance().GetAeroplane(i);
-        aeroplane->SetIncomingConnection(nullptr);
+        if (aeroplane && aeroplane->GetIncomingConnection() == this)
+            aeroplane->SetIncomingConnection(nullptr);
     }
 
     if (mSocket)
@@ -255,14 +257,14 @@ void IncomingConnection::CloseSocket()
 
 //======================================================================================================================
 IncomingConnection::IncomingConnection(TCPsocket socket, bool isLoopback)
-        : mSocket(socket), mIsLoopback(isLoopback), mCurrentAgent(0)
+        : mSocket(socket), mIsLoopback(isLoopback), mSendFailed(false), mCurrentAgent(0)
 {
 }
 
 //======================================================================================================================
 IncomingConnection::UpdateResult IncomingConnection::Update(SDLNet_SocketSet socketSet)
 {
-    if (!mSocket)
+    if (!mSocket || mSendFailed)
         return CONNECTION_CLOSED;
 
     // Read all available data into the persistent buffer (non-blocking)
@@ -312,11 +314,9 @@ IncomingConnection::UpdateResult IncomingConnection::Update(SDLNet_SocketSet soc
 //======================================================================================================================
 void IncomingConnection::SendAgentMessages(const Aeroplane* aeroplane, float dt)
 {
-    if (!mSocket)
-    {
-        TRACE("No socket");
+    if (!mSocket || mSendFailed)
         return;
-    }
+
     size_t num = PicaSim::GetInstance().GetNumAeroplanes();
     int agentID;
     for (agentID = 0 ; agentID != (int)num ; ++agentID)
@@ -361,8 +361,10 @@ void IncomingConnection::SendAgentMessages(const Aeroplane* aeroplane, float dt)
 
         if (!Send(mSocket, messageToSend))
         {
-            TRACE("Unable to send message - closing socket");
-            CloseSocket();
+            // Closing the socket here would free it while it is still in ConnectionListener's
+            // socket set. Mark the connection instead, and the next Update closes it properly.
+            TRACE("Unable to send message - closing connection");
+            mSendFailed = true;
             return;
         }
 

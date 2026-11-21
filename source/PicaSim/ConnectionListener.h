@@ -3,6 +3,8 @@
 
 #include "IncomingConnection.h"
 #include <SDL_net.h>
+#include <memory>
+#include <string>
 #include <vector>
 
 //======================================================================================================================
@@ -23,7 +25,9 @@ private:
     SDLNet_SocketSet mSocketSet;
     bool mAllowRemoteConnections;
 
-    typedef std::vector<IncomingConnection> IncomingConnections;
+    // Held by pointer so each connection keeps its address when others are added or removed.
+    // Aeroplanes keep a pointer to the connection that requested their telemetry.
+    typedef std::vector<std::unique_ptr<IncomingConnection>> IncomingConnections;
     IncomingConnections mIncomingConnections;
 };
 

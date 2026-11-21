@@ -63,6 +63,7 @@ public:
     Controller& GetController() {return *mController;}
 
     void SetIncomingConnection(IncomingConnection* incomingConnection) { mIncomingConnection = incomingConnection; }
+    IncomingConnection* GetIncomingConnection() const { return mIncomingConnection; }
 
     const AeroplaneSettings& GetAeroplaneSettings() const {return mAeroplaneSettings;}
     void SetAeroplaneSettings(const AeroplaneSettings& as) {mAeroplaneSettings = as;}

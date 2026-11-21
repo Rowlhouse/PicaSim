@@ -11,7 +11,12 @@ class IncomingConnection
 public:
     IncomingConnection(TCPsocket socket, bool isLoopback);
 
-    /// Closes the socket
+    // Aeroplanes keep a pointer to the connection that requested their telemetry, so a
+    // connection must stay at one address for its whole life
+    IncomingConnection(const IncomingConnection&) = delete;
+    IncomingConnection& operator=(const IncomingConnection&) = delete;
+
+    /// Closes the socket. Call SDLNet_TCP_DelSocket first if it is in a socket set.
     void CloseSocket();
 
     /// Returns the socket for socket set management
@@ -45,6 +50,9 @@ private:
 
     TCPsocket mSocket;
     bool mIsLoopback;
+    // Set when sending fails. The socket is left open so that ConnectionListener can take it
+    // out of its socket set before closing it.
+    bool mSendFailed;
     std::string mReceiveBuffer;
 
     NetworkControllers mNetworkControllers;
