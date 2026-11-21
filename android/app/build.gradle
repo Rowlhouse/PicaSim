@@ -26,7 +26,10 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.rowlhouse.picasim"
-    compileSdkVersion 35
+    compileSdkVersion 36
+    // NDK r28 aligns native libraries for 16 KB memory pages by default, which Google Play
+    // requires for apps targeting Android 15 and later
+    ndkVersion "28.2.13676358"
 
     signingConfigs {
         release {
@@ -40,7 +43,7 @@ android {
     defaultConfig {
         applicationId "com.rowlhouse.picasim"
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode parsedVersionCode
         versionName parsedVersionName
 

@@ -74,9 +74,10 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
 
-      - name: Install NDK
+      # Keep the NDK version in step with ndkVersion in android/app/build.gradle
+      - name: Install SDK platform and NDK
         run: |
-          sdkmanager --install "ndk;25.2.9519653"
+          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
 
       - name: Generate asset manifest
         run: |
