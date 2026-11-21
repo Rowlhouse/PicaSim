@@ -1,23 +1,31 @@
 #include "ConnectionListener.h"
 #include "PicaSim.h"
 
+#include <cstdio>
+
 #define LISTEN_PORT  7777
 #define MAX_SOCKETS  16
+
+//======================================================================================================================
+// Formats an IPv4 address as a.b.c.d:port. SDLNet_ResolveIP is not used because it does a
+// reverse DNS lookup, which can block the game for seconds.
+static std::string FormatAddress(const IPaddress* addr)
+{
+    if (!addr)
+        return "unknown";
+    // host and port are both in network byte order
+    const Uint8* b = (const Uint8*)&addr->host;
+    char text[32];
+    snprintf(text, sizeof(text), "%d.%d.%d.%d:%d", b[0], b[1], b[2], b[3], (int) SDLNet_Read16(&addr->port));
+    return text;
+}
 
 //======================================================================================================================
 void ConnectionListener::HandleIncomingConnection(TCPsocket newSocket)
 {
     IPaddress* peerAddr = SDLNet_TCP_GetPeerAddress(newSocket);
-    const char* host = nullptr;
-    if (peerAddr)
-    {
-        host = SDLNet_ResolveIP(peerAddr);
-        TRACE("IncomingConnection: %p from %s:%d", newSocket, host ? host : "unknown", peerAddr->port);
-    }
-    else
-    {
-        TRACE("IncomingConnection: %p", newSocket);
-    }
+    std::string peer = FormatAddress(peerAddr);
+    TRACE("IncomingConnection: %p from %s", newSocket, peer.c_str());
 
     // IPaddress.host is in network byte order, so the first byte is the first octet of the address
     const Uint8* hostBytes = peerAddr ? (const Uint8*)&peerAddr->host : nullptr;
@@ -26,16 +34,21 @@ void ConnectionListener::HandleIncomingConnection(TCPsocket newSocket)
     if (!isLoopback && !mAllowRemoteConnections)
     {
         TRACE("Rejecting remote connection from %s - set mSocketControllerAllowRemote in settings.xml to allow remote control",
-            host ? host : "unknown");
+            peer.c_str());
         SDLNet_TCP_Close(newSocket);
         return;
     }
 
-    IncomingConnection incomingConnection(newSocket, isLoopback);
-    mIncomingConnections.push_back(incomingConnection);
+    // Add to socket set for non-blocking receive checks. If the set is full the connection
+    // would never be read, so close it instead.
+    if (SDLNet_TCP_AddSocket(mSocketSet, newSocket) < 0)
+    {
+        TRACE("Too many connections - closing connection from %s", peer.c_str());
+        SDLNet_TCP_Close(newSocket);
+        return;
+    }
 
-    // Add to socket set for non-blocking receive checks
-    SDLNet_TCP_AddSocket(mSocketSet, newSocket);
+    mIncomingConnections.push_back(std::make_unique<IncomingConnection>(newSocket, isLoopback));
 }
 
 //======================================================================================================================
@@ -105,11 +118,13 @@ void ConnectionListener::Update()
     // Update all active connections
     for (IncomingConnections::iterator it = mIncomingConnections.begin() ; it != mIncomingConnections.end() ; )
     {
-        if (IncomingConnection::CONNECTION_CLOSED == it->Update(mSocketSet))
+        IncomingConnection& connection = **it;
+        if (IncomingConnection::CONNECTION_CLOSED == connection.Update(mSocketSet))
         {
             TRACE("Lost connection");
-            SDLNet_TCP_DelSocket(mSocketSet, it->GetSocket());
-            it->CloseSocket();
+            if (connection.GetSocket())
+                SDLNet_TCP_DelSocket(mSocketSet, connection.GetSocket());
+            connection.CloseSocket();
             it = mIncomingConnections.erase(it);
         }
         else
@@ -125,9 +140,10 @@ void ConnectionListener::Terminate()
     TRACE_METHOD_ONLY(ONCE_2);
     for (IncomingConnections::iterator it = mIncomingConnections.begin() ; it != mIncomingConnections.end() ; ++it)
     {
-        if (mSocketSet)
-            SDLNet_TCP_DelSocket(mSocketSet, it->GetSocket());
-        it->CloseSocket();
+        IncomingConnection& connection = **it;
+        if (mSocketSet && connection.GetSocket())
+            SDLNet_TCP_DelSocket(mSocketSet, connection.GetSocket());
+        connection.CloseSocket();
     }
     mIncomingConnections.clear();
 
