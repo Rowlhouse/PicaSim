@@ -1,3 +1,8 @@
+Version 1.5.0
+- Builds for macOS, Linux and iOS (thanks RobertoD91)
+- Fix VR failing to start with SteamVR headsets such as the Vive and Index (thanks twinstef)
+- Add a joystick preset for the Flysky FS-i6XCN (thanks bupd)
+
 Version 1.4.0
 - Support for VR in menus, including overlay, with mouse input
 
