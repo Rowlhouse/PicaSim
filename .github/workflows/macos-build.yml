@@ -40,7 +40,7 @@ jobs:
     continue-on-error: ${{ matrix.arch == 'x86_64' }}
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
       
@@ -68,7 +68,7 @@ jobs:
           ./macos_create_dmg.sh dist/PicaSim.app dist
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: picasim-${{ matrix.arch }}
           path: dist/
@@ -79,16 +79,16 @@ jobs:
     runs-on: macos-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       
       - name: Download ARM64 build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: picasim-arm64
           path: dist-arm64
       
       - name: Download x86_64 build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: picasim-x86_64
           path: dist-x86_64
@@ -129,7 +129,7 @@ jobs:
           ls -lh dist-universal/PicaSim-*.dmg
       
       - name: Upload universal build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: picasim-universal
           path: dist-universal/

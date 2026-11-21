@@ -34,7 +34,7 @@ jobs:
     name: Build iOS (${{ matrix.target }})
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -87,7 +87,7 @@ jobs:
 
       - name: Upload artifact (device)
         if: matrix.target == 'device'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: picasim-ios-device-unsigned-ipa
           path: PicaSim-ios-device-unsigned.ipa
@@ -95,7 +95,7 @@ jobs:
 
       - name: Upload artifact (simulator)
         if: matrix.target == 'simulator'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: picasim-ios-simulator
           path: PicaSim-ios-simulator.zip
