@@ -32,9 +32,10 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
 
-      - name: Install NDK
+      # Keep the NDK version in step with ndkVersion in android/app/build.gradle
+      - name: Install SDK platform and NDK
         run: |
-          sdkmanager --install "ndk;25.2.9519653"
+          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -94,7 +95,8 @@ jobs:
       - name: Run emulator and test app
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 31
+          # Test on the Android version the app targets
+          api-level: 36
           target: default
           arch: x86_64
           emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
