@@ -96,7 +96,20 @@ jobs:
               exit 1
             fi
           done
-          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          # Ignore line breaks, spaces and any -----BEGIN/END----- lines that copy and
+          # paste or other base64 tools can add
+          if ! printf '%s\n' "$KEYSTORE_BASE64" | sed '/^-----/d' | tr -d '[:space:]' \
+              | base64 -d > "$RUNNER_TEMP/release.jks" 2> /dev/null; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 is not valid base64. Re-create it from the .jks file as described in RELEASING.md."
+            exit 1
+          fi
+          # Check the password and alias now, so a mistake gets a clear message
+          # rather than a Gradle signing error
+          if ! keytool -list -keystore "$RUNNER_TEMP/release.jks" -storepass:env KEYSTORE_PASSWORD \
+              -alias "$KEY_ALIAS" > /dev/null; then
+            echo "::error::Could not open the keystore with ANDROID_KEYSTORE_PASSWORD, or it has no key named ANDROID_KEY_ALIAS."
+            exit 1
+          fi
           # Java properties files treat backslashes as escapes, so double them
           esc() { printf '%s' "$1" | sed 's/\\/\\\\/g'; }
           {

@@ -21,10 +21,11 @@ The Android APK on GitHub is signed with a key used only for GitHub downloads. I
    - Optionally, under "Deployment branches and tags", limit it to `main`. Dry runs from other branches then can't sign the APK.
 
 4. In that environment, add four environment secrets:
-   - `ANDROID_KEYSTORE_BASE64`: the keystore as base64. This copies it to the clipboard:
+   - `ANDROID_KEYSTORE_BASE64`: the keystore as base64. Run this in the folder that holds `picasim-github.jks`. It prints the length of the base64 text and copies the text to the clipboard:
      ```powershell
-     [Convert]::ToBase64String([IO.File]::ReadAllBytes("$PWD\picasim-github.jks")) | Set-Clipboard
+     $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Get-Item .\picasim-github.jks).FullName)); $b64.Length; $b64 | Set-Clipboard
      ```
+     The length should be several thousand. If PowerShell shows an error instead, nothing was copied and the clipboard still holds whatever was there before, so don't paste it into the secret. This works on a network share too, where a path built from `$PWD` fails.
    - `ANDROID_KEYSTORE_PASSWORD`: the password
    - `ANDROID_KEY_ALIAS`: `picasim-github`
    - `ANDROID_KEY_PASSWORD`: the password again
