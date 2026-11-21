@@ -227,7 +227,7 @@ bool PicaSim::Init(GameSettings& gameSettings, LoadingScreenHelper* loadingScree
   if (gameSettings.mOptions.mEnableSocketController)
   {
     mInstance->mConnectionListener = std::make_unique<ConnectionListener>();
-    mInstance->mConnectionListener->Init();
+    mInstance->mConnectionListener->Init(gameSettings.mOptions.mSocketControllerAllowRemote);
   }
     return true;
 }
