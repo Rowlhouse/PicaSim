@@ -13,9 +13,12 @@ on:
         description: 'Create GitHub Release'
         required: false
         default: 'false'
+  workflow_call:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # When called from the Release workflow, github.workflow is "Release", so the
+  # prefix keeps each platform's group separate from the others and from push builds
+  group: macos-build-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
