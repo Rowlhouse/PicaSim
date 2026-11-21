@@ -270,9 +270,11 @@ StartMenuResult DisplayStartMenu(GameSettings& gameSettings)
             if (result != STARTMENU_MAX)
                 break;
 
-            // Check for back button / quit
+            // Check for back button / quit. Back only quits when "Use back button to exit" is set,
+            // because otherwise it is usually pressed while stepping back through the menus.
             if (CheckForQuitRequest() ||
-                    (Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED))
+                    ((Input::GetInstance().GetKeyState(SDLK_AC_BACK) & KEY_STATE_PRESSED) &&
+                     gameSettings.mOptions.mUseBackButtonToExit))
             {
                 result = STARTMENU_QUIT;
                 break;

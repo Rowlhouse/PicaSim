@@ -26,7 +26,11 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.rowlhouse.picasim"
-    compileSdkVersion 35
+    compileSdkVersion 36
+    // Pin the NDK so builds don't change with the Android Gradle Plugin's default. Keep it in
+    // step with the CI workflows. (16 KB page alignment comes from the linker flags in
+    // CMakeLists.txt, and is also the default from NDK r28.)
+    ndkVersion "28.2.13676358"
 
     signingConfigs {
         release {
@@ -40,7 +44,7 @@ android {
     defaultConfig {
         applicationId "com.rowlhouse.picasim"
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode parsedVersionCode
         versionName parsedVersionName
 

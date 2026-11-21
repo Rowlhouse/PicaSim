@@ -42,6 +42,8 @@ The Android APK on GitHub is signed with a key used only for GitHub downloads. I
 
 Running the workflow on any other branch is a dry run. It builds everything and uploads the files as a `picasim-release-files` artifact, without making a release.
 
+To test on a phone, tick **Android only** when running the workflow. It builds just the APK, signed with the GitHub key, in about 6 minutes instead of 16, and uploads it as the `picasim-android-release` artifact. It never makes a release, even on `main`. Because it uses the same key as the GitHub releases, it installs over them as an update, keeping settings.
+
 ## Notes
 
 - The macOS DMG from CI is not notarized. The README describes how to make a notarized DMG locally.

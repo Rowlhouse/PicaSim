@@ -341,9 +341,9 @@ The installer is created at `dist/PicaSim-X.Y.Z-Setup.exe`. Running it will:
 
 #### Prerequisites
 
-- **Android SDK** with platform API 33+
-- **Android NDK 25** (r25 / 25.1.x) - install via Android Studio's SDK Manager
-- **Java 17** - required by Gradle 8.5
+- **Android SDK** with platform API 36
+- **Android NDK r28** (28.2.13676358, the version pinned in `android/app/build.gradle`) - install via Android Studio's SDK Manager, or let Gradle download it
+- **Java 17** - required by Gradle 8.11 and the Android Gradle Plugin 8.10
 - **Git submodules** initialised (SDL2, SDL2_net, openal-soft, imgui, stb, glm live in `third_party/`)
 
 ```bash
