@@ -36,7 +36,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -65,7 +65,7 @@ jobs:
           ./linux_create_appimage.sh build/${{ matrix.configure_preset }} dist
 
       - name: Upload AppImage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: picasim-linux-${{ matrix.arch }}
           path: dist/PicaSim-*.AppImage

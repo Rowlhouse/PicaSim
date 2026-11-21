@@ -43,6 +43,7 @@ nul
 CodingStyleQueries.md
 data/VERSIONS.txt
 data/assets_manifest.txt
+data/assets_version.txt
 
 # Android build artifacts
 android/.gradle/

@@ -152,8 +152,73 @@ static bool InitialiseOptions(GameSettings& gameSettings)
 }
 
 //======================================================================================================================
+static bool FileExists(const std::string& path)
+{
+    FILE* f = fopen(path.c_str(), "rb");
+    if (!f)
+        return false;
+    fclose(f);
+    return true;
+}
+
+//======================================================================================================================
+static void PrintUsage()
+{
+    printf("Usage: PicaSim [options]\n");
+    printf("\n");
+    printf("Options:\n");
+    printf("  --fly             Skip the menus and start flying immediately\n");
+    printf("  --plane <name>    Aeroplane to fly (implies --fly)\n");
+    printf("  --scenery <name>  Scenery to fly in (implies --fly)\n");
+    printf("  --help            Print this help and exit\n");
+    printf("\n");
+    printf("<name> is the basename of an XML file under data/SystemSettings/Aeroplane/\n");
+    printf("or data/SystemSettings/Environment/ respectively - e.g. Trainer or Hills.\n");
+}
+
+//======================================================================================================================
 int main(int argc, char* argv[])
 {
+    // Parse the command line up front so --help and option errors don't initialise anything
+    bool cmdLineFly = false;
+    std::string cmdLinePlaneFile;
+    std::string cmdLineSceneryFile;
+    for (int iArg = 1 ; iArg != argc ; ++iArg)
+    {
+        const std::string arg = argv[iArg];
+        if (arg == "--fly")
+        {
+            cmdLineFly = true;
+        }
+        else if (arg == "--plane" || arg == "--scenery")
+        {
+            if (iArg + 1 == argc)
+            {
+                printf("Missing <name> after %s\n\n", arg.c_str());
+                PrintUsage();
+                return 1;
+            }
+            std::string name = argv[++iArg];
+            if (arg == "--plane")
+                cmdLinePlaneFile = "SystemSettings/Aeroplane/" + name + ".xml";
+            else
+                cmdLineSceneryFile = "SystemSettings/Environment/" + name + ".xml";
+            // Specifying a plane or scenery implies wanting to fly it
+            cmdLineFly = true;
+        }
+        else if (arg == "--help")
+        {
+            PrintUsage();
+            return 0;
+        }
+        else if (!arg.empty() && arg[0] == '-')
+        {
+            printf("Unknown option %s\n\n", arg.c_str());
+            PrintUsage();
+            return 1;
+        }
+    }
+
     SetTraceLevel(1);
 
 #ifdef PICASIM_ANDROID
@@ -186,6 +251,20 @@ int main(int argc, char* argv[])
             TRACE_FILE_IF(ONCE_1) TRACE("iOS: chdir FAILED for %s", dataDir.c_str());
     }
 #endif
+
+    // The working directory is now data/ on all platforms (desktop is run from data/, Android/iOS
+    // have changed to it above), so command-line file overrides can be checked before the window
+    // and GL are initialised.
+    if (!cmdLinePlaneFile.empty() && !FileExists(cmdLinePlaneFile))
+    {
+        printf("Aeroplane file %s not found\n", cmdLinePlaneFile.c_str());
+        return 1;
+    }
+    if (!cmdLineSceneryFile.empty() && !FileExists(cmdLineSceneryFile))
+    {
+        printf("Scenery file %s not found\n", cmdLineSceneryFile.c_str());
+        return 1;
+    }
 
     // Reset stale static state for Android relaunch safety.
     // On Android the shared library stays loaded between app launches,
@@ -262,13 +341,6 @@ int main(int argc, char* argv[])
 
     TRACE("dpi = %d so physical diagonal = %5.2f inches", (int)Platform::GetScreenDPI(), Platform::GetSurfaceDiagonalInches());
 
-#if 0
-    s3eWindowDisplayMode modes[32];
-    int numModes = 32;
-    s3eResult result = s3eWindowGetDisplayModes(modes, &numModes);
-    result = s3eWindowSetFullscreen(&modes[numModes-1]);
-#endif
-
     TRACE_FILE_IF(ONCE_1) TRACE("Initializing AudioManager");
     AudioManager::Init();
     TRACE_FILE_IF(ONCE_1) TRACE("AudioManager initialized");
@@ -280,7 +352,7 @@ int main(int argc, char* argv[])
 
     MEMTEST();
     TRACE_FILE_IF(ONCE_1) TRACE("Creating GameSettings");
-    // Make sure everything goes out of scope before we close down Marmalade
+    // Make sure everything goes out of scope before the subsystems are shut down
     {
         GameSettings gameSettings;
 
@@ -350,6 +422,26 @@ int main(int argc, char* argv[])
             InitialiseOptions(gameSettings);
         }
 
+        // Apply command-line overrides after the saved settings have been loaded so they take precedence
+        if (!cmdLinePlaneFile.empty())
+        {
+            TRACE_FILE_IF(ONCE_1) TRACE("Loading command-line aeroplane %s", cmdLinePlaneFile.c_str());
+            bool loadResult = gameSettings.mAeroplaneSettings.LoadFromFile(cmdLinePlaneFile);
+            IwAssert(ROWLHOUSE, loadResult);
+            TRACE_FILE_IF(ONCE_1) TRACE(" %s", loadResult ? "success" : "failed");
+            gameSettings.mStatistics.mLoadedAeroplane = true;
+        }
+        if (!cmdLineSceneryFile.empty())
+        {
+            TRACE_FILE_IF(ONCE_1) TRACE("Loading command-line scenery %s", cmdLineSceneryFile.c_str());
+            bool loadResult = gameSettings.mEnvironmentSettings.LoadFromFile(cmdLineSceneryFile);
+            IwAssert(ROWLHOUSE, loadResult);
+            TRACE_FILE_IF(ONCE_1) TRACE(" %s", loadResult ? "success" : "failed");
+            bool objectsResult = gameSettings.mObjectsSettings.LoadFromFile(gameSettings.mEnvironmentSettings.mObjectsSettingsFile);
+            IwAssert(ROWLHOUSE, objectsResult);
+            gameSettings.mStatistics.mLoadedTerrain = true;
+        }
+
         LoadingScreen* initialLoadingScreen = new LoadingScreen(GetPS(PS_LOADING, gameSettings.mOptions.mLanguage), gameSettings, true, false, true);
 
         GLint depthBits = 0;
@@ -415,7 +507,8 @@ int main(int argc, char* argv[])
 
         TRACE_FILE_IF(ONCE_1) TRACE("Entering main game loop");
         {
-            bool doDefaultFreeFly = gameSettings.mOptions.mFreeFlyOnStartup;
+            bool doDefaultFreeFly = gameSettings.mOptions.mFreeFlyOnStartup || cmdLineFly;
+            cmdLineFly = false; // The command-line request only applies the first time round the loop
 
             while (1)
             {

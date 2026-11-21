@@ -19,12 +19,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -38,7 +38,7 @@ jobs:
           sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
 
       - name: Cache Gradle
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.gradle/caches
@@ -57,7 +57,7 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Upload debug APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: picasim-android-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
@@ -72,10 +72,10 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Download APK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: picasim-android-debug
           path: apk
@@ -87,7 +87,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-test-logs
           path: android-logs.txt
