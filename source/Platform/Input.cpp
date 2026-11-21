@@ -39,6 +39,7 @@ Input::Input()
     memset(mKeyStates, 0, sizeof(mKeyStates));
     memset(mKeyDown, 0, sizeof(mKeyDown));
     memset(mKeyDownPrev, 0, sizeof(mKeyDownPrev));
+    memset(mKeyPressedThisFrame, 0, sizeof(mKeyPressedThisFrame));
     memset(mMouseButtonStates, 0, sizeof(mMouseButtonStates));
     memset(mMouseButtonDown, 0, sizeof(mMouseButtonDown));
     memset(mMouseButtonDownPrev, 0, sizeof(mMouseButtonDownPrev));
@@ -128,6 +129,7 @@ void Input::ClearPressedStates()
     // Clear edge detection states by syncing prev with current
     // This prevents clicks from "bleeding through" screen transitions
     memcpy(mKeyDownPrev, mKeyDown, sizeof(mKeyDown));
+    memset(mKeyPressedThisFrame, 0, sizeof(mKeyPressedThisFrame));
     memcpy(mMouseButtonDownPrev, mMouseButtonDown, sizeof(mMouseButtonDown));
 
     // Recompute states (will now show DOWN instead of PRESSED for held buttons)
@@ -151,6 +153,7 @@ void Input::BeginFrame()
     // This must happen BEFORE processing events so that new key presses this frame
     // are detected as transitions from the previous frame's state
     memcpy(mKeyDownPrev, mKeyDown, sizeof(mKeyDown));
+    memset(mKeyPressedThisFrame, 0, sizeof(mKeyPressedThisFrame));
     memcpy(mMouseButtonDownPrev, mMouseButtonDown, sizeof(mMouseButtonDown));
 
     // Mark states as dirty so they'll be recomputed after events are processed
@@ -203,6 +206,9 @@ void Input::ProcessEvent(const SDL_Event& event)
             SDL_Scancode scancode = event.key.keysym.scancode;
             if (scancode >= 0 && scancode < MAX_KEYS)
             {
+                // Key repeats arrive as more key downs, and don't count as new presses
+                if (!mKeyDown[scancode])
+                    mKeyPressedThisFrame[scancode] = true;
                 mKeyDown[scancode] = true;
             }
             if (mKeyboardCallback)
@@ -410,7 +416,7 @@ void Input::UpdateKeyStates()
 {
     for (int i = 0; i < MAX_KEYS; ++i)
     {
-        if (mKeyDown[i] && !mKeyDownPrev[i])
+        if ((mKeyDown[i] && !mKeyDownPrev[i]) || mKeyPressedThisFrame[i])
             mKeyStates[i] = KEY_STATE_PRESSED;
         else if (!mKeyDown[i] && mKeyDownPrev[i])
             mKeyStates[i] = KEY_STATE_RELEASED;

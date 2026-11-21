@@ -229,6 +229,9 @@ private:
     KeyState mKeyStates[MAX_KEYS];
     bool mKeyDown[MAX_KEYS];
     bool mKeyDownPrev[MAX_KEYS];
+    // Set when a key goes down during this frame, so a press still counts if the key is
+    // released again before the frame ends. Android's back gesture sends down and up together.
+    bool mKeyPressedThisFrame[MAX_KEYS];
 
     // Mouse state
     int mMouseX, mMouseY;
