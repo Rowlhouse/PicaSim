@@ -1,5 +1,5 @@
 # PicaSim CMake Build System
-# Migrating from Marmalade SDK to SDL2 + OpenGL
+# PicaSim — SDL2 + OpenGL (ported from Marmalade SDK)
 cmake_minimum_required(VERSION 3.20)
 project(PicaSim VERSION 1.0.0 LANGUAGES CXX C)
 
@@ -507,7 +507,7 @@ endif()
 # Install rules (for release packaging)
 # --------------------------------------------------------------------------
 if(NOT ANDROID AND NOT IOS)
-    # Always install to dist/<version_dir> (e.g., dist/PicaSim-1_0_0)
+    # Always install to dist/<version_dir> (e.g., dist/PicaSim-1.0.0)
     set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/dist/${PICASIM_VERSION_DIR}" CACHE PATH "" FORCE)
 
     # Clean the install directory first to prevent stale files

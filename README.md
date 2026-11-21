@@ -147,7 +147,7 @@ cmake --build --preset windows-x64-release
 cmake --install build/windows-x64 --config Release
 ```
 
-This creates a standalone distribution in `dist/PicaSim-X_Y_Z/` (version extracted from VERSIONS.txt).
+This creates a standalone distribution in `dist/PicaSim-X.Y.Z/` (version extracted from VERSIONS.txt).
 
 ### Linux Build
 
@@ -452,7 +452,7 @@ These are covered by PicaSim's licence:
 Under Source
 - Framework: Contains fairly generic code on which PicaSim is built
 - Heightfield: Runtime refinement for rendering a heightfield, based on a paper by Lindstrom + Pascucci. It was good in its day, but I would not recommend it now!
-- MapTrace: Stand-alone helper application for creating a heightfield by tracing contours (very old!)
+- MapTrace: Stand-alone helper application for creating a heightfield by tracing contours (very old!). It has been removed from the repository, but is available in the project's history if ever needed.
 - PicaSim: All the application code
 - Platform: Platform abstraction layer (SDL2, Android, VR)
 
