@@ -1,3 +1,20 @@
+Version 1.6.0
+- Fix the Android back button, which did nothing on recent versions of Android. Back only quits from the start menu when "Use back button to exit" is set
+- Fix on-screen buttons sometimes missing quick clicks and taps, and taps with a second finger
+- Fix crashes when an aeroplane, tug or scenery needs a file that's missing, and find files named with the wrong upper or lower case on Linux, Android and iOS
+- Save settings more safely, so an interrupted save can't lose them
+- Lift no longer has the aspect ratio correction applied twice, giving slightly more lift and control
+- Flutter drag now grows with speed as intended, so the ASW15, Banana, Discus, Jart, MiniDLG, Minimoa, Quark, Quartz, Spirit26 and Tigger glide better at normal speeds
+- The tug's propwash now reaches the towed glider, getting weaker with distance
+- Jet thrust never goes into reverse
+- The remote control server (TCP port 7777) only accepts connections from the same computer unless allowed in settings.xml, and is more robust (thanks RobertoD91)
+- Add the command-line options --fly, --plane, --scenery and --help (thanks RobertoD91)
+- Android: update to Android 16 (API level 36) (thanks JohnTheodore)
+- Android: Help > Versions and What's New now work, and updated data always reaches the device
+- Fix building on current Arch Linux (thanks bupd)
+- Fix the zoom view keeping aeroplanes that are no longer being viewed
+- Smaller fixes for AI aeroplanes, the tug camera and custom aeroplane data
+
 Version 1.5.0
 - Builds for macOS, Linux and iOS (thanks RobertoD91)
 - Fix VR failing to start with SteamVR headsets such as the Vive and Index (thanks twinstef)
