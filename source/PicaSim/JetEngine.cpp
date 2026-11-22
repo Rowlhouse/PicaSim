@@ -165,7 +165,8 @@ void JetEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& turbulen
 
     float f = (speed - mMinSpeed) / (mMaxSpeed - mMinSpeed);
 
-    effectiveness *= f;
+    // Below minSpeed (for example when going backwards) f is negative, but the engine can only push forwards
+    effectiveness = Maximum(effectiveness * f, 0.0f);
 
     float force = mMaxForce * mControl * effectiveness;
     mAeroplane->GetPhysics()->ApplyWorldForceAtWorldPosition(mTM.RowX() * force, mTM.GetTrans());

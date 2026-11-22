@@ -377,10 +377,8 @@ void AerofoilDefinition::GetFlightData(
         CM += mCMPerDeg * RadiansToDegrees(angleOfAttack);
     CM *= flying;
 
-    // Adjust CL for the aspect ratio - effectively adjust the CL per alpha, when flying
-    float CLAdjusted = CL / (1.0f + fabsf(CL) / (PI * effectiveAR) );
-    CL += f * (CLAdjusted -CL);
-
+    // Note that the aspect ratio correction to the lift slope is made in GetGraphData (it used to be applied a
+    // second time here as well)
 }
 
 //======================================================================================================================
@@ -607,20 +605,21 @@ float AerofoilDefinition::ApplyForces(
                         // Airflow in local space
                         Vector3 airflow = engineWash + globalWind - parameters.mVel;
                         float d = airflow.Dot(offset);
-                        // Rotate it according to our rotation, to estimate the effect of the lag (which results in a stabilising effect).
                         if (d > 0.0f)
                         {
-                            Vector3 offsetDir = offset / offsetLength;
                             Vector3 washDir = engineWash / washSpeed;
 
                             float sideOffset = (offset - offset.Dot(washDir) * washDir).GetLength();
                             float radius = engine->GetRadius();
-                            float washRadius = radius * 2.0f;;
+                            // The slipstream spreads out with distance behind the tug. A turbulent jet spreads
+                            // at roughly 0.1 of the distance (a cone with a half angle of about 6 degrees).
+                            float washRadius = radius + offsetLength * 0.1f;
                             // Sideways drop-off
                             float frac = ClampToRange(1.0f - (sideOffset - washRadius) / washRadius, 0.0f, 1.0f);
                             engineWash *= frac;
-                            // Distance drop-off
-                            frac = Square(radius/washRadius);
+                            // Distance drop-off. The jet draws in the surrounding air, so it keeps its momentum
+                            // (u^2 * area) rather than its mass flow, and its speed falls as 1/radius.
+                            frac = radius / washRadius;
                             engineWash *= frac;
                             globalWind += engineWash;
                         }

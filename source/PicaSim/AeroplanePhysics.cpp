@@ -379,7 +379,7 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
     readFromXML(dynamicsElement, "frictionScale", frictionScale);
 
     mFlutterDragScale = readFloatFromXML(dynamicsElement, "flutterDragScale");
-    mFlutterDragSpeed = ds.GetScaledLength(readFloatFromXML(dynamicsElement, "flutterDragSpeed"));
+    mFlutterDragSpeed = ds.GetScaledVel(readFloatFromXML(dynamicsElement, "flutterDragSpeed"));
 
     btVector3 localInertia(0,0,0);
 
@@ -1099,12 +1099,15 @@ void AeroplanePhysics::UpdateAeroplanePrePhysics(float deltaTime)
     Vector3 moment = rollingMoment * mTM.RowX();
     ApplyWorldTorque(moment);
 
-    // Apply additional "flutter" drag
+    // Apply additional "flutter" drag. This represents control surfaces vibrating at high speed, which starts at
+    // some speed and grows as the speed increases (more so with more slop). The coefficient goes with the square of
+    // the airspeed, reaching flutterDragScale at flutterDragSpeed, so it's small at normal speeds and acts as a soft
+    // limit on top speed. (Until 1.6.0 CDFlutter wasn't used, which gave a constant coefficient at all speeds.)
     if (mFlutterDragScale*mFlutterDragSpeed != 0.0f)
     {
-        float CDFlutter = airflow.GetLengthSquared() / Square(mFlutterDragSpeed);
+        float CDFlutter = mFlutterDragScale * airflow.GetLengthSquared() / Square(mFlutterDragSpeed);
 
-        float flutterDrag = mFlutterDragScale * dynamicPressure.x * Square(mWingSpan) * mAeroplane->GetAeroplaneSettings().mDragScale;
+        float flutterDrag = CDFlutter * dynamicPressure.x * Square(mWingSpan) * mAeroplane->GetAeroplaneSettings().mDragScale;
         Vector3 flutterForce = flutterDrag * mTM.RowX();
         ApplyWorldForceAtCoM(flutterForce);
     }
