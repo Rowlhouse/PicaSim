@@ -207,7 +207,10 @@ int InGameDialog::Update(float dt, const char* title, const char* text,
     }
     else
     {
-        // Default: render the game, then start ImGui frame
+        // Default: render the game, then start ImGui frame. Clear first, because while loading there may be
+        // nothing to render (no viewports yet), and the dialog would then leave a trail of copies as it slides in.
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         if (RenderManager::GetExists())
         {
             RenderManager::GetInstance().RenderWithoutSwap();

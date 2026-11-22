@@ -57,6 +57,7 @@ struct TouchPoint
     float pressure;     // Pressure (0-1, if available)
     PointerState state; // Current state
     bool active;    // Is this touch point active?
+    bool releasePending; // Lifted in the frame it went down, so it's reported as pressed first
 };
 
 //==============================================================================
@@ -241,6 +242,9 @@ private:
     PointerState mMouseButtonStates[MOUSE_BUTTON_COUNT];
     bool mMouseButtonDown[MOUSE_BUTTON_COUNT];
     bool mMouseButtonDownPrev[MOUSE_BUTTON_COUNT];
+    // As for keys: a click still counts if the button is released before the frame ends, which touchpad
+    // tap-to-click (and touch-to-mouse emulation) can do
+    bool mMouseButtonPressedThisFrame[MOUSE_BUTTON_COUNT];
 
     // Touch state
     static const int MAX_TOUCHES = 10;
@@ -277,6 +281,8 @@ private:
     // Internal helpers
     void UpdateKeyStates();
     void UpdateMouseStates();
+    // Moves touches on from the previous frame (pressed to down, released to gone). Called at the start of a
+    // frame, before events, so that a touch's pressed and released states are each seen for a whole frame.
     void UpdateTouchStates();
     void OpenGamepads();
     void CloseGamepads();

@@ -134,7 +134,7 @@ void PropellerEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle&
     mPitch = 0.18f;
     mBladeChord = 0.015f;
     mCL0 = 0.5f;
-    mCLPerRadian = RadiansToDegrees(0.1f);
+    mCLPerRadian = 0.1f; // Read as CLPerDegree, and converted to per radian after reading
     mCD0 = 0.05f;
     mCDInducedMultiplier = 2.0f;
     mStallAngle = 10.0f;
@@ -181,6 +181,13 @@ void PropellerEngine::Init(class TiXmlElement* engineElement, class TiXmlHandle&
 
     // Read data for this engine (overrides copied values)
     ReadFromXML(engineElement, engineData);
+
+    // maxRPM is divided by, so it can't be zero. All the supplied aircraft set it.
+    if (mMaxW == 0.0f)
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("Propeller engine %s has no maxRPM - using 10000", mName.c_str());
+        mMaxW = 10000.0f;
+    }
 
     // Post-processing: convert units
     mCLPerRadian = RadiansToDegrees(mCLPerRadian);

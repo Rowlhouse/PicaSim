@@ -18,10 +18,64 @@ Environment& Environment::GetInstance()
 }
 
 //======================================================================================================================
+// Checks that the files a scenery needs can be found. A scenery can refer to files that aren't there, for
+// example a custom scenery, or one remembered in the settings whose panorama has since been removed or renamed.
+// Checking first means it can be replaced before anything is loaded, rather than failing part way through.
+static bool CanLoadScenery(const GameSettings& gs)
+{
+    const TerrainSettings& ts = gs.mEnvironmentSettings.mTerrainSettings;
+    const bool isPanorama = ts.mType == TerrainSettings::TYPE_PANORAMA;
+    const std::string skyboxName = isPanorama ? ts.mPanoramaName : gs.mLightingSettings.mSkyboxName;
+    if (!FileSystem::Exists(FileSystem::FindPathIgnoringCase(skyboxName + "/Lighting.xml")))
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("Can't find the lighting for %s", skyboxName.c_str());
+        return false;
+    }
+
+    if (isPanorama || ts.mType == TerrainSettings::TYPE_PANORAMA_3D)
+    {
+        TiXmlDocument doc;
+        TiXmlElement* element = nullptr;
+        if (LoadXMLDocument(doc, ts.mPanoramaName + "/Panorama.xml"))
+            element = TiXmlHandle(&doc).FirstChild("Panorama").ToElement();
+        if (!element)
+        {
+            TRACE_FILE_IF(ONCE_1) TRACE("Can't load the panorama %s", ts.mPanoramaName.c_str());
+            return false;
+        }
+
+        // Terrain needs a grid of 2^n + 1 points along each side
+        int nx = 0;
+        readFromXML(element, "nx", nx);
+        const std::string heightmapFile = readStringFromXML(element, "heightmapFile");
+        if (nx < 3 || ((nx - 1) & (nx - 2)) != 0 || !FileSystem::Exists(FileSystem::FindPathIgnoringCase(heightmapFile)))
+        {
+            TRACE_FILE_IF(ONCE_1) TRACE("Panorama %s has a bad size (%d) or heightmap (%s)",
+                ts.mPanoramaName.c_str(), nx, heightmapFile.c_str());
+            return false;
+        }
+    }
+    return true;
+}
+
+//======================================================================================================================
 bool Environment::Init(LoadingScreenHelper* loadingScreen)
 {
     TRACE_FUNCTION_ONLY(ONCE_1);
     const GameSettings& gs = PicaSim::GetInstance().GetSettings();
+
+    if (!CanLoadScenery(gs))
+    {
+        // Tell the user, and use the default (generated) scenery instead. That's saved with the settings, so this
+        // doesn't happen every time.
+        const Language language = gs.mOptions.mLanguage;
+        ShowDialog("PicaSim", TXT(PS_FAILEDTOLOADENVIRONMENT), TXT(PS_OK));
+        GameSettings& settings = PicaSim::GetInstance().GetSettings();
+        settings.mEnvironmentSettings = EnvironmentSettings();
+        settings.mObjectsSettings = ObjectsSettings();
+        if (!CanLoadScenery(settings))
+            settings.mLightingSettings = LightingSettings();
+    }
 
     if (loadingScreen) loadingScreen->Update("Loading environment");
 
@@ -47,8 +101,8 @@ bool Environment::Init(LoadingScreenHelper* loadingScreen)
         skyboxName = gs.mLightingSettings.mSkyboxName;
 
     std::string lightingFile = skyboxName + "/Lighting.xml";
-    TiXmlDocument doc(lightingFile);
-    bool success = doc.LoadFile();
+    TiXmlDocument doc;
+    bool success = LoadXMLDocument(doc, lightingFile);
     IwAssert(ROWLHOUSE, success);
 
     if (!success)

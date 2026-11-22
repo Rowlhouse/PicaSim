@@ -307,7 +307,10 @@ double Timer::GetSeconds()
 #else
     #include <unistd.h>
     #include <dirent.h>
+    #include <strings.h>
 #endif
+
+#include "../Framework/Trace.h"
 
 bool FileSystem::Exists(const std::string& path)
 {
@@ -335,6 +338,91 @@ bool FileSystem::MakeDirectory(const std::string& path)
 bool FileSystem::Delete(const std::string& path)
 {
     return remove(path.c_str()) == 0;
+}
+
+//======================================================================================================================
+bool FileSystem::RenameReplacing(const std::string& from, const std::string& to)
+{
+#ifdef _WIN32
+    // rename() fails on Windows if the destination exists
+    return MoveFileExA(from.c_str(), to.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0;
+#else
+    // rename() replaces the destination in one step
+    return rename(from.c_str(), to.c_str()) == 0;
+#endif
+}
+
+//======================================================================================================================
+std::string FileSystem::FindPathIgnoringCase(const std::string& path)
+{
+#ifdef _WIN32
+    // Windows file systems already ignore case
+    return path;
+#else
+    if (path.empty() || Exists(path))
+        return path;
+
+    // Walk the path one component at a time, keeping each component that exists as written and
+    // looking the others up in their parent directory, ignoring case
+    std::string resolved;
+    size_t start = 0;
+    if (path[0] == '/')
+    {
+        resolved = "/";
+        start = 1;
+    }
+    while (start <= path.size())
+    {
+        size_t end = path.find('/', start);
+        if (end == std::string::npos)
+            end = path.size();
+        const std::string component = path.substr(start, end - start);
+        if (!component.empty())
+        {
+            std::string candidate = resolved + component;
+            if (component != "." && component != ".." && !Exists(candidate))
+            {
+                DIR* dir = opendir(resolved.empty() ? "." : resolved.c_str());
+                if (!dir)
+                    return path;
+                bool found = false;
+                while (struct dirent* entry = readdir(dir))
+                {
+                    if (strcasecmp(entry->d_name, component.c_str()) == 0)
+                    {
+                        candidate = resolved + entry->d_name;
+                        found = true;
+                        break;
+                    }
+                }
+                closedir(dir);
+                if (!found)
+                    return path;
+            }
+            resolved = candidate;
+            if (end < path.size())
+                resolved += '/';
+        }
+        start = end + 1;
+    }
+
+    // Log it so that the data can be corrected
+    TRACE_FILE_IF(ONCE_1) TRACE("Using %s for %s (the letter case differs)", resolved.c_str(), path.c_str());
+    return resolved;
+#endif
+}
+
+//======================================================================================================================
+FILE* FileSystem::OpenFile(const std::string& path, const char* mode)
+{
+    FILE* file = fopen(path.c_str(), mode);
+    if (!file && mode && mode[0] == 'r')
+    {
+        const std::string resolved = FindPathIgnoringCase(path);
+        if (resolved != path)
+            file = fopen(resolved.c_str(), mode);
+    }
+    return file;
 }
 
 std::vector<std::string> FileSystem::ListDirectory(const std::string& path)

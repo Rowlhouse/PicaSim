@@ -1,4 +1,5 @@
 #include "ac3d.h"
+#include "Platform.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -94,7 +95,7 @@ static rawImageRec *RawImageOpen(char *fileName)
         fprintf(stderr, "Out of memory!\n");
         return(NULL);
     }
-    if ((raw->file = fopen(fileName, "rb")) == NULL) {
+    if ((raw->file = FileSystem::OpenFile(fileName, "rb")) == NULL) {
         perror(fileName);
         return(NULL);
 

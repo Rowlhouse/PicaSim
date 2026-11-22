@@ -50,16 +50,16 @@ void Aeroplane::Init(const AeroplaneSettings& as,
     std::string aeroplaneFile = mAeroplaneSettings.mName + "/Aeroplane.xml";
     GetFileChecksum(mChecksum, aeroplaneFile.c_str());
 
-    TiXmlDocument doc(aeroplaneFile.c_str());
-    bool ok = doc.LoadFile();
+    TiXmlDocument doc;
+    bool ok = LoadXMLDocument(doc, aeroplaneFile);
     if (!ok)
     {
         const Language language = PicaSim::GetInstance().GetSettings().mOptions.mLanguage;
         ShowDialog("PicaSim", "Failed to load aeroplane - using default!", TXT(PS_OK));
 
         mAeroplaneSettings = AeroplaneSettings();
-        doc = TiXmlDocument(mAeroplaneSettings.mName + "/Aeroplane.xml");
-        ok = doc.LoadFile();
+        doc = TiXmlDocument();
+        ok = LoadXMLDocument(doc, mAeroplaneSettings.mName + "/Aeroplane.xml");
     }
     IwAssert(ROWLHOUSE, ok);
 
@@ -152,8 +152,19 @@ void Aeroplane::Init(const AeroplaneSettings& as,
         mTugControllerSetting.mIncludeInCameraViews = false;
         mTugControllerSetting.mEnableDebugDraw = false;
         mTugController = std::make_unique<AIControllerTug>(mTugControllerSetting, tugModifiers, 0);
-        mTugController->Init(loadingScreen);
+        if (!mTugController->Init(loadingScreen))
+        {
+            // The tug couldn't be loaded (Init has told the user), so launch without one
+            mTugController.reset();
+        }
+    }
+    else
+    {
+        mTugController.reset();
+    }
 
+    if (mTugController)
+    {
         AeroplaneSettings tas = mTugController->GetAeroplane()->GetAeroplaneSettings();
         tas.mRelaunchTime = FLT_MAX;
         tas.mAIAeroplaneSettings.mControlMaxBankAngle = 25.0f;
@@ -171,10 +182,6 @@ void Aeroplane::Init(const AeroplaneSettings& as,
         tas.mAIAeroplaneSettings.mPoweredTakeoffDistance = as.mAeroTowCircuitSize;
         mTugController->GetAeroplane()->SetAeroplaneSettings(tas);
         mTugController->Reset();
-    }
-    else
-    {
-        mTugController.reset();
     }
 
     if (basicLaunchPos)

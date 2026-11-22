@@ -135,17 +135,29 @@ static void AddMidRange(
 
 //======================================================================================================================
 AerofoilDefinition::AerofoilDefinition(const char* name)
-    : mReferenceCount(1), mName(name)
+  : mReferenceCount(1)
+  , mName(name)
+  // Defaults (those of the supplied symmetric sections) in case the file is missing or incomplete
+  , mLiftPositionOffsetFractionForwards(0.5f)
+  , mLiftPositionOffsetFractionReverse(-0.5f)
+  , mCDFlying(0.006f)
+  , mCDStalled(1.7f)
+  , mCDMax(2.0f)
+  , mCM0(0.0f)
+  , mCMPerDeg(0.0f)
+  , mRefRe(200000.0f)
+  , mMinReFrac(0.1f)
+  , mCDPower(-0.15f)
 {
-    char filename[256];
-    sprintf(filename, "%s.xml", name);
-    TiXmlDocument aerofoilDoc(filename);
-    bool ok = aerofoilDoc.LoadFile();
-    IwAssert(ROWLHOUSE, ok);
+    const std::string filename = std::string(name) + ".xml";
+    TiXmlDocument aerofoilDoc;
+    if (!LoadXMLDocument(aerofoilDoc, filename))
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to load aerofoil %s - using a default section", filename.c_str());
+    }
 
     TiXmlHandle docHandle( &aerofoilDoc );
     TiXmlElement* element = docHandle.FirstChild( "Aerofoil" ).ToElement();
-    IwAssert(ROWLHOUSE, element);
 
     readFromXML(element, "liftPositionOffsetFractionForwards", mLiftPositionOffsetFractionForwards);
     readFromXML(element, "liftPositionOffsetFractionReverse", mLiftPositionOffsetFractionReverse);
@@ -182,7 +194,9 @@ AerofoilDefinition::AerofoilDefinition(const char* name)
             dataPoints.push_back(data);
         }
     }
-    else
+
+    // Generate the data if it's not given (including when the file couldn't be loaded)
+    if (dataPoints.empty())
     {
         float CL0 = 0.0f;
         float CLPerDeg = 0.1f;

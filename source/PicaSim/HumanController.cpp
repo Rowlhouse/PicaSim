@@ -243,16 +243,19 @@ void HumanController::UpdateScreenSticks(float deltaTime)
 
     s3ePointerState touchState0 = s3ePointerGetTouchState(0);
     s3ePointerState touchState1 = s3ePointerGetTouchState(1);
+    // A touch counts from the frame it goes down, when it's reported as pressed
+    const bool touchDown0 = touchState0 == S3E_POINTER_STATE_DOWN || touchState0 == S3E_POINTER_STATE_PRESSED;
+    const bool touchDown1 = touchState1 == S3E_POINTER_STATE_DOWN || touchState1 == S3E_POINTER_STATE_PRESSED;
 
     int numTouches = 0;
-    if (touchState0 == S3E_POINTER_STATE_DOWN)
+    if (touchDown0)
     {
         touchX0 = ((float) s3ePointerGetTouchX(0)) / displayWidth;
         touchY0 = 1.0f - ((float) s3ePointerGetTouchY(0)) / displayHeight;  
         ++numTouches;
     }
 
-    if (touchState1 == S3E_POINTER_STATE_DOWN)
+    if (touchDown1)
     {
         touchX1 = ((float) s3ePointerGetTouchX(1)) / displayWidth;
         touchY1 = 1.0f - ((float) s3ePointerGetTouchY(1)) / displayHeight;  
@@ -279,10 +282,10 @@ void HumanController::UpdateScreenSticks(float deltaTime)
     {
         rightX = touchX0;
         rightY = touchY0;
-        rightTouched = touchState0 == S3E_POINTER_STATE_DOWN;
+        rightTouched = touchDown0;
         leftX = touchX1;
         leftY = touchY1;
-        leftTouched = touchState1 == S3E_POINTER_STATE_DOWN;
+        leftTouched = touchDown1;
     }
     else if (
         (touchX1 > 0.5f+trimHalfWidth && touchX1 <= 1.0f) ||
@@ -291,21 +294,21 @@ void HumanController::UpdateScreenSticks(float deltaTime)
     {
         rightX = touchX1;
         rightY = touchY1;
-        rightTouched = touchState1 == S3E_POINTER_STATE_DOWN;
+        rightTouched = touchDown1;
         leftX = touchX0;
         leftY = touchY0;
-        leftTouched = touchState0 == S3E_POINTER_STATE_DOWN;
+        leftTouched = touchDown0;
     }
 
     if (options.mControllerEnableTrim)
     {
-        if (touchState0 == S3E_POINTER_STATE_DOWN && touchX0 > 0.5f-trimHalfWidth && touchX0 < 0.5f+trimHalfWidth)
+        if (touchDown0 && touchX0 > 0.5f-trimHalfWidth && touchX0 < 0.5f+trimHalfWidth)
         {
             midX = touchX0;
             midY = touchY0;
             midTouched = true;
         }
-        else if (touchState1 == S3E_POINTER_STATE_DOWN && touchX1 > 0.5f-trimHalfWidth && touchX1 < 0.5f+trimHalfWidth)
+        else if (touchDown1 && touchX1 > 0.5f-trimHalfWidth && touchX1 < 0.5f+trimHalfWidth)
         {
             midX = touchX1;
             midY = touchY1;

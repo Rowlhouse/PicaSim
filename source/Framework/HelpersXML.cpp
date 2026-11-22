@@ -1,6 +1,22 @@
 #include "HelpersXML.h"
 #include "Trace.h"
 
+#include "Platform.h"
+
+//======================================================================================================================
+bool LoadXMLDocument(TiXmlDocument& doc, const std::string& path)
+{
+    if (doc.LoadFile(path))
+        return true;
+    // Only retry when the file couldn't be opened, not when it failed to parse
+    if (doc.ErrorId() != TiXmlBase::TIXML_ERROR_OPENING_FILE)
+        return false;
+    const std::string resolved = FileSystem::FindPathIgnoringCase(path);
+    if (resolved == path)
+        return false;
+    return doc.LoadFile(resolved);
+}
+
 //======================================================================================================================
 bool readFromXML(TiXmlElement* elem, const char* name, bool& value, size_t* index)
 {

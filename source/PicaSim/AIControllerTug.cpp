@@ -53,8 +53,6 @@ bool AIControllerTug::Init(LoadingScreenHelper* loadingScreen)
     for (unsigned int i = 0 ; i != MAX_CHANNELS ; ++i)
         mOutputControls[i] = 0.0f;
 
-    EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_CONTROL);
-
     AeroplaneSettings as;
     if (!as.LoadFromFile(mAIControllerSetting.mAeroplaneFile.c_str()))
     {
@@ -62,6 +60,10 @@ bool AIControllerTug::Init(LoadingScreenHelper* loadingScreen)
         ShowDialog("PicaSim", "Failed to load AI controller", TXT(PS_OK));
         return false;
     }
+
+    // Register only once loading has succeeded, since a controller that fails to initialise is deleted
+    // without being terminated
+    EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_CONTROL);
 
     as.mEngineScale *= mAeroplaneModifiers.mEngineScale;
     as.mSizeScale *= mAeroplaneModifiers.mSizeScale;

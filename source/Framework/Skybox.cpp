@@ -1,12 +1,7 @@
 #include "Skybox.h"
 #include "TileExpansion.h"
 
-#if defined(PS_PLATFORM_IOS)
-  #include "Platform.h"
-  #include <cstdio>
-#else
-  #include <filesystem>
-#endif
+#include "Platform.h"
 
 #include "RenderManager.h"
 #include "LoadingScreenHelper.h"
@@ -22,21 +17,17 @@
 
 #define DEBUG_SAVE_EXPANDED_TEXTURES 0
 
-// iOS 12 doesn't have std::filesystem. Use fopen-based check instead.
-// On other platforms std::filesystem::exists is used directly (see call sites below).
-#if defined(PS_PLATFORM_IOS)
+// Whether a skybox image exists, allowing for a name with the wrong letter case (the texture loader allows
+// for that too). On iOS, relative paths are resolved to the app bundle.
 static bool FileExists(const char* path)
 {
     std::string resolved = path;
+#if defined(PS_PLATFORM_IOS)
     if (path[0] != '/' && path[0] != '.')
         resolved = FileSystem::GetBasePath() + "/data/" + path;
-    FILE* f = fopen(resolved.c_str(), "rb");
-    if (f) { fclose(f); return true; }
-    return false;
-}
-#else
-static bool FileExists(const char* path) { return std::filesystem::exists(path); }
 #endif
+    return FileSystem::Exists(FileSystem::FindPathIgnoringCase(resolved));
+}
 
 //======================================================================================================================
 // Transform eye separation direction from world space to face-local coordinates

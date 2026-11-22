@@ -791,7 +791,12 @@ void FileMenuDelete(
 #if defined(PS_PLATFORM_IOS)
         ::remove(selectedPath.c_str());
 #else
-        std::filesystem::remove(selectedPath);
+        // The error_code version doesn't throw (which would end the app) if the file can't be deleted
+        std::error_code error;
+        if (!std::filesystem::remove(selectedPath, error))
+        {
+            TRACE_FILE_IF(ONCE_1) TRACE("Failed to delete %s: %s", selectedPath.c_str(), error.message().c_str());
+        }
 #endif
     }
 }
