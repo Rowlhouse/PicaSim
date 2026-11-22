@@ -428,7 +428,8 @@ void PropellerEngine::UpdatePrePhysics(float deltaTime, const TurbulenceData& tu
 
     float aspectRatio = mRadius / mBladeChord;
     // Make the calculations at a number of rings
-    int numRings = 4;
+    // Use the number of rings from the data (it used to be fixed at 4, the default and the only value used)
+    const int numRings = Maximum(mNumRings, 1);
     float dR = mRadius / numRings;
 
     const float stallAngleStartHigh = DegreesToRadians(mStallAngle);

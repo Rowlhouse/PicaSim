@@ -356,7 +356,8 @@ void Aeroplane::LaunchAtPosition(const Vector3& pos, const Vector3& dir)
 
     mPhysics->Launched();
 
-    mSmoothedCameraTargetPos = ds.GetScaledLength(mTM.TransformVec(Vector3(mAeroplaneSettings.mCameraTargetPosFwd, 0.0f, mAeroplaneSettings.mCameraTargetPosUp)));
+    // Scale the offset, not the world position (as in Launch)
+    mSmoothedCameraTargetPos = mTM.TransformVec(ds.GetScaledLength(Vector3(mAeroplaneSettings.mCameraTargetPosFwd, 0.0f, mAeroplaneSettings.mCameraTargetPosUp)));
     mSmoothedCameraTargetPosRate = Vector3(0,0,0);
 
     mSmoothedCameraVelocity = mVelocity;

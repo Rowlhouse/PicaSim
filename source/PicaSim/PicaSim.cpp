@@ -356,6 +356,9 @@ void PicaSim::HandleMode()
                 mZoomViewport->GetCamera()->SetCameraTransform(mInstance->mObserver.get());
                 mZoomViewport->GetCamera()->SetCameraTarget(cameraAeroplane);
                 mZoomViewport->GetCamera()->SetAutoZoom(1.0f, 2.0f * cameraAeroplane->GetGraphics()->GetRenderBoundingRadius());
+                // Rebuild the list each time (this runs every frame), so that it doesn't keep aeroplanes that are
+                // no longer being viewed, or that have gone. An empty list means everything is rendered.
+                mZoomViewport->ClearRenderObjects();
                 if (mGameSettings.mOptions.mOnlyPlaneInZoomView)
                 {
                     mZoomViewport->AddRenderObject(cameraAeroplane->GetGraphics());
@@ -369,10 +372,6 @@ void PicaSim::HandleMode()
 
                         cameraAeroplane->GetPhysics()->AddRopesToViewport(mZoomViewport);
                     }
-                }
-                else
-                {
-                    mZoomViewport->ClearRenderObjects();
                 }
             }
         }

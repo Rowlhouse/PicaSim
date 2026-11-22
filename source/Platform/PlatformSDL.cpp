@@ -283,7 +283,8 @@ uint64_t Timer::GetMicroseconds()
     }
 
     uint64_t counter = SDL_GetPerformanceCounter();
-    return (counter * 1000000ULL) / frequency;
+    // Split the conversion, since counter * 1000000 overflows after about 21 days' uptime with a 10 MHz counter
+    return (counter / frequency) * 1000000ULL + ((counter % frequency) * 1000000ULL) / frequency;
 }
 
 double Timer::GetSeconds()

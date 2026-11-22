@@ -222,7 +222,8 @@ void AIControllerPowered::EntityUpdate(float deltaTime, int entityLevel)
         -DegreesToRadians(aias.mControlMaxBankAngle), DegreesToRadians(aias.mControlMaxBankAngle));
     //if (altitude < physicsRadius)
     //  desiredRoll *= altitude / physicsRadius;
-    const float currentRoll = asinf(tm.RowY().z);
+    // Clamped, since rounding can take it just outside [-1, 1], and asinf would give NaN
+    const float currentRoll = asinf(ClampToRange(tm.RowY().z, -1.0f, 1.0f));
     float rollControl = ClampToRange(RadiansToDegrees(desiredRoll - currentRoll) * aias.mControlRollControlPerRollAngle, -1.0f, 1.0f);
     rollControl *= aias.mControlMaxRollControl;
 
@@ -230,10 +231,11 @@ void AIControllerPowered::EntityUpdate(float deltaTime, int entityLevel)
     float pitchControl = RadiansToDegrees(fabsf(currentRoll)) * -aias.mControlPitchControlPerRollAngle;
 
     // Also adjust depending on air speed.
-    float currentSlope = velRelWind.z / fwdSpeedRelAir;
+    // Avoid dividing by zero (for example the tug starting from rest in still air)
+    float currentSlope = velRelWind.z / (fabsf(fwdSpeedRelAir) > 0.01f ? fwdSpeedRelAir : 0.01f);
 
     float desiredAltitudeChange = mTargetWaypoint.z - pos.z;
-    float targetSlope = desiredAltitudeChange / horDistToTarget;
+    float targetSlope = desiredAltitudeChange / Maximum(horDistToTarget, 0.01f);
     targetSlope = ClampToRange(targetSlope, -aias.mPoweredControlMaxSlopeDown, aias.mPoweredControlMaxSlopeUp);
 
     pitchControl -= (targetSlope - currentSlope) * aias.mPoweredControlPitchControlPerSlope;
