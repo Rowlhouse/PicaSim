@@ -32,7 +32,22 @@ bool Settings::SaveToFile(const std::string& fileName) const
     doc.LinkEndChild(decl);
     if (WriteToDoc(doc))
     {
-        bool result = doc.SaveFile(fileName.c_str());
+        // Write a temporary file and then put it in place of the original, so that an interrupted save (the
+        // app being killed, a crash or a power cut) can't leave a truncated file, which would lose all the
+        // settings when it failed to load next time
+        const std::string tempFileName = fileName + ".tmp";
+        bool result = false;
+        FILE* file = fopen(tempFileName.c_str(), "w");
+        if (file)
+        {
+            result = doc.SaveFile(file);
+            // fclose reports errors writing out what was buffered, such as the disk being full
+            result = (fclose(file) == 0) && result;
+            if (result)
+                result = FileSystem::RenameReplacing(tempFileName, fileName);
+            if (!result)
+                FileSystem::Delete(tempFileName);
+        }
         TRACE_FILE_IF(ONCE_1) TRACE("Written to file %s = %d", fileName.c_str(), result);
         return result;
     }
@@ -46,8 +61,8 @@ bool Settings::SaveToFile(const std::string& fileName) const
 //======================================================================================================================
 bool Settings::LoadFromFile(const std::string& name, bool readAll, bool disableLogging)
 {
-    TiXmlDocument doc(name);
-    if (!doc.LoadFile())
+    TiXmlDocument doc;
+    if (!LoadXMLDocument(doc, name))
     {
         if (!disableLogging)
         {
@@ -62,8 +77,8 @@ bool Settings::LoadFromFile(const std::string& name, bool readAll, bool disableL
 //======================================================================================================================
 bool Settings::LoadBasicsFromFile(const std::string& name, bool disableLogging)
 {
-    TiXmlDocument doc(name);
-    if (!doc.LoadFile())
+    TiXmlDocument doc;
+    if (!LoadXMLDocument(doc, name))
     {
         if (!disableLogging)
         {
@@ -1542,7 +1557,7 @@ bool GetFileChecksum(uint32& checksum, const char* file)
     if (!file)
         return false;
 
-    FILE* fileHandle = fopen(file, "rb");
+    FILE* fileHandle = FileSystem::OpenFile(file, "rb");
     if (!fileHandle)
     {
         TRACE_FILE_IF(ONCE_1) TRACE("Error opening %s", file);
@@ -1551,6 +1566,12 @@ bool GetFileChecksum(uint32& checksum, const char* file)
     fseek(fileHandle, 0, SEEK_END);
     long fileNumBytes = ftell(fileHandle);
     fseek(fileHandle, 0, SEEK_SET);
+    if (fileNumBytes <= 0)
+    {
+        // Nothing to add (and &data[0] isn't valid for an empty vector)
+        fclose(fileHandle);
+        return fileNumBytes == 0;
+    }
     std::vector<uint8> data(fileNumBytes);
     size_t result = fread(&data[0], fileNumBytes, 1, fileHandle);
     if (result != 1)
@@ -2504,6 +2525,9 @@ bool ControllerSettings::ReadFromDoc(TiXmlDocument& doc, bool readAll)
     READ_ATTRIBUTE(mTreatThrottleAsBrakes);
     READ_ATTRIBUTE(mNumAltSettings);
     READ_ATTRIBUTE(mCurrentAltSetting);
+    // These index arrays and are used with %, so keep them in range whatever the file says
+    mNumAltSettings = ClampToRange(mNumAltSettings, 1, (int) CONTROLLER_MAX_NUM_ALT_SETTINGS);
+    mCurrentAltSetting = ClampToRange(mCurrentAltSetting, 0, mNumAltSettings - 1);
     readFromXML(element, "mControlPerChannel_0", (int&) mControlPerChannel[Controller::CHANNEL_AILERONS ]);
     readFromXML(element, "mControlPerChannel_1", (int&) mControlPerChannel[Controller::CHANNEL_ELEVATOR ]);
     readFromXML(element, "mControlPerChannel_2", (int&) mControlPerChannel[Controller::CHANNEL_RUDDER   ]);

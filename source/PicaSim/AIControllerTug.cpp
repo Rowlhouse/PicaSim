@@ -53,8 +53,6 @@ bool AIControllerTug::Init(LoadingScreenHelper* loadingScreen)
     for (unsigned int i = 0 ; i != MAX_CHANNELS ; ++i)
         mOutputControls[i] = 0.0f;
 
-    EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_CONTROL);
-
     AeroplaneSettings as;
     if (!as.LoadFromFile(mAIControllerSetting.mAeroplaneFile.c_str()))
     {
@@ -62,6 +60,10 @@ bool AIControllerTug::Init(LoadingScreenHelper* loadingScreen)
         ShowDialog("PicaSim", "Failed to load AI controller", TXT(PS_OK));
         return false;
     }
+
+    // Register only once loading has succeeded, since a controller that fails to initialise is deleted
+    // without being terminated
+    EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_CONTROL);
 
     as.mEngineScale *= mAeroplaneModifiers.mEngineScale;
     as.mSizeScale *= mAeroplaneModifiers.mSizeScale;
@@ -208,7 +210,8 @@ void AIControllerTug::EntityUpdate(float deltaTime, int entityLevel)
         -DegreesToRadians(aias.mControlMaxBankAngle), DegreesToRadians(aias.mControlMaxBankAngle));
     //if (altitude < physicsRadius)
     //  desiredRoll *= altitude / physicsRadius;
-    const float currentRoll = asinf(tm.RowY().z);
+    // Clamped, since rounding can take it just outside [-1, 1], and asinf would give NaN
+    const float currentRoll = asinf(ClampToRange(tm.RowY().z, -1.0f, 1.0f));
     float rollControl = ClampToRange(RadiansToDegrees(desiredRoll - currentRoll) * aias.mControlRollControlPerRollAngle, -1.0f, 1.0f);
     rollControl *= aias.mControlMaxRollControl;
 
@@ -216,11 +219,12 @@ void AIControllerTug::EntityUpdate(float deltaTime, int entityLevel)
     float pitchControl = RadiansToDegrees(fabsf(currentRoll)) * -aias.mControlPitchControlPerRollAngle;
 
     // Also adjust depending on air speed.
-    float currentSlope = velRelWind.z / fwdSpeedRelAir;
+    // Avoid dividing by zero (for example the tug starting from rest in still air)
+    float currentSlope = velRelWind.z / (fabsf(fwdSpeedRelAir) > 0.01f ? fwdSpeedRelAir : 0.01f);
 
     float desiredAltitudeChange = mTargetWaypoint.z - pos.z;
 
-    float targetSlope = desiredAltitudeChange / horDistToTarget;
+    float targetSlope = desiredAltitudeChange / Maximum(horDistToTarget, 0.01f);
     targetSlope = ClampToRange(targetSlope, -aias.mPoweredControlMaxSlopeDown, aias.mPoweredControlMaxSlopeUp);
 
     pitchControl -= (targetSlope - currentSlope) * aias.mPoweredControlPitchControlPerSlope;

@@ -43,6 +43,7 @@ Input::Input()
     memset(mMouseButtonStates, 0, sizeof(mMouseButtonStates));
     memset(mMouseButtonDown, 0, sizeof(mMouseButtonDown));
     memset(mMouseButtonDownPrev, 0, sizeof(mMouseButtonDownPrev));
+    memset(mMouseButtonPressedThisFrame, 0, sizeof(mMouseButtonPressedThisFrame));
     memset(mTouches, 0, sizeof(mTouches));
 }
 
@@ -131,16 +132,24 @@ void Input::ClearPressedStates()
     memcpy(mKeyDownPrev, mKeyDown, sizeof(mKeyDown));
     memset(mKeyPressedThisFrame, 0, sizeof(mKeyPressedThisFrame));
     memcpy(mMouseButtonDownPrev, mMouseButtonDown, sizeof(mMouseButtonDown));
+    memset(mMouseButtonPressedThisFrame, 0, sizeof(mMouseButtonPressedThisFrame));
 
     // Recompute states (will now show DOWN instead of PRESSED for held buttons)
     UpdateKeyStates();
     UpdateMouseStates();
 
-    // Clear touch pressed states
+    // Clear touch pressed states. A tap that has already been lifted becomes a release.
     for (int i = 0; i < MAX_TOUCHES; ++i)
     {
-        if (mTouches[i].state == POINTER_STATE_PRESSED)
+        if (mTouches[i].releasePending)
+        {
+            mTouches[i].state = POINTER_STATE_RELEASED;
+            mTouches[i].releasePending = false;
+        }
+        else if (mTouches[i].state == POINTER_STATE_PRESSED)
+        {
             mTouches[i].state = POINTER_STATE_DOWN;
+        }
     }
 
     // Prevent immediate recomputation
@@ -155,6 +164,11 @@ void Input::BeginFrame()
     memcpy(mKeyDownPrev, mKeyDown, sizeof(mKeyDown));
     memset(mKeyPressedThisFrame, 0, sizeof(mKeyPressedThisFrame));
     memcpy(mMouseButtonDownPrev, mMouseButtonDown, sizeof(mMouseButtonDown));
+    memset(mMouseButtonPressedThisFrame, 0, sizeof(mMouseButtonPressedThisFrame));
+
+    // Touches are moved on here rather than after the events, otherwise a new touch would already be DOWN
+    // by the time anything reads it
+    UpdateTouchStates();
 
     // Mark states as dirty so they'll be recomputed after events are processed
     mStatesDirty = true;
@@ -166,11 +180,11 @@ void Input::Update()
     // This prevents PRESSED from transitioning to DOWN when Update() is called multiple times
     if (mStatesDirty)
     {
-        // Update key/mouse/touch states (uses current vs previous for edge detection)
+        // Update key/mouse states (uses current vs previous for edge detection). Touches were moved on in
+        // BeginFrame(), and their events set PRESSED/RELEASED directly.
         // prev was captured in BeginFrame(), current was updated by ProcessEvent()
         UpdateKeyStates();
         UpdateMouseStates();
-        UpdateTouchStates();
 
         mStatesDirty = false;
     }
@@ -251,6 +265,7 @@ void Input::ProcessEvent(const SDL_Event& event)
             if (button >= 0 && button < MOUSE_BUTTON_COUNT)
             {
                 mMouseButtonDown[button] = true;
+                mMouseButtonPressedThisFrame[button] = true;
             }
             mMouseX = event.button.x;
             mMouseY = event.button.y;
@@ -298,6 +313,7 @@ void Input::ProcessEvent(const SDL_Event& event)
                 mTouches[index].pressure = event.tfinger.pressure;
                 mTouches[index].state = POINTER_STATE_PRESSED;
                 mTouches[index].active = true;
+                mTouches[index].releasePending = false;
                 mTouchCount++;
 
                 if (mTouchCallback)
@@ -316,16 +332,18 @@ void Input::ProcessEvent(const SDL_Event& event)
             {
                 mTouches[index].x = event.tfinger.x * Platform::GetDisplayWidth();
                 mTouches[index].y = event.tfinger.y * Platform::GetDisplayHeight();
-                mTouches[index].state = POINTER_STATE_RELEASED;
+                // The touch stays in its slot until the next frame, so the release is seen. A touch that
+                // went down this frame is still reported as pressed first.
+                if (mTouches[index].state == POINTER_STATE_PRESSED)
+                    mTouches[index].releasePending = true;
+                else
+                    mTouches[index].state = POINTER_STATE_RELEASED;
 
                 if (mTouchCallback)
                 {
                     mTouchCallback(mTouches[index].id, 0,
                         (int)mTouches[index].x, (int)mTouches[index].y, mTouchUserData);
                 }
-
-                mTouches[index].active = false;
-                mTouchCount--;
             }
         }
         break;
@@ -431,7 +449,7 @@ void Input::UpdateMouseStates()
 {
     for (int i = 0; i < MOUSE_BUTTON_COUNT; ++i)
     {
-        if (mMouseButtonDown[i] && !mMouseButtonDownPrev[i])
+        if ((mMouseButtonDown[i] && !mMouseButtonDownPrev[i]) || mMouseButtonPressedThisFrame[i])
             mMouseButtonStates[i] = POINTER_STATE_PRESSED;
         else if (!mMouseButtonDown[i] && mMouseButtonDownPrev[i])
             mMouseButtonStates[i] = POINTER_STATE_RELEASED;
@@ -446,14 +464,25 @@ void Input::UpdateTouchStates()
 {
     for (int i = 0; i < MAX_TOUCHES; ++i)
     {
-        if (mTouches[i].active)
+        TouchPoint& touch = mTouches[i];
+        if (!touch.active)
+            continue;
+        if (touch.state == POINTER_STATE_RELEASED)
         {
-            if (mTouches[i].state == POINTER_STATE_PRESSED)
-                mTouches[i].state = POINTER_STATE_DOWN;
+            // Released last frame, so free the slot
+            touch.active = false;
+            touch.state = POINTER_STATE_UP;
+            mTouchCount--;
         }
-        else if (mTouches[i].state == POINTER_STATE_RELEASED)
+        else if (touch.releasePending)
         {
-            mTouches[i].state = POINTER_STATE_UP;
+            // Pressed and lifted last frame: now report the release
+            touch.state = POINTER_STATE_RELEASED;
+            touch.releasePending = false;
+        }
+        else if (touch.state == POINTER_STATE_PRESSED)
+        {
+            touch.state = POINTER_STATE_DOWN;
         }
     }
 }
@@ -752,7 +781,9 @@ int Input::FindTouchIndex(int touchId) const
 {
     for (int i = 0; i < MAX_TOUCHES; ++i)
     {
-        if (mTouches[i].active && mTouches[i].id == touchId)
+        // Skip touches that have been lifted but are kept until the next frame, since the id can be reused
+        const TouchPoint& touch = mTouches[i];
+        if (touch.active && touch.id == touchId && touch.state != POINTER_STATE_RELEASED && !touch.releasePending)
             return i;
     }
     return -1;

@@ -609,8 +609,8 @@ void Terrain::Init(btDynamicsWorld& dynamicsWorld, LoadingScreenHelper* loadingS
     {
         std::string panoramaFile = resolvePath(ts.mPanoramaName + "/Panorama.xml");
         GetFileChecksum(checksum, panoramaFile.c_str());
-        TiXmlDocument doc(panoramaFile);
-        bool success = doc.LoadFile();
+        TiXmlDocument doc;
+        bool success = LoadXMLDocument(doc, panoramaFile);
         IwAssert(ROWLHOUSE, success);
 
         TiXmlHandle docHandle(&doc);

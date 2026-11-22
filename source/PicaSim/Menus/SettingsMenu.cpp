@@ -968,9 +968,9 @@ void SettingsMenu::RenderAeroplaneTab()
         // Colour scheme selector - only shown if multiple models exist
         {
             const int maxModels = 10;
-            TiXmlDocument doc(as.mName + "/Aeroplane.xml");
+            TiXmlDocument doc;
             std::vector<std::string> modelNames;
-            if (doc.LoadFile())
+            if (LoadXMLDocument(doc, as.mName + "/Aeroplane.xml"))
             {
                 TiXmlHandle graphicsHandle = doc.FirstChild("Graphics");
                 int iModel = 0;

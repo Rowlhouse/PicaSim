@@ -42,11 +42,19 @@ bool Image::LoadFromFile(const char* filename)
 
     // Load image with stb_image
     int width, height, channels;
-    unsigned char* data = stbi_load(filename, &width, &height, &channels, 0);
+    // Open the file ourselves so that a name with the wrong letter case is still found
+    unsigned char* data = nullptr;
+    FILE* file = FileSystem::OpenFile(filename, "rb");
+    if (file)
+    {
+        data = stbi_load_from_file(file, &width, &height, &channels, 0);
+        fclose(file);
+    }
 
     if (!data)
     {
-        fprintf(stderr, "Failed to load image: %s - %s\n", filename, stbi_failure_reason());
+        const char* reason = file ? stbi_failure_reason() : "can't open file";
+        fprintf(stderr, "Failed to load image: %s - %s\n", filename, reason ? reason : "unknown");
         return false;
     }
 

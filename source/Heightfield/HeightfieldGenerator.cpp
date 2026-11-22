@@ -1,4 +1,5 @@
 #include "HeightfieldGenerator.h"
+#include "Platform.h"
 
 #include <cmath>
 #include <cstdio>
@@ -350,7 +351,7 @@ bool LoadHeightfield(
 {
   printf("Reading raw data file: %s\n", heightmapFile);
 
-  FILE * dataFile = fopen(heightmapFile, "rb");
+  FILE * dataFile = FileSystem::OpenFile(heightmapFile, "rb");
   if (dataFile == 0)
   {
     printf("Unable to open raw data file: %s\n", heightmapFile);

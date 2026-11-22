@@ -516,13 +516,13 @@ bool ACLoadModel(ACModel& model, const char *fname)
     bool compressed = false;
     line = 0;
 
-    FILE *f = fopen(fname, "rb");
+    FILE *f = FileSystem::OpenFile(fname, "rb");
     if (f == NULL)
     {
         // If we fail to open the file, it may be compressed
         char cf[512];
         sprintf(cf, "%s.p", fname);
-        f = fopen(cf, "rb");
+        f = FileSystem::OpenFile(cf, "rb");
         if (f == NULL)
         {
             IwAssertMsg(ROWLHOUSE, false, ("Failed to open file"));

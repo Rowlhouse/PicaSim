@@ -234,7 +234,7 @@ Genie sailplane, based on the design by Harley Michaelis
 
 <Graphics>
   <Model name="Standard" model3DS="SystemData/Aeroplanes/Genie/Genie.ac" modelScale="1.0" cullBackFace="true"/>
-  <Model name="Blue" model3DS="SystemData/Aeroplanes/Genie/Genie25.3ds" modelScale="1.45" cullBackFace="true"/>
+  <Model name="Blue" model3DS="SystemData/Aeroplanes/Genie/genie25.3ds" modelScale="1.45" cullBackFace="true"/>
 
   <ControlSurface
     name="Tail"

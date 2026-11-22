@@ -19,6 +19,7 @@
 // particular reading 117 bytes into a 4byte stack variable...
 
 #include "3ds.h"
+#include "Platform.h"
 #include <stdio.h>
 #include <math.h>
 #if defined(__ppc__)
@@ -119,7 +120,7 @@ bool CLoad3DS::Import3DS(ThreeDSModel *pModel, const char *strFileName)
     TRACE_FILE_IF(ONCE_1) TRACE("CLoad3DS::Import3DS pModel = %p, file = %s", pModel, strFileName);
     
     // Open the 3DS file
-    m_FilePointer = fopen(strFileName, "rb");
+    m_FilePointer = FileSystem::OpenFile(strFileName, "rb");
     
     // Make sure we have a valid file pointer (we found the file)
     if(!m_FilePointer) 

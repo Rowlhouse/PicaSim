@@ -16,6 +16,7 @@
   */
 
 #include <cstdint>
+#include <cstdio>
 #include <string>
 #include <vector>
 #include <cassert>
@@ -193,6 +194,17 @@ public:
         static bool IsDirectory(const std::string& path);
         static bool MakeDirectory(const std::string& path);
         static bool Delete(const std::string& path);
+        // Renames from to to, replacing to if it exists. Where the system allows, to is never left missing
+        // or part written, so this is used to save a file safely after writing a temporary copy.
+        static bool RenameReplacing(const std::string& from, const std::string& to);
+
+        // Data files sometimes name other files with the wrong letter case, which works on Windows and
+        // (usually) macOS but not on Linux, Android or iOS devices. FindPathIgnoringCase returns path
+        // unchanged if it exists, otherwise an existing path that matches it ignoring case, or path
+        // unchanged if there's none. OpenFile is fopen, retrying with the case corrected when opening
+        // for reading fails. Both only search directories when the path as given doesn't exist.
+        static std::string FindPathIgnoringCase(const std::string& path);
+        static FILE* OpenFile(const std::string& path, const char* mode);
 
         // Directory listing
         static std::vector<std::string> ListDirectory(const std::string& path);

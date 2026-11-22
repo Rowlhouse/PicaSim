@@ -4,6 +4,10 @@
 #include "tinyxml.h"
 #include "Helpers.h"
 
+// Loads an XML file into doc. If the file can't be opened as named, tries again with its letter case
+// corrected (see FileSystem::FindPathIgnoringCase), since data sometimes names files with the wrong case.
+bool LoadXMLDocument(TiXmlDocument& doc, const std::string& path);
+
 bool readFromXML(TiXmlElement* elem, const char* name, bool& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, unsigned int& value, size_t* index = 0);
 bool readFromXML(TiXmlElement* elem, const char* name, long unsigned int& value, size_t* index = 0);

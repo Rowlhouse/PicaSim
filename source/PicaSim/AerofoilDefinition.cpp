@@ -135,17 +135,29 @@ static void AddMidRange(
 
 //======================================================================================================================
 AerofoilDefinition::AerofoilDefinition(const char* name)
-    : mReferenceCount(1), mName(name)
+  : mReferenceCount(1)
+  , mName(name)
+  // Defaults (those of the supplied symmetric sections) in case the file is missing or incomplete
+  , mLiftPositionOffsetFractionForwards(0.5f)
+  , mLiftPositionOffsetFractionReverse(-0.5f)
+  , mCDFlying(0.006f)
+  , mCDStalled(1.7f)
+  , mCDMax(2.0f)
+  , mCM0(0.0f)
+  , mCMPerDeg(0.0f)
+  , mRefRe(200000.0f)
+  , mMinReFrac(0.1f)
+  , mCDPower(-0.15f)
 {
-    char filename[256];
-    sprintf(filename, "%s.xml", name);
-    TiXmlDocument aerofoilDoc(filename);
-    bool ok = aerofoilDoc.LoadFile();
-    IwAssert(ROWLHOUSE, ok);
+    const std::string filename = std::string(name) + ".xml";
+    TiXmlDocument aerofoilDoc;
+    if (!LoadXMLDocument(aerofoilDoc, filename))
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("Failed to load aerofoil %s - using a default section", filename.c_str());
+    }
 
     TiXmlHandle docHandle( &aerofoilDoc );
     TiXmlElement* element = docHandle.FirstChild( "Aerofoil" ).ToElement();
-    IwAssert(ROWLHOUSE, element);
 
     readFromXML(element, "liftPositionOffsetFractionForwards", mLiftPositionOffsetFractionForwards);
     readFromXML(element, "liftPositionOffsetFractionReverse", mLiftPositionOffsetFractionReverse);
@@ -182,7 +194,9 @@ AerofoilDefinition::AerofoilDefinition(const char* name)
             dataPoints.push_back(data);
         }
     }
-    else
+
+    // Generate the data if it's not given (including when the file couldn't be loaded)
+    if (dataPoints.empty())
     {
         float CL0 = 0.0f;
         float CLPerDeg = 0.1f;
@@ -363,10 +377,8 @@ void AerofoilDefinition::GetFlightData(
         CM += mCMPerDeg * RadiansToDegrees(angleOfAttack);
     CM *= flying;
 
-    // Adjust CL for the aspect ratio - effectively adjust the CL per alpha, when flying
-    float CLAdjusted = CL / (1.0f + fabsf(CL) / (PI * effectiveAR) );
-    CL += f * (CLAdjusted -CL);
-
+    // Note that the aspect ratio correction to the lift slope is made in GetGraphData (it used to be applied a
+    // second time here as well)
 }
 
 //======================================================================================================================
@@ -593,20 +605,21 @@ float AerofoilDefinition::ApplyForces(
                         // Airflow in local space
                         Vector3 airflow = engineWash + globalWind - parameters.mVel;
                         float d = airflow.Dot(offset);
-                        // Rotate it according to our rotation, to estimate the effect of the lag (which results in a stabilising effect).
                         if (d > 0.0f)
                         {
-                            Vector3 offsetDir = offset / offsetLength;
                             Vector3 washDir = engineWash / washSpeed;
 
                             float sideOffset = (offset - offset.Dot(washDir) * washDir).GetLength();
                             float radius = engine->GetRadius();
-                            float washRadius = radius * 2.0f;;
+                            // The slipstream spreads out with distance behind the tug. A turbulent jet spreads
+                            // at roughly 0.1 of the distance (a cone with a half angle of about 6 degrees).
+                            float washRadius = radius + offsetLength * 0.1f;
                             // Sideways drop-off
                             float frac = ClampToRange(1.0f - (sideOffset - washRadius) / washRadius, 0.0f, 1.0f);
                             engineWash *= frac;
-                            // Distance drop-off
-                            frac = Square(radius/washRadius);
+                            // Distance drop-off. The jet draws in the surrounding air, so it keeps its momentum
+                            // (u^2 * area) rather than its mass flow, and its speed falls as 1/radius.
+                            frac = radius / washRadius;
                             engineWash *= frac;
                             globalWind += engineWash;
                         }

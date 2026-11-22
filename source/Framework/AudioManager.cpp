@@ -305,7 +305,7 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     mNormaliseOnLoad = normaliseOnLoad;
 
     // Load raw PCM file
-    FILE* file = fopen(soundFile, "rb");
+    FILE* file = FileSystem::OpenFile(soundFile, "rb");
     if (!file)
     {
         TRACE_FILE_IF(ONCE_1) TRACE("Failed to open sound file: %s", soundFile);
@@ -317,13 +317,21 @@ AudioManager::Sound::Sound(const char* soundFile, int sampleFrequency, bool ster
     fseek(file, 0, SEEK_SET);
 
     TRACE_FILE_IF(ONCE_2) TRACE("Reading sound file - %ld bytes", fileNumBytes);
+    if (fileNumBytes < 2)
+    {
+        TRACE_FILE_IF(ONCE_1) TRACE("Sound file is empty or can't be read: %s", soundFile);
+        fclose(file);
+        return;
+    }
     mSoundSamples = (int)(fileNumBytes / 2); // reading 16 bit values
     mSoundData = new int16[mSoundSamples];
 
-    size_t bytesRead = fread(mSoundData, 1, fileNumBytes, file);
+    // Read whole samples only, so that a file with an odd number of bytes can't overrun the buffer
+    const size_t bytesToRead = (size_t)mSoundSamples * sizeof(int16);
+    size_t bytesRead = fread(mSoundData, 1, bytesToRead, file);
     fclose(file);
 
-    if (bytesRead != (size_t)fileNumBytes)
+    if (bytesRead != bytesToRead)
     {
         TRACE_FILE_IF(ONCE_1) TRACE("Error reading sound file: %s", soundFile);
         delete[] mSoundData;

@@ -46,8 +46,6 @@ bool AIControllerGlider::Init(LoadingScreenHelper* loadingScreen)
     for (unsigned int i = 0 ; i != MAX_CHANNELS ; ++i)
         mOutputControls[i] = 0.0f;
 
-    EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_CONTROL);
-
     AeroplaneSettings as;
     if (!as.LoadFromFile(mAIControllerSetting.mAeroplaneFile.c_str()))
     {
@@ -55,6 +53,10 @@ bool AIControllerGlider::Init(LoadingScreenHelper* loadingScreen)
         ShowDialog("PicaSim", "Failed to load AI controller", TXT(PS_OK));
         return false;
     }
+
+    // Register only once loading has succeeded, since a controller that fails to initialise is deleted
+    // without being terminated
+    EntityManager::GetInstance().RegisterEntity(this, ENTITY_LEVEL_CONTROL);
 
     // Override a few aeroplane settings
     as.mColourOffset += mAIControllerSetting.mColourOffset;
@@ -320,7 +322,8 @@ void AIControllerGlider::EntityUpdate(float deltaTime, int entityLevel)
     }
     float desiredRoll = ClampToRange(headingChange * aias.mControlBankAnglePerHeadingChange, 
         -DegreesToRadians(aias.mControlMaxBankAngle), DegreesToRadians(aias.mControlMaxBankAngle));
-    const float currentRoll = asinf(tm.RowY().z);
+    // Clamped, since rounding can take it just outside [-1, 1], and asinf would give NaN
+    const float currentRoll = asinf(ClampToRange(tm.RowY().z, -1.0f, 1.0f));
 
     if (altitude < physicsRadius)
     {
@@ -337,7 +340,8 @@ void AIControllerGlider::EntityUpdate(float deltaTime, int entityLevel)
     float fwdSpeedRelAir = velRelWind.Dot(tm.RowX());
 
     // Make it so if we're going too fast, the target glide slope is positive - negative if going too slow. +ve glide slope is up.
-    float currentGlideSlope = velRelWind.z / fwdSpeedRelAir;
+    // Avoid dividing by zero (for example at rest in still air)
+    float currentGlideSlope = velRelWind.z / (fabsf(fwdSpeedRelAir) > 0.01f ? fwdSpeedRelAir : 0.01f);
 
     float adjustForAltitudeScale = ClampToRange(
         1.0f - fabsf(headingChange / DegreesToRadians(aias.mGliderControlHeadingChangeForNoSlope)), 0.0f, 1.0f);

@@ -298,6 +298,29 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
         }
     } // Loop over shapes
 
+    // A custom aircraft might have no parts, or none that collide, and the inertia and convex hull calculations
+    // below need at least one of each. Rather than crash, use a small box so that the aircraft can still be created.
+    {
+        Transform defaultTM;
+        defaultTM.SetIdentity();
+        const Vector3 defaultExtents = ds.GetScaledLength(Vector3(0.2f, 0.2f, 0.2f));
+        if (masses.empty())
+        {
+            TRACE_FILE_IF(ONCE_1) TRACE("Aeroplane has no parts - using a default box");
+            float mass = 1.0f;
+            ds.ScaleMass(mass);
+            masses.push_back(mass);
+            mMass += mass;
+            mCollisionShape->addChildShape(TransformToBulletTransform(defaultTM),
+                new btBoxShape(Vector3ToBulletVector3(defaultExtents * 0.5f)));
+        }
+        if (collidingPoints.size() == 0)
+        {
+            TRACE_FILE_IF(ONCE_1) TRACE("Aeroplane has no colliding parts - using a default box");
+            AddPoints(collidingPoints, mAABBMin, mAABBMax, defaultExtents, defaultTM, margin);
+        }
+    }
+
     // Loop over the crash shapes
     TiXmlHandle crashShapesHandle = docHandle.FirstChild("Physics").FirstChild("CrashShapes");
     TiXmlElement* crashShapesElement = crashShapesHandle.ToElement();
@@ -356,7 +379,7 @@ void AeroplanePhysics::Init(TiXmlDocument& aeroplaneDoc, Aeroplane* aeroplane, u
     readFromXML(dynamicsElement, "frictionScale", frictionScale);
 
     mFlutterDragScale = readFloatFromXML(dynamicsElement, "flutterDragScale");
-    mFlutterDragSpeed = ds.GetScaledLength(readFloatFromXML(dynamicsElement, "flutterDragSpeed"));
+    mFlutterDragSpeed = ds.GetScaledVel(readFloatFromXML(dynamicsElement, "flutterDragSpeed"));
 
     btVector3 localInertia(0,0,0);
 
@@ -1076,12 +1099,15 @@ void AeroplanePhysics::UpdateAeroplanePrePhysics(float deltaTime)
     Vector3 moment = rollingMoment * mTM.RowX();
     ApplyWorldTorque(moment);
 
-    // Apply additional "flutter" drag
+    // Apply additional "flutter" drag. This represents control surfaces vibrating at high speed, which starts at
+    // some speed and grows as the speed increases (more so with more slop). The coefficient goes with the square of
+    // the airspeed, reaching flutterDragScale at flutterDragSpeed, so it's small at normal speeds and acts as a soft
+    // limit on top speed. (Until 1.6.0 CDFlutter wasn't used, which gave a constant coefficient at all speeds.)
     if (mFlutterDragScale*mFlutterDragSpeed != 0.0f)
     {
-        float CDFlutter = airflow.GetLengthSquared() / Square(mFlutterDragSpeed);
+        float CDFlutter = mFlutterDragScale * airflow.GetLengthSquared() / Square(mFlutterDragSpeed);
 
-        float flutterDrag = mFlutterDragScale * dynamicPressure.x * Square(mWingSpan) * mAeroplane->GetAeroplaneSettings().mDragScale;
+        float flutterDrag = CDFlutter * dynamicPressure.x * Square(mWingSpan) * mAeroplane->GetAeroplaneSettings().mDragScale;
         Vector3 flutterForce = flutterDrag * mTM.RowX();
         ApplyWorldForceAtCoM(flutterForce);
     }
@@ -1453,9 +1479,11 @@ void AeroplanePhysics::AttachToTug(Aeroplane& tugAeroplane)
     const AeroplaneSettings& as = mAeroplane->GetAeroplaneSettings();
     const AeroplaneSettings& tas = tugAeroplane.GetAeroplaneSettings();
     DimensionalScaling ds(as.mSizeScale, as.mMassScale, true);
+    DimensionalScaling tds(tas.mSizeScale, tas.mMassScale, true);
 
+    // Each hook is scaled with its own aeroplane. The rope's anchors are fixed in each body at these points.
     Vector3 noseHookPos = mAeroplane->GetTransform().TransformVec(ds.GetScaledLength(as.mNoseHookOffset));
-    Vector3 tailHookPos = tugAeroplane.GetTransform().TransformVec(ds.GetScaledLength(tas.mTailHookOffset));
+    Vector3 tailHookPos = tugAeroplane.GetTransform().TransformVec(tds.GetScaledLength(tas.mTailHookOffset));
 
     int numMidPoints = 4;
 
