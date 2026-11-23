@@ -74,7 +74,7 @@ Phase 6
       extentsY="0.2"
       extentsZ="0.01"
       wingAspectRatio="7.0"
-      groundEffect="1"
+      groundEffectSpan="1.68"
     />
 
     <Wing 
@@ -91,7 +91,7 @@ Phase 6
       extentsY="0.4"
       extentsZ="0.01"
       wingAspectRatio="7.0"
-      groundEffect="1"
+      groundEffectSpan="1.68"
       
       CLPerDegree="0.01"
       CDPerDegree="0.02"
@@ -118,7 +118,7 @@ Phase 6
       extentsY="0.338"
       extentsZ="0.01"
       wingAspectRatio="7.0"
-      groundEffect="1"
+      groundEffectSpan="1.68"
       
       CLPerDegree="0.01"
       CDPerDegree="0.02"
@@ -159,7 +159,7 @@ Phase 6
       extentsY="0.5"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.5"
       
       washFromWingName1="Left"
       washFromWingName2="Right"

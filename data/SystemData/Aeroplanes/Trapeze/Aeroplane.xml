@@ -66,7 +66,7 @@ Based on Paige Anderson's Trapeze
       extentsZ="0.01"
       
       wingAspectRatio="6.7"
-      groundEffect="1"
+      groundEffectSpan="1.34"
     />
 
     <Wing 
@@ -82,7 +82,7 @@ Based on Paige Anderson's Trapeze
       extentsY="0.369"
       extentsZ="0.01"
       wingAspectRatio="6.7"
-      groundEffect="1"
+      groundEffectSpan="1.34"
       
       CLPerDegree="0.022"
       CDPerDegree="0.015"
@@ -108,7 +108,7 @@ Based on Paige Anderson's Trapeze
       extentsY="0.2"
       extentsZ="0.01"
       wingAspectRatio="6.7"
-      groundEffect="1"
+      groundEffectSpan="1.34"
       
       CLPerDegree="0.022"
       CDPerDegree="0.015"
@@ -147,7 +147,7 @@ Based on Paige Anderson's Trapeze
       extentsZ="0.01"
       pitch="0.3"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.4"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

@@ -50,7 +50,7 @@ Peacemaker - 4 channel powered plane
       extentsY="0.464"
       extentsZ="0.01"
       wingAspectRatio="6.0"
-      groundEffect="1"
+      groundEffectSpan="0.93"
       collide="true"
 
       CLPerDegree="0.022"
@@ -82,7 +82,7 @@ Peacemaker - 4 channel powered plane
       extentsZ="0.01"
       rotationY="0.0"
       wingAspectRatio="4.0"
-      groundEffect="1"
+      groundEffectSpan="0.32"
       
       CLPerDegree="0.022"
       CDPerDegree="0.03"

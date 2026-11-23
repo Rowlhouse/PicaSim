@@ -30,6 +30,7 @@ Magpie
       extentsY="0.1"
       extentsZ="0.01"
       wingAspectRatio="10.0"
+      groundEffectSpan="0.9"
       
       CLPerDegree="0.0"
       CDPerDegree="0.5"
@@ -54,6 +55,7 @@ Magpie
       extentsZ="0.01"
       roll="5"
       wingAspectRatio="10.0"
+      groundEffectSpan="0.9"
       
       CLPerDegree="0.022"
       CDPerDegree="0.02"
@@ -87,6 +89,7 @@ Magpie
       extentsY="0.3"
       extentsZ="0.01"
       wingAspectRatio="2.0"
+      groundEffectSpan="0.3"
       
       CLPerDegree="0.022"
       CDPerDegree="0.02"

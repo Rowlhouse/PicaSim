@@ -15,7 +15,7 @@ struct AerofoilData
         : 
         numSections(1), numPieces(1), wingPosition(0,0,0), wingRotation(0,0,0), wingExtents(1,1,1), shadow(0,0,0),
         wingAspectRatio(1), wingSpanEfficiency(0.9f), controlHalfSpeed(100),
-        roll(0), pitch(0), yaw(0), groundEffect(false), washFromEngineFraction(0.0f) 
+        roll(0), pitch(0), yaw(0), groundEffectSpan(0.0f), groundEffect(0.0f), washFromEngineFraction(0.0f)
     {
         for (size_t i = 0 ; i != 4 ; ++i)
             washFromWingFraction[i] = 0.0f;
@@ -34,7 +34,8 @@ struct AerofoilData
     float roll;
     float pitch;
     float yaw;
-    bool groundEffect;
+    float groundEffectSpan; ///< Span of the whole lifting surface for ground effect. Zero means not set.
+    float groundEffect;     ///< Older setting, used when groundEffectSpan isn't set. Multiplies the span estimated from chord * AR.
 
     std::string washFromEngineName;
     float washFromEngineFraction;
@@ -102,7 +103,14 @@ bool Wing::ReadFromXML(class TiXmlElement* wingElement, AerofoilData& aerofoilDa
     readFromXML(wingElement, "roll", aerofoilData.roll);
     readFromXML(wingElement, "pitch", aerofoilData.pitch);
     readFromXML(wingElement, "yaw", aerofoilData.yaw);
-    readFromXML(wingElement, "groundEffect", aerofoilData.groundEffect);
+    readFromXML(wingElement, "groundEffectSpan", aerofoilData.groundEffectSpan);
+    // Older aeroplanes have groundEffect, which used to be just on or off, so accept true/false as well as a number
+    if (!readFromXML(wingElement, "groundEffect", aerofoilData.groundEffect))
+    {
+        bool groundEffect = false;
+        if (readFromXML(wingElement, "groundEffect", groundEffect))
+            aerofoilData.groundEffect = groundEffect ? 1.0f : 0.0f;
+    }
 
     readFromXML(wingElement, "washFromEngineName", aerofoilData.washFromEngineName);
     readFromXML(wingElement, "washFromEngineFraction", aerofoilData.washFromEngineFraction);
@@ -200,6 +208,7 @@ void Wing::Init(
     ds.ScaleMass(mMass);
     ds.ScaleLength(aerofoilData.wingPosition);
     ds.ScaleLength(aerofoilData.wingExtents);
+    ds.ScaleLength(aerofoilData.groundEffectSpan);
     mSlopDegreesPerNewton /= ds.GetScaledForce(1.0f);
 
     // Set up configuration for each aerofoil
@@ -214,7 +223,14 @@ void Wing::Init(
     aerofoilConfiguration.mWingAspectRatio = aerofoilData.wingAspectRatio;
     aerofoilConfiguration.mWingSpanEfficiency = aerofoilData.wingSpanEfficiency;
     aerofoilConfiguration.mControlHalfSpeed = aerofoilData.controlHalfSpeed;
-    aerofoilConfiguration.mGroundEffect = aerofoilData.groundEffect;
+    // Ground effect depends on the span of the whole lifting surface. If that isn't given, estimate it from this
+    // wing's chord and aspect ratio, scaled by the older groundEffect value.
+    if (aerofoilData.groundEffectSpan > 0.0f)
+        aerofoilConfiguration.mGroundEffectSpan = aerofoilData.groundEffectSpan;
+    else
+        aerofoilConfiguration.mGroundEffectSpan =
+            aerofoilConfiguration.mExtents.x * aerofoilData.wingAspectRatio * aerofoilData.groundEffect;
+    mGroundEffectSpan = aerofoilConfiguration.mGroundEffectSpan;
 
     aerofoilConfiguration.mWashFromEngineName = aerofoilData.washFromEngineName;
     aerofoilConfiguration.mWashFromEngineFraction = aerofoilData.washFromEngineFraction;

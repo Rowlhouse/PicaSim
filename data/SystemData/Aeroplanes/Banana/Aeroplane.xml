@@ -86,7 +86,7 @@ Based on the Banana
       pitch="0"
       roll="1"
       wingAspectRatio="10.0"
-      groundEffect="1"
+      groundEffectSpan="1.39"
       
       CLPerDegree="0.02"
       CDPerDegree="0.04"
@@ -113,7 +113,7 @@ Based on the Banana
       pitch="0.2"
       roll="2"
       wingAspectRatio="10.0"
-      groundEffect="1"
+      groundEffectSpan="1.39"
       
       CLPerDegree="0.02"
       CDPerDegree="0.02"
@@ -142,7 +142,7 @@ Based on the Banana
       extentsY="0.07"
       extentsZ="0.01"
       wingAspectRatio="5.0"      
-      groundEffect="1"
+      groundEffectSpan="1.39"
     />
 
     <Wing
@@ -177,7 +177,7 @@ Based on the Banana
       extentsY="0.2"
       extentsZ="0.01"
       wingAspectRatio="3"
-      groundEffect="1"
+      groundEffectSpan="0.33"
       
       CLPerDegree="0.01"
       CDPerDegree="0.005"

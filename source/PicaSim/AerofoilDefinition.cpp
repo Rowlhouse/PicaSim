@@ -16,6 +16,16 @@ AerofoilDefinition::AerofoilDefinitions AerofoilDefinition::mAerofoilDefinitions
 const float kinematicViscosity = 1.5e-5f;
 
 //======================================================================================================================
+// Returns the aspect ratio adjusted for airflow coming from the side. beta is the sideslip angle.
+static float GetAspectRatioInSideslip(float aspectRatio, float chord, float beta)
+{
+    float span = aspectRatio * chord;
+    float area = span * chord;
+    float effSpan = span * FastCos(beta) + chord * FastSin(beta);
+    return Square(effSpan) / area;
+}
+
+//======================================================================================================================
 AerofoilDefinition* AerofoilDefinition::Create(const char* name)
 {
     AerofoilDefinitions::iterator it = mAerofoilDefinitions.find(name);
@@ -564,20 +574,27 @@ float AerofoilDefinition::ApplyForces(
 
     wash = Vector3(0,0,0);
 
-    // Increase effective aspect ratio when near the ground, as that has the effect of 
-    // inhibiting the tip vortices and thus induced drag etc.
+    // Ground effect. Near the ground the tip vortices can't fully form, which reduces the induced drag and the
+    // downwash, and increases the lift slope. All of those follow from increasing the effective aspect ratio, by
+    // the factor that the induced drag is reduced. That uses Wieselsberger's approximation, with h the height
+    // and b the span of the whole lifting surface:
+    //   CDi(near ground) / CDi(free air) = 1 - (1 - 1.32 h/b) / (1.05 + 7.4 h/b)
+    // This reduces the induced drag by about 23% at h/b = 1/4 and 48% at h/b = 1/10, and fades out at
+    // h/b = 1/1.32. It's only intended down to h/b of about 1/30, so clamp there.
     float effectiveAR = configuration.mWingAspectRatio;
     Vector3 pos = parameters.mTM.GetTrans();
 
-    if (configuration.mGroundEffect)
+    if (configuration.mGroundEffectSpan > 0.0f)
     {
         float height = pos.z - Environment::GetInstance().GetTerrain().GetTerrainHeightFast(pos.x, pos.y, true);
-        float span  = configuration.mExtents.x * configuration.mWingAspectRatio;
-        float heightRatio = 3.0f * height / span;
-        if (heightRatio < 1.0f)
+        float heightRatio = height / configuration.mGroundEffectSpan;
+        const float maxHeightRatio = 1.0f / 1.32f;
+        const float minHeightRatio = 1.0f / 30.0f;
+        if (heightRatio < maxHeightRatio)
         {
-            heightRatio = Maximum(heightRatio, 0.5f);
-            effectiveAR *= 1.0f / heightRatio;
+            heightRatio = Maximum(heightRatio, minHeightRatio);
+            float inducedDragFraction = 1.0f - (1.0f - 1.32f * heightRatio) / (1.05f + 7.4f * heightRatio);
+            effectiveAR /= inducedDragFraction;
         }
     }
 
@@ -704,6 +721,24 @@ float AerofoilDefinition::ApplyForces(
                 float d = airflow.Dot(offset);
                 Vector3 wash = wing->GetLastWash();
 
+                // The ground reduces the downwash behind a wing. Treat the ground as a mirror, so there's an image
+                // of the wing's trailing vortices below it, pushing the air up. For elliptical loading the vortices
+                // are pi/4 of the span apart. With them at the wing's height and us at our height (both above the
+                // ground), the fraction of the free air downwash that's left is:
+                //   1 - (s^2 + (h - hw)^2) / (s^2 + (h + hw)^2)
+                // where s is half the vortex spacing.
+                const float groundEffectSpan = wing->GetGroundEffectSpan();
+                if (groundEffectSpan > 0.0f)
+                {
+                    const Terrain& terrain = Environment::GetInstance().GetTerrain();
+                    float wingHeight = Maximum(wingPos.z - terrain.GetTerrainHeightFast(wingPos.x, wingPos.y, true), 0.0f);
+                    float height = Maximum(pos.z - terrain.GetTerrainHeightFast(pos.x, pos.y, true), 0.0f);
+                    float s = groundEffectSpan * (PI / 8.0f);
+                    float washFraction = 1.0f -
+                        (Square(s) + Square(height - wingHeight)) / (Square(s) + Square(height + wingHeight));
+                    wash *= washFraction;
+                }
+
                 // Rotate it according to our rotation, to estimate the effect of the lag (which results in a stabilising effect).
                 if (d > 0.0f)
                 {
@@ -760,14 +795,12 @@ float AerofoilDefinition::ApplyForces(
         airflow.x = -minSpeed;
     }
 
-    // Adjust AR depending on the direction
-    //if (0)
+    // Adjust AR depending on the direction. Also keep the free air value, which is used for the downwash.
+    float freeAirAR = configuration.mWingAspectRatio;
     {
         float beta = atan2f(fabsf(airflow.y), fabsf(airflow.x));
-        float span = effectiveAR * configuration.mExtents.x;
-        float area = span * configuration.mExtents.x;
-        float effSpan = span * FastCos(beta) + configuration.mExtents.x * FastSin(beta);
-        effectiveAR = Square(effSpan) / area;
+        effectiveAR = GetAspectRatioInSideslip(effectiveAR, configuration.mExtents.x, beta);
+        freeAirAR = GetAspectRatioInSideslip(freeAirAR, configuration.mExtents.x, beta);
     }
 
 #if 1
@@ -864,7 +897,9 @@ float AerofoilDefinition::ApplyForces(
 
     // Downwash
     // http://www.onemetre.net/Design/Downwash/Momentum/Momentum.htm
-    float downwashAngle = (2.0f / PI) * CL / effectiveAR;
+    // This is the free air value, as whatever uses it accounts for the ground (which affects it more than the
+    // induced drag).
+    float downwashAngle = (2.0f / PI) * CL / freeAirAR;
     wash = (downwashAngle * airflow.x) * liftDir;
 
     // Debug Draw

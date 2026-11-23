@@ -34,7 +34,7 @@ Simple canard glider
       extentsY="1.0f"
       extentsZ="0.01f"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="1.98"
 
       washFromWingName1="FrontTail"
       washFromWingFraction1="0.1"
@@ -74,7 +74,7 @@ Simple canard glider
       extentsY="0.8f"
       extentsZ="0.01f"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.8"
       
       CLPerDegree="0.022"
       CDPerDegree="0.02"

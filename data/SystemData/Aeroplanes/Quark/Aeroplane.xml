@@ -80,7 +80,7 @@ Quark
       extentsY="0.47"
       extentsZ="0.01"
       wingAspectRatio="8"
-      groundEffect="1"
+      groundEffectSpan="2.0"
       
       CLPerDegree="0.015"
       CDPerDegree="0.015"
@@ -107,7 +107,7 @@ Quark
       extentsY="0.5"
       extentsZ="0.01"
       wingAspectRatio="8"
-      groundEffect="1"
+      groundEffectSpan="2.0"
       
       CLPerDegree="0.015"
       CDPerDegree="0.015"
@@ -147,7 +147,7 @@ Quark
       extentsY="0.56"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.56"
 
       washFromWingName1="Left1"
       washFromWingName2="Right1"

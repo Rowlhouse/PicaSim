@@ -71,7 +71,7 @@ RTEraserFive - 4 channel indoor plane based on the Eraser Five by Robin Trumpp
       extentsY="0.16"
       extentsZ="0.01"
       wingAspectRatio="9.0"
-      groundEffect="1"
+      groundEffectSpan="0.8"
       
       CLPerDegree="0.003"
       CDPerDegree="0.01"
@@ -100,7 +100,7 @@ RTEraserFive - 4 channel indoor plane based on the Eraser Five by Robin Trumpp
       extentsY="0.19"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.8"
       
       CLPerDegree="0.003"
       CDPerDegree="0.02"
@@ -142,7 +142,6 @@ RTEraserFive - 4 channel indoor plane based on the Eraser Five by Robin Trumpp
       extentsY="0.06"
       extentsZ="0.001"
       wingAspectRatio="5.0"
-      groundEffect="1"
        
       collide="true"
     />
@@ -168,7 +167,7 @@ RTEraserFive - 4 channel indoor plane based on the Eraser Five by Robin Trumpp
       extentsZ="0.01"
       rotationY="0.75"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.38"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

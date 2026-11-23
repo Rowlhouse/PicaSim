@@ -37,7 +37,7 @@ SopwithPup
       extentsZ="0.01"
       roll="4.0"
       wingAspectRatio="5.6"
-      groundEffect="1"
+      groundEffectSpan="2.0"
             
       shadowZ="1.0"
       washFromEngineName="Engine"
@@ -59,7 +59,7 @@ SopwithPup
       extentsZ="0.01"
       roll="4"
       wingAspectRatio="5.6"
-      groundEffect="1"
+      groundEffectSpan="2.0"
       
       CLPerDegree="0.022"
       CDPerDegree="0.06"
@@ -103,6 +103,7 @@ SopwithPup
       extentsY="0.28"
       extentsZ="0.01"
       wingAspectRatio="5.6"
+      groundEffectSpan="2.0"
       render="true"
       collide="false"
       
@@ -126,6 +127,7 @@ SopwithPup
       extentsZ="0.01"
       roll="4.0"
       wingAspectRatio="5.6"
+      groundEffectSpan="2.0"
             
       shadowZ="-1.0"
       washFromEngineName="Engine"
@@ -147,6 +149,7 @@ SopwithPup
       extentsZ="0.01"
       roll="4"
       wingAspectRatio="5.6"
+      groundEffectSpan="2.0"
       
       CLPerDegree="0.022"
       CDPerDegree="0.06"
@@ -188,12 +191,12 @@ SopwithPup
       extentsX="0.2"
       extentsY="0.62"
       extentsZ="0.01"
-      rotationY="-0.45"
+      rotationY="-1.0"
       wingAspectRatio="4.0"
-      groundEffect="1"
+      groundEffectSpan="0.62"
       
-      washFromWingName1="Left1"
-      washFromWingName2="Right1"
+      washFromWingName1="LeftBottom1"
+      washFromWingName2="RightBottom1"
       washFromWingFraction1="0.3"
       washFromWingFraction2="0.3"
 

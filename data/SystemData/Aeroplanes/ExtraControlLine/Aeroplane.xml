@@ -50,7 +50,7 @@ Extra3D - 4 channel powered plane
       extentsY="0.34"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="1.42"
       
       CLPerDegree="0.022"
       CDPerDegree="0.015"
@@ -77,7 +77,7 @@ Extra3D - 4 channel powered plane
       extentsY="0.37"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="1.42"
       
       CLPerDegree="0.022"
       CDPerDegree="0.015"
@@ -117,7 +117,7 @@ Extra3D - 4 channel powered plane
       extentsZ="0.01"
       rotationY="-0.25"
       wingAspectRatio="3.0"
-      groundEffect="1"
+      groundEffectSpan="0.48"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

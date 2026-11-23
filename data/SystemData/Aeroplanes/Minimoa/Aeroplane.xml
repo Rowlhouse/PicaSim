@@ -75,7 +75,7 @@
       roll="9.5"
       pitch="-3"
       wingAspectRatio="16.0"
-      groundEffect="1"
+      groundEffectSpan="2.5"
     />
 
     <Wing
@@ -93,7 +93,7 @@
       roll="1"
       pitch="-1"
       wingAspectRatio="16.0"
-      groundEffect="1"
+      groundEffectSpan="2.5"
       
       CLPerDegree="0.01"
       CDPerDegree="0.005"
@@ -122,7 +122,7 @@
       roll="1"
       pitch="1"
       wingAspectRatio="16.0"
-      groundEffect="1"
+      groundEffectSpan="2.5"
       
       CLPerDegree="0.01"
       CDPerDegree="0.005"
@@ -170,7 +170,7 @@
       extentsY="0.44"
       extentsZ="0.01"
       wingAspectRatio="6.0"
-      groundEffect="1"
+      groundEffectSpan="0.44"
 
       CLPerDegree="0.01"
       CDPerDegree="0.005"

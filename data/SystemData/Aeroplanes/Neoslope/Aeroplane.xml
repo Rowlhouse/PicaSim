@@ -49,7 +49,7 @@ Neoslope
       extentsY="0.2"
       extentsZ="0.01"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="2.0"
     />
 
     <Wing 
@@ -67,7 +67,7 @@ Neoslope
       extentsY="0.3"
       extentsZ="0.01"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="2.0"
       
       CLPerDegree="0.022"
       CDPerDegree="0.01"
@@ -93,7 +93,7 @@ Neoslope
       extentsY="0.6"
       extentsZ="0.01"      
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="2.0"
 
       CLPerDegree="0.022"
       CDPerDegree="0.01"
@@ -135,7 +135,7 @@ Neoslope
       extentsY="0.4"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.4"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

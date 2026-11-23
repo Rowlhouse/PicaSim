@@ -67,7 +67,7 @@ F18 1.5m span EDF/Jet
       extentsY="0.9"
       extentsZ="0.01"
       wingAspectRatio="3.0"
-      groundEffect="1"
+      groundEffectSpan="1.49"
       
       CLPerDegree="0.022"
       CDPerDegree="0.02"
@@ -100,7 +100,7 @@ F18 1.5m span EDF/Jet
       extentsY="0.7"
       extentsZ="0.01"
       wingAspectRatio="2.0"
-      groundEffect="1"
+      groundEffectSpan="0.7"
 
       washFromWingName1="Left"
       washFromWingName2="Right"
