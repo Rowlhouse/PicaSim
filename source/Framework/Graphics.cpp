@@ -375,6 +375,11 @@ GLuint esLoadProgram( const char *vertShaderSrc, const char *fragShaderSrc )
     glAttachShader ( programObject, vertexShader );
     glAttachShader ( programObject, fragmentShader );
 
+    // Every shader has a_position and always feeds it from an array. Pin it to location 0, because in a
+    // compatibility profile some drivers (older AMD/Intel) draw nothing unless attribute 0 is an enabled array.
+    // Without this, a_colour can land on 0 and textured models (which use a constant colour) disappear.
+    glBindAttribLocation ( programObject, 0, "a_position" );
+
     // Link the program
     glLinkProgram ( programObject );
 
