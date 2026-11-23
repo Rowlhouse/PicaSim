@@ -68,7 +68,7 @@ Trainer Simple rudder/elevator glider
       extentsY="0.3"
       extentsZ="0.01"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="1.96"
     />
 
     <Wing
@@ -93,7 +93,7 @@ Trainer Simple rudder/elevator glider
       extentsY="0.7"
       extentsZ="0.01"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="1.96"
     />
 
     <Wing
@@ -118,7 +118,7 @@ Trainer Simple rudder/elevator glider
       extentsY="0.5"
       extentsZ="0.01"
       wingAspectRatio="3.0"
-      groundEffect="1"
+      groundEffectSpan="0.5"
      
       washFromWingName1="Left"
       washFromWingName2="Right"

@@ -51,7 +51,6 @@ Sherpa2
       extentsZ="0.01"
       
       wingAspectRatio="1.0"
-      groundEffect="1"
       
       collide="false"
     />
@@ -70,7 +69,7 @@ Sherpa2
       extentsY="0.46"
       extentsZ="0.01"
       wingAspectRatio="3.0"
-      groundEffect="1"
+      groundEffectSpan="0.92"
 
       CLPerDegree="0.03"
       CDPerDegree="0.005"

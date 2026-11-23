@@ -31,7 +31,7 @@ Kato
       extentsY="0.3"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="1.2"
 
       CLPerDegree="0.003"
       CDPerDegree="0.000"
@@ -59,7 +59,7 @@ Kato
       extentsY="0.33"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="1.2"
 
       CLPerDegree="0.006"
       CDPerDegree="0.000"

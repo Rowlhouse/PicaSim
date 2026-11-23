@@ -73,7 +73,7 @@ Spirit - 2.6m span F3F plane
       pitch="0.8"
       roll="2.5"
       wingAspectRatio="11.0"
-      groundEffect="1"
+      groundEffectSpan="2.6"
       collide="0"
 
       CLPerDegree="0.022"
@@ -101,7 +101,7 @@ Spirit - 2.6m span F3F plane
       extentsY="0.7"
       extentsZ="0.01"
       wingAspectRatio="11.0"
-      groundEffect="1"
+      groundEffectSpan="2.6"
       collide="1"
       
       CLPerDegree="0.022"
@@ -143,7 +143,7 @@ Spirit - 2.6m span F3F plane
       extentsY="0.32"
       extentsZ="0.01"
       wingAspectRatio="2.5"
-      groundEffect="1"
+      groundEffectSpan="0.51"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

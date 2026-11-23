@@ -34,7 +34,7 @@ MiniDLG
       roll="11"
       pitch="-1.0"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="0.98"
     />
 
     <Wing
@@ -52,7 +52,7 @@ MiniDLG
       roll="11"
       pitch="0.0"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="0.98"
     />
 
     <Wing
@@ -81,7 +81,7 @@ MiniDLG
       extentsY="0.24"
       extentsZ="0.01"
       wingAspectRatio="2.5"
-      groundEffect="1"
+      groundEffectSpan="0.24"
       
       CLPerDegree="0.022"
       CDPerDegree="0.002"

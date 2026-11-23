@@ -82,7 +82,7 @@ Based on Steve Lange's Le Fish
       extentsZ="0.01"
       
       wingAspectRatio="6.7"
-      groundEffect="1"
+      groundEffectSpan="1.64"
     />
 
     <Wing 
@@ -98,7 +98,7 @@ Based on Steve Lange's Le Fish
       extentsY="0.369"
       extentsZ="0.01"
       wingAspectRatio="6.7"
-      groundEffect="1"
+      groundEffectSpan="1.64"
       
       CLPerDegree="0.02"
       CDPerDegree="0.01"
@@ -124,7 +124,7 @@ Based on Steve Lange's Le Fish
       extentsY="0.35"
       extentsZ="0.01"
       wingAspectRatio="6.7"
-      groundEffect="1"
+      groundEffectSpan="1.64"
       
       CLPerDegree="0.022"
       CDPerDegree="0.01"
@@ -163,7 +163,7 @@ Based on Steve Lange's Le Fish
       extentsY="0.52"
       extentsZ="0.01"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="0.52"
 
       washFromWingName1="Left1"
       washFromWingName2="Right1"

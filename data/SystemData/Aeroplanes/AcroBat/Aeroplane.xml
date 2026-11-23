@@ -72,7 +72,7 @@ AcroBat - 4 channel powered plane
       roll="0"
       pitch="0"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="1.58"
       
       CLPerControl="0.25"
       CDPerControl="0.05"
@@ -106,7 +106,7 @@ AcroBat - 4 channel powered plane
       roll="0"
       pitch="0"
       wingAspectRatio="5.0"
-      groundEffect="1"
+      groundEffectSpan="1.58"
       
       CLPerDegree="0.022"
       CDPerDegree="0.06"
@@ -147,7 +147,7 @@ AcroBat - 4 channel powered plane
       extentsZ="0.01"
       rotationY="0.0"
       wingAspectRatio="3.0"
-      groundEffect="1"
+      groundEffectSpan="0.58"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

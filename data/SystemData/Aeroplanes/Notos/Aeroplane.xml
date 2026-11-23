@@ -32,7 +32,7 @@ Notos
       roll="6"
       pitch="0.0"
       wingAspectRatio="11.0"
-      groundEffect="1"
+      groundEffectSpan="1.5"
       
       CLPerDegree="0.022"
       CDPerDegree="0.006"
@@ -62,7 +62,7 @@ Notos
       roll="6"
       pitch="-0.4"
       wingAspectRatio="11.0"
-      groundEffect="1"
+      groundEffectSpan="1.5"
       
       CLPerDegree="0.022"
       CDPerDegree="0.006"
@@ -103,7 +103,7 @@ Notos
       extentsY="0.4"
       extentsZ="0.01"
       wingAspectRatio="6"
-      groundEffect="1"
+      groundEffectSpan="0.4"
       
       CLPerDegree="0.022"
       CDPerDegree="0.01"

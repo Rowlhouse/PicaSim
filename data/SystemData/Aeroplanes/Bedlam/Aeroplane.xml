@@ -74,7 +74,7 @@ Bedlam
       extentsZ="0.0197"
       pitch="0.00"
       wingAspectRatio="7.6"
-      groundEffect="1"     
+      groundEffectSpan="1.52"     
     />
     
     <Wing
@@ -91,7 +91,7 @@ Bedlam
       extentsZ="0.015"
       pitch="0.00"
       wingAspectRatio="7.6"
-      groundEffect="1"
+      groundEffectSpan="1.52"
       
       CLPerDegree="0.022"
       CDPerDegree="0.015"
@@ -119,7 +119,7 @@ Bedlam
       roll="5"
       pitch="0.00"
       wingAspectRatio="7.6"
-      groundEffect="1"
+      groundEffectSpan="1.52"
       
       CLPerDegree="0.022"
       CDPerDegree="0.015"
@@ -164,7 +164,7 @@ Bedlam
       extentsZ="0.0042"
       pitch="0.00"
       wingAspectRatio="4.2"
-      groundEffect="1"
+      groundEffectSpan="0.43"
       
       washFromWingName1="Left2"
       washFromWingName2="Right2"

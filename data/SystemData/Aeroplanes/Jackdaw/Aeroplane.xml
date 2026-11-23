@@ -72,7 +72,7 @@ Jackdaw - 4 channel powered plane
       roll="3"
       pitch="-1"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="1.58"
       
       CLPerDegree="0.022"
       CDPerDegree="0.057"
@@ -101,7 +101,7 @@ Jackdaw - 4 channel powered plane
       roll="3"
       pitch="1"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="1.58"
       
       CLPerDegree="0.022"
       CDPerDegree="0.057"
@@ -142,7 +142,7 @@ Jackdaw - 4 channel powered plane
       extentsZ="0.01"
       rotationY="-0.7"
       wingAspectRatio="6.0"
-      groundEffect="1"
+      groundEffectSpan="0.6"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

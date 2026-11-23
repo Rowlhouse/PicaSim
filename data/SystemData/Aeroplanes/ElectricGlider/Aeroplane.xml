@@ -68,7 +68,7 @@ Electric glider
       extentsY="0.3"
       extentsZ="0.01"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="2.0"
     />
 
     <Wing
@@ -93,7 +93,7 @@ Electric glider
       extentsY="0.72"
       extentsZ="0.01"
       wingAspectRatio="8.0"
-      groundEffect="1"
+      groundEffectSpan="2.0"
       
       CLPerDegree="0.022"
       CDPerDegree="0.02"
@@ -127,7 +127,7 @@ Electric glider
       extentsY="0.5"
       extentsZ="0.01"
       wingAspectRatio="3.0"
-      groundEffect="1"
+      groundEffectSpan="0.5"
 
       washFromWingName1="Left"
       washFromWingName2="Right"

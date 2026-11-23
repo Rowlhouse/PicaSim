@@ -72,7 +72,7 @@ Tigger - 2.9m span F3F racer
       pitch="-0.5"
       roll="3.5"
       wingAspectRatio="11.0"
-      groundEffect="1"
+      groundEffectSpan="2.9"
       collide="0"
 
       CLPerDegree="0.022"
@@ -100,7 +100,7 @@ Tigger - 2.9m span F3F racer
       extentsY="0.8"
       extentsZ="0.01"
       wingAspectRatio="11.0"
-      groundEffect="1"
+      groundEffectSpan="2.9"
       collide="0"
       
       CLPerDegree="0.022"
@@ -131,7 +131,7 @@ Tigger - 2.9m span F3F racer
       extentsZ="0.01"
       
       wingAspectRatio="11.0"
-      groundEffect="1"
+      groundEffectSpan="2.9"
     />
 
     <Wing
@@ -167,7 +167,7 @@ Tigger - 2.9m span F3F racer
       extentsY="0.3"
       extentsZ="0.01"
       wingAspectRatio="3"
-      groundEffect="1"
+      groundEffectSpan="0.5"
       
       CLPerDegree="0.015"
       CDPerDegree="0.01"

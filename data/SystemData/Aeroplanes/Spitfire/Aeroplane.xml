@@ -31,7 +31,7 @@ Spitfire
       extentsY="0.3"
       extentsZ="0.01"
       wingAspectRatio="5.6"
-      groundEffect="1"
+      groundEffectSpan="1.58"
       render="true"
       collide="false"
 
@@ -54,7 +54,7 @@ Spitfire
       extentsZ="0.01"
       roll="3.5"
       wingAspectRatio="5.6"
-      groundEffect="1"
+      groundEffectSpan="1.58"
             
       washFromEngineName="Engine"
       washFromEngineFraction="0.0"
@@ -75,7 +75,7 @@ Spitfire
       extentsZ="0.01"
       roll="4"
       wingAspectRatio="5.6"
-      groundEffect="1"
+      groundEffectSpan="1.58"
       
       CLPerDegree="0.022"
       CDPerDegree="0.06"
@@ -118,7 +118,7 @@ Spitfire
       extentsZ="0.01"
       rotationY="-0.85"
       wingAspectRatio="4.0"
-      groundEffect="1"
+      groundEffectSpan="0.44"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

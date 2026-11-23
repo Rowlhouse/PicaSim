@@ -29,8 +29,12 @@ public:
     /// Updates the aerofoils to update their position etc after the physics step
     void UpdatePostPhysics(float deltaTime);
 
-    /// Returns the last downwash - i.e. the disturbance to the global airflow
+    /// Returns the last downwash - i.e. the disturbance to the global airflow. This is the downwash in free air,
+    /// so whatever uses it needs to account for the effect of the ground.
     Vector3 GetLastWash() const {return mLastWash;}
+
+    /// Span of the whole lifting surface for ground effect. Zero if ground effect is disabled.
+    float GetGroundEffectSpan() const {return mGroundEffectSpan;}
 
 private:
     bool ReadFromXML(class TiXmlElement* wingElement, struct AerofoilData& aerofoilData);
@@ -47,6 +51,7 @@ private:
     // The position/orientation of the middle of the wing
     Transform mTMLocal;
     Vector3 mExtents;
+    float mGroundEffectSpan;
 
     Vector3 mLastWash;
     Vector3 mLastForce;

@@ -32,7 +32,7 @@ GeeBee
       roll="4.5"
       pitch="-3"
       wingAspectRatio="6.0"
-      groundEffect="1"
+      groundEffectSpan="2.36"
       
       CLPerControl="0.25"
       CDPerControl="0.05"
@@ -66,7 +66,7 @@ GeeBee
       roll="3"
       pitch="-2"
       wingAspectRatio="6.0"
-      groundEffect="1"
+      groundEffectSpan="2.36"
       
       CLPerDegree="0.022"
       CDPerDegree="0.06"
@@ -110,7 +110,7 @@ GeeBee
       extentsZ="0.01"
       rotationY="-1.9"
       wingAspectRatio="4.0"
-      groundEffect="1"
+      groundEffectSpan="0.74"
       
       washFromWingName1="Left1"
       washFromWingName2="Right1"

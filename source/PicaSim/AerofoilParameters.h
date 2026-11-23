@@ -35,7 +35,9 @@ struct AerofoilConfiguration
     std::string mWashFromWingName[sMaxWashFromWings];
     float mWashFromWingFraction[sMaxWashFromWings];
 
-    bool mGroundEffect;
+    /// Span of the whole lifting surface that this aerofoil is part of (e.g. the whole wing, or the whole
+    /// tailplane), used for ground effect. Zero disables ground effect.
+    float mGroundEffectSpan;
 };
 
 /// These parameters will be updated each tick and are specific to that aerofoil
